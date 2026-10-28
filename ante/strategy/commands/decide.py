@@ -10,6 +10,10 @@ Rules:
   ``PROCEED`` whatever else is true;
 - ``PROCEED`` and ``PROCEED_WITH_CONDITIONS`` need a valid ``close`` artefact
   (the termination is designed before the commitment, XII) and dated expectations;
+- ``PROCEED`` needs a ``nodal`` artefact in the lineage, and every claim it lists
+  as blocking (load-bearing and still ``ASSUMPTION`` or ``ATTRIBUTED_INTENT``) must
+  be accepted here as a named risk; other verdicts are warned when nodal is absent
+  or a blocking claim is neither accepted nor covered by a condition;
 - ``PROCEED`` needs no detected pathology and an ``INDEPENDENT_OPERATOR``
   coherence review; a review by the proposer or its context is a coherence
   function, not a barrier (invariant 10, decision D-010);
@@ -17,16 +21,24 @@ Rules:
 - dissent is recorded, or the record names who was asked for it;
 - the residual risk has a named acceptor, and the record expires.
 
+The record carries a frozen ``snapshot`` of what was known at decision time
+(parents, every visible claim with its status and origin, the expectations);
+``ante learn`` reconciles and calibrates against that snapshot only
+(``ante/constructs``, Marco I.10).
+
 Input fields::
 
     decision_owner, verdict, rationale, conditions: [text],
     dissent: [{by, objection, evidence: [claim id], response}], dissent_solicited_from: [text],
     residual_risk: {statement, accepted_by}, expires,
     expectations: [{id, what_should_change, in_whom, horizon, refuted_by,
-                    probability: {verbal, interval: [low, high]}}]
+                    probability: {verbal, interval: [low, high]}, kind?}]
+                  ``kind`` labels the type of claim for calibration (``ante learn calibrate``)
+    accepted_risks (optional): [{claim, accepted_by, statement}]  load-bearing claims accepted unverified
 """
 from __future__ import annotations
 
+from ante.constructs import snapshot as snapshot_mod
 from ante.core import canon, schema
 from ante.core import time as ante_time
 from ante.strategy.artifact import LineageError
@@ -43,7 +55,10 @@ def _expectations(value, ctx):
     schema.unique_ids(items, 'expectations')
     for index, item in enumerate(items):
         path = f'expectations[{index}]'
-        schema.exact_keys(item, ('id', 'what_should_change', 'in_whom', 'horizon', 'refuted_by', 'probability'), path)
+        schema.exact_keys(item, ('id', 'what_should_change', 'in_whom', 'horizon', 'refuted_by', 'probability'), path,
+                          ('kind',))
+        if 'kind' in item:
+            nonplaceholder(item['kind'], f'{path}.kind', findings)
         for key in ('what_should_change', 'in_whom', 'refuted_by'):
             nonplaceholder(item[key], f'{path}.{key}', findings, 'UNTESTABLE_EXPECTATION')
         ante_time.parse(item['horizon'], f'{path}.horizon')
@@ -56,6 +71,21 @@ def _expectations(value, ctx):
         high = schema.number(interval[1], f'{path}.probability.interval[1]', 0, 1)
         schema.require(low <= high, f'{path}.probability.interval', 'low must not exceed high')
     return items
+
+
+def _accepted_risks(value, ctx, nodal) -> dict:
+    """Named acceptances of unverified claims; ids may come from upstream or from nodal's graph."""
+    graph = {r['id'] for r in nodal['body']['load_bearing_claims']} if nodal else set()
+    accepted = {}
+    for index, item in enumerate(schema.array(value, 'accepted_risks')):
+        path = f'accepted_risks[{index}]'
+        schema.exact_keys(item, ('claim', 'accepted_by', 'statement'), path)
+        if item['claim'] not in graph:
+            ctx.refs([item['claim']], f'{path}.claim', 1)
+        nonplaceholder(item['accepted_by'], f'{path}.accepted_by', ctx.findings, 'RISK_WITHOUT_ACCEPTOR')
+        nonplaceholder(item['statement'], f'{path}.statement', ctx.findings)
+        accepted[item['claim']] = item
+    return accepted
 
 
 def run(doc, ctx):
@@ -83,6 +113,28 @@ def run(doc, ctx):
         findings.error('CONDITIONS_MISSING', 'conditions', f'{verdict} must state its conditions')
 
     detected = [p['id'] for p in pathology['body']['detected']]
+    nodal = ctx.lineage.one('nodal')
+    accepted = _accepted_risks(doc.get('accepted_risks', []), ctx, nodal)
+    if nodal is not None and frame['artifact_sha256'] not in {
+            r['artifact_sha256'] for r in nodal['parents'] if r['command'] == 'frame'}:
+        raise LineageError('nodal examined another frame than the one this decision rests on')
+    blocking = nodal['body']['blocking'] if nodal else []
+    unresolved = [c for c in blocking if c not in accepted]
+    if verdict == 'PROCEED':
+        if nodal is None:
+            findings.error('NODAL_NOT_RUN', 'verdict',
+                           'PROCEED needs a nodal artefact: which claims carry the plan, and are they verified (VIII.5)?')
+        for claim_id in unresolved:
+            findings.error('LOAD_BEARING_UNVERIFIED', 'accepted_risks',
+                           f'{claim_id} carries the plan unverified: corroborate it and re-run nodal, or accept it '
+                           'as a named risk')
+    elif verdict == 'PROCEED_WITH_CONDITIONS':
+        if nodal is None:
+            findings.warn('NODAL_NOT_RUN', 'verdict', 'no nodal artefact: load-bearing claims were not examined')
+        for claim_id in unresolved:
+            if not any(claim_id in condition for condition in conditions):
+                findings.warn('LOAD_BEARING_UNVERIFIED', 'conditions',
+                              f'{claim_id} carries the plan unverified and no condition names it')
     if verdict in ACTIVATING:
         if close is None:
             findings.error('NO_TERMINATION_CONTRACT', 'verdict',
@@ -135,6 +187,9 @@ def run(doc, ctx):
         'expires': ante_time.iso(expires),
         'expectations': expectations,
         'authority': AUTHORITY_NOTE,
+        'load_bearing_claims': {'blocking': blocking, 'accepted_risks': [accepted[c] for c in sorted(accepted)]}
+        if nodal else None,
+        'snapshot': snapshot_mod.build(ctx.at, ctx.lineage.parents, ctx.claims, expectations, verdict),
     }
     next_decision = {
         'PROCEED': 'Authorised work may start under the owner\'s own authority; record outcomes with ante learn reconcile.',
@@ -150,4 +205,4 @@ COMMAND = Command(
     name='decide', summary='Strategic Decision Record bound to cohere, pathology and close',
     fields=('decision_owner', 'verdict', 'rationale', 'conditions', 'dissent', 'dissent_solicited_from',
             'residual_risk', 'expires', 'expectations'),
-    parents=('frame', 'cohere', 'pathology'), run=run)
+    optional=('accepted_risks',), parents=('frame', 'cohere', 'pathology'), run=run)

@@ -2,8 +2,8 @@
 
 Each test starts from the synthetic laboratory-consortium inputs
 (examples/foundation/lab-consortium/input), changes one thing, and checks the
-exit status and the finding code. Doctrine tables come from the D-004 proposal
-until strategy/contracts.json carries them.
+exit status and the finding code. Doctrine tables come from strategy/contracts.json
+(decision D-004, accepted).
 """
 import contextlib
 import copy
@@ -21,14 +21,16 @@ sys.path.insert(0, str(ROOT))
 from ante import cli  # noqa: E402
 
 INPUTS = ROOT / 'examples/foundation/lab-consortium/input'
-CONTRACTS = str(ROOT / 'foundation/proposals/contracts-v2.json')
+CONTRACTS = str(ROOT / 'strategy/contracts.json')
 DOCTRINE_COMMANDS = {'cohere', 'pathology', 'decide'}
 PLAN = [  # command, parents
     ('frame', []), ('map', ['frame']), ('cause', ['frame', 'map']), ('focus', ['map']),
-    ('options', ['cause', 'frame', 'map']), ('react', ['options', 'map']), ('ach', ['frame']),
-    ('watch', ['options']), ('close', ['frame']), ('cohere', ['frame', 'cause', 'map']),
+    ('options', ['cause', 'frame', 'map']), ('react', ['options', 'map']), ('street', ['frame', 'map']), ('ach', ['frame']),
+    ('watch', ['options']), ('close', ['frame']), ('cohere', ['frame', 'cause', 'map', 'street']),
     ('pathology', ['frame', 'map']),
-    ('decide', ['frame', 'cohere', 'pathology', 'close', 'cause']),
+    ('nodal', ['frame', 'map', 'cause', 'focus', 'options', 'react', 'street', 'ach', 'watch', 'close', 'cohere',
+               'pathology']),
+    ('decide', ['frame', 'cohere', 'pathology', 'close', 'cause', 'nodal']),
 ]
 
 
@@ -39,9 +41,10 @@ def load(name):
 class Chain:
     """A temporary case directory with helpers to run commands in-process."""
 
-    def __init__(self):
+    def __init__(self, contracts=CONTRACTS):
         self.dir = Path(tempfile.mkdtemp(prefix='ante-chain-'))
         self.out = self.dir / 'out'
+        self.contracts = contracts
 
     def close(self):
         shutil.rmtree(self.dir, ignore_errors=True)
@@ -53,7 +56,7 @@ class Chain:
         for parent in parents:
             argv += ['--from', str(parent if isinstance(parent, Path) else self.out / f'{parent}.json')]
         if contracts and command in DOCTRINE_COMMANDS:
-            argv += ['--contracts', CONTRACTS]
+            argv += ['--contracts', contracts if isinstance(contracts, str) else self.contracts]
         if at:
             argv += ['--at', at]
         stdout, stderr = stdio.StringIO(), stdio.StringIO()
@@ -93,6 +96,18 @@ class FullChain(Base):
         self.assertEqual('PROCEED_WITH_CONDITIONS', decision['verdict'])
         self.assertIn('does not itself grant', decision['body']['authority'])
         self.assertTrue((self.chain.out / 'decide.md').read_text().startswith('# ante decide'))
+
+    def test_decide_freezes_what_was_known(self):
+        from ante.constructs import snapshot
+        self.chain.build()
+        decision = self.chain.artefact('decide')
+        frozen = snapshot.verify(decision['body']['snapshot'])
+        parents = {p['command'] for p in frozen['parents']}
+        self.assertTrue({'frame', 'cohere', 'pathology', 'close'} <= parents)
+        self.assertEqual(decision['body']['expectations'], frozen['expectations'])
+        known = {(c['from'], c['id']) for c in frozen['claims_known']}
+        cohere = self.chain.artefact('cohere')
+        self.assertTrue({('cohere', c['id']) for c in cohere['claims']} <= known)
 
     def test_same_input_same_at_same_bytes(self):
         first = self.chain.run('frame', load('frame'), out=self.chain.dir / 'a')
@@ -230,7 +245,7 @@ class Coherence(Base):
         doc = load('cohere')
         doc['tests']['interactive'] = {'status': 'NOT_APPLICABLE', 'reason': 'no adaptive actor after checking',
                                        'evidence': [], 'finding': None}
-        self.assertEqual(0, self.chain.run('cohere', doc, ['frame', 'cause', 'map'])[0])
+        self.assertEqual(0, self.chain.run('cohere', doc, ['frame', 'cause', 'map', 'street'])[0])
 
     def test_a_failed_test_is_fatal_and_removes_proceed(self):
         doc = load('cohere')
@@ -238,14 +253,27 @@ class Coherence(Base):
                                       'finding': {'class': 'ACCEPTED_RISK', 'owner': 'x', 'reason': 'y'}}
         self.rejects('cohere', doc, 'FAIL_NOT_FATAL')
         doc['tests']['conversion']['finding'] = {'class': 'FATAL_DEFECT', 'reason': 'reserve double-counted'}
-        self.assertEqual(0, self.chain.run('cohere', doc, ['frame', 'cause', 'map'])[0])
+        self.assertEqual(0, self.chain.run('cohere', doc, ['frame', 'cause', 'map', 'street'])[0])
         self.assertEqual(['REDESIGN', 'REJECT'], self.chain.artefact('cohere')['body']['admissible_verdicts'])
 
     def test_pending_evidence_caps_at_hold(self):
         doc = load('cohere')
         doc['tests']['causal']['finding'] = {'class': 'PENDING_EVIDENCE', 'trigger': 'booking forecast confirmed'}
-        self.assertEqual(0, self.chain.run('cohere', doc, ['frame', 'cause', 'map'])[0])
+        self.assertEqual(0, self.chain.run('cohere', doc, ['frame', 'cause', 'map', 'street'])[0])
         self.assertEqual('HOLD', self.chain.artefact('cohere')['body']['admissible_verdicts'][0])
+
+    def test_not_applicable_needs_a_reason_and_never_counts_as_pass(self):
+        doc = load('cohere')
+        doc['tests']['legitimacy'] = {'status': 'NOT_APPLICABLE', 'reason': 'n/a', 'evidence': [], 'finding': None}
+        self.rejects('cohere', doc, 'UNREASONED_RESULT')
+        doc['tests']['legitimacy']['reason'] = 'no third party holds authority over the shared instrument'
+        code, _, err = self.chain.run('cohere', doc, ['frame', 'cause', 'map', 'street'], out=self.chain.dir / 'na')
+        self.assertEqual(0, code, err)
+        body = json.loads((self.chain.dir / 'na/cohere.json').read_text())['body']
+        self.assertEqual(['legitimacy'], body['not_applicable'])
+        self.assertNotIn('legitimacy', body['passed'])
+        self.assertEqual(1, body['status_counts']['NOT_APPLICABLE'])
+        self.assertEqual('Política / Political-purpose', body['names']['purpose'])
 
     def test_every_test_must_be_answered(self):
         doc = load('cohere')
@@ -253,7 +281,11 @@ class Coherence(Base):
         self.rejects('cohere', doc, 'TEST_NOT_ANSWERED')
 
     def test_without_doctrine_tables_the_command_refuses(self):
-        status, _, err = self.chain.run('cohere', load('cohere'), ['frame', 'cause', 'map'], contracts=False,
+        stripped = json.loads(Path(CONTRACTS).read_text())
+        del stripped['coherence_tests']
+        path = self.chain.dir / 'stripped-contracts.json'
+        path.write_text(json.dumps(stripped))
+        status, _, err = self.chain.run('cohere', load('cohere'), ['frame', 'cause', 'map'], contracts=str(path),
                                         out=self.chain.dir / 'x')
         self.assertEqual(2, status)
         self.assertIn('D-004', err)
@@ -288,8 +320,8 @@ class Pathologies(Base):
 class Decision(Base):
     def setUp(self):
         super().setUp()
-        self.chain.build('pathology')
-        self.parents = ['frame', 'cohere', 'pathology', 'close', 'cause']
+        self.chain.build('nodal')
+        self.parents = ['frame', 'cohere', 'pathology', 'close', 'cause', 'nodal']
 
     def decide(self, **changes):
         doc = load('decide')
@@ -309,22 +341,60 @@ class Decision(Base):
         doc = load('cohere')
         doc['tests']['conversion'] = {'status': 'FAIL', 'reason': 'reserve double-counted', 'evidence': ['cap-100'],
                                       'finding': {'class': 'FATAL_DEFECT', 'reason': 'reserve double-counted'}}
-        self.chain.run('cohere', doc, ['frame', 'cause', 'map'])
+        self.chain.run('cohere', doc, ['frame', 'cause', 'map', 'street'])
         self.rejects('decide', self.decide(), 'VERDICT_NOT_ADMISSIBLE', self.parents)
 
-    def test_independent_review_and_clean_sweep_allow_proceed(self):
+    def clean_review(self):
         cohere = load('cohere')
         cohere['independence_level'] = 'INDEPENDENT_OPERATOR'
         cohere['tests']['causal'] = {'status': 'PASS', 'reason': 'slack confirmed', 'evidence': ['slack-20'],
                                      'finding': None}
-        self.assertEqual(0, self.chain.run('cohere', cohere, ['frame', 'cause', 'map'])[0])
+        self.assertEqual(0, self.chain.run('cohere', cohere, ['frame', 'cause', 'map', 'street'])[0])
         sweep = load('pathology')
         sweep['pathologies']['metric_substitution'] = {'status': 'NOT_DETECTED', 'evidence': [],
                                                        'false_positive_check': 'n/a', 'note': 'deadline documents required'}
         self.assertEqual(0, self.chain.run('pathology', sweep, ['frame', 'map'])[0])
-        code, _, err = self.chain.run('decide', self.decide(verdict='PROCEED', conditions=[]), self.parents)
+
+    def proceed(self, accepted=('a-inflates', 'slack-20')):
+        doc = self.decide(verdict='PROCEED', conditions=[])
+        doc['accepted_risks'] = [{'claim': c, 'accepted_by': 'Consortium council (synthetic)',
+                                  'statement': f'{c} accepted unverified for this cycle'} for c in accepted]
+        return doc
+
+    def test_independent_review_clean_sweep_and_named_risks_allow_proceed(self):
+        self.clean_review()
+        code, _, err = self.chain.run('decide', self.proceed(), self.parents)
         self.assertEqual(0, code, err)
-        self.assertEqual('PROCEED', self.chain.artefact('decide')['verdict'])
+        decision = self.chain.artefact('decide')
+        self.assertEqual('PROCEED', decision['verdict'])
+        self.assertEqual(['a-inflates', 'slack-20'], decision['body']['load_bearing_claims']['blocking'])
+
+    def test_proceed_needs_nodal(self):
+        self.clean_review()
+        self.rejects('decide', self.proceed(), 'NODAL_NOT_RUN', [p for p in self.parents if p != 'nodal'])
+
+    def test_a_load_bearing_assumption_blocks_proceed_until_accepted_or_corroborated(self):
+        self.clean_review()
+        err = self.rejects('decide', self.proceed(accepted=('a-inflates',)), 'LOAD_BEARING_UNVERIFIED', self.parents)
+        self.assertIn('slack-20', err)
+        corroborated = {'at': '2026-10-28T13:30:00Z', 'claims': [{
+            'id': 'slack-20', 'text': 'Twenty requested hours can move to weeks 45-46 without breaking a deadline.',
+            'status': 'EVIDENCE', 'source': {'ref': 'pi-confirmations-w44', 'origin': 'external'},
+            'date': '2026-10-28', 'limit': 'Synthetic didactic data.'}]}
+        self.assertEqual(0, self.chain.run('nodal', corroborated, dict(PLAN)['nodal'])[0])
+        self.assertNotIn('slack-20', self.chain.artefact('nodal')['body']['blocking'])
+        code, _, err = self.chain.run('decide', self.proceed(accepted=('a-inflates',)), self.parents)
+        self.assertEqual(0, code, err)
+
+    def test_nodal_of_another_frame_breaks_the_lineage(self):
+        other = load('frame')
+        other['claims'][0]['text'] += ' (re-stated)'
+        self.chain.run('frame', other, out=self.chain.dir / 'f2')
+        self.chain.run('nodal', load('nodal'), [self.chain.dir / 'f2/frame.json'], out=self.chain.dir / 'n2')
+        parents = [p for p in self.parents if p != 'nodal'] + [self.chain.dir / 'n2/nodal.json']
+        status, _, err = self.chain.run('decide', self.decide(), parents, out=self.chain.dir / 'x')
+        self.assertEqual(3, status, err)
+
 
     def test_dissent_or_its_solicitation_is_recorded(self):
         self.rejects('decide', self.decide(dissent=[], dissent_solicited_from=[]), 'DISSENT_NOT_SOLICITED',
@@ -346,6 +416,74 @@ class Decision(Base):
         with contextlib.redirect_stderr(stdio.StringIO()) as err:
             self.assertEqual(3, cli.main(argv))
         self.assertIn('another doctrine', err.getvalue())
+
+
+class Street(Base):
+    def setUp(self):
+        super().setUp()
+        self.chain.build('close')
+
+    def test_every_instrument_needs_a_misuse_scenario_with_an_external_indicator(self):
+        doc = load('street')
+        doc['instruments'][1]['misuse'] = []
+        self.rejects('street', doc, 'INSTRUMENT_WITHOUT_MISUSE')
+        doc = load('street')
+        doc['instruments'][0]['misuse'][0]['indicator'] = 'Share of hours declared urgent'
+        self.rejects('street', doc, 'CIRCULAR_INDICATOR')
+        doc = load('street')
+        doc['instruments'][0]['misuse'][0]['actor'] = 'uni-z'
+        self.rejects('street', doc, 'UNKNOWN_ACTOR')
+
+    def test_a_plan_metric_without_misuse_analysis_cannot_pass_the_interactive_test(self):
+        code, _, err = self.chain.run('cohere', load('cohere'), ['frame', 'cause', 'map'])
+        self.assertEqual(0, code, err)
+        cohere = self.chain.artefact('cohere')
+        interactive = cohere['body']['tests']['interactive']
+        self.assertEqual('CONDITIONAL', interactive['status'])
+        self.assertEqual('PENDING_EVIDENCE', interactive['finding']['class'])
+        self.assertNotIn('PROCEED_WITH_CONDITIONS', cohere['body']['admissible_verdicts'])
+        self.assertEqual(['MISUSE_ANALYSIS_MISSING'], [f['code'] for f in cohere['findings']])
+
+    def test_partial_analysis_still_conditions_the_test(self):
+        doc = load('street')
+        doc['instruments'] = doc['instruments'][:1]
+        self.assertEqual(0, self.chain.run('street', doc, ['frame', 'map'])[0])
+        self.assertEqual(0, self.chain.run('cohere', load('cohere'), ['frame', 'cause', 'map', 'street'])[0])
+        body = self.chain.artefact('cohere')['body']
+        self.assertEqual(['essential demand per cycle'], body['misuse_analysis']['uncovered_metrics'])
+        self.assertEqual('CONDITIONAL', body['tests']['interactive']['status'])
+
+    def test_full_analysis_leaves_the_review_as_written(self):
+        self.assertEqual(0, self.chain.run('cohere', load('cohere'), ['frame', 'cause', 'map', 'street'])[0])
+        body = self.chain.artefact('cohere')['body']
+        self.assertEqual([], body['misuse_analysis']['uncovered_metrics'])
+        self.assertEqual('PASS', body['tests']['interactive']['status'])
+
+
+class Nodal(Base):
+    def test_load_counts_citing_sites_outside_the_stating_artefact(self):
+        self.chain.build('nodal')
+        body = self.chain.artefact('nodal')['body']
+        rows = {r['id']: r for r in body['load_bearing_claims']}
+        self.assertEqual('medium', body['irreversibility'])
+        self.assertEqual(3, rows['slack-20']['load'])
+        self.assertTrue(all(not site.startswith('cause:') for site in rows['slack-20']['cited_by']))
+        self.assertEqual(('corroborate', True), (rows['slack-20']['required_verification'], rows['slack-20']['blocking']))
+        self.assertFalse(rows['demand-110']['blocking'], 'evidence carries load without blocking')
+
+    def test_irreversibility_raises_the_required_verification(self):
+        from ante.strategy.commands import nodal
+        options = {'command': 'options', 'at': '2026-10-28T10:00:00Z', 'artifact_sha256': 'o', 'claims': [],
+                   'body': {'options': [{'viable': True, 'reversibility': 'high', 'assumptions': ['x']}]}}
+        stated = {'command': 'cause', 'at': '2026-10-28T09:00:00Z', 'artifact_sha256': 'c', 'body': {},
+                  'claims': [{'id': 'x', 'status': 'ASSUMPTION', 'source': {'origin': 'owner'}}]}
+        cites = {'command': 'cohere', 'at': '2026-10-28T11:00:00Z', 'artifact_sha256': 'h', 'claims': [],
+                 'body': {'tests': {'causal': {'evidence': ['x']}}}}
+        high = nodal.assess([stated, options, cites])
+        self.assertEqual(([], 'check'), (high['blocking'], high['load_bearing_claims'][0]['required_verification']))
+        options['body']['options'][0]['reversibility'] = 'low'
+        low = nodal.assess([stated, options, cites])
+        self.assertEqual(['x'], low['blocking'])
 
 
 class Lineage(Base):
@@ -411,7 +549,8 @@ class Claims(Base):
         return {'id': 'a-inflates', 'text': 'A inflated its requests in cycle 1.', 'status': 'EVIDENCE',
                 'source': {'ref': 'booking-audit-cycle-1', 'origin': 'external'}, 'date': '2026-11-10',
                 'limit': 'cycle 1 only', 'upgrade': {'observation': 'audit of A requests against deadline letters',
-                                                     'could_have_refuted': True, 'source': 'booking-audit-cycle-1',
+                                                     'could_have_refuted': True,
+                                                     'source': {'ref': 'booking-audit-cycle-1', 'origin': 'external'},
                                                      'date': '2026-11-10', **upgrade}}
 
     def test_attributed_intent_rises_only_through_a_refuting_observation(self):
@@ -421,13 +560,31 @@ class Claims(Base):
         self.rejects('cause', self.cause_with(self.upgraded(could_have_refuted=False)), 'INTENT_UPGRADE_UNFALSIFIABLE')
 
     def test_repetition_of_the_same_source_is_not_observation(self):
-        claim = self.upgraded(source='council-minutes-2026-09')
+        claim = self.upgraded(source={'ref': 'council-minutes-2026-09', 'origin': 'external'})
         self.rejects('cause', self.cause_with(claim), 'INTENT_UPGRADE_BY_REPETITION')
+
+    def test_the_upgrading_observation_cannot_be_system_output(self):
+        claim = self.upgraded(source={'ref': 'ante-street-analysis', 'origin': 'system'})
+        self.rejects('cause', self.cause_with(claim), 'SELF_CORROBORATION')
+
+    def test_restating_one_step_removed_does_not_launder_attributed_intent(self):
+        restated = {'id': 'a-inflates', 'text': 'A may be inflating its requests.', 'status': 'HYPOTHESIS',
+                    'source': {'ref': 'council-minutes-2026-09', 'origin': 'owner'}, 'date': '2026-10-27',
+                    'limit': 'restated'}
+        code, _, err = self.chain.run('cause', self.cause_with(restated), ['frame', 'map'])
+        self.assertEqual(0, code, err)
+        history = self.chain.artefact('cause')['claim_history']['a-inflates']
+        self.assertEqual(['ATTRIBUTED_INTENT', 'HYPOTHESIS'], [e['status'] for e in history])
+        options = load('options')
+        laundered = dict(self.upgraded(), date='2026-10-27')
+        del laundered['upgrade']
+        options['claims'] = [laundered]
+        self.rejects('options', options, 'INTENT_UPGRADE_WITHOUT_OBSERVATION', ['cause', 'frame'])
 
     def test_a_proper_upgrade_is_accepted(self):
         claim = self.upgraded()
         claim['source'] = {'ref': 'booking-audit-cycle-1', 'origin': 'external'}
-        claim['upgrade']['source'] = 'deadline-letter-register'
+        claim['upgrade']['source'] = {'ref': 'deadline-letter-register', 'origin': 'external'}
         code, _, err = self.chain.run('cause', self.cause_with(claim), ['frame', 'map'], at='2026-11-11T00:00:00Z')
         self.assertEqual(0, code, err)
 

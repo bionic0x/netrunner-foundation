@@ -1,0 +1,117 @@
+{
+  "artifact_sha256": "9b779a6783be2bf0c8bf27261f468b6ccd17c599aa9c08171a272f6c5706b9a4",
+  "at": "2026-10-28T11:45:00Z",
+  "body": {
+    "covered_metrics": [
+      "essential demand per cycle",
+      "share of hours declared urgent"
+    ],
+    "misuse_analysis": [
+      {
+        "id": "urgent-share",
+        "kind": "metric",
+        "misuse": [
+          {
+            "actor": "uni-a",
+            "countermeasure": "an urgency label counts only with the funder's deadline letter",
+            "effect_on_purpose": "urgent hours crowd out the requests the label was meant to protect",
+            "indicator": "urgent requests without a deadline document attached",
+            "reuse": "relabel ordinary requests as urgent so they jump the queue"
+          },
+          {
+            "actor": "council",
+            "countermeasure": "report missed deadlines beside the share every cycle",
+            "effect_on_purpose": "real deadlines are missed while the indicator looks healthy",
+            "indicator": "missed external deadlines on requests that were refused the urgent label",
+            "reuse": "push the share down by refusing urgent labels to show the metric improving"
+          }
+        ],
+        "purpose": "protect hours with a real external deadline",
+        "statement": "share of hours declared urgent"
+      },
+      {
+        "id": "essential-demand",
+        "kind": "metric",
+        "misuse": [
+          {
+            "actor": "research-teams",
+            "countermeasure": "aggregate essential demand by project, not by booking",
+            "effect_on_purpose": "the capacity trigger fires late because demand looks fragmented",
+            "indicator": "bookings by one team within the same week whose sum exceeds its declared need",
+            "reuse": "split one essential booking into several smaller ones to look less dominant"
+          }
+        ],
+        "purpose": "trigger a capacity decision before coordination stops helping",
+        "statement": "essential demand per cycle"
+      },
+      {
+        "id": "deadline-document-rule",
+        "kind": "rule",
+        "misuse": [
+          {
+            "actor": "uni-a",
+            "countermeasure": "letters name the project and the date; the coordinator samples them each cycle",
+            "effect_on_purpose": "the document becomes a formality and inflation resumes",
+            "indicator": "deadline letters reused across unrelated projects",
+            "reuse": "obtain generic deadline letters that cover every request"
+          }
+        ],
+        "purpose": "remove the incentive to inflate urgency",
+        "statement": "urgency labels require a deadline document"
+      }
+    ]
+  },
+  "case_id": "lab-consortium",
+  "claim_history": {
+    "a-inflates": [
+      {
+        "command": "map",
+        "origin": "external",
+        "ref": "council-minutes-2026-09",
+        "status": "ATTRIBUTED_INTENT"
+      }
+    ],
+    "cap-100": [
+      {
+        "command": "frame",
+        "origin": "external",
+        "ref": "lab-maintenance-log-w43",
+        "status": "EVIDENCE"
+      }
+    ],
+    "demand-110": [
+      {
+        "command": "frame",
+        "origin": "external",
+        "ref": "reservation-export-2026-10-21",
+        "status": "EVIDENCE"
+      }
+    ],
+    "priority-50": [
+      {
+        "command": "frame",
+        "origin": "external",
+        "ref": "funder-deadline-letters",
+        "status": "EVIDENCE"
+      }
+    ]
+  },
+  "claims": [],
+  "command": "street",
+  "findings": [],
+  "independence_level": null,
+  "input_sha256": "971efd81e5cfa6f25f14e5944e21c86c482864888797226b09de3c262715cf3b",
+  "next_decision": "Carry each manipulation indicator into watch; cohere checks coverage.",
+  "parents": [
+    {
+      "artifact_sha256": "d6e55f031b0bbfb954dccf850690412029f568e3a1ccdd8b962aed6cff9d2574",
+      "command": "frame"
+    },
+    {
+      "artifact_sha256": "a4e9a714ee77a69296f58be4412b2b58df8703d46d4b011d8ded18526afac0d1",
+      "command": "map"
+    }
+  ],
+  "schema_version": 2,
+  "verdict": null
+}

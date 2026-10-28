@@ -8,28 +8,35 @@ gets a status and, when it is not a clean pass, a triage class:
 
     FAIL          → FATAL_DEFECT
     CONDITIONAL   → ACCEPTED_RISK (owner and reason) or PENDING_EVIDENCE (date or trigger)
-    NOT_APPLICABLE→ a stated reason; never allowed where the doctrine table forbids it
-                    (Epistemic and Exit)
+    NOT_APPLICABLE→ a stated reason; never counts as PASS (``passed`` lists only PASS);
+                    never allowed where the doctrine table forbids it (Epistemic and Exit)
 
 Nothing is summed. The artefact states which decision outputs remain admissible:
 one fatal defect removes PROCEED and PROCEED_WITH_CONDITIONS regardless of how
 many tests pass; pending evidence removes them too (invariant 1: with incomplete
 evidence the output is HOLD).
 
-The tests come from the ``coherence_tests`` table of ``strategy/contracts.json``;
-without that table the command refuses to run (decision D-004).
+The tests come from the ``coherence_tests`` table of ``strategy/contracts.json``
+(decision D-004); ids are stable and the canonical name of each test is recorded
+in ``names``. Without that table the command refuses to run.
 
 Input fields::
 
     tests  {test id: {status, reason, evidence: [claim id],
                       finding: {class, owner?, reason?, due?, trigger?} | null}}
-    plan_metrics  [text]   metrics the plan relies on (checked by misuse analysis)
+    plan_metrics  [text]   metrics the plan relies on
+
+Misuse analysis (``ante street``): a plan metric that no ``street`` artefact in
+the lineage analyses keeps the interactive test from passing — a ``PASS`` is
+recorded as ``CONDITIONAL`` with pending evidence (trigger: the missing
+analysis), which leaves ``HOLD``, ``REDESIGN`` or ``REJECT``.
 """
 from __future__ import annotations
 
 from ante.core import canon, schema
 from ante.core import time as ante_time
 from ante.strategy.base import Command, Result, nonplaceholder
+from ante.strategy.commands.street import covers
 
 STATUSES = ('PASS', 'CONDITIONAL', 'FAIL', 'NOT_APPLICABLE')
 CLASSES = ('FATAL_DEFECT', 'ACCEPTED_RISK', 'PENDING_EVIDENCE')
@@ -99,10 +106,29 @@ def run(doc, ctx):
     metrics = schema.array(doc['plan_metrics'], 'plan_metrics')
     for index, metric in enumerate(metrics):
         nonplaceholder(metric, f'plan_metrics[{index}]', findings)
+    street = ctx.lineage.one('street')
+    uncovered = [m for m in metrics if isinstance(m, str) and not covers(street, m)]
+    interactive = tests.get('interactive')
+    if uncovered and isinstance(interactive, dict):
+        trigger = 'ante street misuse analysis of: ' + '; '.join(uncovered)
+        findings.warn('MISUSE_ANALYSIS_MISSING', 'tests.interactive',
+                      'plan metrics without misuse analysis: ' + '; '.join(uncovered))
+        if interactive.get('status') == 'PASS':
+            tests = dict(tests, interactive={
+                'status': 'CONDITIONAL', 'evidence': interactive['evidence'],
+                'reason': f"{interactive['reason']} [recorded as CONDITIONAL: no misuse analysis of the plan's metrics]",
+                'finding': {'class': 'PENDING_EVIDENCE', 'trigger': trigger}})
+            classes.add('PENDING_EVIDENCE')
 
+    statuses = {test_id: entry.get('status') for test_id, entry in tests.items() if isinstance(entry, dict)}
     body = {
         'tests': tests,
+        'names': {test_id: by_id[test_id]['name'] for test_id in tests if test_id in by_id and 'name' in by_id[test_id]},
+        'passed': sorted(t for t, status in statuses.items() if status == 'PASS'),
+        'not_applicable': sorted(t for t, status in statuses.items() if status == 'NOT_APPLICABLE'),
+        'status_counts': {status: sum(1 for value in statuses.values() if value == status) for status in STATUSES},
         'plan_metrics': metrics,
+        'misuse_analysis': {'street': street['artifact_sha256'] if street else None, 'uncovered_metrics': uncovered},
         'doctrine_sha256': canon.digest(ctx.doctrine.raw),
         'classes': sorted(classes),
         'admissible_verdicts': admissible(classes),

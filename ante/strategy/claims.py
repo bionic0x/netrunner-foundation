@@ -4,10 +4,10 @@ A claim is ``{id, text, status, source, date, limit}`` plus, when needed:
 
     intent    {capability, will}   required for ATTRIBUTED_INTENT: keeps what the
                                    actor *can* do apart from what it is said to *want*
-    upgrade   {observation, could_have_refuted, source, date}
-                                   required when a claim id that an upstream
-                                   artefact recorded as ATTRIBUTED_INTENT becomes
-                                   EVIDENCE here
+    upgrade   {observation, could_have_refuted, source: {ref, origin}, date}
+                                   required when a claim id that any ancestor
+                                   recorded as ATTRIBUTED_INTENT becomes EVIDENCE
+                                   here; the observation's origin cannot be system
     expires   ISO date or time after which the claim must be renewed
 
 ``source`` is ``{ref, origin}`` with ``origin`` one of:
@@ -22,8 +22,10 @@ Rules enforced here:
   be ``system``: the system's own output never corroborates itself;
 - ``ATTRIBUTED_INTENT`` separates capability from will;
 - ``ATTRIBUTED_INTENT`` rises to ``EVIDENCE`` only through an observation that
-  could have refuted it, from a source the claim did not already rest on —
-  repetition of the same source is not observation.
+  could have refuted it, from a non-system source the claim never rested on —
+  repetition of the same source is not observation. The rule reads the whole
+  ``claim_history`` of the lineage, so restating the id as ``HYPOTHESIS`` in one
+  artefact and as ``EVIDENCE`` in a later one does not bypass it.
 """
 from __future__ import annotations
 
@@ -43,8 +45,23 @@ def placeholder(value: Any) -> bool:
     return not isinstance(value, str) or value.strip().casefold() in PLACEHOLDERS
 
 
+def history_entry(claim: dict, command: str) -> dict:
+    source = claim['source'] if isinstance(claim['source'], dict) else {}
+    return {'status': claim['status'], 'ref': source.get('ref'), 'origin': source.get('origin'), 'command': command}
+
+
+def extend_history(history: dict[str, list[dict]], claims: list[dict], command: str) -> dict[str, list[dict]]:
+    out = {claim_id: list(entries) for claim_id, entries in history.items()}
+    for claim in claims:
+        entry = history_entry(claim, command)
+        if entry not in out.setdefault(claim['id'], []):
+            out[claim['id']].append(entry)
+    return {claim_id: out[claim_id] for claim_id in sorted(out)}
+
+
 def validate(claims: Any, states: tuple[str, ...], prior: dict[str, list[dict]],
              findings: Findings) -> list[dict]:
+    """``prior`` is the lineage's claim history: {id: [{status, ref, origin, command}]}."""
     schema.array(claims, 'claims')
     ids = set()
     for index, claim in enumerate(claims):
@@ -95,14 +112,19 @@ def _check_transition(claim: dict, earlier: list[dict], path: str, findings: Fin
                        'attributed intent becomes evidence only through an observation that could have refuted it')
         return
     schema.exact_keys(upgrade, ('observation', 'could_have_refuted', 'source', 'date'), f'{path}.upgrade')
+    source = schema.exact_keys(upgrade['source'], ('ref', 'origin'), f'{path}.upgrade.source')
+    schema.enum(source['origin'], ORIGINS, f'{path}.upgrade.source.origin')
+    if source['origin'] == 'system':
+        findings.error('SELF_CORROBORATION', f'{path}.upgrade.source.origin',
+                       'a system-produced observation cannot refute or confirm an attribution')
     if placeholder(upgrade['observation']):
         findings.error('INTENT_UPGRADE_WITHOUT_OBSERVATION', f'{path}.upgrade.observation', 'observation required')
     if upgrade['could_have_refuted'] is not True:
         findings.error('INTENT_UPGRADE_UNFALSIFIABLE', f'{path}.upgrade.could_have_refuted',
                        'the observation must have been able to refute the attribution')
     _date(upgrade['date'], f'{path}.upgrade.date')
-    used = {_ref(e['source']) for e in earlier} | {_ref(claim['source'])}
-    if placeholder(upgrade['source']) or upgrade['source'] in used:
+    used = {e['ref'] for e in earlier} | {_ref(claim['source'])}
+    if placeholder(source['ref']) or source['ref'] in used:
         findings.error('INTENT_UPGRADE_BY_REPETITION', f'{path}.upgrade.source',
                        'the upgrading observation repeats a source the claim already rested on')
 
