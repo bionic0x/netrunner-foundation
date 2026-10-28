@@ -110,7 +110,6 @@ seen_slugs = set()
 total_refs = 0
 total_artifacts = 0
 contracts = 0
-chains = 0
 
 for rb in runbooks:
     if not isinstance(rb, dict):
@@ -238,7 +237,6 @@ for rb in runbooks:
     elif len(set(commands)) != len(commands):
         errors.append(f"runbook '{rid}': strategy_commands repeats a command")
     else:
-        chains += 1
         material = rb.get("material", True)
         if material is not True and not (isinstance(material, str) and material.strip().casefold() not in PLACEHOLDERS):
             errors.append(f"runbook '{rid}': material must be true or a stated reason why it is not")
@@ -273,7 +271,6 @@ if errors:
 print(
     f"PASSED: {len(runbooks)} runbooks, {total_refs} agent slug references, "
     f"{total_artifacts} required artifacts, {contracts}/{len(runbooks)} termination contracts "
-    f"— references and required metadata are structurally valid; closure adequacy requires human review. "
-    f"{chains}/{len(runbooks)} strategy command chains declared."
+    f"— references and required metadata are structurally valid; closure adequacy requires human review."
 )
 PYEOF

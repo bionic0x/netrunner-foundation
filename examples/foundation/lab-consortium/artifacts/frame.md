@@ -6,7 +6,7 @@
 | Verdict | — |
 | Independence | — |
 | Input SHA-256 | `dcbf016f1dd916afed380643e0e8833035cd77a936643c2b0c1d4f4398ba243b` |
-| Artefact SHA-256 | `f3f11099665d17b689e605f8d9cf131a04e864ece52a0137d9187b5df392b28b` |
+| Artefact SHA-256 | `d6e55f031b0bbfb954dccf850690412029f568e3a1ccdd8b962aed6cff9d2574` |
 
 ## Claims
 

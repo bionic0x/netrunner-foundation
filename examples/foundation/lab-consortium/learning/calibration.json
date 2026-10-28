@@ -17,7 +17,7 @@
     }
   ],
   "kind": "calibration",
-  "ledger_head": "1f197fa94d24c2d5b6f05e96f65eca7fd8d72c64199598ed1eeb15699ed57ec6",
+  "ledger_head": "e73755d69c289d3b195e76609b85382f5c0312bcd5d722ee45ef6f06e93bfcc7",
   "method": "Brier score on the midpoint of each declared interval; CONFIRMED = 1, REFUTED = 0.",
   "min_sample": 30,
   "schema_version": 1

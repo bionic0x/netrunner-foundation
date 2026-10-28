@@ -25,11 +25,8 @@
     "support/**",
     "testing/**",
     "strategy/vectors.json",
-    "strategy/runbooks/**",
-    "strategy/playbooks/**",
     "ante/nexus/**",
-    "ante/registry/**",
-    "ante/strategy/commands/*.py"
+    "ante/registry/**"
   ],
   "protected": [
     "foundation/develop-policy.json",
@@ -43,13 +40,11 @@
     "ante/learn/**",
     "ante/_compat.py",
     "ante/paths.py",
-    "ante/strategy/artifact.py",
-    "ante/strategy/base.py",
-    "ante/strategy/claims.py",
-    "ante/strategy/commands/cohere.py",
-    "ante/strategy/commands/decide.py",
-    "ante/strategy/commands/pathology.py",
-    "ante/strategy/commands/selftest.py",
+    "ante/strategy/**",
+    "ante/cli.py",
+    "ante/deck.py",
+    "ante/__init__.py",
+    "ante/__main__.py",
     "tests/**",
     "strategy/*.md",
     "strategy/challenger-pairs.json",
@@ -60,5 +55,7 @@
     "strategy/unified-agency-sources.json",
     "scripts/**",
     ".github/**"
-  ]
+  ],
+  "finding_min_sample": 30,
+  "pattern_semantics": "fnmatch, as in nexus-improve.py: \"*\" also matches \"/\", so \"strategy/*.md\" covers every Markdown file under strategy/."
 }

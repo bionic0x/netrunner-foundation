@@ -2,8 +2,8 @@
 
 Each test starts from the synthetic laboratory-consortium inputs
 (examples/foundation/lab-consortium/input), changes one thing, and checks the
-exit status and the finding code. Doctrine tables come from the D-004 proposal
-until strategy/contracts.json carries them.
+exit status and the finding code. Doctrine tables come from strategy/contracts.json
+(decision D-004, accepted).
 """
 import contextlib
 import copy
@@ -21,7 +21,7 @@ sys.path.insert(0, str(ROOT))
 from ante import cli  # noqa: E402
 
 INPUTS = ROOT / 'examples/foundation/lab-consortium/input'
-CONTRACTS = str(ROOT / 'foundation/proposals/contracts-v2.json')
+CONTRACTS = str(ROOT / 'strategy/contracts.json')
 DOCTRINE_COMMANDS = {'cohere', 'pathology', 'decide'}
 PLAN = [  # command, parents
     ('frame', []), ('map', ['frame']), ('cause', ['frame', 'map']), ('focus', ['map']),
@@ -41,9 +41,10 @@ def load(name):
 class Chain:
     """A temporary case directory with helpers to run commands in-process."""
 
-    def __init__(self):
+    def __init__(self, contracts=CONTRACTS):
         self.dir = Path(tempfile.mkdtemp(prefix='ante-chain-'))
         self.out = self.dir / 'out'
+        self.contracts = contracts
 
     def close(self):
         shutil.rmtree(self.dir, ignore_errors=True)
@@ -55,7 +56,7 @@ class Chain:
         for parent in parents:
             argv += ['--from', str(parent if isinstance(parent, Path) else self.out / f'{parent}.json')]
         if contracts and command in DOCTRINE_COMMANDS:
-            argv += ['--contracts', CONTRACTS]
+            argv += ['--contracts', contracts if isinstance(contracts, str) else self.contracts]
         if at:
             argv += ['--at', at]
         stdout, stderr = stdio.StringIO(), stdio.StringIO()
@@ -261,13 +262,30 @@ class Coherence(Base):
         self.assertEqual(0, self.chain.run('cohere', doc, ['frame', 'cause', 'map', 'street'])[0])
         self.assertEqual('HOLD', self.chain.artefact('cohere')['body']['admissible_verdicts'][0])
 
+    def test_not_applicable_needs_a_reason_and_never_counts_as_pass(self):
+        doc = load('cohere')
+        doc['tests']['legitimacy'] = {'status': 'NOT_APPLICABLE', 'reason': 'n/a', 'evidence': [], 'finding': None}
+        self.rejects('cohere', doc, 'UNREASONED_RESULT')
+        doc['tests']['legitimacy']['reason'] = 'no third party holds authority over the shared instrument'
+        code, _, err = self.chain.run('cohere', doc, ['frame', 'cause', 'map', 'street'], out=self.chain.dir / 'na')
+        self.assertEqual(0, code, err)
+        body = json.loads((self.chain.dir / 'na/cohere.json').read_text())['body']
+        self.assertEqual(['legitimacy'], body['not_applicable'])
+        self.assertNotIn('legitimacy', body['passed'])
+        self.assertEqual(1, body['status_counts']['NOT_APPLICABLE'])
+        self.assertEqual('Política / Political-purpose', body['names']['purpose'])
+
     def test_every_test_must_be_answered(self):
         doc = load('cohere')
         del doc['tests']['legitimacy']
         self.rejects('cohere', doc, 'TEST_NOT_ANSWERED')
 
     def test_without_doctrine_tables_the_command_refuses(self):
-        status, _, err = self.chain.run('cohere', load('cohere'), ['frame', 'cause', 'map'], contracts=False,
+        stripped = json.loads(Path(CONTRACTS).read_text())
+        del stripped['coherence_tests']
+        path = self.chain.dir / 'stripped-contracts.json'
+        path.write_text(json.dumps(stripped))
+        status, _, err = self.chain.run('cohere', load('cohere'), ['frame', 'cause', 'map'], contracts=str(path),
                                         out=self.chain.dir / 'x')
         self.assertEqual(2, status)
         self.assertIn('D-004', err)
@@ -531,7 +549,8 @@ class Claims(Base):
         return {'id': 'a-inflates', 'text': 'A inflated its requests in cycle 1.', 'status': 'EVIDENCE',
                 'source': {'ref': 'booking-audit-cycle-1', 'origin': 'external'}, 'date': '2026-11-10',
                 'limit': 'cycle 1 only', 'upgrade': {'observation': 'audit of A requests against deadline letters',
-                                                     'could_have_refuted': True, 'source': 'booking-audit-cycle-1',
+                                                     'could_have_refuted': True,
+                                                     'source': {'ref': 'booking-audit-cycle-1', 'origin': 'external'},
                                                      'date': '2026-11-10', **upgrade}}
 
     def test_attributed_intent_rises_only_through_a_refuting_observation(self):
@@ -541,13 +560,31 @@ class Claims(Base):
         self.rejects('cause', self.cause_with(self.upgraded(could_have_refuted=False)), 'INTENT_UPGRADE_UNFALSIFIABLE')
 
     def test_repetition_of_the_same_source_is_not_observation(self):
-        claim = self.upgraded(source='council-minutes-2026-09')
+        claim = self.upgraded(source={'ref': 'council-minutes-2026-09', 'origin': 'external'})
         self.rejects('cause', self.cause_with(claim), 'INTENT_UPGRADE_BY_REPETITION')
+
+    def test_the_upgrading_observation_cannot_be_system_output(self):
+        claim = self.upgraded(source={'ref': 'ante-street-analysis', 'origin': 'system'})
+        self.rejects('cause', self.cause_with(claim), 'SELF_CORROBORATION')
+
+    def test_restating_one_step_removed_does_not_launder_attributed_intent(self):
+        restated = {'id': 'a-inflates', 'text': 'A may be inflating its requests.', 'status': 'HYPOTHESIS',
+                    'source': {'ref': 'council-minutes-2026-09', 'origin': 'owner'}, 'date': '2026-10-27',
+                    'limit': 'restated'}
+        code, _, err = self.chain.run('cause', self.cause_with(restated), ['frame', 'map'])
+        self.assertEqual(0, code, err)
+        history = self.chain.artefact('cause')['claim_history']['a-inflates']
+        self.assertEqual(['ATTRIBUTED_INTENT', 'HYPOTHESIS'], [e['status'] for e in history])
+        options = load('options')
+        laundered = dict(self.upgraded(), date='2026-10-27')
+        del laundered['upgrade']
+        options['claims'] = [laundered]
+        self.rejects('options', options, 'INTENT_UPGRADE_WITHOUT_OBSERVATION', ['cause', 'frame'])
 
     def test_a_proper_upgrade_is_accepted(self):
         claim = self.upgraded()
         claim['source'] = {'ref': 'booking-audit-cycle-1', 'origin': 'external'}
-        claim['upgrade']['source'] = 'deadline-letter-register'
+        claim['upgrade']['source'] = {'ref': 'deadline-letter-register', 'origin': 'external'}
         code, _, err = self.chain.run('cause', self.cause_with(claim), ['frame', 'map'], at='2026-11-11T00:00:00Z')
         self.assertEqual(0, code, err)
 

@@ -6,11 +6,11 @@
 | Verdict | — |
 | Independence | — |
 | Input SHA-256 | `8e9359fdf49309a71a052f7685a7547b1ac9f67684ad9ef8cfec232a1d1e968d` |
-| Artefact SHA-256 | `b21637d1efc77e244c2aab62bb67b04183105985e47b0c513b5b0d3aaaed2f14` |
+| Artefact SHA-256 | `a4e9a714ee77a69296f58be4412b2b58df8703d46d4b011d8ded18526afac0d1` |
 
 ## Lineage
 
-- frame `f3f11099665d17b689e605f8d9cf131a04e864ece52a0137d9187b5df392b28b`
+- frame `d6e55f031b0bbfb954dccf850690412029f568e3a1ccdd8b962aed6cff9d2574`
 
 ## Claims
 

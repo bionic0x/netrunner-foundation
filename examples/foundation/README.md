@@ -35,6 +35,6 @@ git diff --exit-code examples/foundation/lab-consortium # identical bytes: the c
 python3 scripts/ante deck --artifacts examples/foundation/lab-consortium/artifacts --plain
 ```
 
-The doctrine tables come from `foundation/proposals/contracts-v2.json` until the
-owner settles decision D-004. A complete chain is a record, not an
-authorisation to act.
+The doctrine tables (seven coherence tests, fourteen pathologies) come from
+`strategy/contracts.json`. A complete chain is a record, not an authorisation to
+act.

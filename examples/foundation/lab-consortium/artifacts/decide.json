@@ -1,5 +1,5 @@
 {
-  "artifact_sha256": "3d3d2610225b91b41e7396759783890597f99f038cb1167bc404b1db77145f2c",
+  "artifact_sha256": "62bfd287a645c1b546661d8c290b2caa599cd2251509d8440564a48e6d887b7d",
   "at": "2026-10-28T14:00:00Z",
   "body": {
     "admissible_verdicts": [
@@ -146,31 +146,31 @@
       "frozen_at": "2026-10-28T14:00:00Z",
       "parents": [
         {
-          "artifact_sha256": "2456016bc2caa97e0e59231577425b55f42c6179fa30b1bd2760e18cd339e927",
+          "artifact_sha256": "dbcd3f8552ac57d0fb012db9327e95752f3f253ba3b28829fd6e2bce64dd3b86",
           "command": "cause"
         },
         {
-          "artifact_sha256": "b5437d8d4c3692706913991c729d868c65a977e90bd6898cb8ae673e52489b8f",
+          "artifact_sha256": "b96ede0f4457d88a2b5c557fc20d2292657e063f355fc35db50e8e8d13f8e938",
           "command": "close"
         },
         {
-          "artifact_sha256": "5599a450119c14fcc49771fb679cb478ba739e6ce96cbd01bf50d18b660bebf9",
+          "artifact_sha256": "3dc4bdb4aca789ee4696dfe11778f9377e6ffe79a2544584402cb03f0036c3ef",
           "command": "cohere"
         },
         {
-          "artifact_sha256": "f3f11099665d17b689e605f8d9cf131a04e864ece52a0137d9187b5df392b28b",
+          "artifact_sha256": "d6e55f031b0bbfb954dccf850690412029f568e3a1ccdd8b962aed6cff9d2574",
           "command": "frame"
         },
         {
-          "artifact_sha256": "c8a966827d82d262c3fc774dcf48d2799be0387c1355e97fdf86358d57e73756",
+          "artifact_sha256": "e2803a1bb15434ea655a31ad83a8357c26d54ce7846bccb8a05c360edef71401",
           "command": "nodal"
         },
         {
-          "artifact_sha256": "666b8f3af454d8f5cde4441fe5993042330f9c0c3fe9d91c3daf13f9ef71718f",
+          "artifact_sha256": "5dac54f0cbf3c0f24b4588a3f98e19563d62539fc61e6d21701821af70306960",
           "command": "pathology"
         }
       ],
-      "snapshot_sha256": "51f6aed73f7070235158c55d93600d924c1465ba17daf2b097ab7afe600383ad",
+      "snapshot_sha256": "842eba9983a8f957fd2d56d6a0fc56f8428b1dda4e2584c27c62f209985581b6",
       "verdict": "PROCEED_WITH_CONDITIONS"
     },
     "termination_contract": {
@@ -185,6 +185,88 @@
     "verdict": "PROCEED_WITH_CONDITIONS"
   },
   "case_id": "lab-consortium",
+  "claim_history": {
+    "a-inflates": [
+      {
+        "command": "map",
+        "origin": "external",
+        "ref": "council-minutes-2026-09",
+        "status": "ATTRIBUTED_INTENT"
+      }
+    ],
+    "cap-100": [
+      {
+        "command": "frame",
+        "origin": "external",
+        "ref": "lab-maintenance-log-w43",
+        "status": "EVIDENCE"
+      }
+    ],
+    "cohesion-hypothesis": [
+      {
+        "command": "focus",
+        "origin": "owner",
+        "ref": "council discussion 2026-10-27",
+        "status": "HYPOTHESIS"
+      }
+    ],
+    "demand-110": [
+      {
+        "command": "frame",
+        "origin": "external",
+        "ref": "reservation-export-2026-10-21",
+        "status": "EVIDENCE"
+      }
+    ],
+    "dup-check": [
+      {
+        "command": "ach",
+        "origin": "external",
+        "ref": "reservation-reconciliation-2026-10-26",
+        "status": "EVIDENCE"
+      }
+    ],
+    "model-summary": [
+      {
+        "command": "ach",
+        "origin": "system",
+        "ref": "ante draft of 2026-10-27",
+        "status": "HYPOTHESIS"
+      }
+    ],
+    "priority-50": [
+      {
+        "command": "frame",
+        "origin": "external",
+        "ref": "funder-deadline-letters",
+        "status": "EVIDENCE"
+      }
+    ],
+    "slack-20": [
+      {
+        "command": "cause",
+        "origin": "owner",
+        "ref": "booking forecast for weeks 45-46",
+        "status": "ASSUMPTION"
+      }
+    ],
+    "tech-report": [
+      {
+        "command": "ach",
+        "origin": "external",
+        "ref": "technical-staff-note-2026-10-25",
+        "status": "EVIDENCE"
+      }
+    ],
+    "tech-report-echo": [
+      {
+        "command": "ach",
+        "origin": "external",
+        "ref": "council-minutes-2026-10-27",
+        "status": "EVIDENCE"
+      }
+    ]
+  },
   "claims": [],
   "command": "decide",
   "findings": [],
@@ -193,30 +275,30 @@
   "next_decision": "Satisfy each condition before the gated commitment; preparatory work only.",
   "parents": [
     {
-      "artifact_sha256": "2456016bc2caa97e0e59231577425b55f42c6179fa30b1bd2760e18cd339e927",
+      "artifact_sha256": "dbcd3f8552ac57d0fb012db9327e95752f3f253ba3b28829fd6e2bce64dd3b86",
       "command": "cause"
     },
     {
-      "artifact_sha256": "b5437d8d4c3692706913991c729d868c65a977e90bd6898cb8ae673e52489b8f",
+      "artifact_sha256": "b96ede0f4457d88a2b5c557fc20d2292657e063f355fc35db50e8e8d13f8e938",
       "command": "close"
     },
     {
-      "artifact_sha256": "5599a450119c14fcc49771fb679cb478ba739e6ce96cbd01bf50d18b660bebf9",
+      "artifact_sha256": "3dc4bdb4aca789ee4696dfe11778f9377e6ffe79a2544584402cb03f0036c3ef",
       "command": "cohere"
     },
     {
-      "artifact_sha256": "f3f11099665d17b689e605f8d9cf131a04e864ece52a0137d9187b5df392b28b",
+      "artifact_sha256": "d6e55f031b0bbfb954dccf850690412029f568e3a1ccdd8b962aed6cff9d2574",
       "command": "frame"
     },
     {
-      "artifact_sha256": "c8a966827d82d262c3fc774dcf48d2799be0387c1355e97fdf86358d57e73756",
+      "artifact_sha256": "e2803a1bb15434ea655a31ad83a8357c26d54ce7846bccb8a05c360edef71401",
       "command": "nodal"
     },
     {
-      "artifact_sha256": "666b8f3af454d8f5cde4441fe5993042330f9c0c3fe9d91c3daf13f9ef71718f",
+      "artifact_sha256": "5dac54f0cbf3c0f24b4588a3f98e19563d62539fc61e6d21701821af70306960",
       "command": "pathology"
     }
   ],
-  "schema_version": 1,
+  "schema_version": 2,
   "verdict": "PROCEED_WITH_CONDITIONS"
 }

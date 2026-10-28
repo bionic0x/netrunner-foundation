@@ -8,16 +8,17 @@ gets a status and, when it is not a clean pass, a triage class:
 
     FAIL          → FATAL_DEFECT
     CONDITIONAL   → ACCEPTED_RISK (owner and reason) or PENDING_EVIDENCE (date or trigger)
-    NOT_APPLICABLE→ a stated reason; never allowed where the doctrine table forbids it
-                    (Epistemic and Exit)
+    NOT_APPLICABLE→ a stated reason; never counts as PASS (``passed`` lists only PASS);
+                    never allowed where the doctrine table forbids it (Epistemic and Exit)
 
 Nothing is summed. The artefact states which decision outputs remain admissible:
 one fatal defect removes PROCEED and PROCEED_WITH_CONDITIONS regardless of how
 many tests pass; pending evidence removes them too (invariant 1: with incomplete
 evidence the output is HOLD).
 
-The tests come from the ``coherence_tests`` table of ``strategy/contracts.json``;
-without that table the command refuses to run (decision D-004).
+The tests come from the ``coherence_tests`` table of ``strategy/contracts.json``
+(decision D-004); ids are stable and the canonical name of each test is recorded
+in ``names``. Without that table the command refuses to run.
 
 Input fields::
 
@@ -119,8 +120,13 @@ def run(doc, ctx):
                 'finding': {'class': 'PENDING_EVIDENCE', 'trigger': trigger}})
             classes.add('PENDING_EVIDENCE')
 
+    statuses = {test_id: entry.get('status') for test_id, entry in tests.items() if isinstance(entry, dict)}
     body = {
         'tests': tests,
+        'names': {test_id: by_id[test_id]['name'] for test_id in tests if test_id in by_id and 'name' in by_id[test_id]},
+        'passed': sorted(t for t, status in statuses.items() if status == 'PASS'),
+        'not_applicable': sorted(t for t, status in statuses.items() if status == 'NOT_APPLICABLE'),
+        'status_counts': {status: sum(1 for value in statuses.values() if value == status) for status in STATUSES},
         'plan_metrics': metrics,
         'misuse_analysis': {'street': street['artifact_sha256'] if street else None, 'uncovered_metrics': uncovered},
         'doctrine_sha256': canon.digest(ctx.doctrine.raw),

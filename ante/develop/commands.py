@@ -64,14 +64,48 @@ class DevelopError(ValueError):
 
 # --- state ------------------------------------------------------------------------------
 
+ANCHOR_REF = 'refs/ante/develop-state'
+
+
 class State:
-    def __init__(self, path: str):
-        self.path = path
-        self.entries = ledger.read(path)
+    """The loop's hash-chained log, anchored in the repository.
+
+    The limits of the loop (open proposals, spend, the stop after regressions, the
+    Turing lock's running total) are computed from this log, so the log must be the
+    one the loop has always used. ``refs/ante/develop-state`` records its absolute
+    path and the hash of its last entry. Opening a fresh file, another file, or a
+    file whose tail was cut no longer matches the anchor and is refused. Only a
+    human resets the loop, by deleting the ref (``git update-ref -d``) and saying why.
+    """
+
+    def __init__(self, path: str, repo: Path):
+        self.path = str(Path(path).resolve())
+        self.repo = Path(repo)
+        self.entries = ledger.read(self.path)
+        anchor = self._anchor()
+        head = self.entries[-1]['entry_hash'] if self.entries else ledger.GENESIS
+        if anchor is None:
+            if self.entries:
+                raise DevelopError('this develop state has entries but no anchor in the repository; '
+                                   'it is not the loop\'s log')
+        elif anchor != (self.path, head):
+            raise DevelopError('the develop state does not match its anchor (another file, a new file, or a '
+                               'truncated one); the loop\'s limits cannot be recomputed from it')
+
+    def _anchor(self) -> tuple[str, str] | None:
+        ref = policy_mod.git(self.repo, 'rev-parse', '--verify', '--quiet', ANCHOR_REF, check=False).strip()
+        if not ref:
+            return None
+        path, head = policy_mod.git(self.repo, 'cat-file', 'blob', ref).splitlines()[:2]
+        return path, head
 
     def append(self, kind: str, payload: dict, at: str) -> dict:
         entry = ledger.append(self.path, kind, payload, at, kinds=STATE_KINDS)
         self.entries.append(entry)
+        blob = subprocess.run(['git', '-C', str(self.repo), 'hash-object', '-w', '--stdin'],
+                              input=f'{self.path}\n{entry["entry_hash"]}\n', capture_output=True, text=True,
+                              check=True).stdout.strip()
+        policy_mod.git(self.repo, 'update-ref', ANCHOR_REF, blob)
         return entry
 
     def proposals(self) -> dict[str, dict]:
@@ -128,7 +162,7 @@ def _validate_spec(spec: dict) -> dict:
     return spec
 
 
-def _check_findings(spec: dict) -> list[dict]:
+def _check_findings(spec: dict, min_sample: int) -> list[dict]:
     checked = []
     for finding in spec['findings']:
         path = Path(finding['path'])
@@ -142,10 +176,16 @@ def _check_findings(spec: dict) -> list[dict]:
         kind = value.get('kind') if finding['kind'] != 'selftest' else value.get('command')
         if kind != finding['kind']:
             raise DevelopError(f'finding {path.name} is not a {finding["kind"]} output')
-        if finding['kind'] == 'patterns' and not value.get('proposals'):
-            raise DevelopError(f'finding {path.name} proposes no pattern that survived the apophenia guard')
-        if finding['kind'] == 'calibration' and not any(g.get('result') == 'MEASURED' for g in value.get('groups', [])):
-            raise DevelopError(f'finding {path.name} measured nothing (INSUFFICIENT_SAMPLE is not a finding)')
+        if finding['kind'] == 'patterns':
+            if not value.get('proposals'):
+                raise DevelopError(f'finding {path.name} proposes no pattern that survived the apophenia guard')
+            if value.get('decisions_used', 0) < min_sample:
+                raise DevelopError(f'finding {path.name} rests on {value.get("decisions_used", 0)} decisions; '
+                                   f'the develop policy requires {min_sample}')
+        if finding['kind'] == 'calibration' and not any(
+                g.get('result') == 'MEASURED' and g.get('n', 0) >= min_sample for g in value.get('groups', [])):
+            raise DevelopError(f'finding {path.name} measured no group of at least {min_sample} predictions '
+                               '(the floor comes from the develop policy, not from --min-sample)')
         checked.append(finding)
     return checked
 
@@ -178,7 +218,7 @@ def _scope_violations(policy: policy_mod.Policy, spec: dict, paths: list[str]) -
 
 def propose(spec_path: str, patch: str, base: str, state_path: str, at: str, repo: Path = ROOT) -> dict:
     spec = _validate_spec(io.load_document(spec_path))
-    state = State(state_path)
+    state = State(state_path, repo)
     policy = policy_mod.at_ref(repo, base)
     if state.stopped(policy.consecutive_regressions_to_stop):
         raise DevelopError('the develop loop is stopped after consecutive held-out regressions; a human must resume it')
@@ -189,13 +229,13 @@ def propose(spec_path: str, patch: str, base: str, state_path: str, at: str, rep
         raise DevelopError(f'{len(open_ids)} open proposal(s); the limit is {policy.max_open_proposals}')
     if state.spend() + spec['cost']['usd_ceiling'] > policy.campaign_spend_usd:
         raise DevelopError(f'cost ceiling would exceed the campaign limit of {policy.campaign_spend_usd} USD')
-    findings = _check_findings(spec)
     patch_path = Path(patch)
     patch_bytes = patch_path.read_bytes()
     hits = _contamination(spec, patch_bytes)
     if hits:
         raise DevelopError('held-out canary found in ' + ', '.join(sorted({h['where'] for h in hits}))
                            + ': contamination; investigate the leak before any proposal from this source')
+    findings = _check_findings(spec, policy.finding_min_sample)
     paths = policy_mod.patch_paths(repo, patch_path)
     if not paths:
         raise DevelopError('the patch changes nothing')
@@ -227,7 +267,7 @@ def gate(proposal_id: str, patch: str, state_path: str, at: str, evidence: dict 
     """Admit, hold or reject one proposal. Every evaluator runs from the BASE tree."""
     from ante.turing import lock
 
-    state = State(state_path)
+    state = State(state_path, repo)
     entry = state.proposals().get(proposal_id)
     if entry is None:
         raise DevelopError(f'no proposal {proposal_id}')
@@ -300,6 +340,7 @@ def gate(proposal_id: str, patch: str, state_path: str, at: str, evidence: dict 
                 report['reasons'].append(f'selftest rows newly in FAIL: {new}')
         else:
             report['checks']['selftest'] = {'measured': None, 'reason': 'no evidence register supplied'}
+            report['holds'].append('no self-test evidence register supplied')
 
         # held-out: Pareto non-regression, judged by the base evaluator on packs outside the checkout
         regression = None
@@ -362,8 +403,8 @@ def gate(proposal_id: str, patch: str, state_path: str, at: str, evidence: dict 
 
 # --- pr ---------------------------------------------------------------------------------
 
-def pr_plan(proposal_id: str, state_path: str, base_branch: str) -> dict:
-    state = State(state_path)
+def pr_plan(proposal_id: str, state_path: str, base_branch: str, repo: Path = ROOT) -> dict:
+    state = State(state_path, repo)
     if proposal_id not in state.proposals():
         raise DevelopError(f'no proposal {proposal_id}')
     if proposal_id in state.closed():
@@ -390,7 +431,7 @@ def pr_plan(proposal_id: str, state_path: str, base_branch: str) -> dict:
 
 
 def pr(proposal_id: str, state_path: str, base_branch: str, at: str, execute: bool, repo: Path = ROOT) -> dict:
-    plan = pr_plan(proposal_id, state_path, base_branch)
+    plan = pr_plan(proposal_id, state_path, base_branch, repo)
     if not execute:
         return {**plan, 'executed': False, 'note': 'dry run; pass --execute to push the branch and open the draft'}
     remote = policy_mod.git(repo, 'ls-remote', '--heads', 'origin', plan['branch'], check=False)
@@ -409,7 +450,7 @@ def pr(proposal_id: str, state_path: str, base_branch: str, at: str, execute: bo
         url = create.stdout.strip().splitlines()[-1] if create.stdout.strip() else None
     finally:
         Path(body_file).unlink(missing_ok=True)
-    State(state_path).append('pr', {'id': proposal_id, 'url': url, 'branch': plan['branch'], 'draft': True}, at)
+    State(state_path, repo).append('pr', {'id': proposal_id, 'url': url, 'branch': plan['branch'], 'draft': True}, at)
     return {**plan, 'executed': True, 'url': url}
 
 
@@ -472,17 +513,17 @@ def main(args) -> int:
         elif args.develop_command == 'resume':
             for value, name in ((args.by, 'by'), (args.reason, 'reason')):
                 schema.text(value, name)
-            state = State(args.state)
+            state = State(args.state, repo)
             entry = state.append('resume', {'by': args.by, 'reason': args.reason}, at)
             result = {'resumed_by': args.by, 'entry': entry['entry_hash']}
         elif args.develop_command == 'close':
-            state = State(args.state)
+            state = State(args.state, repo)
             if args.id not in state.proposals():
                 raise DevelopError(f'no proposal {args.id}')
             entry = state.append('close', {'id': args.id, 'outcome': args.outcome}, at)
             result = {'closed': args.id, 'outcome': args.outcome, 'entry': entry['entry_hash']}
         else:
-            state = State(args.state)
+            state = State(args.state, repo)
             result = {'proposals': sorted(state.proposals()), 'closed': sorted(state.closed()),
                       'gates': [{'id': g['payload']['id'], 'decision': g['payload']['decision']} for g in state.gates()],
                       'spend_ceiling_committed_usd': state.spend()}

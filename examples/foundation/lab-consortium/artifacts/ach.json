@@ -1,5 +1,5 @@
 {
-  "artifact_sha256": "6cdf6215377003bf082dfbc621f288f5572a21f7ba096449b5afcec140894287",
+  "artifact_sha256": "1d7c2f4c72c18fbb313b4063282b8179bbac5d0d90286d0fb4213cb896ab908f",
   "at": "2026-10-28T10:15:00Z",
   "body": {
     "analysis": {
@@ -136,6 +136,64 @@
     }
   },
   "case_id": "lab-consortium",
+  "claim_history": {
+    "cap-100": [
+      {
+        "command": "frame",
+        "origin": "external",
+        "ref": "lab-maintenance-log-w43",
+        "status": "EVIDENCE"
+      }
+    ],
+    "demand-110": [
+      {
+        "command": "frame",
+        "origin": "external",
+        "ref": "reservation-export-2026-10-21",
+        "status": "EVIDENCE"
+      }
+    ],
+    "dup-check": [
+      {
+        "command": "ach",
+        "origin": "external",
+        "ref": "reservation-reconciliation-2026-10-26",
+        "status": "EVIDENCE"
+      }
+    ],
+    "model-summary": [
+      {
+        "command": "ach",
+        "origin": "system",
+        "ref": "ante draft of 2026-10-27",
+        "status": "HYPOTHESIS"
+      }
+    ],
+    "priority-50": [
+      {
+        "command": "frame",
+        "origin": "external",
+        "ref": "funder-deadline-letters",
+        "status": "EVIDENCE"
+      }
+    ],
+    "tech-report": [
+      {
+        "command": "ach",
+        "origin": "external",
+        "ref": "technical-staff-note-2026-10-25",
+        "status": "EVIDENCE"
+      }
+    ],
+    "tech-report-echo": [
+      {
+        "command": "ach",
+        "origin": "external",
+        "ref": "council-minutes-2026-10-27",
+        "status": "EVIDENCE"
+      }
+    ]
+  },
   "claims": [
     {
       "date": "2026-10-26",
@@ -202,10 +260,10 @@
   "next_decision": "Record the leading hypothesis with its confidence and indicators.",
   "parents": [
     {
-      "artifact_sha256": "f3f11099665d17b689e605f8d9cf131a04e864ece52a0137d9187b5df392b28b",
+      "artifact_sha256": "d6e55f031b0bbfb954dccf850690412029f568e3a1ccdd8b962aed6cff9d2574",
       "command": "frame"
     }
   ],
-  "schema_version": 1,
+  "schema_version": 2,
   "verdict": null
 }

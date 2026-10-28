@@ -86,7 +86,14 @@ class RunCheck(unittest.TestCase):
         self.assertEqual('PROCEED_WITH_CONDITIONS', json.loads(out)['verdict'])
 
     def test_a_chain_built_on_another_doctrine_is_not_complete(self):
-        code, out, _ = self.run_cli('run', 'strategic-decision', '--artifacts', str(self.chain.out))
+        other = json.loads(Path(CONTRACTS).read_text())
+        other['coherence_tests'][0]['question'] = 'a different wording'
+        path = self.chain.dir / 'other-contracts.json'
+        path.write_text(json.dumps(other))
+        chain = Chain(contracts=str(path))
+        self.addCleanup(chain.close)
+        chain.build()
+        code, out, _ = self.run_cli('run', 'strategic-decision', '--artifacts', str(chain.out))
         self.assertEqual(1, code)
         self.assertEqual(['cohere', 'pathology'], json.loads(out)['non_canonical_doctrine'])
 

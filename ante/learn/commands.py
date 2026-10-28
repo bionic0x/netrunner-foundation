@@ -114,9 +114,16 @@ def reconcile(doc_path: str, ledger_path: str, at: str) -> list[dict]:
 
 
 def _latest_outcomes(entries: list[dict]) -> dict[tuple[str, str], dict]:
+    """The latest outcome per expectation. A system-produced entry never replaces one from an
+    external or owner source: the system cannot overwrite an observation (invariant 7)."""
     latest = {}
     for entry in ledger.reconciliations(entries):
-        latest[(entry['payload']['decision'], entry['payload']['expectation'])] = entry
+        key = (entry['payload']['decision'], entry['payload']['expectation'])
+        current = latest.get(key)
+        if (current is not None and entry['payload']['source']['origin'] == 'system'
+                and current['payload']['source']['origin'] != 'system'):
+            continue
+        latest[key] = entry
     return latest
 
 

@@ -26,8 +26,9 @@ def decide_artifact(case, verdict='PROCEED_WITH_CONDITIONS', pathologies=(), rev
     expectations = expectations or [{'id': 'e1', 'what_should_change': 'x', 'in_whom': 'y',
                                      'horizon': '2026-12-01T00:00:00Z', 'refuted_by': 'z',
                                      'probability': {'verbal': 'likely', 'interval': [0.6, 0.8]}}]
-    return seal({'schema_version': 1, 'command': 'decide', 'case_id': case, 'at': at,
+    return seal({'schema_version': artifact.SCHEMA_VERSION, 'command': 'decide', 'case_id': case, 'at': at,
                  'input_sha256': canon.digest(case), 'parents': [], 'independence_level': None, 'claims': [],
+                 'claim_history': {},
                  'body': {'verdict': verdict, 'review_independence': review,
                           'detected_pathologies': list(pathologies), 'expectations': expectations,
                           'snapshot': snapshot.build(at, [], [], expectations, verdict),
@@ -82,6 +83,19 @@ class LedgerChain(Workspace):
         Path(self.ledger).write_text(Path(self.ledger).read_text().replace('agent-a', 'agent-b'))
         with contextlib.redirect_stdout(stdio.StringIO()), contextlib.redirect_stderr(stdio.StringIO()):
             self.assertEqual(3, cli.main(['learn', 'verify', '--ledger', self.ledger]))
+
+    def test_concurrent_appends_keep_one_chain(self):
+        import multiprocessing
+        procs = [multiprocessing.Process(target=ledger.append,
+                                         args=(self.ledger, 'note', {'n': i}, '2026-10-28T13:00:00Z'))
+                 for i in range(8)]
+        for proc in procs:
+            proc.start()
+        for proc in procs:
+            proc.join()
+        entries = ledger.read(self.ledger)
+        self.assertEqual(list(range(1, 9)), [e['seq'] for e in entries])
+        self.assertEqual(set(range(8)), {e['payload']['n'] for e in entries})
 
     def test_entries_are_appended_in_time_order(self):
         self.record(decide_artifact('a'), at='2026-10-29T00:00:00Z')
@@ -166,6 +180,15 @@ class Calibrate(Workspace):
         self.assertAlmostEqual(expected, overall['brier'], places=6)
         by_agent = [g for g in result['groups'] if g['dimension'] == 'agent']
         self.assertTrue(all(g['result'] == 'INSUFFICIENT_SAMPLE' for g in by_agent))
+
+    def test_a_system_entry_cannot_overwrite_an_external_observation(self):
+        art = decide_artifact('s')
+        self.record(art)
+        self.observe(art, 'REFUTED')
+        self.observe(art, 'INCONCLUSIVE', origin='system', at='2026-12-03T00:00:00Z')
+        result = commands.calibrate(self.ledger, '2026-12-31T00:00:00Z', min_sample=1)
+        self.assertEqual(1, result['decisive_predictions'])
+        self.assertAlmostEqual(0.49, result['groups'][0]['brier'], places=6)
 
     def test_latest_reconciliation_wins_without_rewriting(self):
         art = decide_artifact('x')
@@ -342,7 +365,7 @@ class Shadow(Workspace):
         self.assertEqual(('MEASURED', 1), (result['result'], result['compared_predictions']))
         self.assertAlmostEqual(0.01, result['shadow_brier'])
         self.assertAlmostEqual(0.09, result['real_brier'])
-        self.assertTrue(result['eligible_for_proposal'])
+        self.assertFalse(result['eligible_for_proposal'], 'a caller-lowered --min-history cannot make a candidate eligible')
 
     def test_adoption_needs_history(self):
         art = decide_artifact('a')

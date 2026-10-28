@@ -1,5 +1,5 @@
 {
-  "artifact_sha256": "b5437d8d4c3692706913991c729d868c65a977e90bd6898cb8ae673e52489b8f",
+  "artifact_sha256": "b96ede0f4457d88a2b5c557fc20d2292657e063f355fc35db50e8e8d13f8e938",
   "at": "2026-10-28T12:30:00Z",
   "body": {
     "termination_contract": {
@@ -21,6 +21,32 @@
     ]
   },
   "case_id": "lab-consortium",
+  "claim_history": {
+    "cap-100": [
+      {
+        "command": "frame",
+        "origin": "external",
+        "ref": "lab-maintenance-log-w43",
+        "status": "EVIDENCE"
+      }
+    ],
+    "demand-110": [
+      {
+        "command": "frame",
+        "origin": "external",
+        "ref": "reservation-export-2026-10-21",
+        "status": "EVIDENCE"
+      }
+    ],
+    "priority-50": [
+      {
+        "command": "frame",
+        "origin": "external",
+        "ref": "funder-deadline-letters",
+        "status": "EVIDENCE"
+      }
+    ]
+  },
   "claims": [],
   "command": "close",
   "findings": [],
@@ -29,10 +55,10 @@
   "next_decision": "Run the seven coherence tests on the whole plan (ante cohere).",
   "parents": [
     {
-      "artifact_sha256": "f3f11099665d17b689e605f8d9cf131a04e864ece52a0137d9187b5df392b28b",
+      "artifact_sha256": "d6e55f031b0bbfb954dccf850690412029f568e3a1ccdd8b962aed6cff9d2574",
       "command": "frame"
     }
   ],
-  "schema_version": 1,
+  "schema_version": 2,
   "verdict": null
 }

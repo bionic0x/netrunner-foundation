@@ -6,21 +6,21 @@ a human decision.
 
 ---
 
-## D-001 · Where the foundation work lives — PROPOSED
+## D-001 · Where the foundation work lives — ACCEPTED
 
-**Context.** The foundation prompt forks `bionic0x/Ante-agency-agents` into
-`bionic0x/ante-foundation` at `86addea`. Creating a repository is an account-level
-action outside the scope this work session was granted.
+**Decision (owner, 28 Oct 2026).** The definitive destination is the private
+repository `bionic0x/neuromancers-foundation`; no `ante-foundation` repository is
+created. Work starts from `86addea` (branch `foundation/base-86addea`); `main`
+there is the imported `9c54ba2` and is left as it is.
 
-**Decision.** Work proceeds on branch `foundation/v2`, created from `86addea`,
-in the existing repository. The branch is portable: if the owner creates the
-fork, the same history is pushed there unchanged.
+**Layout.** The original commits are kept unchanged and split into stacked
+branches, one draft pull request per phase, each based on the previous phase:
+`foundation/claude/phase-0` (on `foundation/base-86addea`) … `phase-6`, then
+`foundation/claude/decisions` for the owner decisions and the consolidation of
+the two characterization harnesses. Nothing is merged by the agent.
 
-**Alternatives.** Create the fork now (needs the owner's authorisation);
-work only locally (loses review and CI).
-
-**Consequences.** The `THIRD_PARTY_NOTICES.md` fork declaration is written
-when the destination is fixed.
+**Consequences.** `THIRD_PARTY_NOTICES.md` names the repository and its origin.
+Bringing in `main`'s later commits is decision D-018.
 
 ---
 
@@ -68,14 +68,42 @@ Nothing in the self-development loop (Phase 4) can produce or modify them.
 
 ---
 
-## D-004 · One machine source for the seven tests and fourteen pathologies — PROPOSED
+## D-004 · One machine source for the seven tests and fourteen pathologies — ACCEPTED
 
-**Context.** `strategy/contracts.json` (protected) holds modes, epistemic states,
-decision states and levels. The seven tests and fourteen pathologies exist only
-as prose, in two versions that disagree:
+**Context.** `strategy/contracts.json` (protected) held modes, epistemic states,
+decision states and levels. The seven tests and fourteen pathologies existed only
+as prose, in two versions that disagreed on the name of test 1, on whether
+`NOT_APPLICABLE` is a class, and on the wording of pathology 9.
 
-| Item | `GENERAL-STRATEGY-DOCTRINE.md` | `STRATEGIC-CONTROL-PLANE.md` |
-|---|---|---|
+**Decision (owner, 28 Oct 2026).**
+1. `contracts.json` carries `coherence_tests` and `pathologies` with stable ids
+   (`purpose`, `causal`, `interactive`, `conversion`, `legitimacy`, `epistemic`,
+   `exit`; `level_inversion` … `chronic_personalization`).
+2. The canonical name of test 1 follows the *Marco*: «Política /
+   Political-purpose». `Governing-object` is a documented alias.
+3. Pathology 9 is defined as competing where the adversary converts better;
+   "each move of the adversary fixes our own response" is its mechanism of
+   reproduction.
+4. Test status (`PASS`, `CONDITIONAL`, `FAIL`, `NOT_APPLICABLE`) is separate
+   from triage (`FATAL_DEFECT`, `ACCEPTED_RISK`, `PENDING_EVIDENCE`).
+   `NOT_APPLICABLE` needs a reason, never counts as `PASS`, and is forbidden on
+   Epistemic and Exit.
+5. Existing enums and v1 compatibility are kept; chapter XVII stays in quarantine.
+
+**Implementation.** One commit labelled `protected:` changes only
+`strategy/contracts.json` (the owner's text transcribed; existing keys untouched;
+all 114 characterization recordings and the existing contract checks pass).
+`cohere` records the canonical names and lists `passed` and `not_applicable`
+separately with per-status counts. The proposal file is withdrawn; the hidden
+`--contracts` option remains for tests that need a different doctrine.
+
+**Consequences.** `cohere`, `pathology` and `decide` read the canonical file.
+Every `cohere` and `pathology` artefact records the hash of the doctrine it used,
+and `decide` and `ante run` refuse or flag artefacts produced under another one.
+The example chain was rebuilt under the canonical tables (its artefacts carry the
+new doctrine hash); no characterization recording changed.
+
+---|---|---|
 | Test 1 name | Political/purpose | Governing-object |
 | Finding classes | fatal defect · accepted risk · pending information | `FATAL_DEFECT` · `ACCEPTED_RISK` · `PENDING_EVIDENCE` · `NOT_APPLICABLE` (never on Epistemic or Exit) |
 | Pathology 9 | Reflex symmetry: competing where the other actor converts resources better | Mirrored symmetry: the response is chosen by the opponent's move |
@@ -341,3 +369,30 @@ data, not behaviour introduced here.
 base to the merge base and re-record those two cases from `main`'s own scripts
 (delete the two golden files, `run.py record`, state why), as the
 characterization contract requires for any rebaseline.
+
+---
+
+## D-019 · Findings of the final clean-context review — ACCEPTED
+
+A reviewer with a clean context (`SEPARATED_CONTEXT`: same model family, so a
+coherence function, not an independent barrier) received only the diff, the
+mandate and the test results. Every finding was checked against the code before
+acting on it; all were confirmed.
+
+| Finding | Disposition |
+|---|---|
+| P1 · The gate could answer `PROPOSE` without the self-test | A gate without a self-test register now holds (`no self-test evidence register supplied`). |
+| P1 · Every loop limit read a state file the caller chose | The state is anchored in `refs/ante/develop-state` (absolute path and head hash). A fresh, different or truncated file is refused; only a human resets the loop by deleting the ref. Tested. |
+| P1 · The loop could edit checks that `decide` and `cohere` rely on (`nodal`, `street`, `close`, chain loading) | `ante/strategy/**`, `ante/cli.py`, `ante/deck.py` and the package entry points are protected; the strategy commands are no longer an editable scope. `strategy/*.md` already covers every Markdown file under `strategy/` (fnmatch semantics, now stated in the policy), so the playbook and runbook scopes were dead and are removed. |
+| P1 · `ATTRIBUTED_INTENT` could be laundered by restating the id one step removed | Artefacts carry `claim_history` (schema version 2): every status any ancestor recorded, through the whole lineage. Restating as `HYPOTHESIS` and then as `EVIDENCE` downstream needs the upgrade. Tested. |
+| P1 · No test showed the gate rejecting a held-out regression | New tests run the gate on refrozen held-out copies of the example packs outside the checkout: a regression is `REJECT`, two stop the loop, and a measured improvement with every check passes as `PROPOSE` and one draft plan. |
+| P2 · A system-origin reconciliation could supersede an external one | A system entry never replaces an external or owner outcome. Tested. |
+| P2 · A caller-set sample floor could manufacture a finding | `develop` requires the policy's `finding_min_sample` (30) for calibration groups and pattern decisions; a lowered `stub --min-history` never makes a candidate eligible. |
+| P2 · The upgrading observation's origin was unchecked | `upgrade.source` is `{ref, origin}`; `system` is refused. |
+| P2 · Three documentation overclaims | Self-test docstring, ledger truncation note and the test count corrected. |
+| P3 · No lock on ledger appends | Appends take an exclusive file lock; a concurrency test appends from eight processes. |
+
+What the review could not settle from its inputs, and stays as stated before:
+independence labels, Turing reviews and model reviews are self-declared; the
+self-test and the CI steps run in CI only after the owner applies
+`ci-wiring.patch` (D-017).

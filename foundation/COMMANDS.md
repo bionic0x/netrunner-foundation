@@ -58,7 +58,8 @@ brief; see `ante/strategy/draft.py`.
 | `develop close ID --outcome merged\|rejected\|withdrawn` | frees the open-proposal slot |
 | `develop status` | proposals, gates and committed spend |
 
-Every `develop` command takes `--state FILE` (a hash-chained log) and, except
+Every `develop` command takes `--state FILE` (a hash-chained log, anchored in
+`refs/ante/develop-state` so it cannot be swapped or truncated) and, except
 `status`, `--at`. Decisions D-013 and D-014 describe the policy and the lock.
 
 ## Shadow trials, drift and defences

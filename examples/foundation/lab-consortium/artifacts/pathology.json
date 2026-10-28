@@ -1,5 +1,5 @@
 {
-  "artifact_sha256": "666b8f3af454d8f5cde4441fe5993042330f9c0c3fe9d91c3daf13f9ef71718f",
+  "artifact_sha256": "5dac54f0cbf3c0f24b4588a3f98e19563d62539fc61e6d21701821af70306960",
   "at": "2026-10-28T13:15:00Z",
   "body": {
     "detected": [
@@ -9,7 +9,7 @@
         "mechanism": "Incentives change the record or the conduct to improve the number."
       }
     ],
-    "doctrine_sha256": "36a1bfe3db41383471e3541b8d3f2acdcea13afe7a23e415db6694a663595f63",
+    "doctrine_sha256": "ac92df4ffe92ddf666e84fafd1fb4648a85ca103f4bea2e9b91fa15df921b3be",
     "not_assessed": [
       "chronic_personalization"
     ],
@@ -103,6 +103,40 @@
     }
   },
   "case_id": "lab-consortium",
+  "claim_history": {
+    "a-inflates": [
+      {
+        "command": "map",
+        "origin": "external",
+        "ref": "council-minutes-2026-09",
+        "status": "ATTRIBUTED_INTENT"
+      }
+    ],
+    "cap-100": [
+      {
+        "command": "frame",
+        "origin": "external",
+        "ref": "lab-maintenance-log-w43",
+        "status": "EVIDENCE"
+      }
+    ],
+    "demand-110": [
+      {
+        "command": "frame",
+        "origin": "external",
+        "ref": "reservation-export-2026-10-21",
+        "status": "EVIDENCE"
+      }
+    ],
+    "priority-50": [
+      {
+        "command": "frame",
+        "origin": "external",
+        "ref": "funder-deadline-letters",
+        "status": "EVIDENCE"
+      }
+    ]
+  },
   "claims": [],
   "command": "pathology",
   "findings": [],
@@ -111,14 +145,14 @@
   "next_decision": "Address metric_substitution in the decision conditions (ante decide).",
   "parents": [
     {
-      "artifact_sha256": "f3f11099665d17b689e605f8d9cf131a04e864ece52a0137d9187b5df392b28b",
+      "artifact_sha256": "d6e55f031b0bbfb954dccf850690412029f568e3a1ccdd8b962aed6cff9d2574",
       "command": "frame"
     },
     {
-      "artifact_sha256": "b21637d1efc77e244c2aab62bb67b04183105985e47b0c513b5b0d3aaaed2f14",
+      "artifact_sha256": "a4e9a714ee77a69296f58be4412b2b58df8703d46d4b011d8ded18526afac0d1",
       "command": "map"
     }
   ],
-  "schema_version": 1,
+  "schema_version": 2,
   "verdict": null
 }
