@@ -2,7 +2,7 @@
 
 An artefact is a JSON object:
 
-    schema_version   1
+    schema_version   2
     command          the command that produced it
     case_id          inherited from ``frame``; every artefact of a case shares it
     at               the decision time (``--at`` or the input's ``at``), UTC
@@ -10,6 +10,9 @@ An artefact is a JSON object:
     parents          [{command, artifact_sha256}] — the artefacts it was built on
     independence_level   reviews only: SELF | SEPARATED_CONTEXT | INDEPENDENT_OPERATOR
     claims           [{id, text, status, source, date, limit, ...}]
+    claim_history    {claim id: [{status, ref, origin, command}]} — every status any ancestor
+                     recorded for an id, carried through the whole lineage, so a status
+                     cannot be laundered by restating it one step removed (invariant 2)
     body             command-specific content
     findings         [{severity, code, path, message}] that did not block the artefact
     verdict          a decision state, or null when the command does not decide
@@ -27,11 +30,11 @@ from typing import Any
 
 from ante.core import canon, io
 
-SCHEMA_VERSION = 1
+SCHEMA_VERSION = 2
 INDEPENDENCE_LEVELS = ('SELF', 'SEPARATED_CONTEXT', 'INDEPENDENT_OPERATOR')
 ARTIFACT_KEYS = ('schema_version', 'command', 'case_id', 'at', 'input_sha256', 'parents',
-                 'independence_level', 'claims', 'body', 'findings', 'verdict', 'next_decision',
-                 'artifact_sha256')
+                 'independence_level', 'claims', 'claim_history', 'body', 'findings', 'verdict',
+                 'next_decision', 'artifact_sha256')
 
 
 class LineageError(ValueError):
@@ -137,6 +140,16 @@ class Lineage:
     def refs(self) -> list[dict]:
         return sorted(({'command': p['command'], 'artifact_sha256': p['artifact_sha256']} for p in self.parents),
                       key=lambda r: (r['command'], r['artifact_sha256']))
+
+    def claim_history(self) -> dict[str, list[dict]]:
+        """Every status recorded for each claim id anywhere in the lineage, ancestors included."""
+        history: dict[str, list[dict]] = {}
+        for parent in self.parents:
+            for claim_id, entries in parent['claim_history'].items():
+                for entry in entries:
+                    if entry not in history.setdefault(claim_id, []):
+                        history[claim_id].append(entry)
+        return history
 
     def prior_claims(self) -> dict[str, list[dict]]:
         """Claims already recorded upstream, by id (several parents may carry one id)."""

@@ -6,21 +6,21 @@ a human decision.
 
 ---
 
-## D-001 · Where the foundation work lives — PROPOSED
+## D-001 · Where the foundation work lives — ACCEPTED
 
-**Context.** The foundation prompt forks `bionic0x/Ante-agency-agents` into
-`bionic0x/ante-foundation` at `86addea`. Creating a repository is an account-level
-action outside the scope this work session was granted.
+**Decision (owner, 28 Oct 2026).** The definitive destination is the private
+repository `bionic0x/neuromancers-foundation`; no `ante-foundation` repository is
+created. Work starts from `86addea` (branch `foundation/base-86addea`); `main`
+there is the imported `9c54ba2` and is left as it is.
 
-**Decision.** Work proceeds on branch `foundation/v2`, created from `86addea`,
-in the existing repository. The branch is portable: if the owner creates the
-fork, the same history is pushed there unchanged.
+**Layout.** The original commits are kept unchanged and split into stacked
+branches, one draft pull request per phase, each based on the previous phase:
+`foundation/claude/phase-0` (on `foundation/base-86addea`) … `phase-6`, then
+`foundation/claude/decisions` for the owner decisions and the consolidation of
+the two characterization harnesses. Nothing is merged by the agent.
 
-**Alternatives.** Create the fork now (needs the owner's authorisation);
-work only locally (loses review and CI).
-
-**Consequences.** The `THIRD_PARTY_NOTICES.md` fork declaration is written
-when the destination is fixed.
+**Consequences.** `THIRD_PARTY_NOTICES.md` names the repository and its origin.
+Bringing in `main`'s later commits is decision D-018.
 
 ---
 
@@ -68,14 +68,42 @@ Nothing in the self-development loop (Phase 4) can produce or modify them.
 
 ---
 
-## D-004 · One machine source for the seven tests and fourteen pathologies — PROPOSED
+## D-004 · One machine source for the seven tests and fourteen pathologies — ACCEPTED
 
-**Context.** `strategy/contracts.json` (protected) holds modes, epistemic states,
-decision states and levels. The seven tests and fourteen pathologies exist only
-as prose, in two versions that disagree:
+**Context.** `strategy/contracts.json` (protected) held modes, epistemic states,
+decision states and levels. The seven tests and fourteen pathologies existed only
+as prose, in two versions that disagreed on the name of test 1, on whether
+`NOT_APPLICABLE` is a class, and on the wording of pathology 9.
 
-| Item | `GENERAL-STRATEGY-DOCTRINE.md` | `STRATEGIC-CONTROL-PLANE.md` |
-|---|---|---|
+**Decision (owner, 28 Oct 2026).**
+1. `contracts.json` carries `coherence_tests` and `pathologies` with stable ids
+   (`purpose`, `causal`, `interactive`, `conversion`, `legitimacy`, `epistemic`,
+   `exit`; `level_inversion` … `chronic_personalization`).
+2. The canonical name of test 1 follows the *Marco*: «Política /
+   Political-purpose». `Governing-object` is a documented alias.
+3. Pathology 9 is defined as competing where the adversary converts better;
+   "each move of the adversary fixes our own response" is its mechanism of
+   reproduction.
+4. Test status (`PASS`, `CONDITIONAL`, `FAIL`, `NOT_APPLICABLE`) is separate
+   from triage (`FATAL_DEFECT`, `ACCEPTED_RISK`, `PENDING_EVIDENCE`).
+   `NOT_APPLICABLE` needs a reason, never counts as `PASS`, and is forbidden on
+   Epistemic and Exit.
+5. Existing enums and v1 compatibility are kept; chapter XVII stays in quarantine.
+
+**Implementation.** One commit labelled `protected:` changes only
+`strategy/contracts.json` (the owner's text transcribed; existing keys untouched;
+all 114 characterization recordings and the existing contract checks pass).
+`cohere` records the canonical names and lists `passed` and `not_applicable`
+separately with per-status counts. The proposal file is withdrawn; the hidden
+`--contracts` option remains for tests that need a different doctrine.
+
+**Consequences.** `cohere`, `pathology` and `decide` read the canonical file.
+Every `cohere` and `pathology` artefact records the hash of the doctrine it used,
+and `decide` and `ante run` refuse or flag artefacts produced under another one.
+The example chain was rebuilt under the canonical tables (its artefacts carry the
+new doctrine hash); no characterization recording changed.
+
+---|---|---|
 | Test 1 name | Political/purpose | Governing-object |
 | Finding classes | fatal defect · accepted risk · pending information | `FATAL_DEFECT` · `ACCEPTED_RISK` · `PENDING_EVIDENCE` · `NOT_APPLICABLE` (never on Epistemic or Exit) |
 | Pathology 9 | Reflex symmetry: competing where the other actor converts resources better | Mirrored symmetry: the response is chosen by the opponent's move |
@@ -222,3 +250,149 @@ forced to `HYPOTHESIS` with `origin: system`, the proposal sits under `input`
 beside a `draft` header with `signed: false`, and running a command on the file
 as written fails. Only Anthropic has an adapter (the existing Claude Code adapter);
 other providers in `providers.json` are refused until one is written.
+
+---
+
+## D-013 · The develop loop's own protected list lives beside Overdrive's — PROPOSED
+
+`ante develop` must never change the evaluator that judges it. Overdrive already
+protects its evaluator in `strategy/overdrive-protected.json`, and
+`nexus-improve.py paths` enforces it. The foundation adds parts that need the
+same protection (the gate, the Turing lock, ICE layers, constructs, doctrine and
+claims discipline, the ledger, characterization tests) and declares which scopes
+a proposal may edit at all.
+
+Changing `overdrive-protected.json` is itself a change to a protected path, so
+this branch does not touch it. Instead `foundation/develop-policy.json` holds the
+foundation's protected list, the editable scopes and the loop's limits (one open
+proposal, 50 USD committed per campaign, stop after two consecutive held-out
+regressions), and protects itself. The gate applies both lists, read at the base
+revision, and the stricter wins.
+
+**Proposal for the owner.** Merge the develop protected list into
+`overdrive-protected.json` in a hand-written `protected:` commit, so a single
+policy file governs every self-improvement path. Until then both lists apply.
+
+**How the gate keeps its evaluator honest.** The candidate is applied in a
+worktree at the base; `nexus-improve.py` and the characterization harness with
+its recordings run from a second worktree at the base, never from the candidate.
+A forged proposal that rewrites the evaluator is judged by the old one (tested).
+Held-out packs must be outside the checkout. Missing held-out evidence is HOLD,
+never PROPOSE. `pr` opens at most one draft per proposal, only with `--execute`,
+refuses an existing remote branch, never force-pushes, never merges and never
+touches `.github/**`.
+
+---
+
+## D-014 · The Turing lock counts autonomy cumulatively — PROPOSED
+
+Each proposal declares an integer `autonomy_delta` on six dimensions
+(permissions, budget, scope, gate thresholds, frequency, human-review reduction).
+Only positive components count, so lowering one does not pay for raising another.
+Any positive delta is held until a review record by an `INDEPENDENT_OPERATOR`
+names the proposal. The lock also sums the positive deltas the gate let through
+in the last 90 days, since the last review of the accumulation: above 4, a review
+of the single step is not enough, and the record must accept the accumulated
+total. Five one-step proposals, each reviewed on its own, therefore pass four
+times and are held on the fifth — the erosion lives in the sum, which no
+single-step reviewer saw. A proposal that declares no change but adds lines about
+budgets, limits, approvals, permissions or thresholds trips a heuristic wire
+(`UNDECLARED_AUTONOMY`) and is held. Review records are self-declared like every
+independence label in Ante: the lock checks form, coverage, date, hash and that
+the loop did not write them, not who the reviewer is. The limit and window are
+constants in `ante/turing/lock.py`, a protected path, for the owner to set.
+
+---
+
+## D-015 · Canaries are seeded before freezing, and kept outside the checkout — ACCEPTED
+
+A canary is `ANTE-CANARY-` plus 32 hex digits, written as an HTML comment into
+each markdown or text material of a held-out pack by `ante ice seed`, before
+`nexus-casepack.py freeze` (afterwards the material is fixed by `inputs_hash`).
+The registry that maps canaries to packs lives beside the packs, outside the
+checkout; the format alone is enough to detect contamination. `ante develop`
+rejects any proposal whose spec, patch or cited findings contain a canary, at
+proposal time and again at the gate. The held-out examples already frozen in
+`examples/nexus/casepacks/` are public teaching material: they carry no canary,
+and the gate refuses any held-out root inside the checkout. A test asserts that
+the checkout contains no canary string at all.
+
+The five ICE layers (`ante/ice/layers.json`) — canary scan (detect), autonomy and
+spend margins (absorb), base-revision evaluation (contain), draft-only branch
+(recover), held-out regression stop (learn) — each declare their data and their
+assumption; `ante ice layers` fails if two share either.
+
+---
+
+## D-016 · Literary names stay in the CLI; artefacts use functional names — ACCEPTED
+
+The prompt names the mechanisms after Gibson (`nodal`, `street`, `stub`,
+`jackpot`, `ghosts`, `deck`, constructs, ICE, the Turing lock). They are kept as
+command and module names, which are internal conventions. Everything a third
+party reads uses functional names: `load_bearing_claims`, `misuse_analysis`,
+`snapshot`, `frozen_reviewer`, `shadow_trial`, `cumulative_drift`,
+`stale_claims`, `discard_archive`, finding codes such as
+`MISUSE_ANALYSIS_MISSING` and `LOAD_BEARING_UNVERIFIED`. One residue remains for
+the owner to decide: an artefact's `command` field records the command that
+produced it, so a decision's lineage lists `nodal` and `street`. Renaming those
+two commands (for example `load` and `misuse`) would remove it.
+
+---
+
+## D-017 · CI wiring is delivered as a patch for a protected commit — PROPOSED
+
+The prompt asks for the new checks in `verify-release.sh` and the runbook
+workflow. Both `scripts/verify-release.sh` and `.github/**` are protected paths,
+and adding steps is not a mechanical extraction, so this branch does not edit
+them (§11). `foundation/proposals/ci-wiring.patch` adds, for the owner to apply
+in a hand-written `protected:` commit: the characterization recordings, the
+extraction check, the foundation tests, the frozen-reviewer and defence-layer
+checks, and the institutional self-test run on `foundation/selftest-register.json`
+and published to the job summary (reported, never failing the build, as the
+self-test doctrine requires). The patch applies cleanly to this branch and the
+release gate was run with it applied.
+
+---
+
+## D-018 · Bringing main's newer commits in needs a reviewed rebaseline of two recordings — PROPOSED
+
+`main` has moved past the base commit `86addea` to `9c54ba2` (upstream sync with
+one new agent, held-out packs moved outside the checkout). A trial merge of
+`origin/main` into this branch conflicts only in `CHANGELOG.md` (both entries are
+kept). In the merged tree all foundation tests pass and 112 of 114
+characterization cases match; the two that differ — `catalog--check` and
+`check--check-agent-privileges` — print "507 agents" where the recording says
+506. `main` itself prints exactly those lines, so the difference is upstream
+data, not behaviour introduced here.
+
+**Proposal.** Merge `main`, then in a separate commit move the characterization
+base to the merge base and re-record those two cases from `main`'s own scripts
+(delete the two golden files, `run.py record`, state why), as the
+characterization contract requires for any rebaseline.
+
+---
+
+## D-019 · Findings of the final clean-context review — ACCEPTED
+
+A reviewer with a clean context (`SEPARATED_CONTEXT`: same model family, so a
+coherence function, not an independent barrier) received only the diff, the
+mandate and the test results. Every finding was checked against the code before
+acting on it; all were confirmed.
+
+| Finding | Disposition |
+|---|---|
+| P1 · The gate could answer `PROPOSE` without the self-test | A gate without a self-test register now holds (`no self-test evidence register supplied`). |
+| P1 · Every loop limit read a state file the caller chose | The state is anchored in `refs/ante/develop-state` (absolute path and head hash). A fresh, different or truncated file is refused; only a human resets the loop by deleting the ref. Tested. |
+| P1 · The loop could edit checks that `decide` and `cohere` rely on (`nodal`, `street`, `close`, chain loading) | `ante/strategy/**`, `ante/cli.py`, `ante/deck.py` and the package entry points are protected; the strategy commands are no longer an editable scope. `strategy/*.md` already covers every Markdown file under `strategy/` (fnmatch semantics, now stated in the policy), so the playbook and runbook scopes were dead and are removed. |
+| P1 · `ATTRIBUTED_INTENT` could be laundered by restating the id one step removed | Artefacts carry `claim_history` (schema version 2): every status any ancestor recorded, through the whole lineage. Restating as `HYPOTHESIS` and then as `EVIDENCE` downstream needs the upgrade. Tested. |
+| P1 · No test showed the gate rejecting a held-out regression | New tests run the gate on refrozen held-out copies of the example packs outside the checkout: a regression is `REJECT`, two stop the loop, and a measured improvement with every check passes as `PROPOSE` and one draft plan. |
+| P2 · A system-origin reconciliation could supersede an external one | A system entry never replaces an external or owner outcome. Tested. |
+| P2 · A caller-set sample floor could manufacture a finding | `develop` requires the policy's `finding_min_sample` (30) for calibration groups and pattern decisions; a lowered `stub --min-history` never makes a candidate eligible. |
+| P2 · The upgrading observation's origin was unchecked | `upgrade.source` is `{ref, origin}`; `system` is refused. |
+| P2 · Three documentation overclaims | Self-test docstring, ledger truncation note and the test count corrected. |
+| P3 · No lock on ledger appends | Appends take an exclusive file lock; a concurrency test appends from eight processes. |
+
+What the review could not settle from its inputs, and stays as stated before:
+independence labels, Turing reviews and model reviews are self-declared; the
+self-test and the CI steps run in CI only after the owner applies
+`ci-wiring.patch` (D-017).

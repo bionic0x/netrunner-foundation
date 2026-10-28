@@ -86,15 +86,27 @@ class RunCheck(unittest.TestCase):
         self.assertEqual('PROCEED_WITH_CONDITIONS', json.loads(out)['verdict'])
 
     def test_a_chain_built_on_another_doctrine_is_not_complete(self):
-        code, out, _ = self.run_cli('run', 'strategic-decision', '--artifacts', str(self.chain.out))
+        other = json.loads(Path(CONTRACTS).read_text())
+        other['coherence_tests'][0]['question'] = 'a different wording'
+        path = self.chain.dir / 'other-contracts.json'
+        path.write_text(json.dumps(other))
+        chain = Chain(contracts=str(path))
+        self.addCleanup(chain.close)
+        chain.build()
+        code, out, _ = self.run_cli('run', 'strategic-decision', '--artifacts', str(chain.out))
         self.assertEqual(1, code)
         self.assertEqual(['cohere', 'pathology'], json.loads(out)['non_canonical_doctrine'])
 
     def test_incomplete_chain(self):
-        (self.chain.out / 'react.json').unlink()
+        for name in ('react', 'nodal', 'decide'):   # nodal names react as a parent, decide names nodal
+            (self.chain.out / f'{name}.json').unlink()
         code, out, _ = self.run_cli('run', 'strategic-decision', '--artifacts', str(self.chain.out))
         self.assertEqual(1, code)
-        self.assertEqual(['react'], json.loads(out)['missing'])
+        self.assertEqual(['react', 'decide'], json.loads(out)['missing'])
+
+    def test_a_missing_parent_breaks_the_run(self):
+        (self.chain.out / 'react.json').unlink()
+        self.assertEqual(3, self.run_cli('run', 'strategic-decision', '--artifacts', str(self.chain.out))[0])
 
     def test_tampered_artefact_breaks_the_run(self):
         art = json.loads((self.chain.out / 'watch.json').read_text())
