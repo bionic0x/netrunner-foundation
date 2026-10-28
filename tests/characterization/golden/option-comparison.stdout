@@ -1,0 +1,48 @@
+{
+  "base": {
+    "undominated": [
+      "bounded-pilot"
+    ],
+    "dominance": [
+      {
+        "preferred": "bounded-pilot",
+        "dominated": "large-team",
+        "evidence_basis": [
+          "HYPOTHESIS"
+        ],
+        "measured_only": false
+      }
+    ],
+    "excluded": [
+      {
+        "id": "inadmissible-fast",
+        "admissibility": "INADMISSIBLE",
+        "fatal_defect": true
+      }
+    ],
+    "unknown_factors": []
+  },
+  "scenarios": [
+    {
+      "id": "team-delivers-earlier",
+      "comparison": {
+        "undominated": [
+          "bounded-pilot",
+          "large-team"
+        ],
+        "dominance": [],
+        "excluded": [
+          {
+            "id": "inadmissible-fast",
+            "admissibility": "INADMISSIBLE",
+            "fatal_defect": true
+          }
+        ],
+        "unknown_factors": []
+      },
+      "frontier_changed": true
+    }
+  ],
+  "decision": "HUMAN_COMPARISON_REQUIRED",
+  "interpretation": "Dominance is conditional on supplied values and the selected factors. Edges whose evidence_basis includes TARGET, ESTIMATE or HYPOTHESIS are not measured superiority. No causal proof or weighted score."
+}

@@ -1,0 +1,47 @@
+usage: probe-host-claude-code.py [-h] --agent AGENT --policy POLICY --out OUT
+                                 [--model MODEL] [--valid-hours VALID_HOURS]
+                                 [--keep-raw] [--expiry-wait EXPIRY_WAIT]
+
+probe-host-claude-code.py — drive a real Claude Code host and record what it did.
+
+Produces a host acceptance record for scripts/host-acceptance.py. Nothing here is
+simulated: every enforcement outcome comes from an actual host invocation, and a
+probe that cannot be run reports NOT_ATTEMPTED rather than an assumed pass.
+
+Oracles used, and why each one was chosen:
+
+  discovery        `claude -p --agent <unknown>` prints the host's own list of
+                   available agents and exits before any model call. Free, exact,
+                   and it reveals the identifier the host actually registers —
+                   which is the profile's frontmatter `name`, not its file slug.
+  allowlist        the `system`/`init` event of a stream-json session carries the
+                   resolved `tools` array. This is the host's own view of the
+                   agent's capabilities, not an inference from the profile text.
+  denied operation absence of the side effect (the file the agent was told to
+                   write does not exist) plus absence of the tool from `init`.
+                   `permission_denials` is NOT used: when a tool is outside the
+                   allowlist the host never exposes it, so no denial is recorded
+                   and an empty `permission_denials` would be read as success.
+  revocation       remove the profile, re-run the free discovery oracle.
+  scope_isolation  run the same free oracle from a directory outside the project.
+  expiry           observe profile availability after the supplied policy expires.
+                   This does not establish a universal absence of host expiry support.
+
+One model call per agent (the permitted/denied operation turn). Everything else
+costs nothing.
+
+Usage:
+  probe-host-claude-code.py --agent <slug> --policy <scope-policy.json>       --out evidence/host-acceptance/<slug>.json [--model haiku]
+
+options:
+  -h, --help            show this help message and exit
+  --agent AGENT         canonical agent slug
+  --policy POLICY       scope policy consumed by agent-capabilities.py
+  --out OUT
+  --model MODEL
+  --valid-hours VALID_HOURS
+  --keep-raw            also store the full stream-json transcript alongside
+                        the distilled one
+  --expiry-wait EXPIRY_WAIT
+                        seconds the probe may wait for the policy window to
+                        close before reporting the expiry probe NOT_ATTEMPTED

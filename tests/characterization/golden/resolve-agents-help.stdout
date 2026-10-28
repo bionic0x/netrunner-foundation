@@ -1,0 +1,14 @@
+usage: resolve-agents.py [-h] [--agent AGENT] [--division DIVISION]
+                         [--agents-file AGENTS_FILE] [--runbook RUNBOOK]
+                         [--list-runbooks]
+
+Resolve catalog IDs, display names and runbooks to adapter slugs (stdlib
+only).
+
+options:
+  -h, --help            show this help message and exit
+  --agent AGENT
+  --division DIVISION
+  --agents-file AGENTS_FILE
+  --runbook RUNBOOK
+  --list-runbooks
