@@ -1,0 +1,17 @@
+test_foundation_and_tests_are_infrastructure (test_division_infrastructure.DivisionInfrastructure.test_foundation_and_tests_are_infrastructure) ... ok
+test_unknown_division_remains_rejected (test_division_infrastructure.DivisionInfrastructure.test_unknown_division_remains_rejected) ... ok
+setUpClass (test_legacy_cli.LegacyCLI) ... ERROR
+test_exited_parent_with_child_holding_pipes_is_bounded (test_runner_timeout.RunnerTimeout.test_exited_parent_with_child_holding_pipes_is_bounded) ... ok
+
+======================================================================
+ERROR: setUpClass (test_legacy_cli.LegacyCLI)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/1470bd876a88/ante-foundation/tests/characterization/test_legacy_cli.py", line 61, in setUpClass
+    raise AssertionError("missing or orphan frozen streams")
+AssertionError: missing or orphan frozen streams
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.850s
+
+FAILED (errors=1)
