@@ -1,0 +1,4 @@
+usage: resolve-agents.py [-h] [--agent AGENT] [--division DIVISION]
+                         [--agents-file AGENTS_FILE] [--runbook RUNBOOK]
+                         [--list-runbooks]
+resolve-agents.py: error: unrecognized arguments: --foundation-unknown-option

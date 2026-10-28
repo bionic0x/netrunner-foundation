@@ -1,0 +1,15 @@
+usage: integration-state.py [-h] [--force] {check,record,sync,explain} tool
+
+Verify and synchronize generated adapters with granular per-agent state. State
+v2 records each source hash and the concrete output hashes it owns. Per-agent
+tools can then rebuild only changed/new/corrupted agents, while roster and
+plugin tools deliberately fall back to a clean full rebuild. ``check`` is
+strictly read-only; ``sync`` is the only mode that mutates generated outputs.
+
+positional arguments:
+  {check,record,sync,explain}
+  tool
+
+options:
+  -h, --help            show this help message and exit
+  --force               force sync to perform a clean full rebuild

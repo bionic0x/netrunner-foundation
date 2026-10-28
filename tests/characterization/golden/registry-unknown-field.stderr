@@ -1,0 +1,1 @@
+registry: tools.json: tool 'codex' has no field 'install_kind'

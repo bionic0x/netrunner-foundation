@@ -1,0 +1,8 @@
+test_foundation_and_tests_are_infrastructure (test_division_infrastructure.DivisionInfrastructure.test_foundation_and_tests_are_infrastructure) ... ok
+test_unknown_division_remains_rejected (test_division_infrastructure.DivisionInfrastructure.test_unknown_division_remains_rejected) ... ok
+test_frozen_contracts (test_legacy_cli.LegacyCLI.test_frozen_contracts) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 9.863s
+
+OK

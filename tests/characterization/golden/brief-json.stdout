@@ -1,0 +1,111 @@
+{
+  "instance_id": "SYNTHETIC-STRATEGIC-DECISION-001",
+  "at": "2026-10-28T12:00:00Z",
+  "objective": {
+    "purpose": "Choose a supportable bounded course of action",
+    "non_object": "Maximize completed tasks or agent calls",
+    "success_condition": "The owner can reconstruct evidence, alternatives, limits and conservation"
+  },
+  "decision_state": "PROCEED",
+  "closed": true,
+  "owner": "fixture-owner",
+  "reviewers": [
+    "fixture-reviewer"
+  ],
+  "waiting_on_owner": [],
+  "closure": {
+    "closed": {
+      "outcome": "SUCCESS",
+      "closure": {
+        "achieved": "Synthetic plan meets fixture predicates",
+        "outstanding": "No unresolved fixture obligations; live effectiveness unmeasured",
+        "accountable": "fixture-owner",
+        "on_breach": "Reopen this fixture decision",
+        "conservation_resources": "Fixture maintainers and versioned replay history"
+      }
+    }
+  },
+  "results": [
+    {
+      "task": "A",
+      "agent": "general-strategy-director",
+      "status": "SUCCEEDED",
+      "attempts": 1,
+      "spent": 1,
+      "model": null,
+      "evidence_refs": [
+        "synthetic-result-A"
+      ],
+      "asserts": {},
+      "inputs_stale": false,
+      "blockers": [
+        "INSTANCE_CLOSED"
+      ]
+    },
+    {
+      "task": "B",
+      "agent": "research-synthesist",
+      "status": "SUCCEEDED",
+      "attempts": 1,
+      "spent": 1,
+      "model": null,
+      "evidence_refs": [
+        "synthetic-result-B"
+      ],
+      "asserts": {},
+      "inputs_stale": false,
+      "blockers": [
+        "INSTANCE_CLOSED"
+      ]
+    },
+    {
+      "task": "C",
+      "agent": "specialized-strategic-assurance-lead",
+      "status": "SUCCEEDED",
+      "attempts": 1,
+      "spent": 1,
+      "model": null,
+      "evidence_refs": [
+        "synthetic-result-C"
+      ],
+      "asserts": {},
+      "inputs_stale": false,
+      "blockers": [
+        "DEPENDENCY_REVIEW:A",
+        "DEPENDENCY_REVIEW:B",
+        "INSTANCE_CLOSED"
+      ]
+    }
+  ],
+  "acceptances": {
+    "accepted": 3,
+    "rejected": 0
+  },
+  "independence": {
+    "shared_model_tasks": {},
+    "shared_source_roots": {
+      "fixture-source": [
+        "CLM-1",
+        "CLM-2"
+      ]
+    },
+    "plan_warnings": []
+  },
+  "budget": {
+    "spent": 3,
+    "reserve": 2,
+    "reserve_released": 0,
+    "uncommitted_cost": 5
+  },
+  "record": [
+    {
+      "at": "2026-09-15T12:00:00Z",
+      "type": "close",
+      "issuer": "fixture-owner",
+      "evidence_refs": [
+        "synthetic-decision"
+      ]
+    }
+  ],
+  "note": "Derived from the instance and event log only; the brief decides nothing."
+}

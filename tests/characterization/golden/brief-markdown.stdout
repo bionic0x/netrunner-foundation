@@ -1,0 +1,44 @@
+# Decision brief: SYNTHETIC-STRATEGIC-DECISION-001
+
+As of 2026-10-28T12:00:00Z. Decision state **PROCEED** (closed). Owner `fixture-owner`.
+
+**Purpose.** Choose a supportable bounded course of action  
+**Not the goal.** Maximize completed tasks or agent calls  
+**Success means.** The owner can reconstruct evidence, alternatives, limits and conservation
+
+## Waiting on you (0)
+
+Nothing is waiting on the owner.
+
+## Closure
+
+Closed with outcome **SUCCESS**.
+- achieved: Synthetic plan meets fixture predicates
+- outstanding: No unresolved fixture obligations; live effectiveness unmeasured
+- accountable: fixture-owner
+- on_breach: Reopen this fixture decision
+- conservation_resources: Fixture maintainers and versioned replay history
+
+## Results
+
+| Task | Agent | Status | Model | Spent | Asserts | Blockers |
+|---|---|---|---|---|---|---|
+| A | general-strategy-director | SUCCEEDED | — | 1 | — | INSTANCE_CLOSED |
+| B | research-synthesist | SUCCEEDED | — | 1 | — | INSTANCE_CLOSED |
+| C | specialized-strategic-assurance-lead | SUCCEEDED | — | 1 | — | DEPENDENCY_REVIEW:A, DEPENDENCY_REVIEW:B, INSTANCE_CLOSED |
+
+Acceptances: 3 accepted, 0 rejected.
+
+## Independence
+
+- Claims CLM-1, CLM-2 share source root `fixture-source`.
+
+## Budget
+
+Spent 3; reserve 2 (released 0); uncommitted 5.
+
+## Record
+
+- 2026-09-15T12:00:00Z `close` by `fixture-owner` — evidence_refs: ["synthetic-decision"]
+
+_Derived from the instance and event log only; the brief decides nothing._

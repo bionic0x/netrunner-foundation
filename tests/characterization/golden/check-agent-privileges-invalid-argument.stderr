@@ -1,0 +1,2 @@
+usage: check-agent-privileges.py [-h] [--root ROOT] [--inventory]
+check-agent-privileges.py: error: unrecognized arguments: --foundation-unknown-option

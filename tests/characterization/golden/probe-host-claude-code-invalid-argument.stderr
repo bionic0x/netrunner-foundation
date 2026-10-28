@@ -1,0 +1,4 @@
+usage: probe-host-claude-code.py [-h] --agent AGENT --policy POLICY --out OUT
+                                 [--model MODEL] [--valid-hours VALID_HOURS]
+                                 [--keep-raw] [--expiry-wait EXPIRY_WAIT]
+probe-host-claude-code.py: error: the following arguments are required: --agent, --policy, --out

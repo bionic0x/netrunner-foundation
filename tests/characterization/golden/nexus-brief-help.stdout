@@ -1,0 +1,34 @@
+usage: nexus-brief.py [-h] --events EVENTS --at AT [--json] instance
+
+nexus-brief.py — the owner's decision brief for a NEXUS instance (Overdrive, Phase 3).
+
+The engine refuses bad closures; it does not tell the owner, in one place, what
+is waiting on them and why the instance stands where it does. This brief does,
+from the instance and its event log alone. It decides nothing and runs nothing.
+
+    nexus-brief.py INSTANCE_JSON --events EVENTS_JSONL --at ISO_TIME [--json]
+
+Sections, in the order an owner needs them:
+
+  waiting on you   unresolved assertion conflicts, open dissent, holds, closed
+                   challenger gates, claims under review, running tasks
+  closure          whether `close` and `terminate SUFFICIENT_RESULT` would be
+                   admitted now, asked of the engine itself with a probe event
+                   that is never recorded
+  results          each task's status, agent, model, cost, evidence and asserts
+  independence     shared models, shared source roots, plan-linter warnings
+  budget           spent, reserve, releases, uncommitted
+  record           every owner and reviewer event with its stated reason: the
+                   trail that answers "why was this decided"
+
+The Phase 3 kill criterion is an owner who can no longer reconstruct a decision
+from the brief and the event history; the record section exists for that test.
+
+positional arguments:
+  instance
+
+options:
+  -h, --help       show this help message and exit
+  --events EVENTS
+  --at AT          ISO time the brief is computed for (expiry checks)
+  --json

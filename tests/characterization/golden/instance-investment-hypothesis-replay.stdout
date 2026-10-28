@@ -1,0 +1,110 @@
+{
+  "instance_hash": "9600d07e6bcc5d01b82fdb21cda6ebe7b3947ed892b842294d132bf9f3d8e684",
+  "decision_state": "PROCEED",
+  "tasks": {
+    "H1": {
+      "status": "SUCCEEDED",
+      "attempts": 1,
+      "spent": 1,
+      "reserved": 0,
+      "result_revision": 1,
+      "dependency_revisions": {},
+      "inputs_stale": false,
+      "claim_revisions": {
+        "CLM-1": 1
+      },
+      "evidence_refs": [
+        "synthetic-result-H1"
+      ]
+    },
+    "V1": {
+      "status": "SUCCEEDED",
+      "attempts": 1,
+      "spent": 1,
+      "reserved": 0,
+      "result_revision": 1,
+      "dependency_revisions": {
+        "H1": 1
+      },
+      "inputs_stale": false,
+      "claim_revisions": {},
+      "evidence_refs": [
+        "synthetic-result-V1"
+      ]
+    },
+    "A1": {
+      "status": "SUCCEEDED",
+      "attempts": 1,
+      "spent": 1,
+      "reserved": 0,
+      "result_revision": 1,
+      "dependency_revisions": {
+        "V1": 1
+      },
+      "inputs_stale": false,
+      "claim_revisions": {},
+      "evidence_refs": [
+        "synthetic-result-A1"
+      ]
+    }
+  },
+  "claims": {
+    "CLM-1": {
+      "id": "CLM-1",
+      "revision": 1,
+      "statement": "Synthetic hypothesis premise; not market evidence",
+      "status": "HYPOTHESIS",
+      "scope": "shared",
+      "source_refs": [
+        "fixture-hypothesis-card"
+      ],
+      "source_roots": [
+        "fixture-proposer"
+      ],
+      "depends_on": [],
+      "expires": "2030-01-01T00:00:00Z"
+    }
+  },
+  "conditions": {},
+  "review_required": [],
+  "spent": 3,
+  "closed": true,
+  "dissent": [],
+  "events": {
+    "ihv-1": "313e82c4fb90fb54fe179f51553a89a53a82beb56721a38a87218dc5a07776ce",
+    "ihv-2": "06d0c9019fd8a853488c3ff3f9363f83417ef7f334084ebcb1746a40b5e07393",
+    "ihv-3": "bbb9fee2c2287fd4b288bfc81fc1d61790a461e29aa49f7ed9d38a1ddaeee0f2",
+    "ihv-4": "5ca34bfbd463162c7ba65444cf768638c0497782e6f7e8ce798fa43f8121b2e0",
+    "ihv-5": "2b8dcc0b58097fcf4f34137bc6a5bc9b2319afded1cbba1e5687a304cad7bfcd",
+    "ihv-6": "2a99dff01a1196a8f03e954320e8312f634e43106ef48cae4a7eeeeccf72ca3e",
+    "ihv-7": "85b227fe9eb294ef2a3bcb225c41807b3241701897488ed22530d1996f4456c5"
+  },
+  "last_at": "2026-10-10T12:00:00Z",
+  "output_refs": [
+    "synthetic-result-A1",
+    "synthetic-result-H1",
+    "synthetic-result-V1"
+  ],
+  "open_dissent": [],
+  "dissent_responses": [],
+  "reserve_released": 0,
+  "reserve_releases": [],
+  "assertions": {
+    "H1": {},
+    "V1": {
+      "verdict:H1": "PROCEED_WITH_CONDITIONS"
+    },
+    "A1": {}
+  },
+  "models": {},
+  "conflict_resolutions": {},
+  "verdict_overrides": {},
+  "verdict_override_history": [],
+  "closure": {
+    "achieved": "Synthetic hypothesis validated with conditions and entered paper tracking",
+    "outstanding": "Paper-tracking evidence and live cost confirmation remain open",
+    "accountable": "fixture-owner",
+    "on_breach": "Return the hypothesis to the validator and suspend dependent decision support",
+    "conservation_resources": "Fixture experiment ledger and versioned replay history"
+  }
+}

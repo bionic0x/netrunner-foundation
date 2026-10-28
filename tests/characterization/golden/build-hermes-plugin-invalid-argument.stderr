@@ -1,0 +1,2 @@
+usage: build-hermes-plugin.py [-h] [--repo-root REPO_ROOT] [--out OUT]
+build-hermes-plugin.py: error: unrecognized arguments: --foundation-unknown-option

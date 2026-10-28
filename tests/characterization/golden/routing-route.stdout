@@ -1,0 +1,69 @@
+{
+  "status": "MODELS_NOT_OBSERVED",
+  "coverage": {
+    "present": [
+      "assurance",
+      "causal",
+      "evidence"
+    ],
+    "unknown_vectors": [],
+    "required": [
+      "assurance",
+      "causal",
+      "evidence",
+      "resource",
+      "termination"
+    ],
+    "missing": [
+      "resource",
+      "termination"
+    ],
+    "kinds": {
+      "assurance": "sequential",
+      "causal": "sequential",
+      "evidence": "cumulative"
+    },
+    "note": "A missing vector is a gap in the instance, never a satisfied requirement."
+  },
+  "tasks": [
+    {
+      "task_id": "A",
+      "level": "strategic",
+      "vector": "causal",
+      "contribution": "sequential",
+      "characteristic_failure": "a necessary dependency is missing, so no later step is enabled",
+      "admissible": [],
+      "excluded": [],
+      "selection": "NO_OBSERVED_TARGET"
+    },
+    {
+      "task_id": "B",
+      "level": "strategic",
+      "vector": "evidence",
+      "contribution": "cumulative",
+      "characteristic_failure": "findings accumulate without changing the decisive uncertainty",
+      "admissible": [],
+      "excluded": [],
+      "selection": "NO_OBSERVED_TARGET"
+    },
+    {
+      "task_id": "C",
+      "level": "operational",
+      "vector": "assurance",
+      "contribution": "sequential",
+      "characteristic_failure": "a technical PASS is promoted into authority it does not carry",
+      "admissible": [],
+      "excluded": [],
+      "selection": "NO_OBSERVED_TARGET"
+    }
+  ],
+  "observation_notes": [
+    "no observation file supplied"
+  ],
+  "limitations": [
+    "Admissibility only. No ranking, no weighted score, no claim that one provider performs better.",
+    "Dominance uses declared cost and context from the operator's own observations; it is not measured performance.",
+    "Provider diversity is not a benefit in itself: justify it by a requirement no single observed target meets, or by a measured difference.",
+    "An unobserved or expired model is not selectable; that is a gap to close, not a reason to fall back to a guess."
+  ]
+}

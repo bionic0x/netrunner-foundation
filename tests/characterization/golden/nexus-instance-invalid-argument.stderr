@@ -1,0 +1,4 @@
+usage: nexus-instance.py [-h] [--events EVENTS] [--checkpoint CHECKPOINT]
+                         [--output OUTPUT] [--at AT]
+                         {validate,plan,replay} instance
+nexus-instance.py: error: the following arguments are required: command, instance

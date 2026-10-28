@@ -1,0 +1,2 @@
+usage: nexus-lint.py [-h] [--strict] instance
+nexus-lint.py: error: the following arguments are required: instance

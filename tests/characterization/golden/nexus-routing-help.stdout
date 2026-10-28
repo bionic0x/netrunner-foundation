@@ -1,0 +1,43 @@
+usage: nexus-routing.py [-h] [--observations OBSERVATIONS] [--at AT]
+                        {route,coverage} instance
+
+nexus-routing.py — select execution targets by level, vector and factor.
+
+NEXUS already carries two of the three dimensions this router needs. Every task
+declares a `level` validated against the five canonical planes, and
+`option_analysis` compares factors without weighted scores. The third dimension
+was missing in two places: `vector` was free text that nothing checked, and the
+engine had no notion of an execution target at all — zero provider or model
+references in 430 lines, because it plans and replays but never executes.
+
+This router closes both. It answers one question per task: given the plane the
+task belongs to, the vector it contributes along, and the requirements it
+declares, which observed execution targets are admissible?
+
+What it refuses to do:
+
+  - It never ranks providers. Admissibility first: a target that cannot meet a
+    declared requirement is excluded, not scored lower. Then the undominated set
+    and the dominance edges, with each edge's evidence basis — the same
+    discipline nexus-options.py already applies to options.
+  - It never selects an unobserved model. strategy/providers.json ships five
+    providers and zero verified models on purpose: a catalog written from memory
+    is stale the week it merges. A model becomes selectable when an observation
+    supplies its id, host, limits and valid_until, and expires when that passes.
+  - It never treats provider diversity as a benefit. Spreading work across
+    vendors is justified by a requirement no single observed target meets, or by
+    a measured difference under the evaluation protocol. Otherwise it is cost and
+    maintenance with no evidenced return.
+
+Usage:
+  nexus-routing.py coverage INSTANCE            # which vectors the instance carries
+  nexus-routing.py route INSTANCE [--observations FILE] [--at ISO8601]
+
+positional arguments:
+  {route,coverage}
+  instance
+
+options:
+  -h, --help            show this help message and exit
+  --observations OBSERVATIONS
+  --at AT

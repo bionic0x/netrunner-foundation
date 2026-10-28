@@ -1,0 +1,19 @@
+usage: nexus-instance.py [-h] [--events EVENTS] [--checkpoint CHECKPOINT]
+                         [--output OUTPUT] [--at AT]
+                         {validate,plan,replay} instance
+
+Deterministic NEXUS planner and event replay. Never executes a tool or agent.
+All authority/evidence records are supplied assertions. The host must
+authenticate and enforce them before live action. Replay validates contracts,
+not truth.
+
+positional arguments:
+  {validate,plan,replay}
+  instance
+
+options:
+  -h, --help            show this help message and exit
+  --events EVENTS
+  --checkpoint CHECKPOINT
+  --output OUTPUT
+  --at AT

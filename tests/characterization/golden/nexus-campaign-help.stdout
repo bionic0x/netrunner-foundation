@@ -1,0 +1,42 @@
+usage: nexus-campaign.py [-h] {plan,status,throughput} ...
+
+nexus-campaign.py — the Phase 1 exit of NEXUS Overdrive, decided before it is run.
+
+strategy/NEXUS-OVERDRIVE.md fixes the exit and the kill rule of Phase 1. This tool
+fixes them in code, so the decision cannot be redrafted after the results are seen:
+
+  exit    >= 6 frozen held-out packs, none written or frozen by an improver;
+          all three variants, >= 2 trials each per pack, one model, one budget
+          policy, live host only, every submission blind-judged
+  kill    if nexus_instance does not have fewer fatal defects in total than
+          fixed_team on those packs, Phase 2 does not speed up the control plane:
+          REDIRECT to improving fixed teams and profiles
+
+    nexus-campaign.py plan   --held-out ROOT --improver NAME --model ID --policy ID
+                             [--policies FILE] [--trials FILE] --operator NAME --out DIR
+    nexus-campaign.py status --held-out ROOT --improver NAME --trials FILE [--judgments FILE]
+    nexus-campaign.py throughput --held-out ROOT --improver NAME \
+                             --baseline-trials F --baseline-judgments F \
+                             --candidate-trials F --candidate-judgments F
+
+Phase 2 (throughput) runs the same campaign twice: the baseline with the
+sequential schedule, the candidate with `plan --schedule parallel`. `throughput`
+returns ADOPT_PARALLEL only if both campaigns are complete on the same packs,
+model and budget policy, the Phase 1 rule did not redirect, the median
+nexus_instance wall time fell, and its fatal defects and constraint violations
+did not rise. Otherwise KEEP_SEQUENTIAL, or INCOMPLETE. An increase in fatal
+defects must be rerun once; if it survives, Phase 2 is killed (charter).
+
+`plan` lists the runs still missing, the exact commands to execute them, and the
+spend ceiling those commands are allowed. It spends nothing. `status` reports
+INCOMPLETE (with every missing item), PROCEED_TO_PHASE_2 or REDIRECT.
+
+Limits: six packs do not support a claim of superiority; the kill rule is a
+pre-registered decision convention, not a significance test. Labels, counters and
+reviewer independence are taken from the records, not authenticated.
+
+positional arguments:
+  {plan,status,throughput}
+
+options:
+  -h, --help            show this help message and exit

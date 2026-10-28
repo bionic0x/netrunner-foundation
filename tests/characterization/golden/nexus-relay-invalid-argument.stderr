@@ -1,0 +1,3 @@
+usage: nexus-relay [-h] [--data-dir DATA_DIR]
+                   {init,invite,serve,verify,anchor,reconcile} ...
+nexus-relay: error: the following arguments are required: command

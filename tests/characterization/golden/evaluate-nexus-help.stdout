@@ -1,0 +1,39 @@
+usage: evaluate-nexus.py [-h] [--cases CASES] --runs RUNS
+                         [--judgments JUDGMENTS] [--require-paired]
+
+evaluate-nexus.py — join recorded host trials with blind reviewer judgments.
+
+Three variants answer the same case under the same model, inputs and budget:
+`single_agent`, `fixed_team`, `nexus_instance`. This tool reports what was
+measured. It never synthesizes a result, never ranks the variants, and never
+reduces the metrics to one number.
+
+Why two files. Assignment knowledge can bias artifact review. So execution and judgment are recorded separately:
+
+  trials     one row per run: variant, model, inputs, budget, and the costs the
+             runner observed (money, tokens, wall time) plus counters the engine
+             must instrument consistently across all variants.
+  judgments  one row per SUBMISSION: the reviewer's counts, keyed only by an
+             opaque submission id. A judgment that names a variant, a case, or a
+             reviewer who also ran the trials is rejected.
+
+The join happens after review. Separate files reduce direct label leakage but do
+not prove blinding or authenticate reviewer identities, costs or evidence.
+
+Why no composite. The metrics answer different questions and trade against each
+other. A fatal defect is not repaid by a lower token count, and a run that is
+cheap because it stopped early is not thereby better. Any input carrying a
+`score`, `rank` or `overall` field is rejected: ranking is the reader's job,
+performed against a stated purpose this tool does not have.
+
+Usage:
+  evaluate-nexus.py --runs host-trials.json --judgments host-judgments.json
+  evaluate-nexus.py --runs ... --judgments ... --require-paired
+
+options:
+  -h, --help            show this help message and exit
+  --cases CASES
+  --runs RUNS
+  --judgments JUDGMENTS
+  --require-paired      require at least one fully judged triple, no
+                        incomplete pairs and no unjudged submissions

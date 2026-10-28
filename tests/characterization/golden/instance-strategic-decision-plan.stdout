@@ -1,0 +1,105 @@
+{
+  "option_comparison": {
+    "base": {
+      "undominated": [
+        "bounded-pilot"
+      ],
+      "dominance": [
+        {
+          "preferred": "bounded-pilot",
+          "dominated": "large-team",
+          "evidence_basis": [
+            "HYPOTHESIS"
+          ],
+          "measured_only": false
+        }
+      ],
+      "excluded": [
+        {
+          "id": "inadmissible-fast",
+          "admissibility": "INADMISSIBLE",
+          "fatal_defect": true
+        }
+      ],
+      "unknown_factors": []
+    },
+    "scenarios": [
+      {
+        "id": "team-delivers-earlier",
+        "comparison": {
+          "undominated": [
+            "bounded-pilot",
+            "large-team"
+          ],
+          "dominance": [],
+          "excluded": [
+            {
+              "id": "inadmissible-fast",
+              "admissibility": "INADMISSIBLE",
+              "fatal_defect": true
+            }
+          ],
+          "unknown_factors": []
+        },
+        "frontier_changed": true
+      }
+    ],
+    "decision": "HUMAN_COMPARISON_REQUIRED",
+    "interpretation": "Dominance is conditional on supplied values and the selected factors. Edges whose evidence_basis includes TARGET, ESTIMATE or HYPOTHESIS are not measured superiority. No causal proof or weighted score."
+  },
+  "instance_id": "SYNTHETIC-STRATEGIC-DECISION-001",
+  "decision_state": "PROCEED",
+  "tasks": [
+    {
+      "task_id": "A",
+      "agent": "general-strategy-director",
+      "level": "strategic",
+      "vector": "causal",
+      "status": "SUCCEEDED",
+      "blockers": [
+        "INSTANCE_CLOSED"
+      ],
+      "ready": false
+    },
+    {
+      "task_id": "B",
+      "agent": "research-synthesist",
+      "level": "strategic",
+      "vector": "evidence",
+      "status": "SUCCEEDED",
+      "blockers": [
+        "INSTANCE_CLOSED"
+      ],
+      "ready": false
+    },
+    {
+      "task_id": "C",
+      "agent": "specialized-strategic-assurance-lead",
+      "level": "operational",
+      "vector": "assurance",
+      "status": "SUCCEEDED",
+      "blockers": [
+        "DEPENDENCY_REVIEW:A",
+        "DEPENDENCY_REVIEW:B",
+        "INSTANCE_CLOSED"
+      ],
+      "ready": false
+    }
+  ],
+  "spent": 3,
+  "reserve": 2,
+  "reserve_released": 0,
+  "uncommitted_cost": 5,
+  "open_dissent": [],
+  "assertion_conflicts": {},
+  "challenger_gates": {},
+  "shared_model_tasks": {},
+  "shared_source_roots": {
+    "fixture-source": [
+      "CLM-1",
+      "CLM-2"
+    ]
+  },
+  "execution_authority": false,
+  "mode": "OFFLINE_CONTRACT_REPLAY"
+}

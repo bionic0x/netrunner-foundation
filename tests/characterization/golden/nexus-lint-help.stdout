@@ -1,0 +1,34 @@
+usage: nexus-lint.py [-h] [--strict] instance
+
+nexus-lint.py — check a NEXUS instance's plan before the owner adopts it (Overdrive, Phase 2).
+
+The engine refuses an invalid instance. A valid instance can still be a poor
+plan: work that cannot run in parallel because two tasks claim one resource, task
+limits that can only be met by eating into the reserve, or a shared assertion key
+that no independent task can contradict, so a disagreement could never surface.
+
+    nexus-lint.py INSTANCE_JSON [--strict]
+
+Reports the plan's shape (critical path, depth, widest level) and findings:
+
+  ERROR  INVALID_INSTANCE       the engine refuses the instance
+  WARN   SERIALIZED_RESOURCE    independent tasks share a resource scope; the
+                                parallel schedule runs them one after another
+  WARN   BUDGET_HEADROOM        the sum of task cost limits exceeds the ordinary
+                                budget (cost limit minus reserve)
+  WARN   SINGLE_SOURCE_KEY      only one task asserts a key; no conflict can surface
+  WARN   DEPENDENT_ASSERTERS    tasks asserting a key depend on one another; the
+                                later one sees the earlier answer
+  WARN   SAME_AGENT_ASSERTERS   the same agent asserts a key twice
+  WARN   MULTIPLE_SINKS         more than one final task; the deliverable is a
+                                concatenation, not a synthesis
+
+Exit status 1 on ERROR, or on WARN with --strict. The linter reads the plan only;
+it does not run, accept or judge anything.
+
+positional arguments:
+  instance
+
+options:
+  -h, --help  show this help message and exit
+  --strict    exit 1 on warnings too

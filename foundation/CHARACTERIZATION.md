@@ -57,7 +57,15 @@ The normalised harness passes 114/114 at every phase.
    the other, the raw-byte record governs, because it carries no normalisation.
 3. The release gate runs both (`tests/characterization/run.py` and
    `python3 -m unittest discover -s tests/characterization`), proposed for the
-   protected `verify-release.sh` in `foundation/proposals/ci-wiring.patch`.
-4. Codex's branch is merged into this one once its third batch of frozen streams
-   is published; until then the comparison uses its manifest, which lists all
-   116 cases and their hashes.
+   protected `verify-release.sh` and the workflow in
+   `foundation/proposals/ci-wiring.patch`.
+4. Codex's branch (`foundation/phase-0` at `b60af82`, all three batches of
+   frozen streams) is merged into this one without regenerating anything. Its
+   manifest is byte-identical to the one the comparison above was run on; after
+   the merge each of the 50 overlapping cases also checks the `.stdout` and
+   `.stderr` files against their manifest hashes, and all 50 match.
+
+On the merged tree: raw-byte harness 116/116 plus its two division regressions
+and its runner-timeout regression (4 unittest methods, 14.8 s); normalised
+harness 114/114. Codex's records (`BASELINE.md`, `DECISIONS.md`,
+`INVENTORY.md`) are kept verbatim after this branch's, in their own section.
