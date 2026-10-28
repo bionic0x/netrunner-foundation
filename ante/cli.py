@@ -110,6 +110,17 @@ def build_parser() -> argparse.ArgumentParser:
     learn_commands.add_parser(sub)
     from ante.develop import commands as develop_commands
     develop_commands.add_parser(sub)
+    from ante.constructs import frozen
+    frozen.add_parser(sub)
+    from ante.learn import signals, stub
+    stub.add_parser(sub)
+    signals.add_parser(sub)
+    from ante.strategy import ghosts
+    ghosts.add_parser(sub)
+    from ante import deck
+    deck.add_parser(sub)
+    from ante.ice import commands as ice_commands
+    ice_commands.add_parser(sub)
     return parser
 
 

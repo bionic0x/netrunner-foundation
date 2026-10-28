@@ -24,7 +24,9 @@ from ante.turing import lock  # noqa: E402
 
 T = '2026-10-28T12:00:00Z'
 ZERO = {name: 0 for name in lock.DIMENSIONS}
-TARGET = 'ante/strategy/commands/frame.py'
+TARGET = 'academic/academic-anthropologist.md'
+OLD = '- **Cultural ecology**: How environment shapes culture and culture shapes environment (Steward, Rappaport)'
+NEW = '- **Cultural ecology**: How environment shapes culture, and culture shapes environment (Steward, Rappaport)'
 
 
 def git(repo, *args):
@@ -65,10 +67,11 @@ class Sandbox(unittest.TestCase):
     def setUp(self):
         self.dir = Path(tempfile.mkdtemp(prefix='case-', dir=self.root))
         self.state = str(self.dir / 'state.jsonl')
+        subprocess.run(['git', '-C', str(self.repo), 'update-ref', '-d', develop.ANCHOR_REF], capture_output=True)
 
     def finding(self):
         path = self.dir / 'patterns.json'
-        path.write_text(json.dumps({'kind': 'patterns', 'proposals': [{'feature': 'pathology:x'}]}))
+        path.write_text(json.dumps({'kind': 'patterns', 'decisions_used': 40, 'proposals': [{'feature': 'pathology:x'}]}))
         return {'kind': 'patterns', 'path': str(path), 'sha256': canon.sha256_hex(path.read_bytes())}
 
     def spec(self, ident='p1', scope=(TARGET,), delta=None, cost=5):
@@ -99,7 +102,7 @@ class Sandbox(unittest.TestCase):
         return str(out)
 
     def frame_patch(self):
-        return self.patch({TARGET: ('"""ante frame', '"""ante frame ')})
+        return self.patch({TARGET: (OLD, NEW)})
 
     def propose(self, spec, patch, at=T):
         return develop.propose(spec, patch, self.base, self.state, at, self.repo)
@@ -107,21 +110,52 @@ class Sandbox(unittest.TestCase):
 
 class Propose(Sandbox):
     def test_protected_and_out_of_scope_paths_are_refused_before_any_gate(self):
-        for path in ('ante/turing/lock.py', 'tests/characterization/run.py', 'foundation/develop-policy.json',
+        for path in ('ante/turing/lock.py', 'ante/strategy/commands/nodal.py', 'ante/strategy/commands/street.py',
+                     'ante/strategy/chain.py', 'tests/characterization/run.py', 'foundation/develop-policy.json',
                      'scripts/nexus-improve.py', '.github/workflows/x.yml'):
             patch = self.patch({path: ('', '\n# touch\n')}, name=path.replace('/', '_') + '.patch')
             with self.assertRaisesRegex(develop.DevelopError, 'protected|outside'):
                 self.propose(self.spec(scope=('**',)), patch)
+        frozen_patch = self.patch({'specialized/strategic-red-team.md': ('', '\nBe gentler.\n')}, name='frozen.patch')
+        with self.assertRaisesRegex(develop.DevelopError, 'frozen reviewer'):
+            self.propose(self.spec(scope=('specialized/**',)), frozen_patch)
         with self.assertRaisesRegex(develop.DevelopError, 'outside the scope this proposal declared'):
             self.propose(self.spec(scope=('engineering/**',)), self.frame_patch())
+
+    def test_an_injected_canary_rejects_the_proposal(self):
+        token = 'ANTE-CANARY-' + 'c3' * 16
+        leaked = self.patch({TARGET: (OLD, f'{NEW} ({token})')}, name='leak.patch')
+        with self.assertRaisesRegex(develop.DevelopError, 'canary'):
+            self.propose(self.spec(), leaked)
+        spec = json.loads(Path(self.spec('p2')).read_text())
+        finding = Path(spec['findings'][0]['path'])
+        finding.write_text(json.dumps({'kind': 'patterns', 'proposals': [{'feature': token}]}))
+        spec['findings'][0]['sha256'] = canon.sha256_hex(finding.read_bytes())
+        path = self.dir / 'p2.json'
+        path.write_text(json.dumps(spec))
+        with self.assertRaisesRegex(develop.DevelopError, 'canary found in finding'):
+            self.propose(str(path), self.frame_patch())
 
     def test_one_open_proposal_and_a_campaign_spend_ceiling(self):
         self.propose(self.spec('p1'), self.frame_patch())
         with self.assertRaisesRegex(develop.DevelopError, 'open proposal'):
             self.propose(self.spec('p2'), self.frame_patch())
-        develop.State(self.state).append('close', {'id': 'p1', 'outcome': 'withdrawn'}, T)
+        develop.State(self.state, self.repo).append('close', {'id': 'p1', 'outcome': 'withdrawn'}, T)
         with self.assertRaisesRegex(develop.DevelopError, 'campaign limit'):
             self.propose(self.spec('p3', cost=46), self.frame_patch())
+
+    def test_findings_need_the_policy_floor_not_the_callers(self):
+        spec = json.loads(Path(self.spec()).read_text())
+        finding = Path(spec['findings'][0]['path'])
+        cases = (({'kind': 'patterns', 'decisions_used': 5, 'proposals': [{'feature': 'x'}]}, 'rests on 5 decisions'),
+                 ({'kind': 'calibration', 'groups': [{'result': 'MEASURED', 'n': 3}]}, 'at least 30'))
+        for value, message in cases:
+            finding.write_text(json.dumps(value))
+            spec['findings'][0].update(kind=value['kind'], sha256=canon.sha256_hex(finding.read_bytes()))
+            path = self.dir / 'floor.json'
+            path.write_text(json.dumps(spec))
+            with self.assertRaisesRegex(develop.DevelopError, message):
+                self.propose(str(path), self.frame_patch())
 
     def test_findings_must_match_their_hash_and_say_something(self):
         spec = json.loads(Path(self.spec()).read_text())
@@ -146,6 +180,7 @@ class Gate(Sandbox):
         self.assertEqual(0, report['checks']['characterization']['exit'])
         self.assertEqual([], report['checks']['paths']['violations'])
         self.assertIn('no held-out evidence supplied', report['holds'])
+        self.assertIn('no self-test evidence register supplied', report['holds'])
         self.assertNotIn('ante-develop/p1', git(self.repo, 'branch', '--list'))
 
     def test_a_forged_proposal_cannot_bring_its_own_evaluator(self):
@@ -155,10 +190,10 @@ class Gate(Sandbox):
             'scripts/nexus-improve.py': ("    return {'changed': changed, 'violations': violations}",
                                          "    return {'changed': changed, 'violations': []}"),
             'tests/characterization/run.py': ('def load_cases()', 'def load_cases_unused()'),
-            TARGET: ('"""ante frame', '"""ante frame ')})
+            TARGET: (OLD, NEW + ' ' + 'ANTE-CANARY-' + '9e' * 16)})
         paths = sorted(['scripts/nexus-improve.py', 'tests/characterization/run.py', TARGET])
         spec = json.loads(Path(self.spec(scope=('**',))).read_text())
-        develop.State(self.state).append('proposal', {
+        develop.State(self.state, self.repo).append('proposal', {
             'id': 'p1', 'spec': spec, 'findings': spec['findings'], 'base': self.base,
             'patch_sha256': canon.sha256_hex(Path(patch).read_bytes()), 'paths': paths}, T)
         report = develop.gate('p1', patch, self.state, T, None, None, None, self.repo)
@@ -167,6 +202,7 @@ class Gate(Sandbox):
         self.assertEqual({'scripts/nexus-improve.py'}, flagged & {'scripts/nexus-improve.py'})
         self.assertEqual(0, report['checks']['characterization']['exit'], 'base harness, not the forged one')
         self.assertTrue(any('develop policy' in r for r in report['reasons']))
+        self.assertEqual(['patch'], report['checks']['canaries']['hits'])
 
     def test_held_out_packs_inside_the_checkout_are_refused(self):
         patch = self.frame_patch()
@@ -180,9 +216,101 @@ class Gate(Sandbox):
     def test_a_patch_changed_after_proposal_is_refused(self):
         patch = self.frame_patch()
         self.propose(self.spec(), patch)
-        Path(patch).write_text(Path(patch).read_text().replace('ante frame ', 'ante frame  '))
+        Path(patch).write_text(Path(patch).read_text().replace('culture, and', 'culture,  and'))
         with self.assertRaisesRegex(develop.DevelopError, 'differs'):
             develop.gate('p1', patch, self.state, T, None, None, None, self.repo)
+
+
+class HeldOut(Sandbox):
+    """The gate on real held-out evidence: copies of the example packs, refrozen outside the checkout."""
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        import importlib.util
+
+        def load(name, path):
+            spec = importlib.util.spec_from_file_location(name, ROOT / path)
+            module = importlib.util.module_from_spec(spec)
+            spec.loader.exec_module(module)
+            return module
+        cls.tr = load('trial_for_develop', 'scripts/nexus-trial.py')
+        cp = load('casepack_for_develop', 'scripts/nexus-casepack.py')
+        cls.held = cls.root / 'held'
+        for source in sorted((ROOT / 'examples/nexus/casepacks').iterdir()):
+            target = cls.held / source.name
+            shutil.copytree(source, target)
+            data = json.loads((target / 'pack.json').read_text())
+            data.pop('frozen')
+            data['split'], data['author'] = 'held_out', 'independent-author'
+            (target / 'pack.json').write_text(json.dumps(data))
+            for name in data['materials']:
+                with open(target / name, 'a', encoding='utf-8') as out:
+                    out.write('\n<!-- held-out copy -->\n')
+            cp.freeze(target, 'independent-author', '2026-10-10T12:00:00Z')
+        cls.policies = cls.root / 'policies.json'
+        cls.policies.write_text(json.dumps({'schema_version': 1, 'policies': {'p': {
+            'max_cost_usd': 2.0, 'max_tokens': 400000, 'max_calls': 8, 'max_wall_seconds': 1800}}}))
+
+    def record(self, label):
+        trials = self.dir / f'{label}-trials.json'
+        for pack in sorted(self.held.iterdir()):
+            for variant in ('single_agent', 'fixed_team', 'nexus_instance'):
+                self.tr.start(pack, variant, 't1', 'claude-test', 'p', self.policies, 'op-1', self.dir / label / 'runs',
+                              self.dir / label / 'art', trials, self.tr.fake_executor)
+            run = self.dir / label / 'runs' / pack.name / 't1' / 'nexus_instance'
+            for task in ('A', 'B', 'C'):
+                self.tr.accept(run, task, True, 'trial-owner', {'contract_met': True}, use_proposed=task != 'C',
+                               executor=self.tr.fake_executor)
+        return trials
+
+    def judge(self, label, trials, fatal=0):
+        rows = json.loads(trials.read_text())
+        path = self.dir / f'{label}-judgments.json'
+        path.write_text(json.dumps([{
+            'submission_id': r['submission_id'], 'reviewer': 'blind-reviewer', 'judged_at': '2099-01-01T00:00:00Z',
+            'evidence_ref': 'review', 'factual_errors': 0,
+            'fatal_defects': fatal if r['variant'] == 'nexus_instance' else 0, 'constraint_violations': 0,
+            'evidence_coverage': {'covered': 2, 'required': 2}} for r in rows]))
+        return path
+
+    def evidence(self, baseline_fatal, candidate_fatal):
+        self.runs = getattr(self, 'runs', 0) + 1
+        b, c = self.record(f'b{self.runs}'), self.record(f'c{self.runs}')
+        return {'variant': 'nexus_instance', 'held_out': str(self.held), 'improver': 'ante-develop',
+                'baseline_trials': str(b), 'baseline_judgments': str(self.judge(f'b{self.runs}', b, baseline_fatal)),
+                'candidate_trials': str(c), 'candidate_judgments': str(self.judge(f'c{self.runs}', c, candidate_fatal))}
+
+    def fatal_spec(self, ident):
+        doc = json.loads(Path(self.spec(ident)).read_text())
+        doc['metric']['name'] = 'fatal_defects'
+        path = self.dir / f'{ident}-fatal.json'
+        path.write_text(json.dumps(doc))
+        return str(path)
+
+    def test_a_held_out_regression_is_rejected_and_two_stop_the_loop(self):
+        for number in (1, 2):
+            patch = self.patch({TARGET: (OLD, NEW + ' ' * number)}, name=f'r{number}.patch')
+            self.propose(self.fatal_spec(f'r{number}'), patch)
+            report = develop.gate(f'r{number}', patch, self.state, T, self.evidence(0, 1),
+                                  str(self.repo / 'foundation/selftest-register.json'), None, self.repo)
+            self.assertEqual('REJECT', report['decision'])
+            self.assertTrue(report['held_out_regression'])
+            self.assertTrue(any(r.startswith('fatal_defects') for r in report['checks']['held_out']['reasons']))
+            develop.State(self.state, self.repo).append('close', {'id': f'r{number}', 'outcome': 'rejected'}, T)
+        with self.assertRaisesRegex(develop.DevelopError, 'stopped'):
+            self.propose(self.fatal_spec('r3'), self.frame_patch())
+
+    def test_measured_improvement_with_every_check_is_proposed_as_one_draft(self):
+        patch = self.frame_patch()
+        self.propose(self.fatal_spec('ok'), patch)
+        report = develop.gate('ok', patch, self.state, T, self.evidence(1, 0),
+                              str(self.repo / 'foundation/selftest-register.json'), None, self.repo)
+        self.assertEqual('PROPOSE', report['decision'], (report['reasons'], report['holds']))
+        self.assertEqual([], report['checks']['selftest']['new_fail_rows'])
+        self.assertIn('ante-develop/ok', git(self.repo, 'branch', '--list'))
+        plan = develop.pr('ok', self.state, 'main', T, execute=False, repo=self.repo)
+        self.assertEqual('ante-develop/ok', plan['branch'])
 
 
 def gate_entry(ident, decision, regression=None, branch=None, changed=(TARGET,), review=None):
@@ -194,20 +322,39 @@ def gate_entry(ident, decision, regression=None, branch=None, changed=(TARGET,),
     return payload
 
 
+class Anchor(Sandbox):
+    def test_a_fresh_or_truncated_state_cannot_reset_the_loop(self):
+        self.propose(self.spec('p1'), self.frame_patch())
+        fresh = str(self.dir / 'fresh.jsonl')
+        with self.assertRaisesRegex(develop.DevelopError, 'anchor'):
+            develop.propose(self.spec('p2'), self.frame_patch(), self.base, fresh, T, self.repo)
+        develop.State(self.state, self.repo).append('close', {'id': 'p1', 'outcome': 'withdrawn'}, T)
+        lines = Path(self.state).read_text().splitlines(keepends=True)
+        Path(self.state).write_text(''.join(lines[:-1]))          # cut the last entry
+        with self.assertRaisesRegex(develop.DevelopError, 'anchor'):
+            develop.State(self.state, self.repo)
+
+    def test_an_unanchored_log_with_entries_is_refused(self):
+        self.propose(self.spec('p1'), self.frame_patch())
+        subprocess.run(['git', '-C', str(self.repo), 'update-ref', '-d', develop.ANCHOR_REF], check=True)
+        with self.assertRaisesRegex(develop.DevelopError, 'no anchor'):
+            develop.State(self.state, self.repo)
+
+
 class Loop(Sandbox):
     def seed(self, ident, delta=None):
         spec = json.loads(Path(self.spec(ident, delta=delta)).read_text())
-        develop.State(self.state).append('proposal', {'id': ident, 'spec': spec, 'findings': [], 'base': self.base,
+        develop.State(self.state, self.repo).append('proposal', {'id': ident, 'spec': spec, 'findings': [], 'base': self.base,
                                                       'patch_sha256': 'x', 'paths': [TARGET]}, T)
 
     def test_two_consecutive_held_out_regressions_stop_the_loop_until_a_human_resumes(self):
-        state = develop.State(self.state)
+        state = develop.State(self.state, self.repo)
         self.seed('a')
-        state = develop.State(self.state)
+        state = develop.State(self.state, self.repo)
         state.append('gate', gate_entry('a', 'REJECT', regression=True), T)
         state.append('close', {'id': 'a', 'outcome': 'rejected'}, T)
         self.seed('b')
-        state = develop.State(self.state)
+        state = develop.State(self.state, self.repo)
         state.append('gate', gate_entry('b', 'REJECT', regression=True), T)
         state.append('close', {'id': 'b', 'outcome': 'rejected'}, T)
         with self.assertRaisesRegex(develop.DevelopError, 'stopped'):
@@ -221,23 +368,23 @@ class Loop(Sandbox):
     def test_a_pull_request_needs_a_propose_gate_and_happens_once(self):
         self.seed('a')
         with self.assertRaisesRegex(develop.DevelopError, 'not PROPOSE'):
-            develop.pr_plan('a', self.state, 'main')
-        develop.State(self.state).append('gate', gate_entry('a', 'PROPOSE', regression=False,
+            develop.pr_plan('a', self.state, 'main', self.repo)
+        develop.State(self.state, self.repo).append('gate', gate_entry('a', 'PROPOSE', regression=False,
                                                             branch='ante-develop/a'), T)
         plan = develop.pr('a', self.state, 'main', T, execute=False, repo=self.repo)
         self.assertFalse(plan['executed'])
         self.assertIn('--draft', plan['commands'][1])
         self.assertNotIn('--force', plan['commands'][0])
-        develop.State(self.state).append('pr', {'id': 'a', 'url': 'u', 'branch': 'ante-develop/a', 'draft': True}, T)
+        develop.State(self.state, self.repo).append('pr', {'id': 'a', 'url': 'u', 'branch': 'ante-develop/a', 'draft': True}, T)
         with self.assertRaisesRegex(develop.DevelopError, 'at most one'):
-            develop.pr_plan('a', self.state, 'main')
+            develop.pr_plan('a', self.state, 'main', self.repo)
 
     def test_the_loop_never_opens_a_pull_request_touching_github(self):
         self.seed('a')
-        develop.State(self.state).append('gate', gate_entry('a', 'PROPOSE', branch='ante-develop/a',
+        develop.State(self.state, self.repo).append('gate', gate_entry('a', 'PROPOSE', branch='ante-develop/a',
                                                             changed=['.github/workflows/ci.yml']), T)
         with self.assertRaisesRegex(develop.DevelopError, '.github'):
-            develop.pr_plan('a', self.state, 'main')
+            develop.pr_plan('a', self.state, 'main', self.repo)
 
     def test_execute_refuses_to_overwrite_an_existing_remote_branch(self):
         remote = self.dir / 'remote.git'
@@ -250,7 +397,11 @@ class Loop(Sandbox):
         orphan = git(work, '-c', 'user.name=t', '-c', 'user.email=t@invalid', 'commit-tree', empty, '-m', 'x').strip()
         git(work, '-c', 'push.negotiate=false', 'push', '-q', 'origin', f'{orphan}:refs/heads/ante-develop/a')
         self.seed('a')
-        develop.State(self.state).append('gate', gate_entry('a', 'PROPOSE', branch='ante-develop/a'), T)
+        develop.State(self.state, self.repo).append('gate', gate_entry('a', 'PROPOSE', branch='ante-develop/a'), T)
+        content = git(self.repo, 'cat-file', 'blob', develop.ANCHOR_REF)
+        blob = subprocess.run(['git', '-C', str(work), 'hash-object', '-w', '--stdin'], input=content,
+                              capture_output=True, text=True, check=True).stdout.strip()
+        git(work, 'update-ref', develop.ANCHOR_REF, blob)
         with self.assertRaisesRegex(develop.DevelopError, 'already exists on the remote'):
             develop.pr('a', self.state, 'main', T, execute=True, repo=work)
 

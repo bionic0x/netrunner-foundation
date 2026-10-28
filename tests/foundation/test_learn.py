@@ -12,22 +12,28 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
 
 from ante import cli  # noqa: E402
+from ante.constructs import frozen, snapshot  # noqa: E402
 from ante.core import canon  # noqa: E402
-from ante.learn import apophenia, commands, ledger  # noqa: E402
+from ante.learn import apophenia, commands, jackpot, ledger, stub  # noqa: E402
+from ante.strategy import artifact  # noqa: E402
 from ante.strategy.artifact import seal  # noqa: E402
 
 T0 = '2026-10-28T12:00:00Z'
 
 
 def decide_artifact(case, verdict='PROCEED_WITH_CONDITIONS', pathologies=(), review='SEPARATED_CONTEXT',
-                    expectations=None, at=T0):
+                    expectations=None, at=T0, risks=()):
     expectations = expectations or [{'id': 'e1', 'what_should_change': 'x', 'in_whom': 'y',
                                      'horizon': '2026-12-01T00:00:00Z', 'refuted_by': 'z',
                                      'probability': {'verbal': 'likely', 'interval': [0.6, 0.8]}}]
-    return seal({'schema_version': 1, 'command': 'decide', 'case_id': case, 'at': at,
+    return seal({'schema_version': artifact.SCHEMA_VERSION, 'command': 'decide', 'case_id': case, 'at': at,
                  'input_sha256': canon.digest(case), 'parents': [], 'independence_level': None, 'claims': [],
+                 'claim_history': {},
                  'body': {'verdict': verdict, 'review_independence': review,
-                          'detected_pathologies': list(pathologies), 'expectations': expectations},
+                          'detected_pathologies': list(pathologies), 'expectations': expectations,
+                          'snapshot': snapshot.build(at, [], [], expectations, verdict),
+                          'load_bearing_claims': {'blocking': list(risks), 'accepted_risks': [
+                              {'claim': r, 'accepted_by': 'owner', 'statement': 'accepted'} for r in risks]}},
                  'findings': [], 'verdict': verdict, 'next_decision': 'n'})
 
 
@@ -77,6 +83,19 @@ class LedgerChain(Workspace):
         Path(self.ledger).write_text(Path(self.ledger).read_text().replace('agent-a', 'agent-b'))
         with contextlib.redirect_stdout(stdio.StringIO()), contextlib.redirect_stderr(stdio.StringIO()):
             self.assertEqual(3, cli.main(['learn', 'verify', '--ledger', self.ledger]))
+
+    def test_concurrent_appends_keep_one_chain(self):
+        import multiprocessing
+        procs = [multiprocessing.Process(target=ledger.append,
+                                         args=(self.ledger, 'note', {'n': i}, '2026-10-28T13:00:00Z'))
+                 for i in range(8)]
+        for proc in procs:
+            proc.start()
+        for proc in procs:
+            proc.join()
+        entries = ledger.read(self.ledger)
+        self.assertEqual(list(range(1, 9)), [e['seq'] for e in entries])
+        self.assertEqual(set(range(8)), {e['payload']['n'] for e in entries})
 
     def test_entries_are_appended_in_time_order(self):
         self.record(decide_artifact('a'), at='2026-10-29T00:00:00Z')
@@ -162,6 +181,15 @@ class Calibrate(Workspace):
         by_agent = [g for g in result['groups'] if g['dimension'] == 'agent']
         self.assertTrue(all(g['result'] == 'INSUFFICIENT_SAMPLE' for g in by_agent))
 
+    def test_a_system_entry_cannot_overwrite_an_external_observation(self):
+        art = decide_artifact('s')
+        self.record(art)
+        self.observe(art, 'REFUTED')
+        self.observe(art, 'INCONCLUSIVE', origin='system', at='2026-12-03T00:00:00Z')
+        result = commands.calibrate(self.ledger, '2026-12-31T00:00:00Z', min_sample=1)
+        self.assertEqual(1, result['decisive_predictions'])
+        self.assertAlmostEqual(0.49, result['groups'][0]['brier'], places=6)
+
     def test_latest_reconciliation_wins_without_rewriting(self):
         art = decide_artifact('x')
         self.record(art)
@@ -209,6 +237,143 @@ class Patterns(Workspace):
         self.record(decide_artifact('lonely'))
         result = commands.patterns(self.ledger, '2026-12-31T00:00:00Z', min_group=3)
         self.assertEqual((0, False), (result['decisions_used'], result['learned_anything']))
+
+
+class Constructs(Workspace):
+    def test_learn_cannot_write_into_a_construct(self):
+        art = decide_artifact('a')
+        for target in (ROOT / 'specialized/strategic-red-team.md', ROOT / 'ante/constructs/ledger.jsonl'):
+            before = target.read_bytes() if target.exists() else None
+            with self.assertRaises(frozen.ConstructError):
+                commands.record(self.write('a.json', art), str(target), '2026-10-28T13:00:00Z', None, None, False)
+            self.assertEqual(before, target.read_bytes() if target.exists() else None)
+        self.assertEqual([], frozen.verify())
+
+    def test_reconcile_compares_only_against_the_frozen_snapshot(self):
+        art = decide_artifact('a')
+        # A record whose visible expectations were edited after the snapshot was taken
+        # (and then resealed) cannot be recorded: the snapshot no longer matches.
+        body = dict(art['body'], snapshot=dict(art['body']['snapshot'], expectations=[]))
+        resealed = seal({**{k: v for k, v in art.items() if k != 'artifact_sha256'}, 'body': body})
+        with self.assertRaisesRegex(commands.LearnError, 'snapshot'):
+            commands.record(self.write('r.json', resealed), self.ledger, '2026-10-28T13:00:00Z', None, None, False)
+        # Expectations added to the body but absent from the snapshot are not reconcilable.
+        extra = dict(art['body'], expectations=art['body']['expectations'] + [
+            dict(art['body']['expectations'][0], id='e2')])
+        late = seal({**{k: v for k, v in art.items() if k != 'artifact_sha256'}, 'body': extra})
+        self.record(late)
+        with self.assertRaisesRegex(Exception, 'not an expectation'):
+            self.observe(late, 'CONFIRMED', expectation='e2')
+        self.observe(late, 'CONFIRMED', expectation='e1')
+
+    def test_frozen_reviewers_are_marked_in_calibration(self):
+        art = decide_artifact('a')
+        self.record(art, agent='strategic-red-team')
+        self.observe(art, 'CONFIRMED')
+        groups = commands.calibrate(self.ledger, '2026-12-31T00:00:00Z', min_sample=1)['groups']
+        agent = next(g for g in groups if g['dimension'] == 'agent')
+        self.assertTrue(agent['frozen_reviewer'])
+
+
+class Drift(Workspace):
+    def test_minor_deviations_cross_the_cumulative_threshold_without_any_crossing_alone(self):
+        # three decisions with one accepted risk each (1 + 1 + 1), then two refutations (2 + 2): 7
+        arts = [decide_artifact(f'd{i}', risks=[f'r{i}']) for i in range(3)]
+        for i, art in enumerate(arts):
+            self.record(art, at=f'2026-10-28T13:0{i}:00Z')
+        self.observe(arts[0], 'REFUTED', at='2026-12-02T00:00:00Z')
+        self.observe(arts[1], 'REFUTED', at='2026-12-03T00:00:00Z')
+        before = jackpot.assess(ledger.read(self.ledger), '2026-12-04T00:00:00Z')
+        self.assertEqual(('WITHIN_LIMITS', 7), (before['status'], before['total']))
+        self.assertTrue(all(a['weight'] < jackpot.INDIVIDUAL_THRESHOLD for a in before['counted']))
+        self.observe(arts[2], 'INCONCLUSIVE', at='2026-12-04T00:00:00Z')   # + 1
+        after = jackpot.assess(ledger.read(self.ledger), '2026-12-05T00:00:00Z')
+        self.assertEqual(('REVIEW_REQUIRED', 8), (after['status'], after['total']))
+        self.assertIn('review the model', after['reason'])
+
+    def test_while_review_is_due_no_new_exception_is_recorded(self):
+        arts = [decide_artifact(f'd{i}', risks=[f'r{i}']) for i in range(8)]
+        for i, art in enumerate(arts):
+            self.record(art, at=f'2026-10-28T13:0{i}:00Z')
+        with self.assertRaisesRegex(commands.LearnError, 'model review'):
+            self.record(decide_artifact('next', risks=['r9']), at='2026-10-29T00:00:00Z')
+        self.record(decide_artifact('clean'), at='2026-10-29T00:00:00Z')   # no new exception: allowed
+        jackpot.review(self.ledger, 'Ana (owner)', 'urgency assumptions revised', '2026-10-30T00:00:00Z')
+        self.assertEqual(0, jackpot.assess(ledger.read(self.ledger), '2026-10-31T00:00:00Z')['total'])
+        self.record(decide_artifact('next', risks=['r9']), at='2026-10-31T00:00:00Z')
+
+    def test_one_heavy_release_event_is_enough_and_synthetic_and_old_events_do_not_count(self):
+        events = self.write('events.json', {'events': [
+            {'at': '2026-10-28T10:00:00Z', 'source': 'v2.1', 'kind': 'characterization_rebaseline', 'weight': 3,
+             'note': 'golden outputs re-recorded'}]})
+        result = jackpot.assess([], '2026-10-29T00:00:00Z', events=jackpot._events(events))
+        self.assertEqual('REVIEW_REQUIRED', result['status'])
+        for i in range(8):
+            self.record(decide_artifact(f's{i}', risks=['x']), synthetic=True, at=f'2026-10-28T13:0{i}:00Z')
+        self.assertEqual(0, jackpot.assess(ledger.read(self.ledger), '2026-10-29T00:00:00Z')['total'])
+        self.assertEqual(0, jackpot.assess([], '2027-12-01T00:00:00Z', events=jackpot._events(events))['total'])
+
+    def test_cli_exits_1_when_review_is_required(self):
+        for i in range(8):
+            self.record(decide_artifact(f'd{i}', risks=[f'r{i}']), at=f'2026-10-28T13:0{i}:00Z')
+        with contextlib.redirect_stdout(stdio.StringIO()):
+            self.assertEqual(1, cli.main(['jackpot', '--ledger', self.ledger, '--at', '2026-10-29T00:00:00Z']))
+            self.assertEqual(0, cli.main(['learn', 'review', '--ledger', self.ledger, '--by', 'Ana', '--reason',
+                                          'model revised', '--at', '2026-10-29T00:00:00Z']))
+            self.assertEqual(0, cli.main(['jackpot', '--ledger', self.ledger, '--at', '2026-10-29T01:00:00Z']))
+
+
+class Shadow(Workspace):
+    def setUp(self):
+        super().setUp()
+        self.log = str(self.dir / 'shadow.jsonl')
+
+    def shadow(self, art, interval=(0.9, 0.9), candidate='router-v2', at='2026-10-29T00:00:00Z'):
+        spec = {'candidate': {'id': candidate, 'kind': 'routing', 'ref': 'strategy/vectors.json',
+                              'sha256': '0' * 64},
+                'decision': art['artifact_sha256'], 'verdict': 'PROCEED_WITH_CONDITIONS',
+                'predictions': [{'expectation': 'e1', 'interval': list(interval)}], 'rationale': 'candidate routing'}
+        return stub.record(self.write(f'shadow-{candidate}-{art["case_id"]}.json', spec), self.log, self.ledger, at)
+
+    def test_shadow_output_never_enters_a_real_lineage(self):
+        art = decide_artifact('a')
+        self.record(art)
+        entry = self.shadow(art)
+        leaked = self.write('leaked.json', entry)
+        with self.assertRaises(artifact.LineageError):
+            artifact.load_parent(leaked)                         # --from refuses it
+        with self.assertRaises(artifact.LineageError):
+            commands.record(leaked, self.ledger, '2026-10-30T00:00:00Z', None, None, False)
+        with self.assertRaisesRegex(stub.StubError, 'decision ledger'):
+            stub.record(self.write('s.json', {}), self.ledger, self.ledger, '2026-10-30T00:00:00Z')
+        with self.assertRaisesRegex(stub.StubError, 'not a shadow log'):
+            stub.status(self.ledger)
+        self.assertEqual(['decision'], [e['kind'] for e in ledger.read(self.ledger)])
+        with self.assertRaises(ledger.LedgerError):
+            ledger.append(self.ledger, 'shadow', entry['payload'], '2026-10-30T00:00:00Z')
+
+    def test_hidden_until_reconciled_and_no_hindsight(self):
+        art = decide_artifact('a')
+        self.record(art)
+        self.shadow(art)
+        self.assertEqual(0, stub.compare(self.log, self.ledger, '2026-11-01T00:00:00Z', 1)['candidates'][0][
+            'compared_predictions'])
+        self.observe(art, 'CONFIRMED')
+        with self.assertRaisesRegex(stub.StubError, 'hindsight'):
+            self.shadow(art, candidate='late')
+        result = stub.compare(self.log, self.ledger, '2026-12-31T00:00:00Z', 1)['candidates'][0]
+        self.assertEqual(('MEASURED', 1), (result['result'], result['compared_predictions']))
+        self.assertAlmostEqual(0.01, result['shadow_brier'])
+        self.assertAlmostEqual(0.09, result['real_brier'])
+        self.assertFalse(result['eligible_for_proposal'], 'a caller-lowered --min-history cannot make a candidate eligible')
+
+    def test_adoption_needs_history(self):
+        art = decide_artifact('a')
+        self.record(art)
+        self.shadow(art)
+        self.observe(art, 'CONFIRMED')
+        result = stub.compare(self.log, self.ledger, '2026-12-31T00:00:00Z')['candidates'][0]
+        self.assertEqual(('INSUFFICIENT_HISTORY', False), (result['result'], result['eligible_for_proposal']))
 
 
 class Guard(unittest.TestCase):

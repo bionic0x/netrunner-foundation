@@ -18,12 +18,14 @@ docstring is its full input specification.
 | `focus` | XIII F4, III | map | centre without substitution or horizon; concept confusion (pathology 4) |
 | `options` | XIII F5, App. B | cause | one viable option plus decoys; no continuity baseline; same mechanism; scores |
 | `react` | XIII F6, VI, IX | options | no competent opposition, no unexpected cooperation, no third-party shift |
+| `street` | VIII.12, VI | frame (+ map) | instrument without a misuse scenario; manipulation indicator that is the instrument itself; unknown actor. `cohere` records the interactive test as `CONDITIONAL` (pending evidence) while any plan metric lacks this analysis |
 | `ach` | VIII.4 | frame | incomplete matrix; reports source groups, self-produced evidence, sensitivity |
 | `watch` | XIII F7, VI.9 | options | indicator without a response; no pause or terminate threshold |
 | `close` | XII, XIII F8 | frame | placeholder clauses; one clause pasted into several |
 | `cohere` | XIV | frame | FAIL not fatal; `NOT_APPLICABLE` on Epistemic or Exit; unanswered test |
 | `pathology` | XV | frame | unswept pathology; detection without false-positive check; culmination conflated with inversion or escalation |
-| `decide` | SDR | frame, cohere, pathology (+ close to activate) | verdict outside what `cohere` admits; `PROCEED` without independent review, with a detected pathology, without close or expectations |
+| `nodal` | VIII.5 | frame (+ every artefact to examine) | reports load-bearing claims; one still `ASSUMPTION` or `ATTRIBUTED_INTENT` that must be corroborated blocks `PROCEED` in `decide` |
+| `decide` | SDR | frame, cohere, pathology (+ close to activate) | verdict outside what `cohere` admits; `PROCEED` without `nodal` or with a blocking claim not accepted as a named risk, without independent review, with a detected pathology, without close or expectations |
 | `selftest` | VIII.13 | — | `PASS` without evidence or dated in the future |
 
 `ante run RUNBOOK --artifacts DIR` checks that a case directory holds the chain
@@ -42,6 +44,8 @@ brief; see `ante/strategy/draft.py`.
 | `learn calibrate --ledger L --at T` | Brier score and reliability by runbook, agent and claim kind | groups below `--min-sample` (default 30) answer `INSUFFICIENT_SAMPLE`, with no number |
 | `learn patterns --ledger L --at T` | proposes differences in refutation rate that survive a permutation test with Bonferroni correction | patterns that only system-sourced evidence supports; synthetic decisions |
 | `learn verify --ledger L` | checks the chain | — (a broken chain exits 3) |
+| `learn review --ledger L --by NAME --reason TEXT --at T` | records a model review; resets cumulative drift | — |
+| `jackpot --ledger L --at T [--state S] [--events E]` | cumulative drift: refutations, inconclusive outcomes, accepted risks, decide warnings, gate holds and rejects, release events; exit 1 when a model review is due | while a review is due, `learn record` refuses decisions that add accepted risks |
 
 ## Self-development
 
@@ -54,5 +58,20 @@ brief; see `ante/strategy/draft.py`.
 | `develop close ID --outcome merged\|rejected\|withdrawn` | frees the open-proposal slot |
 | `develop status` | proposals, gates and committed spend |
 
-Every `develop` command takes `--state FILE` (a hash-chained log) and, except
+Every `develop` command takes `--state FILE` (a hash-chained log, anchored in
+`refs/ante/develop-state` so it cannot be swapped or truncated) and, except
 `status`, `--at`. Decisions D-013 and D-014 describe the policy and the lock.
+
+## Shadow trials, drift and defences
+
+| Command | What it does |
+|---|---|
+| `stub record SPEC --log S --ledger L --at T` | records a candidate's recommendation for a real decision in a separate shadow log; refused once the decision has outcomes |
+| `stub compare --log S --ledger L --at T` | compares shadow and real forecasts on reconciled expectations only; `INSUFFICIENT_HISTORY` below 30; eligibility permits an `ante develop` proposal, never an adoption |
+| `stub status --log S` | counts only; recommendations stay hidden until reconciled |
+| `constructs list\|verify` | frozen reviewer profiles and their pinned hashes |
+| `ice seed PACK --registry R` / `ice scan PATH...` / `ice layers` | canaries in held-out packs; contamination scan; independence of the five defensive layers |
+| `ghosts --artifacts DIR --at T [--regimes R]` | expired claims, or claims dated before a declared regime change, that live artefacts still cite; exit 1 until renewed or withdrawn |
+| `learn box build\|recombine` | archive of discarded options, rejected hypotheses, refuted expectations and rejected proposals with their reasons; recombined items come back as `HYPOTHESIS` with `origin: system` |
+| `signals add\|export --register R --at T` | weak-signal register (first observation, where, provenance); exported as `HYPOTHESIS` claims for `frame` or `react`, without probabilities |
+| `deck --artifacts DIR [--ledger L] [--log S] [--plain]` | read-only terminal view: chain, epistemic states, nodal load, defence layers, shadow trials, drift |

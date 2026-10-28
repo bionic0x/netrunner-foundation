@@ -21,9 +21,10 @@ import sys
 from pathlib import Path
 
 from ante import registry
+from ante.constructs import frozen, snapshot as snapshot_mod
 from ante.core import canon, io, schema
 from ante.core import time as ante_time
-from ante.learn import apophenia, ledger
+from ante.learn import apophenia, jackpot, ledger
 from ante.strategy import artifact
 
 OUTCOMES = ('CONFIRMED', 'REFUTED', 'INCONCLUSIVE', 'NOT_YET_OBSERVABLE')
@@ -36,15 +37,28 @@ class LearnError(ValueError):
     pass
 
 
+def _frozen_expectations(entry: dict) -> list[dict]:
+    """Expectations as frozen at decision time; an altered or missing snapshot is a lineage error."""
+    try:
+        return snapshot_mod.verify(entry['payload']['artifact']['body'].get('snapshot'))['expectations']
+    except snapshot_mod.SnapshotError as exc:
+        raise ledger.LedgerError(f'decision {entry["seq"]}: {exc}') from None
+
+
 def _at(value: str) -> str:
     return ante_time.iso(ante_time.parse(value, 'at'))
 
 
 def record(decide_path: str, ledger_path: str, at: str, runbook: str | None, agent: str | None,
            synthetic: bool) -> dict:
+    frozen.guard_write(ledger_path)
     art = artifact.load_parent(decide_path)
     if art['command'] != 'decide':
         raise LearnError('only decide artefacts are recorded as decisions')
+    try:
+        snapshot_mod.verify(art['body'].get('snapshot'))
+    except snapshot_mod.SnapshotError as exc:
+        raise LearnError(str(exc)) from None
     if runbook is not None and runbook not in registry.runbooks():
         raise LearnError(f'unknown runbook {runbook}')
     entries = ledger.read(ledger_path)
@@ -52,11 +66,16 @@ def record(decide_path: str, ledger_path: str, at: str, runbook: str | None, age
         raise LearnError('this decision is already in the ledger')
     if ante_time.parse(at, 'at') < ante_time.parse(art['at'], 'decision.at'):
         raise LearnError('a decision cannot be recorded before it was taken')
+    risks = (art['body'].get('load_bearing_claims') or {}).get('accepted_risks', [])
+    if risks and not synthetic and jackpot.assess(entries, at)['status'] == 'REVIEW_REQUIRED':
+        raise LearnError('cumulative drift requires a model review before another accepted risk is recorded '
+                         '(ante learn review --by NAME --reason TEXT)')
     payload = {'artifact': art, 'runbook': runbook, 'agent': agent, 'synthetic': synthetic}
     return ledger.append(ledger_path, 'decision', payload, at)
 
 
 def reconcile(doc_path: str, ledger_path: str, at: str) -> list[dict]:
+    frozen.guard_write(ledger_path)
     doc = io.load_document(doc_path)
     schema.exact_keys(doc, ('observations',), 'input', ('at',))
     entries = ledger.read(ledger_path)
@@ -69,7 +88,7 @@ def reconcile(doc_path: str, ledger_path: str, at: str) -> list[dict]:
         entry = decided.get(obs['decision'])
         if entry is None:
             schema.fail(f'{path}.decision', 'no decision with this artefact hash in the ledger')
-        expectations = {e['id']: e for e in entry['payload']['artifact']['body']['expectations']}
+        expectations = {e['id']: e for e in _frozen_expectations(entry)}
         if obs['expectation'] not in expectations:
             schema.fail(f'{path}.expectation', 'not an expectation of that decision')
         outcome = schema.enum(obs['outcome'], OUTCOMES, f'{path}.outcome')
@@ -95,9 +114,16 @@ def reconcile(doc_path: str, ledger_path: str, at: str) -> list[dict]:
 
 
 def _latest_outcomes(entries: list[dict]) -> dict[tuple[str, str], dict]:
+    """The latest outcome per expectation. A system-produced entry never replaces one from an
+    external or owner source: the system cannot overwrite an observation (invariant 7)."""
     latest = {}
     for entry in ledger.reconciliations(entries):
-        latest[(entry['payload']['decision'], entry['payload']['expectation'])] = entry
+        key = (entry['payload']['decision'], entry['payload']['expectation'])
+        current = latest.get(key)
+        if (current is not None and entry['payload']['source']['origin'] == 'system'
+                and current['payload']['source']['origin'] != 'system'):
+            continue
+        latest[key] = entry
     return latest
 
 
@@ -116,7 +142,7 @@ def calibrate(ledger_path: str, at: str, min_sample: int) -> dict:
     rows = []
     for sha, entry in sorted(decided.items()):
         payload = entry['payload']
-        for expectation in payload['artifact']['body']['expectations']:
+        for expectation in _frozen_expectations(entry):
             outcome = latest.get((sha, expectation['id']))
             if payload['synthetic']:
                 excluded['synthetic'] += 1
@@ -135,7 +161,11 @@ def calibrate(ledger_path: str, at: str, min_sample: int) -> dict:
         keys = sorted({'all'} if dimension == 'all' else {r[dimension] for r in rows})
         for key in keys:
             members = rows if dimension == 'all' else [r for r in rows if r[dimension] == key]
-            groups.append(_calibration_group(dimension, key, members, min_sample))
+            group = _calibration_group(dimension, key, members, min_sample)
+            if dimension == 'agent' and frozen.is_frozen_agent(key):
+                group['frozen_reviewer'] = True
+                group['note'] = 'frozen reviewer: reported for reading, never a target of ante develop'
+            groups.append(group)
     return {'schema_version': SCHEMA_VERSION, 'kind': 'calibration', 'at': _at(at),
             'ledger_head': entries[-1]['entry_hash'] if entries else ledger.GENESIS,
             'min_sample': min_sample, 'decisive_predictions': len(rows), 'excluded': excluded, 'groups': groups,
@@ -168,7 +198,7 @@ def patterns(ledger_path: str, at: str, min_group: int, seed: int = 20261028) ->
         if payload['synthetic']:
             excluded['synthetic'] += 1
             continue
-        outcomes = [latest[(sha, e['id'])] for e in payload['artifact']['body']['expectations']
+        outcomes = [latest[(sha, e['id'])] for e in _frozen_expectations(entry)
                     if (sha, e['id']) in latest and latest[(sha, e['id'])]['payload']['outcome'] in DECISIVE]
         if not outcomes:
             excluded['no_decisive_outcome'] += 1
@@ -210,7 +240,32 @@ def _emit(value: dict, out: str | None) -> None:
         sys.stdout.write(text)
 
 
+def add_jackpot_parser(sub) -> None:
+    drift = sub.add_parser('jackpot', help='cumulative drift across decisions, reconciliations, gates and releases')
+    drift.add_argument('--ledger', required=True)
+    drift.add_argument('--at', required=True)
+    drift.add_argument('--state', help='ante develop state log')
+    drift.add_argument('--events', help='release anomalies: {"events": [{at, source, kind, weight, note}]}')
+    drift.set_defaults(handler=jackpot_main)
+
+
+def jackpot_main(args) -> int:
+    try:
+        at = _at(args.at)
+        state = ledger.read(args.state) if args.state else []
+        result = jackpot.assess(ledger.read(args.ledger), at, state, jackpot._events(args.events))
+    except ledger.LedgerError as exc:
+        print(f'LINEAGE {exc}', file=sys.stderr)
+        return 3
+    except (io.InputError, schema.SchemaError, ante_time.TimeError) as exc:
+        print(f'INVALID {exc}', file=sys.stderr)
+        return 2
+    sys.stdout.write(json.dumps(result, indent=2, sort_keys=True, ensure_ascii=False) + '\n')
+    return 1 if result['status'] == 'REVIEW_REQUIRED' else 0
+
+
 def add_parser(sub) -> None:
+    add_jackpot_parser(sub)
     learn = sub.add_parser('learn', help='decision ledger, reconciliation, calibration, patterns')
     lsub = learn.add_subparsers(dest='learn_command', required=True)
     rec = lsub.add_parser('record', help='append a decide artefact to the ledger')
@@ -227,18 +282,29 @@ def add_parser(sub) -> None:
     pat.add_argument('--min-group', type=int, default=3)
     pat.add_argument('--out')
     ver = lsub.add_parser('verify', help='verify the ledger chain')
-    for p in (rec, rcn, cal, pat, ver):
+    from ante.learn import boxmaker
+    boxmaker.add_parser(lsub)
+    rev = lsub.add_parser('review', help='record a model review (resets cumulative drift)')
+    rev.add_argument('--by', required=True)
+    rev.add_argument('--reason', required=True)
+    for p in (rec, rcn, cal, pat, ver, rev):
         p.add_argument('--ledger', required=True)
-    for p in (rec, rcn, cal, pat):
+    for p in (rec, rcn, cal, pat, rev):
         p.add_argument('--at', required=True)
     learn.set_defaults(handler=main)
 
 
 def main(args) -> int:
+    if args.learn_command == 'box':
+        from ante.learn import boxmaker
+        return boxmaker.main(args)
     try:
         if args.learn_command == 'record':
             entry = record(args.decide, args.ledger, args.at, args.runbook, args.agent, args.synthetic)
             print(f'decision recorded: seq {entry["seq"]} {entry["entry_hash"]}')
+        elif args.learn_command == 'review':
+            entry = jackpot.review(args.ledger, args.by, args.reason, args.at)
+            print(f'model review recorded: seq {entry["seq"]} {entry["entry_hash"]}')
         elif args.learn_command == 'reconcile':
             added = reconcile(args.observations, args.ledger, args.at)
             print(f'{len(added)} reconciliation(s) recorded; head {added[-1]["entry_hash"]}')
@@ -252,7 +318,7 @@ def main(args) -> int:
     except (artifact.LineageError, ledger.LedgerError) as exc:
         print(f'LINEAGE {exc}', file=sys.stderr)
         return 3
-    except (LearnError, io.InputError, schema.SchemaError, ante_time.TimeError) as exc:
+    except (LearnError, frozen.ConstructError, io.InputError, schema.SchemaError, ante_time.TimeError) as exc:
         print(f'INVALID {exc}', file=sys.stderr)
         return 2
     return 0

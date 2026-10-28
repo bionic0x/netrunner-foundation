@@ -1,0 +1,113 @@
+{
+  "artifact_sha256": "dbcd3f8552ac57d0fb012db9327e95752f3f253ba3b28829fd6e2bce64dd3b86",
+  "at": "2026-10-28T10:00:00Z",
+  "body": {
+    "basis": [
+      "demand-110",
+      "slack-20"
+    ],
+    "chain": {
+      "because": "members stop over-reserving defensively once the criteria are predictable and appealable",
+      "final_result": "priority projects completed on time and members still value the consortium",
+      "if": "we adopt shared priority criteria applied by each university and coordinate only the conflicts",
+      "immediate_effect": "fewer conflicting reservations per week",
+      "provided_that": [
+        "essential demand stays within 90 ordinary hours",
+        "deferred hours fit the confirmed slack"
+      ],
+      "then": "conflicting bookings fall and priority projects get their hours"
+    },
+    "refutations": [
+      {
+        "horizon": "end of cycle 2",
+        "observation": "conflicts do not fall after two cycles of applied criteria",
+        "observed_by": "technical staff booking report"
+      }
+    ],
+    "rivals": [
+      {
+        "discriminating_evidence": "essential demand above 90 hours in consecutive cycles despite applied criteria",
+        "explanation": "Demand that cannot be deferred exceeds capacity, so no rule removes the conflict.",
+        "id": "structural-scarcity"
+      },
+      {
+        "discriminating_evidence": "reconciliation of active requests against projects shows duplicates",
+        "explanation": "Duplicate or stale reservations inflate the apparent demand.",
+        "id": "bad-records"
+      }
+    ]
+  },
+  "case_id": "lab-consortium",
+  "claim_history": {
+    "a-inflates": [
+      {
+        "command": "map",
+        "origin": "external",
+        "ref": "council-minutes-2026-09",
+        "status": "ATTRIBUTED_INTENT"
+      }
+    ],
+    "cap-100": [
+      {
+        "command": "frame",
+        "origin": "external",
+        "ref": "lab-maintenance-log-w43",
+        "status": "EVIDENCE"
+      }
+    ],
+    "demand-110": [
+      {
+        "command": "frame",
+        "origin": "external",
+        "ref": "reservation-export-2026-10-21",
+        "status": "EVIDENCE"
+      }
+    ],
+    "priority-50": [
+      {
+        "command": "frame",
+        "origin": "external",
+        "ref": "funder-deadline-letters",
+        "status": "EVIDENCE"
+      }
+    ],
+    "slack-20": [
+      {
+        "command": "cause",
+        "origin": "owner",
+        "ref": "booking forecast for weeks 45-46",
+        "status": "ASSUMPTION"
+      }
+    ]
+  },
+  "claims": [
+    {
+      "date": "2026-10-27",
+      "id": "slack-20",
+      "limit": "Synthetic didactic data (Marco, Appendix E); not an observation of any real institution.",
+      "source": {
+        "origin": "owner",
+        "ref": "booking forecast for weeks 45-46"
+      },
+      "status": "ASSUMPTION",
+      "text": "20 hours can move to the following weeks, where slack is confirmed."
+    }
+  ],
+  "command": "cause",
+  "findings": [],
+  "independence_level": null,
+  "input_sha256": "7891f77ff0020031feaf02546a5d2a66e317eb3484d97c4bf1c827a2f5884ec7",
+  "next_decision": "Locate the decisive dependency and the main effort (ante focus).",
+  "parents": [
+    {
+      "artifact_sha256": "d6e55f031b0bbfb954dccf850690412029f568e3a1ccdd8b962aed6cff9d2574",
+      "command": "frame"
+    },
+    {
+      "artifact_sha256": "a4e9a714ee77a69296f58be4412b2b58df8703d46d4b011d8ded18526afac0d1",
+      "command": "map"
+    }
+  ],
+  "schema_version": 2,
+  "verdict": null
+}

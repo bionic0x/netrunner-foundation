@@ -3,9 +3,9 @@
 There is one source. Code never carries its own copy of an enum: every name the
 package checks against is read from the file the protected evaluator also reads.
 
-Tables that ``contracts.json`` does not yet contain (the seven coherence tests
-and the fourteen pathologies — decision D-004) raise ``MissingTable`` instead of
-falling back to a list written in code.
+A table the file does not contain raises ``MissingTable`` instead of falling
+back to a list written in code (the coherence tests and pathologies were added in
+decision D-004).
 """
 from __future__ import annotations
 

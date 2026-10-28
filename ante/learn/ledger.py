@@ -6,7 +6,13 @@ Each line is an entry::
 
 ``entry_hash`` is the canonical hash of the other five fields; ``prev_hash`` is
 the previous line's ``entry_hash`` (64 zeros for the first). Reading the ledger
-verifies the whole chain; an edited, removed or reordered line breaks it.
+verifies the whole chain: an edited, inserted, reordered or removed line breaks
+it — except the removal of the last lines, which leaves a shorter valid chain.
+A chain alone cannot prove its own length; callers that must detect truncation
+anchor the head hash elsewhere (``ante develop`` keeps it in a git ref).
+
+Appends hold an exclusive lock on the file, so two writers cannot give two
+entries the same sequence number.
 
 Kinds:
     decision        a sealed ``decide`` artefact, frozen as it was (the snapshot
@@ -19,11 +25,13 @@ Nothing rewrites an entry: a correction is a new entry that refers to the old on
 """
 from __future__ import annotations
 
+import fcntl
 import json
 import os
 from pathlib import Path
 from typing import Any
 
+from ante.constructs import frozen
 from ante.core import canon, io
 from ante.core import time as ante_time
 
@@ -70,15 +78,17 @@ def append(path: Path | str, kind: str, payload: Any, at: str, kinds: tuple[str,
         raise LedgerError(f'unknown entry kind {kind}')
     at = ante_time.iso(ante_time.parse(at, 'at'))
     target = Path(path)
-    entries = read(target)
-    if entries and ante_time.parse(entries[-1]['at'], 'at') > ante_time.parse(at, 'at'):
-        raise LedgerError('entries are appended in time order; this one is dated before the last')
-    seq = len(entries) + 1
-    prev = entries[-1]['entry_hash'] if entries else GENESIS
-    entry = {'seq': seq, 'at': at, 'kind': kind, 'payload': payload, 'prev_hash': prev,
-             'entry_hash': _hash(seq, at, kind, payload, prev)}
+    frozen.guard_write(target)
     target.parent.mkdir(parents=True, exist_ok=True)
     with target.open('a', encoding='utf-8') as handle:
+        fcntl.flock(handle.fileno(), fcntl.LOCK_EX)   # released when the file closes
+        entries = read(target)
+        if entries and ante_time.parse(entries[-1]['at'], 'at') > ante_time.parse(at, 'at'):
+            raise LedgerError('entries are appended in time order; this one is dated before the last')
+        seq = len(entries) + 1
+        prev = entries[-1]['entry_hash'] if entries else GENESIS
+        entry = {'seq': seq, 'at': at, 'kind': kind, 'payload': payload, 'prev_hash': prev,
+                 'entry_hash': _hash(seq, at, kind, payload, prev)}
         handle.write(json.dumps(entry, sort_keys=True, ensure_ascii=False, separators=(',', ':')) + '\n')
         handle.flush()
         os.fsync(handle.fileno())
