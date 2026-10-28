@@ -1,0 +1,191 @@
+{
+  "schema_version": 1,
+  "recorded_on": "2026-10-28",
+  "base_commit": "86addea22f6060f2c50e81c67c6dadf978ea3749",
+  "phase": "0 preparation",
+  "phase_exit": "HOLD",
+  "independence_level": "SELF",
+  "execution_authorized": false,
+  "runs": [
+    {
+      "id": "release-py312",
+      "command": "bash scripts/verify-release.sh",
+      "python": "3.12.14",
+      "exit_code": 1,
+      "failed_stage": "Relay",
+      "stage_tests": 122,
+      "stage_errors": 24,
+      "stage_skips": 1
+    },
+    {
+      "id": "relay-py312",
+      "command": "python3 -m unittest discover -s relay/tests -v",
+      "python": "3.12.14",
+      "exit_code": 1,
+      "tests": 122,
+      "errors": 25,
+      "skips": 1,
+      "duration_seconds": 19.732
+    },
+    {
+      "id": "release-py311",
+      "command": "RELAY_REQUIRE_HYPOTHESIS=1 RELAY_PROPERTY_EXAMPLES=1000 bash scripts/verify-release.sh",
+      "python": "3.11.17",
+      "exit_code": 1,
+      "failed_stage": "Relay",
+      "stage_tests": 131,
+      "stage_errors": 24,
+      "stage_skips": 0
+    },
+    {
+      "id": "relay-py311",
+      "command": "RELAY_REQUIRE_HYPOTHESIS=1 RELAY_PROPERTY_EXAMPLES=1000 python3 -m unittest discover -s relay/tests -v",
+      "python": "3.11.17",
+      "exit_code": 1,
+      "tests": 131,
+      "errors": 24,
+      "skips": 0,
+      "duration_seconds": 60.36
+    },
+    {
+      "id": "characterization-baseline",
+      "python": "3.11.17",
+      "exit_code": 0,
+      "unittest_methods": 1,
+      "frozen_subprocess_cases": 116,
+      "entry_points": 43,
+      "duration_seconds": 10.216
+    },
+    {
+      "id": "phase0-validation",
+      "command": "python3 -m unittest discover -s tests/characterization -v",
+      "python": "3.11.17",
+      "exit_code": 0,
+      "unittest_methods": 3,
+      "frozen_subprocess_cases": 116,
+      "directory_regression_cases": 2,
+      "duration_seconds": 9.863
+    },
+    {
+      "id": "git-diff-check",
+      "command": "git diff --cached --check",
+      "exit_code": 0,
+      "note": "Raw stdout fixtures preserve significant Markdown trailing spaces under a narrowly scoped attribute."
+    },
+    {
+      "id": "protected-source-comparison",
+      "method": "Compare original protected paths byte-for-byte with git show base:path; match changed paths against the original manifest. Compare LICENSE and THIRD_PARTY_NOTICES.md too.",
+      "exit_code": 0,
+      "protected_paths_compared": 91,
+      "protected_paths_changed": []
+    },
+    {
+      "id": "phase0-orphan-guard",
+      "command": "python3 -m unittest discover -s tests/characterization -v",
+      "python": "3.11.17",
+      "exit_code": 1,
+      "unittest_methods": 3,
+      "errors": 1,
+      "frozen_subprocess_cases": 0,
+      "duration_seconds": 0.85,
+      "reason": "New guard detected an unreferenced empty golden output left by incomplete cleanup; removed before the final passing run."
+    },
+    {
+      "id": "phase0-final",
+      "command": "python3 -m unittest discover -s tests/characterization -v",
+      "python": "3.11.17",
+      "exit_code": 0,
+      "unittest_methods": 4,
+      "frozen_subprocess_cases": 116,
+      "directory_regression_cases": 2,
+      "timeout_regression_cases": 1,
+      "duration_seconds": 9.562
+    },
+    {
+      "id": "clean-context-review",
+      "method": "Review of diff, mandate, result records and correction diff only; no checkout or network",
+      "independence_level": "SEPARATED_CONTEXT",
+      "open_findings": 0,
+      "disposition": "HOLD at phase-0 exit; findings resolved"
+    }
+  ],
+  "unmeasured": {
+    "baseline_full_release_pass": {
+      "value": null,
+      "reason": "Complete release command failed at Relay; later stages did not execute."
+    },
+    "current_patch_hosted_ci": {
+      "value": null,
+      "reason": "No remote destination or PR was created."
+    },
+    "current_patch_security_scans": {
+      "value": null,
+      "reason": "Not run locally; historical base security result is stored separately."
+    },
+    "container_isolation": {
+      "value": null,
+      "reason": "Docker and Podman are not installed; container E2E was not executed."
+    },
+    "powershell_helper": {
+      "value": null,
+      "reason": "PowerShell is unavailable."
+    },
+    "line_coverage": {
+      "value": null,
+      "reason": "No coverage instrumentation was run; static test references do not measure coverage."
+    },
+    "operational_quality_gain": {
+      "value": null,
+      "reason": "No live comparison, independent held-out trial or application change."
+    },
+    "learned_priors_or_calibration_quality": {
+      "value": null,
+      "reason": "No ledger or learning/calibration implementation yet; no real reconciled data."
+    },
+    "independent_operator_review": {
+      "value": null,
+      "reason": "No independent human operator review was performed."
+    }
+  },
+  "log_sha256": {
+    "phase0-final.stderr.log": "6e2006ec13cbe59231d09dc95b7455b7002db74614aad1e628b0a7ee820955ee",
+    "phase0-final.stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "phase0-orphan-guard.stderr.log": "1750a4d2dbfda254390999859ab372990e381f1bc8e3e7e4d65847375330398f",
+    "phase0-orphan-guard.stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "phase0-validation.stderr.log": "3f1169136df805283b97fe443878f32e8437d7265ec144482715c7dc0f3594ae",
+    "phase0-validation.stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "relay-py311.stderr.log": "9fc10ca9c2aa365e7c1dcd1fb333f8c3ed6f336f08da72f26d1ae82a0a82df10",
+    "relay-py311.stdout.log": "e81e9646546ad1299fefd428c6661e30277fd62d46b44920595a20dfac643807",
+    "relay.stderr.log": "15a5d474d65e5ca2c65ced1a4c5b3c4cfc4e3a4ae4c6387eb0d64e1b6c4709d1",
+    "relay.stdout.log": "3ee236756f876123d21fba5d7401855635917f8aacc047623e7028ab266686d9",
+    "verify-release-py311.stderr.log": "fca54275f4d8934819285e36a49b91966e4c35b39d6e0dfc52dae0aa3fc758c9",
+    "verify-release-py311.stdout.log": "edcc1231d3432e29d5d245bd14275288e556c71db333e1f82183c0686f67ff83",
+    "verify-release.stderr.log": "742400cde65393d2d48872f3013cfe1a92062c80887caa90b7fcb5bf08f264ad",
+    "verify-release.stdout.log": "e90e722366749ecb8b16bbedb34bc120b5ec011916ec4a7b342fb83fe48c4b94"
+  },
+  "reviewed_diff_sha256": {
+    "phase0-review.diff": "a4beacbd14802fc9a84a517a7eabd1536ead1bb02f3bbf1af0a1f8eab1cd6407",
+    "phase0-review-corrections.diff": "dbfce939333ced88c050f52f7d863258f48daf33be3272674937d20a937732aa"
+  },
+  "delivery_attempt": {
+    "repository": "bionic0x/neuromancers-foundation",
+    "requested_actions": [
+      "create_repository_via_browser",
+      "upload_phase_0",
+      "open_draft_pull_request"
+    ],
+    "user_authorized": true,
+    "observed_browser_state": "Private destination created with imported history; pinned base commit visible",
+    "secure_auth_request_status": "Signed-in dashboard verified after password and device verification",
+    "repository_creation_submitted": true,
+    "remote_changes": true,
+    "draft_pull_request": null,
+    "reason": "Import explicitly authorized and completed. Connector returns 404 for the private destination; browser upload in progress.",
+    "proposed_import_source": "bionic0x/Ante-agency-agents",
+    "proposed_visibility": "private",
+    "automatic_approval_review": "initial rejection resolved by explicit user authorization",
+    "repository_created": true,
+    "imported_main_commit": "9c54ba227875633068e4eee919770b324b745d9c",
+    "comparison_base_branch": "foundation/base-86addea"
+  }
+}

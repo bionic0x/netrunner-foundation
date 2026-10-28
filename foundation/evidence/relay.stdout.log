@@ -1,0 +1,18 @@
+log chain intact (6 entries); NEXUS replay accepted 2 events
+nothing to reconcile
+record: run r_e094ea7a8e8e45aaa246f24ece498bee NEXUS finish (rejected); the review note was lost and stays empty
+run r_e094ea7a8e8e45aaa246f24ece498bee: recorded NEXUS finish as rejected
+log chain intact (8 entries); NEXUS replay accepted 2 events
+would record: run r_d283aabf691d4f1d80573d23be2145d7 NEXUS finish (accepted); the review note was lost and stays empty
+dry run; nothing changed. Re-run with --apply while `serve` is stopped.
+record: run r_d283aabf691d4f1d80573d23be2145d7 NEXUS finish (accepted); the review note was lost and stays empty
+run r_d283aabf691d4f1d80573d23be2145d7: recorded NEXUS finish as accepted
+log chain intact (8 entries); NEXUS replay accepted 2 events
+recover: run r_23c919dbbb034ae9bdb8dca750fee1e8 was interrupted; it is marked completed with an error (charged its full reservation if NEXUS started it) and then needs a review
+recovered interrupted run r_23c919dbbb034ae9bdb8dca750fee1e8
+log chain intact (8 entries); NEXUS replay accepted 2 events
+log chain intact (8 entries); NEXUS replay accepted 2 events
+log chain intact (8 entries); NEXUS replay accepted 2 events
+log chain intact (6 entries); NEXUS replay accepted 2 events
+log chain intact (8 entries); NEXUS replay accepted 2 events
+log chain intact (8 entries); NEXUS replay accepted 2 events

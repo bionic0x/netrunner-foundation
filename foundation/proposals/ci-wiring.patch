@@ -2,7 +2,7 @@ diff --git a/.github/workflows/check-runbooks.yml b/.github/workflows/check-runb
 index 5237b8f..d8cd37d 100644
 --- a/.github/workflows/check-runbooks.yml
 +++ b/.github/workflows/check-runbooks.yml
-@@ -83,3 +83,34 @@ jobs:
+@@ -83,3 +83,35 @@ jobs:
          run: |
            python3 scripts/check-htp-gate0.py
            python3 scripts/test-htp-gate0.py
@@ -23,6 +23,7 @@ index 5237b8f..d8cd37d 100644
 +      - name: Characterization recordings and mechanical moves
 +        run: |
 +          python3 tests/characterization/run.py
++          python3 -m unittest discover -s tests/characterization
 +          python3 foundation/tools/extraction.py verify
 +
 +      - name: Foundation tests (strategy, learning, self-development, defences)
@@ -41,13 +42,14 @@ diff --git a/scripts/verify-release.sh b/scripts/verify-release.sh
 index 4b0231f..b892638 100755
 --- a/scripts/verify-release.sh
 +++ b/scripts/verify-release.sh
-@@ -37,6 +37,15 @@ python3 scripts/test-nexus-brief.py
+@@ -37,6 +37,16 @@ python3 scripts/test-nexus-brief.py
  python3 scripts/test-nexus-plan.py
  python3 scripts/test-nexus-optimize.py
  python3 -m unittest discover -s relay/tests
 +# Ante Foundation: behavioural contract, mechanical moves, foundation tests,
 +# frozen reviewers, defence-layer independence, published self-test.
 +python3 tests/characterization/run.py
++python3 -m unittest discover -s tests/characterization
 +python3 foundation/tools/extraction.py verify
 +python3 -m unittest discover -s tests/foundation -p 'test_*.py'
 +python3 scripts/ante constructs verify

@@ -1,0 +1,25 @@
+{
+  "present": [
+    "assurance",
+    "causal",
+    "evidence"
+  ],
+  "unknown_vectors": [],
+  "required": [
+    "assurance",
+    "causal",
+    "evidence",
+    "resource",
+    "termination"
+  ],
+  "missing": [
+    "resource",
+    "termination"
+  ],
+  "kinds": {
+    "assurance": "sequential",
+    "causal": "sequential",
+    "evidence": "cumulative"
+  },
+  "note": "A missing vector is a gap in the instance, never a satisfied requirement."
+}

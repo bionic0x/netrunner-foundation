@@ -1,0 +1,25 @@
+usage: nexus-casepack.py [-h] {validate,verify,freeze,list,new} ...
+
+nexus-casepack.py — freeze and verify evaluation case packs (NEXUS Overdrive, Phase 1).
+
+A case in `examples/nexus/evaluation-cases.json` is a scenario outline. A case
+PACK is the frozen material a trial actually answers: brief, materials,
+constraints, permitted evidence, defect rubric, output contract, and the roster
+each variant uses. Its `inputs_hash` binds every trial row to exactly that
+material, so a variant cannot be credited for answering a different question.
+
+    nexus-casepack.py new      PACK_DIR --author NAME --case-ref ID [--split held_out] [--from PACK_DIR]
+    nexus-casepack.py validate PACK_DIR
+    nexus-casepack.py freeze   PACK_DIR --by NAME --at ISO_TIME
+    nexus-casepack.py verify   PACK_DIR
+    nexus-casepack.py list     ROOT_DIR
+
+Freezing records who froze the pack and when; it does not judge the pack's
+quality. Held-out packs must be authored by someone other than the improver
+(strategy/NEXUS-OVERDRIVE.md); the `author` label is recorded, not authenticated.
+
+positional arguments:
+  {validate,verify,freeze,list,new}
+
+options:
+  -h, --help            show this help message and exit

@@ -1,0 +1,16 @@
+usage: marketplace-intake.py [-h] --at AT [--max-age-seconds MAX_AGE_SECONDS]
+                             [--min-confirmations MIN_CONFIRMATIONS]
+                             snapshot
+
+Turn normalized external marketplace observations into offline HOLD packets.
+No API client, signer, model invocation or NEXUS replay event is emitted here.
+The format is Ante's review envelope, not an assertion about ACT's API schema.
+
+positional arguments:
+  snapshot
+
+options:
+  -h, --help            show this help message and exit
+  --at AT               explicit ISO timestamp with timezone
+  --max-age-seconds MAX_AGE_SECONDS
+  --min-confirmations MIN_CONFIRMATIONS

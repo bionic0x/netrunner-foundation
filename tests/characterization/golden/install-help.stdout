@@ -1,0 +1,55 @@
+install.sh -- Install The Agency agents into your local agentic tool(s).
+
+Reads converted files from integrations/ and copies them to the appropriate
+config directory for each tool. Run scripts/convert.sh first if integrations/
+is missing or stale. Python 3 is required for registry and freshness checks.
+
+Usage:
+  ./scripts/install.sh [selection] [mode] [behavior]
+  Bare invocation installs all teams to detected tools (interactive when a TTY).
+
+Tools:
+  claude-code  -- Copy agents to ~/.claude/agents/
+  copilot      -- Copy agents to ~/.github/agents/ and ~/.copilot/agents/
+  antigravity  -- Copy skills to ~/.gemini/config/skills/
+  gemini-cli   -- Install agents to ~/.gemini/agents/
+  opencode     -- Copy agents to .opencode/agents/ in current directory
+  cursor       -- Copy rules to .cursor/rules/ in current directory
+  aider        -- Copy the CONVENTIONS.md roster index to current directory
+  windsurf     -- Copy .windsurfrules to current directory
+  openclaw     -- Copy workspaces to ~/.openclaw/agency-agents/
+  qwen         -- Copy SubAgents to ~/.qwen/agents/ (user-wide) or .qwen/agents/ (project)
+  zcode        -- Copy agents to ~/.zcode/agents/ (global) or .zcode/agents/ (project)
+  kimi         -- Copy agents to $KIMI_CODE_HOME/agents/ (default ~/.kimi-code/agents/)
+  codex        -- Copy custom agent TOML files to ~/.codex/agents/
+  osaurus      -- Copy skills to ~/.osaurus/skills/
+  hermes       -- Copy lazy-router plugin to ~/.hermes/plugins/ and enable it
+  vibe         -- Copy agents and prompts to ~/.vibe/agents/ and ~/.vibe/prompts/
+  dsh          -- Copy skills to ~/.dsh/skills/ (user-wide) or .dsh/skills/ (project)
+  all          -- Install for all detected tools (default)
+
+Selection (compose freely; empty = everything):
+  --tool <a,b>          Only these tools
+  --division <a,b>      Only these teams/divisions (comma-separated)
+  --agent <slug,slug>   Only these specific agents
+  --agents-file <path>  Agents listed in a file (catalog ID or display name per line)
+  --runbook <slug>      Install the complete roster from strategy/runbooks.json
+
+Mode:
+  --link                Symlink instead of copy (updates propagate)
+  --path <dir>          Override the install directory (single destination)
+
+Behavior:
+  --interactive         Show the interactive wizard (default when run in a terminal)
+  --no-interactive      Skip the wizard, install all detected tools
+  --no-convert          Reuse adapters as-is; fail if selected files are incomplete
+  --dry-run             Print the plan and exit without writing anything
+  --list [tools|teams|agents|runbooks]   List and exit
+  --parallel            Install tools in parallel (output buffered per tool)
+  --jobs N              Max parallel jobs (default: nproc or 4)
+  --help                Show this help
+
+Env: CLAUDE_CONFIG_DIR, COPILOT_AGENT_DIR, CURSOR_RULES_DIR, GEMINI_AGENTS_DIR,
+     OPENCODE_AGENTS_DIR, OPENCLAW_DIR, QWEN_AGENTS_DIR, CODEX_AGENTS_DIR,
+     OSAURUS_SKILLS_DIR, KIMI_CODE_HOME, HERMES_HOME, HERMES_PLUGIN_DIR, VIBE_HOME
+     override default install paths (checked before hardcoded defaults).

@@ -31,6 +31,8 @@
       ],
       "normalised_id": "help--agent-capabilities",
       "raw_id": "agent-capabilities-help",
+      "stdout_file_matches_manifest": true,
+      "stderr_file_matches_manifest": true,
       "class": "same_bytes"
     },
     {
@@ -49,6 +51,8 @@
       ],
       "normalised_id": "help--benchmark-conversion",
       "raw_id": "benchmark-conversion-help",
+      "stdout_file_matches_manifest": true,
+      "stderr_file_matches_manifest": true,
       "class": "same_bytes"
     },
     {
@@ -58,6 +62,8 @@
       ],
       "normalised_id": "catalog--check",
       "raw_id": "catalog-current",
+      "stdout_file_matches_manifest": true,
+      "stderr_file_matches_manifest": true,
       "class": "same_bytes"
     },
     {
@@ -76,6 +82,8 @@
       ],
       "normalised_id": "help--build-catalog",
       "raw_id": "build-catalog-help",
+      "stdout_file_matches_manifest": true,
+      "stderr_file_matches_manifest": true,
       "class": "same_bytes"
     },
     {
@@ -94,6 +102,8 @@
       ],
       "normalised_id": "help--build-hermes-plugin",
       "raw_id": "build-hermes-plugin-help",
+      "stdout_file_matches_manifest": true,
+      "stderr_file_matches_manifest": true,
       "class": "same_bytes"
     },
     {
@@ -110,6 +120,8 @@
       "args": [],
       "normalised_id": "check--check-agent-privileges",
       "raw_id": "agent-privileges-check",
+      "stdout_file_matches_manifest": true,
+      "stderr_file_matches_manifest": true,
       "class": "same_bytes"
     },
     {
@@ -128,6 +140,8 @@
       ],
       "normalised_id": "help--check-agent-privileges",
       "raw_id": "check-agent-privileges-help",
+      "stdout_file_matches_manifest": true,
+      "stderr_file_matches_manifest": true,
       "class": "same_bytes"
     },
     {
@@ -135,6 +149,8 @@
       "args": [],
       "normalised_id": "check--check-challenger-pairs",
       "raw_id": "check-challenger-pairs-check",
+      "stdout_file_matches_manifest": true,
+      "stderr_file_matches_manifest": true,
       "class": "same_bytes"
     },
     {
@@ -156,6 +172,8 @@
       "args": [],
       "normalised_id": "check--check-htp-gate0",
       "raw_id": "check-htp-gate0-check",
+      "stdout_file_matches_manifest": true,
+      "stderr_file_matches_manifest": true,
       "class": "same_bytes"
     },
     {
@@ -170,6 +188,8 @@
       "args": [],
       "normalised_id": "check--check-security-engagement",
       "raw_id": "security-engagement-check",
+      "stdout_file_matches_manifest": true,
+      "stderr_file_matches_manifest": true,
       "class": "same_bytes"
     },
     {
@@ -188,6 +208,8 @@
       ],
       "normalised_id": "help--check-security-engagement",
       "raw_id": "check-security-engagement-help",
+      "stdout_file_matches_manifest": true,
+      "stderr_file_matches_manifest": true,
       "class": "same_bytes"
     },
     {
@@ -195,6 +217,8 @@
       "args": [],
       "normalised_id": "check--check-strategy-vocabulary",
       "raw_id": "check-strategy-vocabulary-check",
+      "stdout_file_matches_manifest": true,
+      "stderr_file_matches_manifest": true,
       "class": "same_bytes"
     },
     {
@@ -263,6 +287,8 @@
       ],
       "normalised_id": "help--evaluate-nexus",
       "raw_id": "evaluate-nexus-help",
+      "stdout_file_matches_manifest": true,
+      "stderr_file_matches_manifest": true,
       "class": "same_bytes"
     },
     {
@@ -285,6 +311,8 @@
       ],
       "normalised_id": "evaluate--runs-judgments",
       "raw_id": "evaluate-synthetic-records",
+      "stdout_file_matches_manifest": true,
+      "stderr_file_matches_manifest": true,
       "class": "same_bytes"
     },
     {
@@ -316,6 +344,8 @@
       ],
       "normalised_id": "help--host-acceptance",
       "raw_id": "host-acceptance-help",
+      "stdout_file_matches_manifest": true,
+      "stderr_file_matches_manifest": true,
       "class": "same_bytes"
     },
     {
@@ -334,6 +364,8 @@
       ],
       "normalised_id": "help--import-openclaw-community",
       "raw_id": "import-openclaw-community-help",
+      "stdout_file_matches_manifest": true,
+      "stderr_file_matches_manifest": true,
       "class": "same_bytes"
     },
     {
@@ -377,6 +409,8 @@
       ],
       "normalised_id": "help--integration-state",
       "raw_id": "integration-state-help",
+      "stdout_file_matches_manifest": true,
+      "stderr_file_matches_manifest": true,
       "class": "same_bytes"
     },
     {
@@ -411,6 +445,8 @@
       ],
       "normalised_id": "help--list-changed-agent-files",
       "raw_id": "list-changed-agent-files-help",
+      "stdout_file_matches_manifest": true,
+      "stderr_file_matches_manifest": true,
       "class": "same_bytes"
     },
     {
@@ -436,6 +472,8 @@
       ],
       "normalised_id": "help--marketplace-intake",
       "raw_id": "marketplace-intake-help",
+      "stdout_file_matches_manifest": true,
+      "stderr_file_matches_manifest": true,
       "class": "same_bytes"
     },
     {
@@ -446,7 +484,7 @@
         "2026-10-28T12:00:00Z"
       ],
       "normalised_id": null,
-      "raw_id": "marketplace-duplicate-key",
+      "raw_id": "marketplace-malformed-json",
       "class": "only_raw"
     },
     {
@@ -468,7 +506,7 @@
         "2026-10-28T12:00:00Z"
       ],
       "normalised_id": null,
-      "raw_id": "marketplace-malformed-json",
+      "raw_id": "marketplace-duplicate-key",
       "class": "only_raw"
     },
     {
@@ -573,6 +611,8 @@
       ],
       "normalised_id": "help--nexus-anthropic",
       "raw_id": "nexus-anthropic-help",
+      "stdout_file_matches_manifest": true,
+      "stderr_file_matches_manifest": true,
       "class": "same_bytes"
     },
     {
@@ -598,6 +638,8 @@
       ],
       "normalised_id": "help--nexus-blind",
       "raw_id": "nexus-blind-help",
+      "stdout_file_matches_manifest": true,
+      "stderr_file_matches_manifest": true,
       "class": "same_bytes"
     },
     {
@@ -657,6 +699,8 @@
       ],
       "normalised_id": "help--nexus-brief",
       "raw_id": "nexus-brief-help",
+      "stdout_file_matches_manifest": true,
+      "stderr_file_matches_manifest": true,
       "class": "same_bytes"
     },
     {
@@ -749,6 +793,8 @@
       ],
       "normalised_id": "help--nexus-campaign",
       "raw_id": "nexus-campaign-help",
+      "stdout_file_matches_manifest": true,
+      "stderr_file_matches_manifest": true,
       "class": "same_bytes"
     },
     {
@@ -806,6 +852,8 @@
       ],
       "normalised_id": "help--nexus-casepack",
       "raw_id": "nexus-casepack-help",
+      "stdout_file_matches_manifest": true,
+      "stderr_file_matches_manifest": true,
       "class": "same_bytes"
     },
     {
@@ -816,6 +864,8 @@
       ],
       "normalised_id": "casepack--list",
       "raw_id": "casepack-list",
+      "stdout_file_matches_manifest": true,
+      "stderr_file_matches_manifest": true,
       "class": "same_bytes"
     },
     {
@@ -856,6 +906,8 @@
       ],
       "normalised_id": "casepack--validate-level-inversion-northwind",
       "raw_id": "casepack-validate",
+      "stdout_file_matches_manifest": true,
+      "stderr_file_matches_manifest": true,
       "class": "same_bytes"
     },
     {
@@ -916,6 +968,8 @@
       ],
       "normalised_id": "casepack--verify-level-inversion-northwind",
       "raw_id": "casepack-verify",
+      "stdout_file_matches_manifest": true,
+      "stderr_file_matches_manifest": true,
       "class": "same_bytes"
     },
     {
@@ -951,6 +1005,8 @@
       ],
       "normalised_id": "help--nexus-improve",
       "raw_id": "nexus-improve-help",
+      "stdout_file_matches_manifest": true,
+      "stderr_file_matches_manifest": true,
       "class": "same_bytes"
     },
     {
@@ -1019,6 +1075,8 @@
       ],
       "normalised_id": "help--nexus-instance",
       "raw_id": "nexus-instance-help",
+      "stdout_file_matches_manifest": true,
+      "stderr_file_matches_manifest": true,
       "class": "same_bytes"
     },
     {
@@ -1053,6 +1111,8 @@
       ],
       "normalised_id": "instance--plan-without-at",
       "raw_id": "instance-plan-needs-at",
+      "stdout_file_matches_manifest": true,
+      "stderr_file_matches_manifest": true,
       "class": "same_bytes"
     },
     {
@@ -1170,7 +1230,7 @@
         "/dev/stdin"
       ],
       "normalised_id": null,
-      "raw_id": "instance-legacy-duplicate-key",
+      "raw_id": "instance-malformed-json",
       "class": "only_raw"
     },
     {
@@ -1180,7 +1240,7 @@
         "/dev/stdin"
       ],
       "normalised_id": null,
-      "raw_id": "instance-malformed-json",
+      "raw_id": "instance-legacy-duplicate-key",
       "class": "only_raw"
     },
     {
@@ -1191,6 +1251,8 @@
       ],
       "normalised_id": "instance--validate-investment",
       "raw_id": "instance-investment-hypothesis-validate",
+      "stdout_file_matches_manifest": true,
+      "stderr_file_matches_manifest": true,
       "class": "same_bytes"
     },
     {
@@ -1201,6 +1263,8 @@
       ],
       "normalised_id": "instance--validate-strategic",
       "raw_id": "instance-strategic-decision-validate",
+      "stdout_file_matches_manifest": true,
+      "stderr_file_matches_manifest": true,
       "class": "same_bytes"
     },
     {
@@ -1266,6 +1330,8 @@
       ],
       "normalised_id": "help--nexus-lint",
       "raw_id": "nexus-lint-help",
+      "stdout_file_matches_manifest": true,
+      "stderr_file_matches_manifest": true,
       "class": "same_bytes"
     },
     {
@@ -1284,6 +1350,8 @@
       ],
       "normalised_id": "lint--strategic",
       "raw_id": "lint-standard",
+      "stdout_file_matches_manifest": true,
+      "stderr_file_matches_manifest": true,
       "class": "same_bytes"
     },
     {
@@ -1294,6 +1362,8 @@
       ],
       "normalised_id": "lint--strategic-strict",
       "raw_id": "lint-strict",
+      "stdout_file_matches_manifest": true,
+      "stderr_file_matches_manifest": true,
       "class": "same_bytes"
     },
     {
@@ -1328,6 +1398,8 @@
       ],
       "normalised_id": "help--nexus-optimize",
       "raw_id": "nexus-optimize-help",
+      "stdout_file_matches_manifest": true,
+      "stderr_file_matches_manifest": true,
       "class": "same_bytes"
     },
     {
@@ -1353,6 +1425,8 @@
       ],
       "normalised_id": "help--nexus-options",
       "raw_id": "nexus-options-help",
+      "stdout_file_matches_manifest": true,
+      "stderr_file_matches_manifest": true,
       "class": "same_bytes"
     },
     {
@@ -1362,6 +1436,8 @@
       ],
       "normalised_id": "options--example",
       "raw_id": "option-comparison",
+      "stdout_file_matches_manifest": true,
+      "stderr_file_matches_manifest": true,
       "class": "same_bytes"
     },
     {
@@ -1396,6 +1472,8 @@
       ],
       "normalised_id": "help--nexus-pilot",
       "raw_id": "nexus-pilot-help",
+      "stdout_file_matches_manifest": true,
+      "stderr_file_matches_manifest": true,
       "class": "same_bytes"
     },
     {
@@ -1445,6 +1523,8 @@
       ],
       "normalised_id": "help--nexus-plan",
       "raw_id": "nexus-plan-help",
+      "stdout_file_matches_manifest": true,
+      "stderr_file_matches_manifest": true,
       "class": "same_bytes"
     },
     {
@@ -1463,6 +1543,8 @@
       ],
       "normalised_id": "help--nexus-relay",
       "raw_id": "nexus-relay-help",
+      "stdout_file_matches_manifest": true,
+      "stderr_file_matches_manifest": true,
       "class": "same_bytes"
     },
     {
@@ -1488,6 +1570,8 @@
       ],
       "normalised_id": "help--nexus-review",
       "raw_id": "nexus-review-help",
+      "stdout_file_matches_manifest": true,
+      "stderr_file_matches_manifest": true,
       "class": "same_bytes"
     },
     {
@@ -1513,6 +1597,8 @@
       ],
       "normalised_id": "help--nexus-routing",
       "raw_id": "nexus-routing-help",
+      "stdout_file_matches_manifest": true,
+      "stderr_file_matches_manifest": true,
       "class": "same_bytes"
     },
     {
@@ -1606,6 +1692,8 @@
       ],
       "normalised_id": "help--nexus-trial",
       "raw_id": "nexus-trial-help",
+      "stdout_file_matches_manifest": true,
+      "stderr_file_matches_manifest": true,
       "class": "same_bytes"
     },
     {
@@ -1624,6 +1712,8 @@
       ],
       "normalised_id": "help--probe-host-claude-code",
       "raw_id": "probe-host-claude-code-help",
+      "stdout_file_matches_manifest": true,
+      "stderr_file_matches_manifest": true,
       "class": "same_bytes"
     },
     {
@@ -1649,6 +1739,8 @@
       ],
       "normalised_id": "help--registry",
       "raw_id": "registry-help",
+      "stdout_file_matches_manifest": true,
+      "stderr_file_matches_manifest": true,
       "class": "same_bytes"
     },
     {
@@ -1658,6 +1750,8 @@
       ],
       "normalised_id": "registry--divisions",
       "raw_id": "registry-divisions",
+      "stdout_file_matches_manifest": true,
+      "stderr_file_matches_manifest": true,
       "class": "same_bytes"
     },
     {
@@ -1689,6 +1783,8 @@
       ],
       "normalised_id": "registry--tools",
       "raw_id": "registry-tools",
+      "stdout_file_matches_manifest": true,
+      "stderr_file_matches_manifest": true,
       "class": "same_bytes"
     },
     {
@@ -1737,6 +1833,8 @@
       ],
       "normalised_id": "help--resolve-agents",
       "raw_id": "resolve-agents-help",
+      "stdout_file_matches_manifest": true,
+      "stderr_file_matches_manifest": true,
       "class": "same_bytes"
     },
     {
@@ -1746,6 +1844,8 @@
       ],
       "normalised_id": "resolve--list-runbooks",
       "raw_id": "resolve-runbooks",
+      "stdout_file_matches_manifest": true,
+      "stderr_file_matches_manifest": true,
       "class": "same_bytes"
     },
     {
@@ -1768,7 +1868,11 @@
     "raw_manifest": {
       "path": "tests/characterization/manifest.json",
       "sha256": "952b0954b3e925d454e2832c17f65c8a41a00ac880528debf36e2d378898acf1",
-      "commit": "f9a915a (foundation/phase-0, 2 of 3 stream batches published)"
+      "commit": "b60af82 (foundation/phase-0, all three stream batches published; merged)"
+    },
+    "raw_golden": {
+      "path": "tests/characterization/golden",
+      "note": "each overlapping case checks the .stdout/.stderr files against the manifest hashes"
     }
   }
 }

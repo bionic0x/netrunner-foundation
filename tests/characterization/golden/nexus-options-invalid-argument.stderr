@@ -1,0 +1,2 @@
+usage: nexus-options.py [-h] input
+nexus-options.py: error: the following arguments are required: input

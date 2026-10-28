@@ -1,0 +1,11 @@
+usage: build-hermes-plugin.py [-h] [--repo-root REPO_ROOT] [--out OUT]
+
+Build the Hermes lazy-router plugin for The Agency agents. The generated
+plugin exposes a small fixed tool surface to Hermes and keeps the large agent
+roster in an on-disk JSON data file. That avoids using skills.external_dirs,
+which advertises every Agency agent in Hermes' initial skill catalog.
+
+options:
+  -h, --help            show this help message and exit
+  --repo-root REPO_ROOT
+  --out OUT             Output directory, default integrations/hermes

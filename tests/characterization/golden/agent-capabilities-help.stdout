@@ -1,0 +1,18 @@
+usage: agent-capabilities.py [-h] --agent AGENT [--observation OBSERVATION]
+                             [--policy POLICY] [--output OUTPUT]
+                             {inspect,render}
+
+Inspect declared/observed capability boundaries; render a scoped Claude
+profile. This tool does not observe a live host or grant authority.
+Observations and scope policies are explicit, externally supplied records,
+never inferred from prompts.
+
+positional arguments:
+  {inspect,render}
+
+options:
+  -h, --help            show this help message and exit
+  --agent AGENT
+  --observation OBSERVATION
+  --policy POLICY
+  --output OUTPUT

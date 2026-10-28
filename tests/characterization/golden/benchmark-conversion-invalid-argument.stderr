@@ -1,0 +1,6 @@
+usage: benchmark-conversion.py [-h]
+                               [--scenario {full-sequential,full-parallel,representative-tool,one-agent-change}]
+                               [--repeat REPEAT] [--tool TOOL] [--jobs JOBS]
+                               [--changed-agent CHANGED_AGENT] [--json JSON]
+                               [--verbose]
+benchmark-conversion.py: error: unrecognized arguments: --foundation-unknown-option

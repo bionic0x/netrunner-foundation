@@ -1,0 +1,2 @@
+PASSED: 17 tools validated from tools.json; 15 converted, 2 source/identity; installer, detection and renderer coverage complete.
+Canonical order: claude-code codex gemini-cli copilot qwen cursor opencode osaurus aider antigravity kimi openclaw windsurf hermes vibe zcode dsh

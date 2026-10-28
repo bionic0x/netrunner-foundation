@@ -1,0 +1,32 @@
+usage: nexus-review.py [-h] {kit,collect} ...
+
+nexus-review.py — a blind reviewer's kit: scoring sheets from each pack's rubric.
+
+nexus-blind.py seals artifacts under opaque submission ids. It gives the reviewer
+the case outline, but not what the pack says a fatal defect, a factual error or a
+required point of evidence is. Without that, counts depend on each reviewer's idea
+of the case. This tool closes that gap without unblinding:
+
+  kit      run by the operator, who holds the trials file. For every sealed
+           submission it resolves the frozen pack the trial answered and writes a
+           scoring sheet listing the pack's rubric, plus the pack's brief,
+           constraints and materials. Everything added is identical for the three
+           variants of a pack, so nothing in the kit tells them apart.
+  collect  run on the returned sheets. Refuses unfilled items or a modified
+           artifact, and writes judgments in the format evaluate-nexus.py reads.
+
+    nexus-review.py kit     --sealed REVIEW_DIR --trials FILE --packs ROOT --out KIT_DIR
+    nexus-review.py collect --kit KIT_DIR --reviewer NAME --judged-at ISO --out JUDGMENTS
+                            [--trials FILE]      # validate against the trials now
+
+The reviewer never needs the trials file. Counts: fatal_defects is the rubric
+items marked present plus any additional fatal defect the reviewer names;
+factual_errors and constraint_violations are counted against the rubric's
+descriptions; evidence_coverage is covered over required rubric points.
+Reviewer independence is recorded, not authenticated.
+
+positional arguments:
+  {kit,collect}
+
+options:
+  -h, --help     show this help message and exit

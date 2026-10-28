@@ -1,0 +1,2 @@
+usage: build-catalog.py [-h] [--check] [--json OUT]
+build-catalog.py: error: unrecognized arguments: --foundation-unknown-option

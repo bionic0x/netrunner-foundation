@@ -1,0 +1,2 @@
+usage: list-changed-agent-files.py [-h] [--divisions DIVISIONS]
+list-changed-agent-files.py: error: unrecognized arguments: --foundation-unknown-option

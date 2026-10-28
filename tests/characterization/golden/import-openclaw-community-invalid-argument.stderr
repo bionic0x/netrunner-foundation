@@ -1,0 +1,4 @@
+usage: import-openclaw-community.py [-h] [--source-ref SOURCE_REF]
+                                    [--root ROOT] [--workers WORKERS]
+                                    [--dry-run]
+import-openclaw-community.py: error: unrecognized arguments: --foundation-unknown-option

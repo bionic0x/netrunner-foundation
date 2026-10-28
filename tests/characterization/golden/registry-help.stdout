@@ -1,0 +1,19 @@
+usage: registry.py [-h] {divisions,tools,tool-field} ...
+
+Read canonical repository registries without duplicating key sets in shell.
+Examples: python3 scripts/registry.py divisions [path] python3
+scripts/registry.py tools [path] python3 scripts/registry.py tools [path]
+--converted python3 scripts/registry.py tools [path] --install-kind per-agent
+python3 scripts/registry.py tool-field <tool> <field> [path] Division keys
+retain JSON insertion order. Tool keys are ordered by their canonical
+``order`` field (then key as a deterministic tie-breaker), so CLI/TUI
+consumers do not carry a second ordering policy.
+
+positional arguments:
+  {divisions,tools,tool-field}
+    divisions           emit division keys
+    tools               emit tool keys in canonical order
+    tool-field          emit one field from one registered tool
+
+options:
+  -h, --help            show this help message and exit

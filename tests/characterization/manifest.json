@@ -1,0 +1,1588 @@
+{
+  "schema_version": 1,
+  "base_commit": "86addea22f6060f2c50e81c67c6dadf978ea3749",
+  "python_version": "3.11.17",
+  "synthetic": true,
+  "evidence_kind": "local_software_characterization_only",
+  "normalization": null,
+  "cases": [
+    {
+      "id": "agent-capabilities-help",
+      "path": "scripts/agent-capabilities.py",
+      "argv": [
+        "{python}",
+        "scripts/agent-capabilities.py",
+        "--help"
+      ],
+      "stdin": "",
+      "returncode": 0,
+      "stdout_sha256": "076e31fb81eda1a232ef65a12bdc834e1f38d49b32d6a3612e413e9e7369a7a5",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "id": "agent-capabilities-invalid-argument",
+      "path": "scripts/agent-capabilities.py",
+      "argv": [
+        "{python}",
+        "scripts/agent-capabilities.py",
+        "--foundation-unknown-option"
+      ],
+      "stdin": "",
+      "returncode": 2,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "d19f05ddd1ecaa293f3383649a444f389f8838e26f2a5a776602e58964330613"
+    },
+    {
+      "id": "benchmark-conversion-help",
+      "path": "scripts/benchmark-conversion.py",
+      "argv": [
+        "{python}",
+        "scripts/benchmark-conversion.py",
+        "--help"
+      ],
+      "stdin": "",
+      "returncode": 0,
+      "stdout_sha256": "8d59ec253befba644399d26dc7e3c5446bdbafb9fcc399d1ef763b8e082c7732",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "id": "benchmark-conversion-invalid-argument",
+      "path": "scripts/benchmark-conversion.py",
+      "argv": [
+        "{python}",
+        "scripts/benchmark-conversion.py",
+        "--foundation-unknown-option"
+      ],
+      "stdin": "",
+      "returncode": 2,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "2956d6210ac96b21064714575b51275842785579a551534c5c2fca7574ab407c"
+    },
+    {
+      "id": "build-catalog-help",
+      "path": "scripts/build-catalog.py",
+      "argv": [
+        "{python}",
+        "scripts/build-catalog.py",
+        "--help"
+      ],
+      "stdin": "",
+      "returncode": 0,
+      "stdout_sha256": "c77e0af445f432562838407e5bd793ac85a776f52e57585f7cb39f2bd3788c2a",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "id": "build-catalog-invalid-argument",
+      "path": "scripts/build-catalog.py",
+      "argv": [
+        "{python}",
+        "scripts/build-catalog.py",
+        "--foundation-unknown-option"
+      ],
+      "stdin": "",
+      "returncode": 2,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "1c6c5b8e8cce92011c19c1aa7dc2d124b86692119ede8968f23157be1b4477eb"
+    },
+    {
+      "id": "build-hermes-plugin-help",
+      "path": "scripts/build-hermes-plugin.py",
+      "argv": [
+        "{python}",
+        "scripts/build-hermes-plugin.py",
+        "--help"
+      ],
+      "stdin": "",
+      "returncode": 0,
+      "stdout_sha256": "e1f4c98af274caa911fe08a518ffc1581105edd9ef078e187819210acff1e910",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "id": "build-hermes-plugin-invalid-argument",
+      "path": "scripts/build-hermes-plugin.py",
+      "argv": [
+        "{python}",
+        "scripts/build-hermes-plugin.py",
+        "--foundation-unknown-option"
+      ],
+      "stdin": "",
+      "returncode": 2,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "9281c33e4170bcc6c7ec0f8cfc6e6c462c311040a743c92f8ed11377898e1c0a"
+    },
+    {
+      "id": "check-agent-privileges-help",
+      "path": "scripts/check-agent-privileges.py",
+      "argv": [
+        "{python}",
+        "scripts/check-agent-privileges.py",
+        "--help"
+      ],
+      "stdin": "",
+      "returncode": 0,
+      "stdout_sha256": "69f61f41c663eb6d7d0ccce8258be3afb89987a6f6ed40bd24c6f458cf42cd5b",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "id": "check-agent-privileges-invalid-argument",
+      "path": "scripts/check-agent-privileges.py",
+      "argv": [
+        "{python}",
+        "scripts/check-agent-privileges.py",
+        "--foundation-unknown-option"
+      ],
+      "stdin": "",
+      "returncode": 2,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "13a19a25fb7ffe31cbc08be76c0b606a4a744c4e5bbf017b308a024d633b59e5"
+    },
+    {
+      "id": "check-security-engagement-help",
+      "path": "scripts/check-security-engagement.py",
+      "argv": [
+        "{python}",
+        "scripts/check-security-engagement.py",
+        "--help"
+      ],
+      "stdin": "",
+      "returncode": 0,
+      "stdout_sha256": "f9f7a072b57ba0d7c7d47c367071d3ccda460172eb3ddfeb12d829fb91521a17",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "id": "check-security-engagement-invalid-argument",
+      "path": "scripts/check-security-engagement.py",
+      "argv": [
+        "{python}",
+        "scripts/check-security-engagement.py",
+        "--foundation-unknown-option"
+      ],
+      "stdin": "",
+      "returncode": 2,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "2394403a0699cd979b690db9ed5cd99e1ee5f8d9bdd3503ed5f9254afeb015cf"
+    },
+    {
+      "id": "evaluate-nexus-help",
+      "path": "scripts/evaluate-nexus.py",
+      "argv": [
+        "{python}",
+        "scripts/evaluate-nexus.py",
+        "--help"
+      ],
+      "stdin": "",
+      "returncode": 0,
+      "stdout_sha256": "58bb70abd23b39f25789f153b39c7b5d3d415d99fe173805aec6bfff39c68889",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "id": "evaluate-nexus-invalid-argument",
+      "path": "scripts/evaluate-nexus.py",
+      "argv": [
+        "{python}",
+        "scripts/evaluate-nexus.py",
+        "--foundation-unknown-option"
+      ],
+      "stdin": "",
+      "returncode": 2,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "5c93b21e66928ee50c1304c27fdd5ebbf85cf177fcfab895b11d1e3a91863746"
+    },
+    {
+      "id": "host-acceptance-help",
+      "path": "scripts/host-acceptance.py",
+      "argv": [
+        "{python}",
+        "scripts/host-acceptance.py",
+        "--help"
+      ],
+      "stdin": "",
+      "returncode": 0,
+      "stdout_sha256": "df853b92b75e457bc0595c1d875a42d73180ea69fe2f06965edbf4c151e9c145",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "id": "host-acceptance-invalid-argument",
+      "path": "scripts/host-acceptance.py",
+      "argv": [
+        "{python}",
+        "scripts/host-acceptance.py",
+        "--foundation-unknown-option"
+      ],
+      "stdin": "",
+      "returncode": 2,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "a1060985bf013ed57d10d7cc7e12fc3d336ac0533cfd79068965955781eaa0d1"
+    },
+    {
+      "id": "import-openclaw-community-help",
+      "path": "scripts/import-openclaw-community.py",
+      "argv": [
+        "{python}",
+        "scripts/import-openclaw-community.py",
+        "--help"
+      ],
+      "stdin": "",
+      "returncode": 0,
+      "stdout_sha256": "aa6e49a6e8136e3b6cad58c7533a693798a75561db8e73be84485de18d16e9d4",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "id": "import-openclaw-community-invalid-argument",
+      "path": "scripts/import-openclaw-community.py",
+      "argv": [
+        "{python}",
+        "scripts/import-openclaw-community.py",
+        "--foundation-unknown-option"
+      ],
+      "stdin": "",
+      "returncode": 2,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "de5ca59854707b734e0323919388441d8b93135e6d6cc772fd06b0b110d60985"
+    },
+    {
+      "id": "integration-state-help",
+      "path": "scripts/integration-state.py",
+      "argv": [
+        "{python}",
+        "scripts/integration-state.py",
+        "--help"
+      ],
+      "stdin": "",
+      "returncode": 0,
+      "stdout_sha256": "52262576bf6d09ab56e405d063dc06b7fa9e71bcf040719a26d53afab9efbfcb",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "id": "integration-state-invalid-argument",
+      "path": "scripts/integration-state.py",
+      "argv": [
+        "{python}",
+        "scripts/integration-state.py",
+        "--foundation-unknown-option"
+      ],
+      "stdin": "",
+      "returncode": 2,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "55430a256f8675c8ad7661d5c8947b1620533bc1e0b6d414da61f502d2c1427b"
+    },
+    {
+      "id": "list-changed-agent-files-help",
+      "path": "scripts/list-changed-agent-files.py",
+      "argv": [
+        "{python}",
+        "scripts/list-changed-agent-files.py",
+        "--help"
+      ],
+      "stdin": "",
+      "returncode": 0,
+      "stdout_sha256": "73e26c5f00a632b6c82bcb3d556808dad2a56c86d6bd22d847928c9ab47ac8f7",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "id": "list-changed-agent-files-invalid-argument",
+      "path": "scripts/list-changed-agent-files.py",
+      "argv": [
+        "{python}",
+        "scripts/list-changed-agent-files.py",
+        "--foundation-unknown-option"
+      ],
+      "stdin": "",
+      "returncode": 2,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "8a49c94a0353f5d5228aa2eaf557baaed02c5502fa38582824455fe1ed669f03"
+    },
+    {
+      "id": "marketplace-intake-help",
+      "path": "scripts/marketplace-intake.py",
+      "argv": [
+        "{python}",
+        "scripts/marketplace-intake.py",
+        "--help"
+      ],
+      "stdin": "",
+      "returncode": 0,
+      "stdout_sha256": "4493cf481484e3828f1a8831a74d0c1c61b50a02f7bf8f930955d14a502d22ce",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "id": "marketplace-intake-invalid-argument",
+      "path": "scripts/marketplace-intake.py",
+      "argv": [
+        "{python}",
+        "scripts/marketplace-intake.py",
+        "--foundation-unknown-option"
+      ],
+      "stdin": "",
+      "returncode": 2,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "285f1b803ecd3e1f9b45e5c272cf6e55f5ad3442a4a0856a23402a96d0bf7dad"
+    },
+    {
+      "id": "nexus-anthropic-help",
+      "path": "scripts/nexus-anthropic.py",
+      "argv": [
+        "{python}",
+        "scripts/nexus-anthropic.py",
+        "--help"
+      ],
+      "stdin": "",
+      "returncode": 0,
+      "stdout_sha256": "1b4dd606e9be3ea52314e335e555a336062ec8f51dc4b0b5cb15f343a04c17d4",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "id": "nexus-anthropic-invalid-argument",
+      "path": "scripts/nexus-anthropic.py",
+      "argv": [
+        "{python}",
+        "scripts/nexus-anthropic.py",
+        "--foundation-unknown-option"
+      ],
+      "stdin": "",
+      "returncode": 2,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "bddae4b48726bcc058038a6f8de315cf792c27ca858ebb1c9f74db283bfe65f8"
+    },
+    {
+      "id": "nexus-blind-help",
+      "path": "scripts/nexus-blind.py",
+      "argv": [
+        "{python}",
+        "scripts/nexus-blind.py",
+        "--help"
+      ],
+      "stdin": "",
+      "returncode": 0,
+      "stdout_sha256": "00db8c546d74e361a6fb5bc3ea26537e7c8fdf5c435a40b9342e9745990539aa",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "id": "nexus-blind-invalid-argument",
+      "path": "scripts/nexus-blind.py",
+      "argv": [
+        "{python}",
+        "scripts/nexus-blind.py",
+        "--foundation-unknown-option"
+      ],
+      "stdin": "",
+      "returncode": 2,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "12cf53284ad5e897e100995c765147dc1c46b98c5324b580d8b00ce93c6cf043"
+    },
+    {
+      "id": "nexus-brief-help",
+      "path": "scripts/nexus-brief.py",
+      "argv": [
+        "{python}",
+        "scripts/nexus-brief.py",
+        "--help"
+      ],
+      "stdin": "",
+      "returncode": 0,
+      "stdout_sha256": "4052271132a3874ef7207b1750ed7646d23cff1a16bfaca191eab445e4e36940",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "id": "nexus-brief-invalid-argument",
+      "path": "scripts/nexus-brief.py",
+      "argv": [
+        "{python}",
+        "scripts/nexus-brief.py",
+        "--foundation-unknown-option"
+      ],
+      "stdin": "",
+      "returncode": 2,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "db1f9f40d48191db346bce126c3e3af18454f1a3e9ea14959e637243f6452fac"
+    },
+    {
+      "id": "nexus-campaign-help",
+      "path": "scripts/nexus-campaign.py",
+      "argv": [
+        "{python}",
+        "scripts/nexus-campaign.py",
+        "--help"
+      ],
+      "stdin": "",
+      "returncode": 0,
+      "stdout_sha256": "2957a50ba5303df7e4fb4920bdc6072b9162a9051326a67d73c78eff526b2864",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "id": "nexus-campaign-invalid-argument",
+      "path": "scripts/nexus-campaign.py",
+      "argv": [
+        "{python}",
+        "scripts/nexus-campaign.py",
+        "--foundation-unknown-option"
+      ],
+      "stdin": "",
+      "returncode": 2,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "76940b2f1a074d4f84ab6a462b1aaed8bd78d028b7f71bd9fc3772b489799d37"
+    },
+    {
+      "id": "nexus-casepack-help",
+      "path": "scripts/nexus-casepack.py",
+      "argv": [
+        "{python}",
+        "scripts/nexus-casepack.py",
+        "--help"
+      ],
+      "stdin": "",
+      "returncode": 0,
+      "stdout_sha256": "4fdc87c956929bfd3d6793463832c241cf7a13f13d940feecacf3c3f1d05dc9e",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "id": "nexus-casepack-invalid-argument",
+      "path": "scripts/nexus-casepack.py",
+      "argv": [
+        "{python}",
+        "scripts/nexus-casepack.py",
+        "--foundation-unknown-option"
+      ],
+      "stdin": "",
+      "returncode": 2,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "c28a3c309b9e2b5e9d68fe72c7368d0c062d4a2dd91e34a45657678b18ede860"
+    },
+    {
+      "id": "nexus-improve-help",
+      "path": "scripts/nexus-improve.py",
+      "argv": [
+        "{python}",
+        "scripts/nexus-improve.py",
+        "--help"
+      ],
+      "stdin": "",
+      "returncode": 0,
+      "stdout_sha256": "2035375196ef13182f3547bfc41af2d17916f8614286460aaa937f58bc01891d",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "id": "nexus-improve-invalid-argument",
+      "path": "scripts/nexus-improve.py",
+      "argv": [
+        "{python}",
+        "scripts/nexus-improve.py",
+        "--foundation-unknown-option"
+      ],
+      "stdin": "",
+      "returncode": 2,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "c9da240afffa4ea50377e602d9d8c2d90927bd80ba7228b481b33dcb4cb5ba6a"
+    },
+    {
+      "id": "nexus-instance-help",
+      "path": "scripts/nexus-instance.py",
+      "argv": [
+        "{python}",
+        "scripts/nexus-instance.py",
+        "--help"
+      ],
+      "stdin": "",
+      "returncode": 0,
+      "stdout_sha256": "7bf9e6d7e047bb6603cb702962ed4ba2e1d2cb26db08645aa25fe460d03e1a87",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "id": "nexus-instance-invalid-argument",
+      "path": "scripts/nexus-instance.py",
+      "argv": [
+        "{python}",
+        "scripts/nexus-instance.py",
+        "--foundation-unknown-option"
+      ],
+      "stdin": "",
+      "returncode": 2,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "f831107955da0066121d04aeda820facd6c082855d17e146136f3f4bb59af239"
+    },
+    {
+      "id": "nexus-lint-help",
+      "path": "scripts/nexus-lint.py",
+      "argv": [
+        "{python}",
+        "scripts/nexus-lint.py",
+        "--help"
+      ],
+      "stdin": "",
+      "returncode": 0,
+      "stdout_sha256": "6afaa69f61606c4ffb2e16f72674991478aa5650b9f63d24760b469aed638cd3",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "id": "nexus-lint-invalid-argument",
+      "path": "scripts/nexus-lint.py",
+      "argv": [
+        "{python}",
+        "scripts/nexus-lint.py",
+        "--foundation-unknown-option"
+      ],
+      "stdin": "",
+      "returncode": 2,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "215936892c1e69d808c63ad84610e783f8426605154bf68dce025a070c48cda4"
+    },
+    {
+      "id": "nexus-optimize-help",
+      "path": "scripts/nexus-optimize.py",
+      "argv": [
+        "{python}",
+        "scripts/nexus-optimize.py",
+        "--help"
+      ],
+      "stdin": "",
+      "returncode": 0,
+      "stdout_sha256": "0b7dbabe65e8e2e3a3b91e6858cf8b10bf1e85dd65d27df97b6b0cfe7aa13e07",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "id": "nexus-optimize-invalid-argument",
+      "path": "scripts/nexus-optimize.py",
+      "argv": [
+        "{python}",
+        "scripts/nexus-optimize.py",
+        "--foundation-unknown-option"
+      ],
+      "stdin": "",
+      "returncode": 2,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "1d8ed98e62702dd0567a86a7c5e2bfd0cde62a4f084368861869ac90cbcc24e8"
+    },
+    {
+      "id": "nexus-options-help",
+      "path": "scripts/nexus-options.py",
+      "argv": [
+        "{python}",
+        "scripts/nexus-options.py",
+        "--help"
+      ],
+      "stdin": "",
+      "returncode": 0,
+      "stdout_sha256": "9dbcd40362fd8bf626099e487bd74bf8eff8ad3c5a298246689f1bd36024bca8",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "id": "nexus-options-invalid-argument",
+      "path": "scripts/nexus-options.py",
+      "argv": [
+        "{python}",
+        "scripts/nexus-options.py",
+        "--foundation-unknown-option"
+      ],
+      "stdin": "",
+      "returncode": 2,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "e59e65a33f38bd56457e840f0184d05e6b8a68552d346d2e3fe3b070da07d20c"
+    },
+    {
+      "id": "nexus-pilot-help",
+      "path": "scripts/nexus-pilot.py",
+      "argv": [
+        "{python}",
+        "scripts/nexus-pilot.py",
+        "--help"
+      ],
+      "stdin": "",
+      "returncode": 0,
+      "stdout_sha256": "1df25a71044acbe9116f3d231b512a81aae79e26f86feb50c970519f7e3bea45",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "id": "nexus-pilot-invalid-argument",
+      "path": "scripts/nexus-pilot.py",
+      "argv": [
+        "{python}",
+        "scripts/nexus-pilot.py",
+        "--foundation-unknown-option"
+      ],
+      "stdin": "",
+      "returncode": 2,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "e87e1104499c479ca8394c86e7fe58b294603658c97d747a03b84f8317915de1"
+    },
+    {
+      "id": "nexus-plan-help",
+      "path": "scripts/nexus-plan.py",
+      "argv": [
+        "{python}",
+        "scripts/nexus-plan.py",
+        "--help"
+      ],
+      "stdin": "",
+      "returncode": 0,
+      "stdout_sha256": "d439b9883924d59b1f38ed4892c609ec5c8e61ccc84ddb5a185d3d2a066095b2",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "id": "nexus-plan-invalid-argument",
+      "path": "scripts/nexus-plan.py",
+      "argv": [
+        "{python}",
+        "scripts/nexus-plan.py",
+        "--foundation-unknown-option"
+      ],
+      "stdin": "",
+      "returncode": 2,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "59674335262e1ee877db29dde721435a9eff49e118a3a4c6fab7dd5222a304e5"
+    },
+    {
+      "id": "nexus-relay-help",
+      "path": "scripts/nexus-relay.py",
+      "argv": [
+        "{python}",
+        "scripts/nexus-relay.py",
+        "--help"
+      ],
+      "stdin": "",
+      "returncode": 0,
+      "stdout_sha256": "51e5822ad20b6bed741a79c65996a46a3b61a953db723b4393ce88481c05a652",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "id": "nexus-relay-invalid-argument",
+      "path": "scripts/nexus-relay.py",
+      "argv": [
+        "{python}",
+        "scripts/nexus-relay.py",
+        "--foundation-unknown-option"
+      ],
+      "stdin": "",
+      "returncode": 2,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "e89bf35b68375c4a1d759a46208bbe4fdb3d03320dff7fae8bdbfa6175cecc1a"
+    },
+    {
+      "id": "nexus-review-help",
+      "path": "scripts/nexus-review.py",
+      "argv": [
+        "{python}",
+        "scripts/nexus-review.py",
+        "--help"
+      ],
+      "stdin": "",
+      "returncode": 0,
+      "stdout_sha256": "a196b971a51b2db086b152cbcd435adc6a64b5b06335bcb5523d8b17f67a132b",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "id": "nexus-review-invalid-argument",
+      "path": "scripts/nexus-review.py",
+      "argv": [
+        "{python}",
+        "scripts/nexus-review.py",
+        "--foundation-unknown-option"
+      ],
+      "stdin": "",
+      "returncode": 2,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "53c5b8196e27f4e53a5636900c8d9c0dc4076eb9de9b2354fb5b8a282f590dc4"
+    },
+    {
+      "id": "nexus-routing-help",
+      "path": "scripts/nexus-routing.py",
+      "argv": [
+        "{python}",
+        "scripts/nexus-routing.py",
+        "--help"
+      ],
+      "stdin": "",
+      "returncode": 0,
+      "stdout_sha256": "b8bc4b72857039f83ded1bf9bd9a9545f86bc2f1ab099854399ce2ae3ec6eede",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "id": "nexus-routing-invalid-argument",
+      "path": "scripts/nexus-routing.py",
+      "argv": [
+        "{python}",
+        "scripts/nexus-routing.py",
+        "--foundation-unknown-option"
+      ],
+      "stdin": "",
+      "returncode": 2,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "36870aee4a28901dd130b78479dabd938af7313ea055fb1c7d2f603611d37ba4"
+    },
+    {
+      "id": "nexus-trial-help",
+      "path": "scripts/nexus-trial.py",
+      "argv": [
+        "{python}",
+        "scripts/nexus-trial.py",
+        "--help"
+      ],
+      "stdin": "",
+      "returncode": 0,
+      "stdout_sha256": "c0aceeea407e5dbc3ae7efdca21bf9a29d9ffb5a0d3c8e1aeeeddabc90552769",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "id": "nexus-trial-invalid-argument",
+      "path": "scripts/nexus-trial.py",
+      "argv": [
+        "{python}",
+        "scripts/nexus-trial.py",
+        "--foundation-unknown-option"
+      ],
+      "stdin": "",
+      "returncode": 2,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "be382fd4fb56ea28677fa7618f1bdf596bb8de38dbdce0c1114215085dce5965"
+    },
+    {
+      "id": "probe-host-claude-code-help",
+      "path": "scripts/probe-host-claude-code.py",
+      "argv": [
+        "{python}",
+        "scripts/probe-host-claude-code.py",
+        "--help"
+      ],
+      "stdin": "",
+      "returncode": 0,
+      "stdout_sha256": "8408933c8b8f6f326244c67e958d4af44c403126c26875e45de72abbd1c08bee",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "id": "probe-host-claude-code-invalid-argument",
+      "path": "scripts/probe-host-claude-code.py",
+      "argv": [
+        "{python}",
+        "scripts/probe-host-claude-code.py",
+        "--foundation-unknown-option"
+      ],
+      "stdin": "",
+      "returncode": 2,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "595b3ab93df31762cad9dd00fe6eb67abd8223ce9f0f480c6e8adfd9408a2cbd"
+    },
+    {
+      "id": "registry-help",
+      "path": "scripts/registry.py",
+      "argv": [
+        "{python}",
+        "scripts/registry.py",
+        "--help"
+      ],
+      "stdin": "",
+      "returncode": 0,
+      "stdout_sha256": "2483c09d5eea8c6c2d89f622533608bb5423abba4aacf5ca4d79479ed656d3de",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "id": "registry-invalid-argument",
+      "path": "scripts/registry.py",
+      "argv": [
+        "{python}",
+        "scripts/registry.py",
+        "--foundation-unknown-option"
+      ],
+      "stdin": "",
+      "returncode": 2,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "2e271a101fddd265b88ba803c1f6892ab18c751ec259e2bf7dbb92cd1da5f6c2"
+    },
+    {
+      "id": "resolve-agents-help",
+      "path": "scripts/resolve-agents.py",
+      "argv": [
+        "{python}",
+        "scripts/resolve-agents.py",
+        "--help"
+      ],
+      "stdin": "",
+      "returncode": 0,
+      "stdout_sha256": "59b42ddbbdcabe6b3f4beed7245d4f7580bf0a9fd7c840224566cc60981990a7",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "id": "resolve-agents-invalid-argument",
+      "path": "scripts/resolve-agents.py",
+      "argv": [
+        "{python}",
+        "scripts/resolve-agents.py",
+        "--foundation-unknown-option"
+      ],
+      "stdin": "",
+      "returncode": 2,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "7b9b5234d2f6da5930afdd49c882e971cb2a7f7b79d6bc6ab7e37771d5aa52a4"
+    },
+    {
+      "id": "convert-help",
+      "path": "scripts/convert.sh",
+      "argv": [
+        "bash",
+        "scripts/convert.sh",
+        "--help"
+      ],
+      "stdin": "",
+      "returncode": 0,
+      "stdout_sha256": "fd6963c4f5e8884baf44153e4839b29af74f9d46c01bf6e30de00d55cf5edf8b",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "id": "convert-invalid-argument",
+      "path": "scripts/convert.sh",
+      "argv": [
+        "bash",
+        "scripts/convert.sh",
+        "--foundation-unknown-option"
+      ],
+      "stdin": "",
+      "returncode": 1,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "1ff71159dce5a1d8f5994b051264f7478c6e88d805834e66f3e44b606436c468"
+    },
+    {
+      "id": "convert-engine-help",
+      "path": "scripts/convert-engine.sh",
+      "argv": [
+        "bash",
+        "scripts/convert-engine.sh",
+        "--help"
+      ],
+      "stdin": "",
+      "returncode": 0,
+      "stdout_sha256": "b87e2675470e8a2d812abe70db0450a7bf31979c434e49143130372beaaec546",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "id": "convert-engine-invalid-argument",
+      "path": "scripts/convert-engine.sh",
+      "argv": [
+        "bash",
+        "scripts/convert-engine.sh",
+        "--foundation-unknown-option"
+      ],
+      "stdin": "",
+      "returncode": 1,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "1ff71159dce5a1d8f5994b051264f7478c6e88d805834e66f3e44b606436c468"
+    },
+    {
+      "id": "install-help",
+      "path": "scripts/install.sh",
+      "argv": [
+        "bash",
+        "scripts/install.sh",
+        "--help"
+      ],
+      "stdin": "",
+      "returncode": 0,
+      "stdout_sha256": "d83edb8224880a2f383654b23f05d367a4a57cda1988bbb6fa2e64ee08740460",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "id": "install-invalid-argument",
+      "path": "scripts/install.sh",
+      "argv": [
+        "bash",
+        "scripts/install.sh",
+        "--foundation-unknown-option"
+      ],
+      "stdin": "",
+      "returncode": 1,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "83d91dfa5968c2c45363d234ba78d61e45c8d3c4843db3ace29c3162013d7a8e"
+    },
+    {
+      "id": "check-challenger-pairs-check",
+      "path": "scripts/check-challenger-pairs.py",
+      "argv": [
+        "{python}",
+        "scripts/check-challenger-pairs.py"
+      ],
+      "stdin": "",
+      "returncode": 0,
+      "stdout_sha256": "f4f83a300ce89eafb24f57793753f6d1f8018c8d026c26f16038df2435a21616",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "id": "check-htp-gate0-check",
+      "path": "scripts/check-htp-gate0.py",
+      "argv": [
+        "{python}",
+        "scripts/check-htp-gate0.py"
+      ],
+      "stdin": "",
+      "returncode": 0,
+      "stdout_sha256": "412db9c43d0cb56fd0f001ac29e140e9a03309538067a745baf5d840596246bb",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "id": "check-strategy-vocabulary-check",
+      "path": "scripts/check-strategy-vocabulary.py",
+      "argv": [
+        "{python}",
+        "scripts/check-strategy-vocabulary.py"
+      ],
+      "stdin": "",
+      "returncode": 0,
+      "stdout_sha256": "8edd6c15d214e903dd5300cd4a20378539d567b2eb0afb1dd8a7451e6274c8b6",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "id": "check-hermes-plugin-check",
+      "path": "scripts/check-hermes-plugin.py",
+      "argv": [
+        "{python}",
+        "scripts/check-hermes-plugin.py"
+      ],
+      "stdin": "",
+      "returncode": 0,
+      "stdout_sha256": "79f9e82b41b5cba325eddd332c42250f859bd429c9d88968b6e0277dc08fe8fb",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "id": "check-divisions-check",
+      "path": "scripts/check-divisions.sh",
+      "argv": [
+        "bash",
+        "scripts/check-divisions.sh"
+      ],
+      "stdin": "",
+      "returncode": 0,
+      "stdout_sha256": "175459ed807ef8ba6179ce1629da654c803b493b0d75740211b709f027d001e9",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "id": "check-tools-check",
+      "path": "scripts/check-tools.sh",
+      "argv": [
+        "bash",
+        "scripts/check-tools.sh"
+      ],
+      "stdin": "",
+      "returncode": 0,
+      "stdout_sha256": "8cfa52d6099492e03929d542e9a27d13665c6312f4ba9b6b906f9a178b029a66",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "id": "check-runbooks-check",
+      "path": "scripts/check-runbooks.sh",
+      "argv": [
+        "bash",
+        "scripts/check-runbooks.sh"
+      ],
+      "stdin": "",
+      "returncode": 0,
+      "stdout_sha256": "5814da4511d680ee8a058fed3e9d5c7025d988aec7b5906d4e8caee6ead13442",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "id": "lint-agents-one-agent",
+      "path": "scripts/lint-agents.sh",
+      "argv": [
+        "bash",
+        "scripts/lint-agents.sh",
+        "engineering/engineering-frontend-developer.md"
+      ],
+      "stdin": "",
+      "returncode": 0,
+      "stdout_sha256": "08951795f61cace332187c754e8a49d15f2bacb241615b89f289727019a8529d",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "id": "check-agent-originality-one-agent",
+      "path": "scripts/check-agent-originality.sh",
+      "argv": [
+        "bash",
+        "scripts/check-agent-originality.sh",
+        "engineering/engineering-frontend-developer.md"
+      ],
+      "stdin": "",
+      "returncode": 0,
+      "stdout_sha256": "0e7c34eeff7cf572f030aeede5b8d0cac76672f9339caff5080539e6e7dba597",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "id": "instance-strategic-decision-validate",
+      "path": "scripts/nexus-instance.py",
+      "argv": [
+        "{python}",
+        "scripts/nexus-instance.py",
+        "validate",
+        "examples/nexus/strategic-decision.instance.json"
+      ],
+      "stdin": "",
+      "returncode": 0,
+      "stdout_sha256": "f799805fef2c6b5cb57ef8ceb184c50e17cc62e1ea8e9ac9ed1d1ed7f30ca7b5",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "id": "instance-strategic-decision-replay",
+      "path": "scripts/nexus-instance.py",
+      "argv": [
+        "{python}",
+        "scripts/nexus-instance.py",
+        "replay",
+        "examples/nexus/strategic-decision.instance.json",
+        "--events",
+        "examples/nexus/strategic-decision.events.jsonl"
+      ],
+      "stdin": "",
+      "returncode": 0,
+      "stdout_sha256": "a43cc071a54235ff3b6c0d2aa0c31c96ee6294c959904e3ac1996aece8cfe4b4",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "id": "instance-strategic-decision-plan",
+      "path": "scripts/nexus-instance.py",
+      "argv": [
+        "{python}",
+        "scripts/nexus-instance.py",
+        "plan",
+        "examples/nexus/strategic-decision.instance.json",
+        "--events",
+        "examples/nexus/strategic-decision.events.jsonl",
+        "--at",
+        "2026-10-28T12:00:00Z"
+      ],
+      "stdin": "",
+      "returncode": 0,
+      "stdout_sha256": "448aaa5607088cf414b4223c13f8e14b16363b57b2d9478fc0dd4755777f9a52",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "id": "instance-investment-hypothesis-validate",
+      "path": "scripts/nexus-instance.py",
+      "argv": [
+        "{python}",
+        "scripts/nexus-instance.py",
+        "validate",
+        "examples/nexus/investment-hypothesis.instance.json"
+      ],
+      "stdin": "",
+      "returncode": 0,
+      "stdout_sha256": "76b012ecc888e17160e027a07cb577694e4d18b900d482522f76942beb3f617a",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "id": "instance-investment-hypothesis-replay",
+      "path": "scripts/nexus-instance.py",
+      "argv": [
+        "{python}",
+        "scripts/nexus-instance.py",
+        "replay",
+        "examples/nexus/investment-hypothesis.instance.json",
+        "--events",
+        "examples/nexus/investment-hypothesis.events.jsonl"
+      ],
+      "stdin": "",
+      "returncode": 0,
+      "stdout_sha256": "ac6a3e8b1451f5b1e632cf2247dc464d39bbdc17b4e372c6ae8ea6f9c9787a5c",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "id": "instance-investment-hypothesis-plan",
+      "path": "scripts/nexus-instance.py",
+      "argv": [
+        "{python}",
+        "scripts/nexus-instance.py",
+        "plan",
+        "examples/nexus/investment-hypothesis.instance.json",
+        "--events",
+        "examples/nexus/investment-hypothesis.events.jsonl",
+        "--at",
+        "2026-10-28T12:00:00Z"
+      ],
+      "stdin": "",
+      "returncode": 0,
+      "stdout_sha256": "334941e2173f56866add5ff9a636d9e6e37ffb9257d051dea1bba29be9019e85",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "id": "instance-plan-needs-at",
+      "path": "scripts/nexus-instance.py",
+      "argv": [
+        "{python}",
+        "scripts/nexus-instance.py",
+        "plan",
+        "examples/nexus/strategic-decision.instance.json"
+      ],
+      "stdin": "",
+      "returncode": 1,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "e4b311cde92f4c9c0e35ea662c6ccccfea65be1ae4cd4b544596334df4f1b1e7"
+    },
+    {
+      "id": "instance-malformed-json",
+      "path": "scripts/nexus-instance.py",
+      "argv": [
+        "{python}",
+        "scripts/nexus-instance.py",
+        "validate",
+        "/dev/stdin"
+      ],
+      "stdin": "{invalid",
+      "returncode": 1,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "b3ecce23fcf01d185e5db2ea88b1b4bc7c3f222d377213d4043f7ac6a537f17f"
+    },
+    {
+      "id": "instance-legacy-duplicate-key",
+      "path": "scripts/nexus-instance.py",
+      "argv": [
+        "{python}",
+        "scripts/nexus-instance.py",
+        "validate",
+        "/dev/stdin"
+      ],
+      "stdin": "{\"schema_version\":0,\"schema_version\": 1, \"id\": \"SYNTHETIC-STRATEGIC-DECISION-001\", \"runbook_ref\": \"strategic-decision\", \"doctrine_sha256\": \"f81abe2e06ee8311a98dfa61f980b0f9e3ebb2d8b7a90eaa142e413771963570\", \"mandate\": {\"owner\": \"fixture-owner\", \"reviewers\": [\"fixture-reviewer\"], \"authority_ref\": \"synthetic fixture; no live authority\", \"scope\": \"offline-analysis\", \"expires\": \"2030-01-01T00:00:00Z\"}, \"objective\": {\"id\": \"PURPOSE-1\", \"purpose\": \"Choose a supportable bounded course of action\", \"non_object\": \"Maximize completed tasks or agent calls\", \"success_condition\": \"The owner can reconstruct evidence, alternatives, limits and conservation\", \"constraints\": [\"No external actions; synthetic data only\"]}, \"decision_state\": \"PROCEED\", \"budget\": {\"cost_limit\": 10, \"reserve\": 2, \"deadline\": \"2030-01-01T00:00:00Z\", \"unit\": \"synthetic-cost-units\"}, \"claims\": [{\"id\": \"CLM-1\", \"revision\": 1, \"statement\": \"Synthetic decision premise; not external evidence\", \"status\": \"HYPOTHESIS\", \"scope\": \"shared\", \"source_refs\": [\"fixture-source-note\"], \"source_roots\": [\"fixture-source\"], \"depends_on\": [], \"expires\": \"2030-01-01T00:00:00Z\"}, {\"id\": \"CLM-2\", \"revision\": 1, \"statement\": \"Synthetic decision premise; not external evidence\", \"status\": \"HYPOTHESIS\", \"scope\": \"shared\", \"source_refs\": [\"fixture-source-note\"], \"source_roots\": [\"fixture-source\"], \"depends_on\": [\"CLM-1\"], \"expires\": \"2030-01-01T00:00:00Z\"}], \"tasks\": [{\"id\": \"A\", \"agent\": \"general-strategy-director\", \"level\": \"strategic\", \"vector\": \"causal\", \"purpose_ref\": \"PURPOSE-1\", \"mechanism\": \"Resolve a decision-critical uncertainty before commitment\", \"evidence_scope\": \"decision\", \"depends_on\": [], \"claim_revisions\": {\"CLM-1\": 1}, \"cost_limit\": 3, \"attempt_limit\": 2, \"retry_rationale\": \"One correction is affordable in this synthetic exercise\", \"acceptance_predicates\": [\"contract_met\"], \"resource_scope\": [\"fixture-artifact-A\"]}, {\"id\": \"B\", \"agent\": \"research-synthesist\", \"level\": \"strategic\", \"vector\": \"evidence\", \"purpose_ref\": \"PURPOSE-1\", \"mechanism\": \"Resolve a decision-critical uncertainty before commitment\", \"evidence_scope\": \"decision\", \"depends_on\": [], \"claim_revisions\": {}, \"cost_limit\": 3, \"attempt_limit\": 2, \"retry_rationale\": \"One correction is affordable in this synthetic exercise\", \"acceptance_predicates\": [\"contract_met\"], \"resource_scope\": [\"fixture-artifact-B\"]}, {\"id\": \"C\", \"agent\": \"specialized-strategic-assurance-lead\", \"level\": \"operational\", \"vector\": \"assurance\", \"purpose_ref\": \"PURPOSE-1\", \"mechanism\": \"Resolve a decision-critical uncertainty before commitment\", \"evidence_scope\": \"decision\", \"depends_on\": [\"A\", \"B\"], \"claim_revisions\": {\"CLM-2\": 1}, \"cost_limit\": 3, \"attempt_limit\": 2, \"retry_rationale\": \"One correction is affordable in this synthetic exercise\", \"acceptance_predicates\": [\"contract_met\"], \"resource_scope\": [\"fixture-artifact-C\"]}], \"open_conditions\": [], \"option_analysis\": {\"factors\": {\"cost\": \"lower\", \"time_to_evidence_days\": \"lower\"}, \"options\": [{\"id\": \"bounded-pilot\", \"admissibility\": \"ADMISSIBLE\", \"fatal_defect\": false, \"factors\": {\"cost\": {\"value\": 2, \"status\": \"HYPOTHESIS\"}, \"time_to_evidence_days\": {\"value\": 3, \"status\": \"HYPOTHESIS\"}}}, {\"id\": \"large-team\", \"admissibility\": \"ADMISSIBLE\", \"fatal_defect\": false, \"factors\": {\"cost\": {\"value\": 4, \"status\": \"HYPOTHESIS\"}, \"time_to_evidence_days\": {\"value\": 3, \"status\": \"HYPOTHESIS\"}}}, {\"id\": \"inadmissible-fast\", \"admissibility\": \"INADMISSIBLE\", \"fatal_defect\": true, \"factors\": {\"cost\": {\"value\": 1, \"status\": \"HYPOTHESIS\"}, \"time_to_evidence_days\": {\"value\": 5, \"status\": \"HYPOTHESIS\"}}}], \"scenarios\": [{\"id\": \"team-delivers-earlier\", \"overrides\": {\"large-team\": {\"time_to_evidence_days\": {\"value\": 1, \"status\": \"HYPOTHESIS\"}}}}]}}",
+      "returncode": 0,
+      "stdout_sha256": "f799805fef2c6b5cb57ef8ceb184c50e17cc62e1ea8e9ac9ed1d1ed7f30ca7b5",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "id": "routing-coverage",
+      "path": "scripts/nexus-routing.py",
+      "argv": [
+        "{python}",
+        "scripts/nexus-routing.py",
+        "coverage",
+        "examples/nexus/strategic-decision.instance.json",
+        "--at",
+        "2026-10-28T12:00:00Z"
+      ],
+      "stdin": "",
+      "returncode": 0,
+      "stdout_sha256": "282d0dca74eb75f8b69f18ef3223a9fa85d4962eab57147b53a8396e5464132f",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "id": "routing-route",
+      "path": "scripts/nexus-routing.py",
+      "argv": [
+        "{python}",
+        "scripts/nexus-routing.py",
+        "route",
+        "examples/nexus/strategic-decision.instance.json",
+        "--at",
+        "2026-10-28T12:00:00Z"
+      ],
+      "stdin": "",
+      "returncode": 0,
+      "stdout_sha256": "688a79114c6082675a1c1459f2ac94cd1303ac41ed06504b9c8f7d170c27724d",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "id": "lint-standard",
+      "path": "scripts/nexus-lint.py",
+      "argv": [
+        "{python}",
+        "scripts/nexus-lint.py",
+        "examples/nexus/strategic-decision.instance.json"
+      ],
+      "stdin": "",
+      "returncode": 0,
+      "stdout_sha256": "f166184f6b5abcdd21d22e22dcc5dc3e0254c16c9c5860e880e5cbb0c25c03d1",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "id": "lint-strict",
+      "path": "scripts/nexus-lint.py",
+      "argv": [
+        "{python}",
+        "scripts/nexus-lint.py",
+        "examples/nexus/strategic-decision.instance.json",
+        "--strict"
+      ],
+      "stdin": "",
+      "returncode": 1,
+      "stdout_sha256": "f166184f6b5abcdd21d22e22dcc5dc3e0254c16c9c5860e880e5cbb0c25c03d1",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "id": "brief-markdown",
+      "path": "scripts/nexus-brief.py",
+      "argv": [
+        "{python}",
+        "scripts/nexus-brief.py",
+        "examples/nexus/strategic-decision.instance.json",
+        "--events",
+        "examples/nexus/strategic-decision.events.jsonl",
+        "--at",
+        "2026-10-28T12:00:00Z"
+      ],
+      "stdin": "",
+      "returncode": 0,
+      "stdout_sha256": "41800d107ce4d9b5a095590c24257582de7e423e7f862d56613b40fa21d66f1c",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "id": "brief-json",
+      "path": "scripts/nexus-brief.py",
+      "argv": [
+        "{python}",
+        "scripts/nexus-brief.py",
+        "examples/nexus/strategic-decision.instance.json",
+        "--events",
+        "examples/nexus/strategic-decision.events.jsonl",
+        "--at",
+        "2026-10-28T12:00:00Z",
+        "--json"
+      ],
+      "stdin": "",
+      "returncode": 0,
+      "stdout_sha256": "050a970dded4bbceaa45a14e186b0154e3a69089dc11807d98a29bfd5a7c02a5",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "id": "option-comparison",
+      "path": "scripts/nexus-options.py",
+      "argv": [
+        "{python}",
+        "scripts/nexus-options.py",
+        "examples/nexus/options.json"
+      ],
+      "stdin": "",
+      "returncode": 0,
+      "stdout_sha256": "41720f2f90876040bfe2b506f0c7c3f89cbd82a0ada28d6256cdee6e7ddf0f76",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "id": "casepack-list",
+      "path": "scripts/nexus-casepack.py",
+      "argv": [
+        "{python}",
+        "scripts/nexus-casepack.py",
+        "list",
+        "examples/nexus/casepacks"
+      ],
+      "stdin": "",
+      "returncode": 0,
+      "stdout_sha256": "72e525a9ed3d214c1583f80a5afc06ac3d855e26fc3c3b31632c9e87b47def82",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "id": "casepack-validate",
+      "path": "scripts/nexus-casepack.py",
+      "argv": [
+        "{python}",
+        "scripts/nexus-casepack.py",
+        "validate",
+        "examples/nexus/casepacks/level-inversion-northwind"
+      ],
+      "stdin": "",
+      "returncode": 0,
+      "stdout_sha256": "be5219a6846aa21a54cdf7324cff930d4c0d374762aa594db053f9ee9cd8bb37",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "id": "casepack-verify",
+      "path": "scripts/nexus-casepack.py",
+      "argv": [
+        "{python}",
+        "scripts/nexus-casepack.py",
+        "verify",
+        "examples/nexus/casepacks/level-inversion-northwind"
+      ],
+      "stdin": "",
+      "returncode": 0,
+      "stdout_sha256": "ef1c8dd20bee6fad4b074142f4a511d122eed2018d453fb4ad0d2d7edd5edd10",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "id": "improve-invalid-command",
+      "path": "scripts/nexus-improve.py",
+      "argv": [
+        "{python}",
+        "scripts/nexus-improve.py",
+        "protected",
+        "--base",
+        "86addea22f6060f2c50e81c67c6dadf978ea3749",
+        "--head",
+        "86addea22f6060f2c50e81c67c6dadf978ea3749",
+        "--repo",
+        "."
+      ],
+      "stdin": "",
+      "returncode": 2,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "ecc15c63561ae4d6397f8384ad816143f6a6648f81ac97c8e7f39555c57a1f95"
+    },
+    {
+      "id": "blind-submission-id",
+      "path": "scripts/nexus-blind.py",
+      "argv": [
+        "{python}",
+        "scripts/nexus-blind.py",
+        "submission-id",
+        "--case",
+        "synthetic",
+        "--trial",
+        "0",
+        "--variant",
+        "single_agent",
+        "--salt",
+        "synthetic-fixture"
+      ],
+      "stdin": "",
+      "returncode": 0,
+      "stdout_sha256": "e8ecadab6520267213839cccdc36cdbaa35d51ae60cf62df9a390be05c6038dc",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "id": "registry-divisions",
+      "path": "scripts/registry.py",
+      "argv": [
+        "{python}",
+        "scripts/registry.py",
+        "divisions"
+      ],
+      "stdin": "",
+      "returncode": 0,
+      "stdout_sha256": "3c9f8eeb93b0611515605ea73a96468d689546cff12b3cd376887a70d234219a",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "id": "registry-tools",
+      "path": "scripts/registry.py",
+      "argv": [
+        "{python}",
+        "scripts/registry.py",
+        "tools"
+      ],
+      "stdin": "",
+      "returncode": 0,
+      "stdout_sha256": "2d6d4c29c4ac7611a1e83f11056ca80a4ed9d0fb2c82b07934bffb02f4dad7c4",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "id": "registry-converted-tools",
+      "path": "scripts/registry.py",
+      "argv": [
+        "{python}",
+        "scripts/registry.py",
+        "tools",
+        "--converted"
+      ],
+      "stdin": "",
+      "returncode": 0,
+      "stdout_sha256": "8d251328db7642f35851e66f79f154c7bb8d4404410da8a5fb95800dd406aae4",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "id": "registry-unknown-field",
+      "path": "scripts/registry.py",
+      "argv": [
+        "{python}",
+        "scripts/registry.py",
+        "tool-field",
+        "codex",
+        "install_kind"
+      ],
+      "stdin": "",
+      "returncode": 1,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "799bd75dc8497e653d0e74aa7fd7eaf1d905e5f9ed9125102fb06b87bd50c4e7"
+    },
+    {
+      "id": "resolve-runbooks",
+      "path": "scripts/resolve-agents.py",
+      "argv": [
+        "{python}",
+        "scripts/resolve-agents.py",
+        "--list-runbooks"
+      ],
+      "stdin": "",
+      "returncode": 0,
+      "stdout_sha256": "e379861a6639e3a040f241b734bbad85af057756539f4ca5db96c24f8dcc3d61",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "id": "resolve-one-agent",
+      "path": "scripts/resolve-agents.py",
+      "argv": [
+        "{python}",
+        "scripts/resolve-agents.py",
+        "--agent",
+        "engineering-frontend-developer"
+      ],
+      "stdin": "",
+      "returncode": 0,
+      "stdout_sha256": "651b8609256459cfef9136a263a4d41fbf69e313cdd619ebf764b10b0110d351",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "id": "filter-agent-paths",
+      "path": "scripts/list-changed-agent-files.py",
+      "argv": [
+        "{python}",
+        "scripts/list-changed-agent-files.py"
+      ],
+      "stdin": "README.md\nengineering/engineering-frontend-developer.md\nengineering/README.md\nscripts/registry.py\n",
+      "returncode": 0,
+      "stdout_sha256": "c89e6a8dfe547224c88978f92dcceb7e510cca62915ebff0e92a17601fa2ef34",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "id": "agent-privileges-check",
+      "path": "scripts/check-agent-privileges.py",
+      "argv": [
+        "{python}",
+        "scripts/check-agent-privileges.py"
+      ],
+      "stdin": "",
+      "returncode": 0,
+      "stdout_sha256": "f880593c4dcba697561f619c3db323c19cba3ef688759f137e9c3ffb74d219f6",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "id": "security-engagement-check",
+      "path": "scripts/check-security-engagement.py",
+      "argv": [
+        "{python}",
+        "scripts/check-security-engagement.py"
+      ],
+      "stdin": "",
+      "returncode": 0,
+      "stdout_sha256": "9a8d4491100464a3b321d98582f247b563324a31ae80e14d54405415a0e78e9b",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "id": "catalog-current",
+      "path": "scripts/build-catalog.py",
+      "argv": [
+        "{python}",
+        "scripts/build-catalog.py",
+        "--check"
+      ],
+      "stdin": "",
+      "returncode": 0,
+      "stdout_sha256": "f3ce93775b581e66c1ad02c1e16303b18d2232aa8cce2dd2c8490758a3356904",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "id": "marketplace-hold",
+      "path": "scripts/marketplace-intake.py",
+      "argv": [
+        "{python}",
+        "scripts/marketplace-intake.py",
+        "examples/marketplace/act-task.snapshot.json",
+        "--at",
+        "2026-10-28T12:00:00Z"
+      ],
+      "stdin": "",
+      "returncode": 0,
+      "stdout_sha256": "37ac828116f253c10f1f0dacc613aa973de93eb0a067ed25f8b32e4758f8dde7",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "id": "marketplace-invalid-at",
+      "path": "scripts/marketplace-intake.py",
+      "argv": [
+        "{python}",
+        "scripts/marketplace-intake.py",
+        "examples/marketplace/act-task.snapshot.json",
+        "--at",
+        "invalid"
+      ],
+      "stdin": "",
+      "returncode": 2,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "deeba8a0cf1e5981a492d2f284ab21d0c8655325a83449a94b24577cc6dac789"
+    },
+    {
+      "id": "marketplace-malformed-json",
+      "path": "scripts/marketplace-intake.py",
+      "argv": [
+        "{python}",
+        "scripts/marketplace-intake.py",
+        "/dev/stdin",
+        "--at",
+        "2026-10-28T12:00:00Z"
+      ],
+      "stdin": "{secret-fixture-payload",
+      "returncode": 2,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "deeba8a0cf1e5981a492d2f284ab21d0c8655325a83449a94b24577cc6dac789"
+    },
+    {
+      "id": "marketplace-duplicate-key",
+      "path": "scripts/marketplace-intake.py",
+      "argv": [
+        "{python}",
+        "scripts/marketplace-intake.py",
+        "/dev/stdin",
+        "--at",
+        "2026-10-28T12:00:00Z"
+      ],
+      "stdin": "{\"schema_version\":1,\"schema_version\":1,\"observations\":[]}",
+      "returncode": 2,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "deeba8a0cf1e5981a492d2f284ab21d0c8655325a83449a94b24577cc6dac789"
+    },
+    {
+      "id": "marketplace-boolean-integer",
+      "path": "scripts/marketplace-intake.py",
+      "argv": [
+        "{python}",
+        "scripts/marketplace-intake.py",
+        "/dev/stdin",
+        "--at",
+        "2026-10-28T12:00:00Z"
+      ],
+      "stdin": "{\n  \"schema_version\": 1,\n  \"observations\": [\n    {\n      \"chain\": \"eip155:42161\",\n      \"contract\": \"0x1111111111111111111111111111111111111111\",\n      \"task_id\": \"42\",\n      \"event\": {\n        \"transaction_hash\": \"0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\n        \"log_index\": true,\n        \"block_number\": 100,\n        \"block_hash\": \"0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\",\n        \"removed\": false,\n        \"confirmations\": 12\n      },\n      \"observed_at\": \"2026-10-28T10:00:00Z\",\n      \"source_ref\": \"synthetic:act-review-envelope; not a deployment or API export\",\n      \"external_state\": \"ASSIGNED\",\n      \"topic\": \"research\",\n      \"payload\": \"Synthetic request: assess a public document without executing external actions.\",\n      \"deadline\": \"2026-10-29T10:00:00Z\",\n      \"payment_state\": \"NOT_OBSERVED\"\n    }\n  ]\n}\n",
+      "returncode": 2,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "deeba8a0cf1e5981a492d2f284ab21d0c8655325a83449a94b24577cc6dac789"
+    },
+    {
+      "id": "evaluate-synthetic-records",
+      "path": "scripts/evaluate-nexus.py",
+      "argv": [
+        "{python}",
+        "scripts/evaluate-nexus.py",
+        "--runs",
+        "examples/nexus/host-trials.json",
+        "--judgments",
+        "examples/nexus/host-judgments.json"
+      ],
+      "stdin": "",
+      "returncode": 0,
+      "stdout_sha256": "619cb006288bda1f7d072e2e0df445f33f287ee28a654084b3ce4eff5707befa",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "id": "improve-paths-unchanged",
+      "path": "scripts/nexus-improve.py",
+      "argv": [
+        "{python}",
+        "scripts/nexus-improve.py",
+        "paths",
+        "--base",
+        "86addea22f6060f2c50e81c67c6dadf978ea3749",
+        "--head",
+        "86addea22f6060f2c50e81c67c6dadf978ea3749",
+        "--repo",
+        "."
+      ],
+      "stdin": "",
+      "returncode": 0,
+      "stdout_sha256": "4d657b8d8b078cf83540ab8414e8808e23071e73ba7801b4f47922aa2bb16f0b",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "id": "registry-tool-field",
+      "path": "scripts/registry.py",
+      "argv": [
+        "{python}",
+        "scripts/registry.py",
+        "tool-field",
+        "codex",
+        "installKind"
+      ],
+      "stdin": "",
+      "returncode": 0,
+      "stdout_sha256": "4443fbe3cd08ec5bd84fd67126e3c78cb76f296b9d460368aeb9707269fc33fa",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "capture_closed_on": "2026-10-28"
+}
