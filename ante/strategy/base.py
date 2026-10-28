@@ -98,7 +98,8 @@ def execute(command: Command, doc: Any, cli_at: str | None, parent_paths: list[s
 
     findings = Findings()
     prior = lineage.prior_claims()
-    claims = claims_mod.validate(doc['claims'], doctrine.epistemic_states, prior, findings)
+    history = lineage.claim_history()
+    claims = claims_mod.validate(doc['claims'], doctrine.epistemic_states, history, findings)
     ctx = Context(at=at, lineage=lineage, doctrine=doctrine, findings=findings,
                   claim_ids={c['id'] for c in claims} | set(prior), claims=claims)
     independence = None
@@ -120,6 +121,7 @@ def execute(command: Command, doc: Any, cli_at: str | None, parent_paths: list[s
         'parents': lineage.refs(),
         'independence_level': independence,
         'claims': claims,
+        'claim_history': claims_mod.extend_history(history, claims, command.name),
         'body': result.body,
         'findings': findings.warnings(),
         'verdict': result.verdict,

@@ -6,16 +6,16 @@
 | Verdict | PROCEED_WITH_CONDITIONS |
 | Independence | — |
 | Input SHA-256 | `c1384be4b69530ebbd21b54ac45eee3244177e5e7d156766be6b58b7ce09e01c` |
-| Artefact SHA-256 | `4a66bd00a6fa03b346a901639af48a6d8a1dcd17a59719c0ff843366f651e33d` |
+| Artefact SHA-256 | `62bfd287a645c1b546661d8c290b2caa599cd2251509d8440564a48e6d887b7d` |
 
 ## Lineage
 
-- cause `2456016bc2caa97e0e59231577425b55f42c6179fa30b1bd2760e18cd339e927`
-- close `b5437d8d4c3692706913991c729d868c65a977e90bd6898cb8ae673e52489b8f`
-- cohere `aa8d7bb24c5bf41c687c8025b2fa15e1c1982368c481b3530468559abf18e6e1`
-- frame `f3f11099665d17b689e605f8d9cf131a04e864ece52a0137d9187b5df392b28b`
-- nodal `971dc5cc9f29cf2180f6afec287c3d663d128bd887021fad311fa242b21b159a`
-- pathology `acbf0725bc64103f4b83a067549d680bc713543d507925b27c826ce77ceddbbb`
+- cause `dbcd3f8552ac57d0fb012db9327e95752f3f253ba3b28829fd6e2bce64dd3b86`
+- close `b96ede0f4457d88a2b5c557fc20d2292657e063f355fc35db50e8e8d13f8e938`
+- cohere `3dc4bdb4aca789ee4696dfe11778f9377e6ffe79a2544584402cb03f0036c3ef`
+- frame `d6e55f031b0bbfb954dccf850690412029f568e3a1ccdd8b962aed6cff9d2574`
+- nodal `e2803a1bb15434ea655a31ad83a8357c26d54ce7846bccb8a05c360edef71401`
+- pathology `5dac54f0cbf3c0f24b4588a3f98e19563d62539fc61e6d21701821af70306960`
 
 ## Content
 
@@ -120,27 +120,27 @@
     "parents": [
       {
         "command": "cause",
-        "artifact_sha256": "2456016bc2caa97e0e59231577425b55f42c6179fa30b1bd2760e18cd339e927"
+        "artifact_sha256": "dbcd3f8552ac57d0fb012db9327e95752f3f253ba3b28829fd6e2bce64dd3b86"
       },
       {
         "command": "close",
-        "artifact_sha256": "b5437d8d4c3692706913991c729d868c65a977e90bd6898cb8ae673e52489b8f"
+        "artifact_sha256": "b96ede0f4457d88a2b5c557fc20d2292657e063f355fc35db50e8e8d13f8e938"
       },
       {
         "command": "cohere",
-        "artifact_sha256": "aa8d7bb24c5bf41c687c8025b2fa15e1c1982368c481b3530468559abf18e6e1"
+        "artifact_sha256": "3dc4bdb4aca789ee4696dfe11778f9377e6ffe79a2544584402cb03f0036c3ef"
       },
       {
         "command": "frame",
-        "artifact_sha256": "f3f11099665d17b689e605f8d9cf131a04e864ece52a0137d9187b5df392b28b"
+        "artifact_sha256": "d6e55f031b0bbfb954dccf850690412029f568e3a1ccdd8b962aed6cff9d2574"
       },
       {
         "command": "nodal",
-        "artifact_sha256": "971dc5cc9f29cf2180f6afec287c3d663d128bd887021fad311fa242b21b159a"
+        "artifact_sha256": "e2803a1bb15434ea655a31ad83a8357c26d54ce7846bccb8a05c360edef71401"
       },
       {
         "command": "pathology",
-        "artifact_sha256": "acbf0725bc64103f4b83a067549d680bc713543d507925b27c826ce77ceddbbb"
+        "artifact_sha256": "5dac54f0cbf3c0f24b4588a3f98e19563d62539fc61e6d21701821af70306960"
       }
     ],
     "claims_known": [
@@ -200,7 +200,7 @@
       }
     ],
     "verdict": "PROCEED_WITH_CONDITIONS",
-    "snapshot_sha256": "7b3bf56e1c139ba7e98c5fd771c58e88d9f41996480f13ae2cba3a178d9d9eed"
+    "snapshot_sha256": "842eba9983a8f957fd2d56d6a0fc56f8428b1dda4e2584c27c62f209985581b6"
   }
 }
 ```

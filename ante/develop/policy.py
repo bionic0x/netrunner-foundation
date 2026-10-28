@@ -47,6 +47,7 @@ class Policy:
     protected: tuple[str, ...]
     overdrive: tuple[str, ...]
     frozen: tuple[str, ...] = ()
+    finding_min_sample: int = 30
 
     def classify(self, path: str) -> str | None:
         """Why ``path`` may not be changed, or None if it may."""
@@ -77,6 +78,7 @@ def at_ref(repo: Path, ref: str) -> Policy:
         protected=tuple(policy['protected']),
         overdrive=tuple(overdrive['protected']),
         frozen=frozen_mod.paths(repo, ref),
+        finding_min_sample=int(policy.get('finding_min_sample', 30)),
     )
 
 

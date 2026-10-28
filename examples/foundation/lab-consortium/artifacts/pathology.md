@@ -6,12 +6,12 @@
 | Verdict | — |
 | Independence | SEPARATED_CONTEXT |
 | Input SHA-256 | `47c3ed00a869e9522e287a6784496a0e00dd474af579f01545060ccd31951262` |
-| Artefact SHA-256 | `acbf0725bc64103f4b83a067549d680bc713543d507925b27c826ce77ceddbbb` |
+| Artefact SHA-256 | `5dac54f0cbf3c0f24b4588a3f98e19563d62539fc61e6d21701821af70306960` |
 
 ## Lineage
 
-- frame `f3f11099665d17b689e605f8d9cf131a04e864ece52a0137d9187b5df392b28b`
-- map `b21637d1efc77e244c2aab62bb67b04183105985e47b0c513b5b0d3aaaed2f14`
+- frame `d6e55f031b0bbfb954dccf850690412029f568e3a1ccdd8b962aed6cff9d2574`
+- map `a4e9a714ee77a69296f58be4412b2b58df8703d46d4b011d8ded18526afac0d1`
 
 ## Content
 

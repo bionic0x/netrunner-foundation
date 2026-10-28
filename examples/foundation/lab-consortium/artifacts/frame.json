@@ -1,5 +1,5 @@
 {
-  "artifact_sha256": "f3f11099665d17b689e605f8d9cf131a04e864ece52a0137d9187b5df392b28b",
+  "artifact_sha256": "d6e55f031b0bbfb954dccf850690412029f568e3a1ccdd8b962aed6cff9d2574",
   "at": "2026-10-28T09:00:00Z",
   "body": {
     "basis": [
@@ -52,6 +52,32 @@
     ]
   },
   "case_id": "lab-consortium",
+  "claim_history": {
+    "cap-100": [
+      {
+        "command": "frame",
+        "origin": "external",
+        "ref": "lab-maintenance-log-w43",
+        "status": "EVIDENCE"
+      }
+    ],
+    "demand-110": [
+      {
+        "command": "frame",
+        "origin": "external",
+        "ref": "reservation-export-2026-10-21",
+        "status": "EVIDENCE"
+      }
+    ],
+    "priority-50": [
+      {
+        "command": "frame",
+        "origin": "external",
+        "ref": "funder-deadline-letters",
+        "status": "EVIDENCE"
+      }
+    ]
+  },
   "claims": [
     {
       "date": "2026-10-20",
@@ -93,6 +119,6 @@
   "input_sha256": "dcbf016f1dd916afed380643e0e8833035cd77a936643c2b0c1d4f4398ba243b",
   "next_decision": "Map actors, authority and dependencies against this end state (ante map).",
   "parents": [],
-  "schema_version": 1,
+  "schema_version": 2,
   "verdict": null
 }

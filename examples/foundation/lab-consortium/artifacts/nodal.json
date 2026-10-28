@@ -1,20 +1,20 @@
 {
-  "artifact_sha256": "971dc5cc9f29cf2180f6afec287c3d663d128bd887021fad311fa242b21b159a",
+  "artifact_sha256": "e2803a1bb15434ea655a31ad83a8357c26d54ce7846bccb8a05c360edef71401",
   "at": "2026-10-28T13:30:00Z",
   "body": {
     "artefacts_examined": [
-      "ach:6cdf62153770",
-      "cause:2456016bc2ca",
-      "close:b5437d8d4c36",
-      "cohere:aa8d7bb24c5b",
-      "focus:f93ef843113c",
-      "frame:f3f11099665d",
-      "map:b21637d1efc7",
-      "options:9e9841d34670",
-      "pathology:acbf0725bc64",
-      "react:9844e5d92944",
-      "street:e7879bed3397",
-      "watch:fef0d6e6e31d"
+      "ach:1d7c2f4c72c1",
+      "cause:dbcd3f8552ac",
+      "close:b96ede0f4457",
+      "cohere:3dc4bdb4aca7",
+      "focus:250120fe71f3",
+      "frame:d6e55f031b0b",
+      "map:a4e9a714ee77",
+      "options:fc02126b99d0",
+      "pathology:5dac54f0cbf3",
+      "react:a7b5dfd8bd22",
+      "street:9b779a6783be",
+      "watch:c2543a226b69"
     ],
     "blocking": [
       "a-inflates",
@@ -114,6 +114,88 @@
     "weight": 1.5
   },
   "case_id": "lab-consortium",
+  "claim_history": {
+    "a-inflates": [
+      {
+        "command": "map",
+        "origin": "external",
+        "ref": "council-minutes-2026-09",
+        "status": "ATTRIBUTED_INTENT"
+      }
+    ],
+    "cap-100": [
+      {
+        "command": "frame",
+        "origin": "external",
+        "ref": "lab-maintenance-log-w43",
+        "status": "EVIDENCE"
+      }
+    ],
+    "cohesion-hypothesis": [
+      {
+        "command": "focus",
+        "origin": "owner",
+        "ref": "council discussion 2026-10-27",
+        "status": "HYPOTHESIS"
+      }
+    ],
+    "demand-110": [
+      {
+        "command": "frame",
+        "origin": "external",
+        "ref": "reservation-export-2026-10-21",
+        "status": "EVIDENCE"
+      }
+    ],
+    "dup-check": [
+      {
+        "command": "ach",
+        "origin": "external",
+        "ref": "reservation-reconciliation-2026-10-26",
+        "status": "EVIDENCE"
+      }
+    ],
+    "model-summary": [
+      {
+        "command": "ach",
+        "origin": "system",
+        "ref": "ante draft of 2026-10-27",
+        "status": "HYPOTHESIS"
+      }
+    ],
+    "priority-50": [
+      {
+        "command": "frame",
+        "origin": "external",
+        "ref": "funder-deadline-letters",
+        "status": "EVIDENCE"
+      }
+    ],
+    "slack-20": [
+      {
+        "command": "cause",
+        "origin": "owner",
+        "ref": "booking forecast for weeks 45-46",
+        "status": "ASSUMPTION"
+      }
+    ],
+    "tech-report": [
+      {
+        "command": "ach",
+        "origin": "external",
+        "ref": "technical-staff-note-2026-10-25",
+        "status": "EVIDENCE"
+      }
+    ],
+    "tech-report-echo": [
+      {
+        "command": "ach",
+        "origin": "external",
+        "ref": "council-minutes-2026-10-27",
+        "status": "EVIDENCE"
+      }
+    ]
+  },
   "claims": [],
   "command": "nodal",
   "findings": [
@@ -135,54 +217,54 @@
   "next_decision": "Corroborate a-inflates, slack-20 and re-run nodal, or accept them as named risks in decide; PROCEED is refused until then.",
   "parents": [
     {
-      "artifact_sha256": "6cdf6215377003bf082dfbc621f288f5572a21f7ba096449b5afcec140894287",
+      "artifact_sha256": "1d7c2f4c72c18fbb313b4063282b8179bbac5d0d90286d0fb4213cb896ab908f",
       "command": "ach"
     },
     {
-      "artifact_sha256": "2456016bc2caa97e0e59231577425b55f42c6179fa30b1bd2760e18cd339e927",
+      "artifact_sha256": "dbcd3f8552ac57d0fb012db9327e95752f3f253ba3b28829fd6e2bce64dd3b86",
       "command": "cause"
     },
     {
-      "artifact_sha256": "b5437d8d4c3692706913991c729d868c65a977e90bd6898cb8ae673e52489b8f",
+      "artifact_sha256": "b96ede0f4457d88a2b5c557fc20d2292657e063f355fc35db50e8e8d13f8e938",
       "command": "close"
     },
     {
-      "artifact_sha256": "aa8d7bb24c5bf41c687c8025b2fa15e1c1982368c481b3530468559abf18e6e1",
+      "artifact_sha256": "3dc4bdb4aca789ee4696dfe11778f9377e6ffe79a2544584402cb03f0036c3ef",
       "command": "cohere"
     },
     {
-      "artifact_sha256": "f93ef843113c69d4824768b05a8d38b40879a6b01c8b7f150a19139f1a7f03cf",
+      "artifact_sha256": "250120fe71f32059e8abcbba6f1c98c52e4aee2af834ff62abded113cf54eba1",
       "command": "focus"
     },
     {
-      "artifact_sha256": "f3f11099665d17b689e605f8d9cf131a04e864ece52a0137d9187b5df392b28b",
+      "artifact_sha256": "d6e55f031b0bbfb954dccf850690412029f568e3a1ccdd8b962aed6cff9d2574",
       "command": "frame"
     },
     {
-      "artifact_sha256": "b21637d1efc77e244c2aab62bb67b04183105985e47b0c513b5b0d3aaaed2f14",
+      "artifact_sha256": "a4e9a714ee77a69296f58be4412b2b58df8703d46d4b011d8ded18526afac0d1",
       "command": "map"
     },
     {
-      "artifact_sha256": "9e9841d3467008035df11b3b98bc8de06047e87464fef85ed1bd75054acb7530",
+      "artifact_sha256": "fc02126b99d0bc538a5b573cd2e9d3508c95f6e18c6eb1fb1eaff0e114b429fb",
       "command": "options"
     },
     {
-      "artifact_sha256": "acbf0725bc64103f4b83a067549d680bc713543d507925b27c826ce77ceddbbb",
+      "artifact_sha256": "5dac54f0cbf3c0f24b4588a3f98e19563d62539fc61e6d21701821af70306960",
       "command": "pathology"
     },
     {
-      "artifact_sha256": "9844e5d9294464d2c9b7ff1236b48d2c159dbbf34b3d5663fbb3c20d31676df0",
+      "artifact_sha256": "a7b5dfd8bd228c2938256e87360c298d07ffa2d7a135f9b3eacb220ac11bebb9",
       "command": "react"
     },
     {
-      "artifact_sha256": "e7879bed3397c340448220a0a1851e49049be05d42b66da87769570ef967ffe7",
+      "artifact_sha256": "9b779a6783be2bf0c8bf27261f468b6ccd17c599aa9c08171a272f6c5706b9a4",
       "command": "street"
     },
     {
-      "artifact_sha256": "fef0d6e6e31dd61bfd09c336adbe4fa35088f052228011df20186529eda8c617",
+      "artifact_sha256": "c2543a226b69a7d737c502f7f729f898fee3e86fc02f4d0d1f34278d6bf05229",
       "command": "watch"
     }
   ],
-  "schema_version": 1,
+  "schema_version": 2,
   "verdict": null
 }

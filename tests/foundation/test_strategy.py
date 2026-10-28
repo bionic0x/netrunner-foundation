@@ -549,7 +549,8 @@ class Claims(Base):
         return {'id': 'a-inflates', 'text': 'A inflated its requests in cycle 1.', 'status': 'EVIDENCE',
                 'source': {'ref': 'booking-audit-cycle-1', 'origin': 'external'}, 'date': '2026-11-10',
                 'limit': 'cycle 1 only', 'upgrade': {'observation': 'audit of A requests against deadline letters',
-                                                     'could_have_refuted': True, 'source': 'booking-audit-cycle-1',
+                                                     'could_have_refuted': True,
+                                                     'source': {'ref': 'booking-audit-cycle-1', 'origin': 'external'},
                                                      'date': '2026-11-10', **upgrade}}
 
     def test_attributed_intent_rises_only_through_a_refuting_observation(self):
@@ -559,13 +560,31 @@ class Claims(Base):
         self.rejects('cause', self.cause_with(self.upgraded(could_have_refuted=False)), 'INTENT_UPGRADE_UNFALSIFIABLE')
 
     def test_repetition_of_the_same_source_is_not_observation(self):
-        claim = self.upgraded(source='council-minutes-2026-09')
+        claim = self.upgraded(source={'ref': 'council-minutes-2026-09', 'origin': 'external'})
         self.rejects('cause', self.cause_with(claim), 'INTENT_UPGRADE_BY_REPETITION')
+
+    def test_the_upgrading_observation_cannot_be_system_output(self):
+        claim = self.upgraded(source={'ref': 'ante-street-analysis', 'origin': 'system'})
+        self.rejects('cause', self.cause_with(claim), 'SELF_CORROBORATION')
+
+    def test_restating_one_step_removed_does_not_launder_attributed_intent(self):
+        restated = {'id': 'a-inflates', 'text': 'A may be inflating its requests.', 'status': 'HYPOTHESIS',
+                    'source': {'ref': 'council-minutes-2026-09', 'origin': 'owner'}, 'date': '2026-10-27',
+                    'limit': 'restated'}
+        code, _, err = self.chain.run('cause', self.cause_with(restated), ['frame', 'map'])
+        self.assertEqual(0, code, err)
+        history = self.chain.artefact('cause')['claim_history']['a-inflates']
+        self.assertEqual(['ATTRIBUTED_INTENT', 'HYPOTHESIS'], [e['status'] for e in history])
+        options = load('options')
+        laundered = dict(self.upgraded(), date='2026-10-27')
+        del laundered['upgrade']
+        options['claims'] = [laundered]
+        self.rejects('options', options, 'INTENT_UPGRADE_WITHOUT_OBSERVATION', ['cause', 'frame'])
 
     def test_a_proper_upgrade_is_accepted(self):
         claim = self.upgraded()
         claim['source'] = {'ref': 'booking-audit-cycle-1', 'origin': 'external'}
-        claim['upgrade']['source'] = 'deadline-letter-register'
+        claim['upgrade']['source'] = {'ref': 'deadline-letter-register', 'origin': 'external'}
         code, _, err = self.chain.run('cause', self.cause_with(claim), ['frame', 'map'], at='2026-11-11T00:00:00Z')
         self.assertEqual(0, code, err)
 

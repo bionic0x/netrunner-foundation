@@ -369,3 +369,30 @@ data, not behaviour introduced here.
 base to the merge base and re-record those two cases from `main`'s own scripts
 (delete the two golden files, `run.py record`, state why), as the
 characterization contract requires for any rebaseline.
+
+---
+
+## D-019 · Findings of the final clean-context review — ACCEPTED
+
+A reviewer with a clean context (`SEPARATED_CONTEXT`: same model family, so a
+coherence function, not an independent barrier) received only the diff, the
+mandate and the test results. Every finding was checked against the code before
+acting on it; all were confirmed.
+
+| Finding | Disposition |
+|---|---|
+| P1 · The gate could answer `PROPOSE` without the self-test | A gate without a self-test register now holds (`no self-test evidence register supplied`). |
+| P1 · Every loop limit read a state file the caller chose | The state is anchored in `refs/ante/develop-state` (absolute path and head hash). A fresh, different or truncated file is refused; only a human resets the loop by deleting the ref. Tested. |
+| P1 · The loop could edit checks that `decide` and `cohere` rely on (`nodal`, `street`, `close`, chain loading) | `ante/strategy/**`, `ante/cli.py`, `ante/deck.py` and the package entry points are protected; the strategy commands are no longer an editable scope. `strategy/*.md` already covers every Markdown file under `strategy/` (fnmatch semantics, now stated in the policy), so the playbook and runbook scopes were dead and are removed. |
+| P1 · `ATTRIBUTED_INTENT` could be laundered by restating the id one step removed | Artefacts carry `claim_history` (schema version 2): every status any ancestor recorded, through the whole lineage. Restating as `HYPOTHESIS` and then as `EVIDENCE` downstream needs the upgrade. Tested. |
+| P1 · No test showed the gate rejecting a held-out regression | New tests run the gate on refrozen held-out copies of the example packs outside the checkout: a regression is `REJECT`, two stop the loop, and a measured improvement with every check passes as `PROPOSE` and one draft plan. |
+| P2 · A system-origin reconciliation could supersede an external one | A system entry never replaces an external or owner outcome. Tested. |
+| P2 · A caller-set sample floor could manufacture a finding | `develop` requires the policy's `finding_min_sample` (30) for calibration groups and pattern decisions; a lowered `stub --min-history` never makes a candidate eligible. |
+| P2 · The upgrading observation's origin was unchecked | `upgrade.source` is `{ref, origin}`; `system` is refused. |
+| P2 · Three documentation overclaims | Self-test docstring, ledger truncation note and the test count corrected. |
+| P3 · No lock on ledger appends | Appends take an exclusive file lock; a concurrency test appends from eight processes. |
+
+What the review could not settle from its inputs, and stays as stated before:
+independence labels, Turing reviews and model reviews are self-declared; the
+self-test and the CI steps run in CI only after the owner applies
+`ci-wiring.patch` (D-017).

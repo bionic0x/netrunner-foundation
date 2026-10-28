@@ -1,5 +1,5 @@
 {
-  "artifact_sha256": "b21637d1efc77e244c2aab62bb67b04183105985e47b0c513b5b0d3aaaed2f14",
+  "artifact_sha256": "a4e9a714ee77a69296f58be4412b2b58df8703d46d4b011d8ded18526afac0d1",
   "at": "2026-10-28T09:30:00Z",
   "body": {
     "actors": [
@@ -67,6 +67,40 @@
     ]
   },
   "case_id": "lab-consortium",
+  "claim_history": {
+    "a-inflates": [
+      {
+        "command": "map",
+        "origin": "external",
+        "ref": "council-minutes-2026-09",
+        "status": "ATTRIBUTED_INTENT"
+      }
+    ],
+    "cap-100": [
+      {
+        "command": "frame",
+        "origin": "external",
+        "ref": "lab-maintenance-log-w43",
+        "status": "EVIDENCE"
+      }
+    ],
+    "demand-110": [
+      {
+        "command": "frame",
+        "origin": "external",
+        "ref": "reservation-export-2026-10-21",
+        "status": "EVIDENCE"
+      }
+    ],
+    "priority-50": [
+      {
+        "command": "frame",
+        "origin": "external",
+        "ref": "funder-deadline-letters",
+        "status": "EVIDENCE"
+      }
+    ]
+  },
   "claims": [
     {
       "date": "2026-09-30",
@@ -91,10 +125,10 @@
   "next_decision": "State the causal hypothesis and its rival (ante cause).",
   "parents": [
     {
-      "artifact_sha256": "f3f11099665d17b689e605f8d9cf131a04e864ece52a0137d9187b5df392b28b",
+      "artifact_sha256": "d6e55f031b0bbfb954dccf850690412029f568e3a1ccdd8b962aed6cff9d2574",
       "command": "frame"
     }
   ],
-  "schema_version": 1,
+  "schema_version": 2,
   "verdict": null
 }

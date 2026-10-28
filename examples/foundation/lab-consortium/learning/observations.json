@@ -1,7 +1,7 @@
 {
   "observations": [
     {
-      "decision": "4a66bd00a6fa03b346a901639af48a6d8a1dcd17a59719c0ff843366f651e33d",
+      "decision": "62bfd287a645c1b546661d8c290b2caa599cd2251509d8440564a48e6d887b7d",
       "expectation": "conflicts-fall",
       "outcome": "CONFIRMED",
       "observed": "Conflicting bookings fell from 9 to 3 per week over cycles 1 and 2 (synthetic).",
@@ -9,7 +9,7 @@
       "observed_at": "2026-12-14T00:00:00Z"
     },
     {
-      "decision": "4a66bd00a6fa03b346a901639af48a6d8a1dcd17a59719c0ff843366f651e33d",
+      "decision": "62bfd287a645c1b546661d8c290b2caa599cd2251509d8440564a48e6d887b7d",
       "expectation": "priority-delivered",
       "outcome": "NOT_YET_OBSERVABLE",
       "observed": "Two of five deadline-bound projects have reached their deadline; the horizon is 2027-01-15.",

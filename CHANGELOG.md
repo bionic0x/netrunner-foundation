@@ -23,7 +23,7 @@
 - Eight scripts become entry points over `ante/nexus/` with byte-identical
   behaviour, proved by 114 characterization recordings taken before the move.
   Runbooks declare `strategy_commands` and `material`.
-- Synthetic end-to-end example in `examples/foundation/`; 152 foundation tests
+- Synthetic end-to-end example in `examples/foundation/`; 169 foundation tests
   and 114 characterization cases. Owner
   decisions pending: D-003, D-010, D-013, D-014, D-016, D-017, D-018 (`foundation/DECISIONS.md`).
 - `strategy/contracts.json` carries the seven coherence tests and fourteen
