@@ -180,12 +180,99 @@
     "repository_creation_submitted": true,
     "remote_changes": true,
     "draft_pull_request": null,
-    "reason": "Import explicitly authorized and completed. Connector returns 404 for the private destination; browser upload in progress.",
+    "reason": "All eight existing Foundation PRs (#3\u2013#10) and Dependabot PR #1 are verified merged. PR #2 remains open because it downgrades mcp to 1.29.0 and OSV reports four fixable vulnerabilities (one high, three medium). The raw-byte audit branch remains separate from the merged Foundation implementation.",
     "proposed_import_source": "bionic0x/Ante-agency-agents",
     "proposed_visibility": "private",
     "automatic_approval_review": "initial rejection resolved by explicit user authorization",
     "repository_created": true,
     "imported_main_commit": "9c54ba227875633068e4eee919770b324b745d9c",
-    "comparison_base_branch": "foundation/base-86addea"
+    "comparison_base_branch": "foundation/base-86addea",
+    "phase0_upload_complete": true,
+    "confirmed_upload_groups": {
+      "foundation_documents": 8,
+      "evidence": 16,
+      "characterization_harness": 5,
+      "golden_files": 233
+    },
+    "pending_uploads": [],
+    "remote_byte_verification": {
+      "archive_commit": "4b7558bd353960d0708a453d31d3d7da9c0c2604",
+      "golden_stream_hashes": 232,
+      "protected_paths": 91,
+      "license_notices_intact": true,
+      "scope": "Archive preceding the division-checker edit and final editorial updates"
+    },
+    "merge_requested_by_user": true,
+    "merges_performed": [
+      {
+        "pr": 1,
+        "commit": "15ffb29",
+        "verified": true,
+        "base": "main"
+      },
+      {
+        "pr": 10,
+        "commit": "c63356b",
+        "verified": true,
+        "base": "foundation/claude/phase-6"
+      },
+      {
+        "pr": 9,
+        "commit": "8d04116",
+        "base": "foundation/claude/phase-5",
+        "verified": true
+      },
+      {
+        "pr": 8,
+        "verified": true,
+        "commit": "df95f62",
+        "base": "foundation/claude/phase-4"
+      },
+      {
+        "pr": 7,
+        "verified": true,
+        "commit": "64919f6",
+        "base": "foundation/claude/phase-3"
+      },
+      {
+        "pr": 6,
+        "verified": true,
+        "commit": "dae74bd",
+        "base": "foundation/claude/phase-2"
+      },
+      {
+        "pr": 5,
+        "verified": true,
+        "commit": "bc903d8",
+        "base": "foundation/claude/phase-1"
+      },
+      {
+        "pr": 4,
+        "verified": true,
+        "commit": "75538f5",
+        "base": "foundation/claude/phase-0"
+      },
+      {
+        "pr": 3,
+        "verified": true,
+        "commit": "409508c",
+        "base": "foundation/base-86addea"
+      }
+    ],
+    "existing_phase0_pull_request": "https://github.com/bionic0x/neuromancers-foundation/pull/3",
+    "existing_consolidation_pull_request": "https://github.com/bionic0x/neuromancers-foundation/pull/10",
+    "remaining_pull_requests": [
+      {
+        "pr": 2,
+        "status": "OPEN",
+        "reason": "OSV failed: mcp 1.29.0 has 4 known vulnerabilities (1 high, 3 medium), fixed in 1.30.0",
+        "job": "https://github.com/bionic0x/neuromancers-foundation/actions/runs/40733306601/job/122975085995?pr=2"
+      }
+    ],
+    "foundation_integrated_branch": "foundation/base-86addea",
+    "foundation_merge_commit": "409508c",
+    "ci_limitations": "Consolidation head 3955813 had 12/13 checks successful, macOS queued. Subsequent merges reran CI; these reruns were pending at merge time. No complete green final release is claimed by this operator.",
+    "audit_branch": "foundation/phase-0",
+    "raw_corpus_merged_into_foundation": false
   }
 }
