@@ -3,11 +3,13 @@
 ## Ante Foundation (this fork)
 
 The `ante/` package, `scripts/ante`, `foundation/`, `tests/foundation/`,
-`tests/characterization/` and `examples/foundation/` are original work of this
-fork, `bionic0x/Ante-agency-agents`, which derives from
-[msitarzewski/agency-agents](https://github.com/msitarzewski/agency-agents) under
-the MIT License in [LICENSE](LICENSE); the upstream copyright notice is retained
-there. The foundation adds no third-party code and no new runtime dependency:
+`tests/characterization/` and `examples/foundation/` are original work of
+`bionic0x/neuromancers-foundation`, a fork of
+[bionic0x/Ante-agency-agents](https://github.com/bionic0x/Ante-agency-agents) at
+`86addea`, itself derived from
+[msitarzewski/agency-agents](https://github.com/msitarzewski/agency-agents). All
+are under the MIT License in [LICENSE](LICENSE); the upstream copyright notice
+is retained there. The foundation adds no third-party code and no new runtime dependency:
 it uses the Python standard library and the hash-pinned PyYAML already declared
 in `scripts/requirements-validation.txt`. Eight modules under `ante/nexus/` are
 mechanical moves of this repository's own scripts (see `foundation/MIGRATION.md`).

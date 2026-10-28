@@ -6,7 +6,7 @@
 | Verdict | — |
 | Independence | SEPARATED_CONTEXT |
 | Input SHA-256 | `336098a23123b2ac98dac78553122d02e53daf73cb9b7faaaa2622c3dc15634c` |
-| Artefact SHA-256 | `5599a450119c14fcc49771fb679cb478ba739e6ce96cbd01bf50d18b660bebf9` |
+| Artefact SHA-256 | `aa8d7bb24c5bf41c687c8025b2fa15e1c1982368c481b3530468559abf18e6e1` |
 
 ## Lineage
 
@@ -83,6 +83,30 @@
       "finding": null
     }
   },
+  "names": {
+    "purpose": "Política / Political-purpose",
+    "causal": "Causal / Causal",
+    "interactive": "Interactiva / Interactive",
+    "conversion": "De conversión / Conversion",
+    "legitimacy": "De legitimidad / Legitimacy",
+    "epistemic": "Epistémica / Epistemic",
+    "exit": "De salida / Exit"
+  },
+  "passed": [
+    "conversion",
+    "epistemic",
+    "exit",
+    "interactive",
+    "legitimacy",
+    "purpose"
+  ],
+  "not_applicable": [],
+  "status_counts": {
+    "PASS": 6,
+    "CONDITIONAL": 1,
+    "FAIL": 0,
+    "NOT_APPLICABLE": 0
+  },
   "plan_metrics": [
     "share of hours declared urgent",
     "essential demand per cycle"
@@ -91,7 +115,7 @@
     "street": "e7879bed3397c340448220a0a1851e49049be05d42b66da87769570ef967ffe7",
     "uncovered_metrics": []
   },
-  "doctrine_sha256": "36a1bfe3db41383471e3541b8d3f2acdcea13afe7a23e415db6694a663595f63",
+  "doctrine_sha256": "ac92df4ffe92ddf666e84fafd1fb4648a85ca103f4bea2e9b91fa15df921b3be",
   "classes": [
     "ACCEPTED_RISK"
   ],

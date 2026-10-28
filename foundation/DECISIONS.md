@@ -6,21 +6,21 @@ a human decision.
 
 ---
 
-## D-001 · Where the foundation work lives — PROPOSED
+## D-001 · Where the foundation work lives — ACCEPTED
 
-**Context.** The foundation prompt forks `bionic0x/Ante-agency-agents` into
-`bionic0x/ante-foundation` at `86addea`. Creating a repository is an account-level
-action outside the scope this work session was granted.
+**Decision (owner, 28 Oct 2026).** The definitive destination is the private
+repository `bionic0x/neuromancers-foundation`; no `ante-foundation` repository is
+created. Work starts from `86addea` (branch `foundation/base-86addea`); `main`
+there is the imported `9c54ba2` and is left as it is.
 
-**Decision.** Work proceeds on branch `foundation/v2`, created from `86addea`,
-in the existing repository. The branch is portable: if the owner creates the
-fork, the same history is pushed there unchanged.
+**Layout.** The original commits are kept unchanged and split into stacked
+branches, one draft pull request per phase, each based on the previous phase:
+`foundation/claude/phase-0` (on `foundation/base-86addea`) … `phase-6`, then
+`foundation/claude/decisions` for the owner decisions and the consolidation of
+the two characterization harnesses. Nothing is merged by the agent.
 
-**Alternatives.** Create the fork now (needs the owner's authorisation);
-work only locally (loses review and CI).
-
-**Consequences.** The `THIRD_PARTY_NOTICES.md` fork declaration is written
-when the destination is fixed.
+**Consequences.** `THIRD_PARTY_NOTICES.md` names the repository and its origin.
+Bringing in `main`'s later commits is decision D-018.
 
 ---
 
@@ -68,14 +68,42 @@ Nothing in the self-development loop (Phase 4) can produce or modify them.
 
 ---
 
-## D-004 · One machine source for the seven tests and fourteen pathologies — PROPOSED
+## D-004 · One machine source for the seven tests and fourteen pathologies — ACCEPTED
 
-**Context.** `strategy/contracts.json` (protected) holds modes, epistemic states,
-decision states and levels. The seven tests and fourteen pathologies exist only
-as prose, in two versions that disagree:
+**Context.** `strategy/contracts.json` (protected) held modes, epistemic states,
+decision states and levels. The seven tests and fourteen pathologies existed only
+as prose, in two versions that disagreed on the name of test 1, on whether
+`NOT_APPLICABLE` is a class, and on the wording of pathology 9.
 
-| Item | `GENERAL-STRATEGY-DOCTRINE.md` | `STRATEGIC-CONTROL-PLANE.md` |
-|---|---|---|
+**Decision (owner, 28 Oct 2026).**
+1. `contracts.json` carries `coherence_tests` and `pathologies` with stable ids
+   (`purpose`, `causal`, `interactive`, `conversion`, `legitimacy`, `epistemic`,
+   `exit`; `level_inversion` … `chronic_personalization`).
+2. The canonical name of test 1 follows the *Marco*: «Política /
+   Political-purpose». `Governing-object` is a documented alias.
+3. Pathology 9 is defined as competing where the adversary converts better;
+   "each move of the adversary fixes our own response" is its mechanism of
+   reproduction.
+4. Test status (`PASS`, `CONDITIONAL`, `FAIL`, `NOT_APPLICABLE`) is separate
+   from triage (`FATAL_DEFECT`, `ACCEPTED_RISK`, `PENDING_EVIDENCE`).
+   `NOT_APPLICABLE` needs a reason, never counts as `PASS`, and is forbidden on
+   Epistemic and Exit.
+5. Existing enums and v1 compatibility are kept; chapter XVII stays in quarantine.
+
+**Implementation.** One commit labelled `protected:` changes only
+`strategy/contracts.json` (the owner's text transcribed; existing keys untouched;
+all 114 characterization recordings and the existing contract checks pass).
+`cohere` records the canonical names and lists `passed` and `not_applicable`
+separately with per-status counts. The proposal file is withdrawn; the hidden
+`--contracts` option remains for tests that need a different doctrine.
+
+**Consequences.** `cohere`, `pathology` and `decide` read the canonical file.
+Every `cohere` and `pathology` artefact records the hash of the doctrine it used,
+and `decide` and `ante run` refuse or flag artefacts produced under another one.
+The example chain was rebuilt under the canonical tables (its artefacts carry the
+new doctrine hash); no characterization recording changed.
+
+---|---|---|
 | Test 1 name | Political/purpose | Governing-object |
 | Finding classes | fatal defect · accepted risk · pending information | `FATAL_DEFECT` · `ACCEPTED_RISK` · `PENDING_EVIDENCE` · `NOT_APPLICABLE` (never on Epistemic or Exit) |
 | Pathology 9 | Reflex symmetry: competing where the other actor converts resources better | Mirrored symmetry: the response is chosen by the opponent's move |

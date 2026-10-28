@@ -2,8 +2,8 @@
 
 Each test starts from the synthetic laboratory-consortium inputs
 (examples/foundation/lab-consortium/input), changes one thing, and checks the
-exit status and the finding code. Doctrine tables come from the D-004 proposal
-until strategy/contracts.json carries them.
+exit status and the finding code. Doctrine tables come from strategy/contracts.json
+(decision D-004, accepted).
 """
 import contextlib
 import copy
@@ -21,7 +21,7 @@ sys.path.insert(0, str(ROOT))
 from ante import cli  # noqa: E402
 
 INPUTS = ROOT / 'examples/foundation/lab-consortium/input'
-CONTRACTS = str(ROOT / 'foundation/proposals/contracts-v2.json')
+CONTRACTS = str(ROOT / 'strategy/contracts.json')
 DOCTRINE_COMMANDS = {'cohere', 'pathology', 'decide'}
 PLAN = [  # command, parents
     ('frame', []), ('map', ['frame']), ('cause', ['frame', 'map']), ('focus', ['map']),
@@ -41,9 +41,10 @@ def load(name):
 class Chain:
     """A temporary case directory with helpers to run commands in-process."""
 
-    def __init__(self):
+    def __init__(self, contracts=CONTRACTS):
         self.dir = Path(tempfile.mkdtemp(prefix='ante-chain-'))
         self.out = self.dir / 'out'
+        self.contracts = contracts
 
     def close(self):
         shutil.rmtree(self.dir, ignore_errors=True)
@@ -55,7 +56,7 @@ class Chain:
         for parent in parents:
             argv += ['--from', str(parent if isinstance(parent, Path) else self.out / f'{parent}.json')]
         if contracts and command in DOCTRINE_COMMANDS:
-            argv += ['--contracts', CONTRACTS]
+            argv += ['--contracts', contracts if isinstance(contracts, str) else self.contracts]
         if at:
             argv += ['--at', at]
         stdout, stderr = stdio.StringIO(), stdio.StringIO()
@@ -261,13 +262,30 @@ class Coherence(Base):
         self.assertEqual(0, self.chain.run('cohere', doc, ['frame', 'cause', 'map', 'street'])[0])
         self.assertEqual('HOLD', self.chain.artefact('cohere')['body']['admissible_verdicts'][0])
 
+    def test_not_applicable_needs_a_reason_and_never_counts_as_pass(self):
+        doc = load('cohere')
+        doc['tests']['legitimacy'] = {'status': 'NOT_APPLICABLE', 'reason': 'n/a', 'evidence': [], 'finding': None}
+        self.rejects('cohere', doc, 'UNREASONED_RESULT')
+        doc['tests']['legitimacy']['reason'] = 'no third party holds authority over the shared instrument'
+        code, _, err = self.chain.run('cohere', doc, ['frame', 'cause', 'map', 'street'], out=self.chain.dir / 'na')
+        self.assertEqual(0, code, err)
+        body = json.loads((self.chain.dir / 'na/cohere.json').read_text())['body']
+        self.assertEqual(['legitimacy'], body['not_applicable'])
+        self.assertNotIn('legitimacy', body['passed'])
+        self.assertEqual(1, body['status_counts']['NOT_APPLICABLE'])
+        self.assertEqual('Política / Political-purpose', body['names']['purpose'])
+
     def test_every_test_must_be_answered(self):
         doc = load('cohere')
         del doc['tests']['legitimacy']
         self.rejects('cohere', doc, 'TEST_NOT_ANSWERED')
 
     def test_without_doctrine_tables_the_command_refuses(self):
-        status, _, err = self.chain.run('cohere', load('cohere'), ['frame', 'cause', 'map'], contracts=False,
+        stripped = json.loads(Path(CONTRACTS).read_text())
+        del stripped['coherence_tests']
+        path = self.chain.dir / 'stripped-contracts.json'
+        path.write_text(json.dumps(stripped))
+        status, _, err = self.chain.run('cohere', load('cohere'), ['frame', 'cause', 'map'], contracts=str(path),
                                         out=self.chain.dir / 'x')
         self.assertEqual(2, status)
         self.assertIn('D-004', err)

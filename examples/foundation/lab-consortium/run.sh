@@ -9,8 +9,6 @@ ANTE=(python3 "$ROOT/scripts/ante")
 IN="$HERE/input"
 OUT="${1:-$HERE/artifacts}"
 LEARN="${2:-$HERE/learning}"
-# The doctrine tables this chain uses are the D-004 proposal until strategy/contracts.json carries them.
-CONTRACTS="$ROOT/foundation/proposals/contracts-v2.json"
 
 rm -rf "$OUT" "$LEARN"
 mkdir -p "$OUT" "$LEARN"
@@ -19,7 +17,6 @@ step() {
   local cmd="$1"; shift
   local args=("$IN/$cmd.json" --out "$OUT")
   for parent in "$@"; do args+=(--from "$OUT/$parent.json"); done
-  case "$cmd" in cohere|pathology|decide) args+=(--contracts "$CONTRACTS") ;; esac
   "${ANTE[@]}" "$cmd" "${args[@]}" >/dev/null
   echo "  $cmd"
 }
@@ -41,7 +38,7 @@ step nodal frame map cause focus options react street ach watch close cohere pat
 step decide frame cohere pathology close cause nodal
 
 echo "run check:"
-"${ANTE[@]}" run strategic-decision --artifacts "$OUT" --contracts "$CONTRACTS" > "$LEARN/run-check.json"
+"${ANTE[@]}" run strategic-decision --artifacts "$OUT" > "$LEARN/run-check.json"
 echo "  complete: $(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["complete"])' "$LEARN/run-check.json")"
 
 echo "learning (synthetic: excluded from calibration by design):"

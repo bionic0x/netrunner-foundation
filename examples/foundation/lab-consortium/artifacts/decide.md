@@ -6,16 +6,16 @@
 | Verdict | PROCEED_WITH_CONDITIONS |
 | Independence | — |
 | Input SHA-256 | `c1384be4b69530ebbd21b54ac45eee3244177e5e7d156766be6b58b7ce09e01c` |
-| Artefact SHA-256 | `3d3d2610225b91b41e7396759783890597f99f038cb1167bc404b1db77145f2c` |
+| Artefact SHA-256 | `4a66bd00a6fa03b346a901639af48a6d8a1dcd17a59719c0ff843366f651e33d` |
 
 ## Lineage
 
 - cause `2456016bc2caa97e0e59231577425b55f42c6179fa30b1bd2760e18cd339e927`
 - close `b5437d8d4c3692706913991c729d868c65a977e90bd6898cb8ae673e52489b8f`
-- cohere `5599a450119c14fcc49771fb679cb478ba739e6ce96cbd01bf50d18b660bebf9`
+- cohere `aa8d7bb24c5bf41c687c8025b2fa15e1c1982368c481b3530468559abf18e6e1`
 - frame `f3f11099665d17b689e605f8d9cf131a04e864ece52a0137d9187b5df392b28b`
-- nodal `c8a966827d82d262c3fc774dcf48d2799be0387c1355e97fdf86358d57e73756`
-- pathology `666b8f3af454d8f5cde4441fe5993042330f9c0c3fe9d91c3daf13f9ef71718f`
+- nodal `971dc5cc9f29cf2180f6afec287c3d663d128bd887021fad311fa242b21b159a`
+- pathology `acbf0725bc64103f4b83a067549d680bc713543d507925b27c826ce77ceddbbb`
 
 ## Content
 
@@ -128,7 +128,7 @@
       },
       {
         "command": "cohere",
-        "artifact_sha256": "5599a450119c14fcc49771fb679cb478ba739e6ce96cbd01bf50d18b660bebf9"
+        "artifact_sha256": "aa8d7bb24c5bf41c687c8025b2fa15e1c1982368c481b3530468559abf18e6e1"
       },
       {
         "command": "frame",
@@ -136,11 +136,11 @@
       },
       {
         "command": "nodal",
-        "artifact_sha256": "c8a966827d82d262c3fc774dcf48d2799be0387c1355e97fdf86358d57e73756"
+        "artifact_sha256": "971dc5cc9f29cf2180f6afec287c3d663d128bd887021fad311fa242b21b159a"
       },
       {
         "command": "pathology",
-        "artifact_sha256": "666b8f3af454d8f5cde4441fe5993042330f9c0c3fe9d91c3daf13f9ef71718f"
+        "artifact_sha256": "acbf0725bc64103f4b83a067549d680bc713543d507925b27c826ce77ceddbbb"
       }
     ],
     "claims_known": [
@@ -200,7 +200,7 @@
       }
     ],
     "verdict": "PROCEED_WITH_CONDITIONS",
-    "snapshot_sha256": "51f6aed73f7070235158c55d93600d924c1465ba17daf2b097ab7afe600383ad"
+    "snapshot_sha256": "7b3bf56e1c139ba7e98c5fd771c58e88d9f41996480f13ae2cba3a178d9d9eed"
   }
 }
 ```

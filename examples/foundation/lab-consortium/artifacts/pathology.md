@@ -6,7 +6,7 @@
 | Verdict | — |
 | Independence | SEPARATED_CONTEXT |
 | Input SHA-256 | `47c3ed00a869e9522e287a6784496a0e00dd474af579f01545060ccd31951262` |
-| Artefact SHA-256 | `666b8f3af454d8f5cde4441fe5993042330f9c0c3fe9d91c3daf13f9ef71718f` |
+| Artefact SHA-256 | `acbf0725bc64103f4b83a067549d680bc713543d507925b27c826ce77ceddbbb` |
 
 ## Lineage
 
@@ -115,7 +115,7 @@
   "not_assessed": [
     "chronic_personalization"
   ],
-  "doctrine_sha256": "36a1bfe3db41383471e3541b8d3f2acdcea13afe7a23e415db6694a663595f63"
+  "doctrine_sha256": "ac92df4ffe92ddf666e84fafd1fb4648a85ca103f4bea2e9b91fa15df921b3be"
 }
 ```
 

@@ -1,17 +1,17 @@
 {
-  "artifact_sha256": "c8a966827d82d262c3fc774dcf48d2799be0387c1355e97fdf86358d57e73756",
+  "artifact_sha256": "971dc5cc9f29cf2180f6afec287c3d663d128bd887021fad311fa242b21b159a",
   "at": "2026-10-28T13:30:00Z",
   "body": {
     "artefacts_examined": [
       "ach:6cdf62153770",
       "cause:2456016bc2ca",
       "close:b5437d8d4c36",
-      "cohere:5599a450119c",
+      "cohere:aa8d7bb24c5b",
       "focus:f93ef843113c",
       "frame:f3f11099665d",
       "map:b21637d1efc7",
       "options:9e9841d34670",
-      "pathology:666b8f3af454",
+      "pathology:acbf0725bc64",
       "react:9844e5d92944",
       "street:e7879bed3397",
       "watch:fef0d6e6e31d"
@@ -147,7 +147,7 @@
       "command": "close"
     },
     {
-      "artifact_sha256": "5599a450119c14fcc49771fb679cb478ba739e6ce96cbd01bf50d18b660bebf9",
+      "artifact_sha256": "aa8d7bb24c5bf41c687c8025b2fa15e1c1982368c481b3530468559abf18e6e1",
       "command": "cohere"
     },
     {
@@ -167,7 +167,7 @@
       "command": "options"
     },
     {
-      "artifact_sha256": "666b8f3af454d8f5cde4441fe5993042330f9c0c3fe9d91c3daf13f9ef71718f",
+      "artifact_sha256": "acbf0725bc64103f4b83a067549d680bc713543d507925b27c826ce77ceddbbb",
       "command": "pathology"
     },
     {

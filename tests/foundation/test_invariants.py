@@ -93,7 +93,7 @@ class NoNewNetwork(unittest.TestCase):
 
 class QuarantineOfChapterXVII(unittest.TestCase):
     def test_doctrine_tables_hold_seven_tests_and_fourteen_pathologies_only(self):
-        tables = json.loads((ROOT / 'foundation/proposals/contracts-v2.json').read_text())
+        tables = json.loads((ROOT / 'strategy/contracts.json').read_text())
         self.assertEqual(7, len(tables['coherence_tests']))
         self.assertEqual(14, len(tables['pathologies']))
         self.assertNotIn('XVII', json.dumps(tables['coherence_tests']) + json.dumps(tables['pathologies']))
