@@ -1,0 +1,87 @@
+# Foundation baseline — 28 October 2026
+
+**Exit: HOLD.** The baseline is recorded, but the phase-0 exit is not satisfied.
+The complete release gate stops at Relay in this environment. No extraction,
+learning loop, self-development loop or Gibson mechanism is implemented here.
+
+Pinned source: `bionic0x/Ante-agency-agents` at
+`86addea22f6060f2c50e81c67c6dadf978ea3749` (the supplied base). All baseline
+runs completed before this branch changed any production file. `LICENSE`,
+upstream copyright, `THIRD_PARTY_NOTICES.md` and protected paths stay unchanged.
+
+| Execution on original checkout | Runtime | Exit | Observed result |
+| --- | --- | --- | --- |
+| `bash scripts/verify-release.sh` | Python 3.12.14, supplied runtime | 1 | Reaches Relay: 122 tests, 24 errors, 1 skip (Hypothesis unavailable). |
+| `python3 -m unittest discover -s relay/tests -v` | Python 3.12.14 | 1 | 122 tests, 25 errors, 1 skip. Initial diagnostic run; not the target runtime. |
+| `bash scripts/verify-release.sh` | CPython 3.11.17 | 1 | Reaches Relay: 131 tests, 24 errors, no skips. `RELAY_REQUIRE_HYPOTHESIS=1`, `RELAY_PROPERTY_EXAMPLES=1000`. |
+| `python3 -m unittest discover -s relay/tests -v` | CPython 3.11.17 | 1 | 131 tests in 60.360s; 24 errors, no skips, with the same property settings. |
+| Frozen CLI characterization on original source | CPython 3.11.17 | 0 | 116 subprocess cases, 43 entry points; one unittest containing named subtests, 10.216s. |
+| Final phase-0 patch validation | CPython 3.11.17 | 0 | 116 frozen cases, 2 directory regressions and 1 timeout regression; four unittest methods, 9.562s. |
+
+The 24 errors in the target-runtime Relay suite all report
+`PermissionError: [Errno 1] Operation not permitted` at Unix-socket creation.
+This identifies an execution-environment limitation; it does not establish that
+all socket/container behaviors work. The initial 3.12 diagnostic also encountered
+`FileNotFoundError` for a temporary Markdown path during `test_events_file_is_private`
+in the engine's `collect()` call. Its cause was not established. Raw
+stdout and stderr are retained in `evidence/`; logs include upstream synthetic
+test outputs, never observations of real decisions or genuine learned outcomes.
+
+The release script uses `set -e`, so steps after its Relay stage **did not run**
+in either complete-gate attempt. Passing checks before that point include the
+catalog, vocabulary, runbooks, NEXUS instance/routing, marketplace intake,
+execution-adapter/pilot fakes, evaluation/casepack/trial/improvement/campaign and
+planning/optimization unit suites. No overall release PASS follows from them.
+
+During harness hardening, the new fixture-inventory guard rejected an orphaned
+empty output file left by an incomplete cleanup. That failed attempt is retained
+as `phase0-orphan-guard.*.log`. Both unreferenced files were removed, every frozen
+stream in the manifest stayed unchanged, and the final four-method suite passed.
+
+## Reproduction in the target runtime
+
+Use Python 3.11 in a host that permits local Unix sockets. Dependencies used here
+are the repository's existing locked versions: PyYAML 6.0.3, Hypothesis 6.168.3
+and sortedcontainers 2.4.0. No application dependency or lock file changed.
+
+```bash
+python3 -m pip install --require-hashes --no-deps \
+  -r .github/requirements/validation.txt -r relay/tests/requirements-property.txt
+RELAY_REQUIRE_HYPOTHESIS=1 RELAY_PROPERTY_EXAMPLES=1000 bash scripts/verify-release.sh
+RELAY_REQUIRE_HYPOTHESIS=1 RELAY_PROPERTY_EXAMPLES=1000 \
+  python3 -m unittest discover -s relay/tests -v
+python3 -m unittest discover -s tests/characterization -v
+```
+
+No tests were suppressed or rewritten to make this environment green. No
+privilege/sandbox escalation was attempted. Docker and Podman are unavailable;
+the container escape probe was not executed. PowerShell is unavailable.
+
+## Existing GitHub Actions evidence — separate from this execution
+
+The repository API reports successful **push** runs for this exact base commit
+for Relay, runbooks, divisions, Hermes rewrite, tools, installer, lint and
+security. They are historical remote results, observed during this session; they
+are **not** a new run of the complete release script or validation of this patch.
+The separate dependency-update run for opentelemetry-api failed. See
+`evidence/base-workflows.json` for all returned run IDs, status, scope and URLs.
+
+- [Existing Relay run](https://github.com/bionic0x/Ante-agency-agents/actions/runs/40654933444)
+- [Existing security run](https://github.com/bionic0x/Ante-agency-agents/actions/runs/40654933409)
+- [Existing runbook run](https://github.com/bionic0x/Ante-agency-agents/actions/runs/40654933471)
+
+The existing `GHSA-xcq7-p3pf-p88h` exception expires on 2027-01-31 in the checked-in
+policy. That policy and all security workflows remain unchanged. Security tools
+were not rerun locally; their current-patch result is `null` with that reason.
+
+## Unmeasured values and independence
+
+`evidence/results.json` records nulls and reasons for unmeasured checks, including
+container isolation, current-patch hosted CI/security, operational improvement,
+learning/calibration quality and full behavioral coverage. No synthetic outcomes
+are added to a real ledger. No private held-out materials were read.
+
+Baseline/characterization are `SELF`. A separate clean-context agent review is
+`SEPARATED_CONTEXT` if recorded in `REVIEW.md`; it cannot stand in for an
+independent operator with authority to pause. No authority is created by these
+reports, labels or successful parsings.

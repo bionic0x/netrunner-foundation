@@ -1,0 +1,3236 @@
+{
+  "schema_version": 1,
+  "base_commit": "86addea22f6060f2c50e81c67c6dadf978ea3749",
+  "method": "Static AST/text inventory, reviewed effect summaries; test references are not measured coverage.",
+  "scripts": [
+    {
+      "path": "integrations/mcp-memory/setup.sh",
+      "category": "CLI/runtime entry",
+      "source_sha256": "7fd9166f7410f3708486b26301166728befacde39fc561a492f3ce6e7c529928",
+      "protected": false,
+      "inputs": "Presence of user MCP config paths.",
+      "outputs": "Printed memory integration guidance.",
+      "effects": "Reads config-file existence only; no installation/network. Output depends on user config; not characterized.",
+      "dependencies": [],
+      "test_references": [],
+      "characterization_cases": [],
+      "parser_declarations": []
+    },
+    {
+      "path": "relay/container/forwarder.py",
+      "category": "CLI/runtime entry",
+      "source_sha256": "75d4c2a51c694ce7f56593e35a7f8a69b8dcef4ace0cd94eeef2e1d9dabdb945",
+      "protected": false,
+      "inputs": "Container socket/environment and HTTP byte stream.",
+      "outputs": "Forwarded proxy stream.",
+      "effects": "Starts a local socket and forwards to mounted Unix socket; exercised by container E2E, not a public argparse CLI.",
+      "dependencies": [
+        "import:os",
+        "import:signal",
+        "import:socket",
+        "import:subprocess",
+        "import:sys",
+        "import:threading"
+      ],
+      "test_references": [],
+      "characterization_cases": [],
+      "parser_declarations": []
+    },
+    {
+      "path": "relay/nexus_relay/__init__.py",
+      "category": "library",
+      "source_sha256": "53645ac0450cfeb12fd475448bda51011c2b0259f793616e72c291ac79980e57",
+      "protected": false,
+      "inputs": "Package metadata.",
+      "outputs": "Version/module identity.",
+      "effects": "No direct effects.",
+      "dependencies": [],
+      "test_references": [
+        "scripts/test-hermes-plugin.py",
+        "scripts/test-install-hermes-destination.sh"
+      ],
+      "characterization_cases": [],
+      "parser_declarations": []
+    },
+    {
+      "path": "relay/nexus_relay/auth.py",
+      "category": "library",
+      "source_sha256": "cb8c1f90e1854c0b7c34f9776403d4545edc17156a395d51d3408e28536a119d",
+      "protected": false,
+      "inputs": "Member/invite/session tokens, request limits.",
+      "outputs": "Auth records, cookies and checks.",
+      "effects": "Random secrets, expiry/time and database auth updates; no outward messages.",
+      "dependencies": [
+        "import:__future__",
+        "import:collections",
+        "import:datetime",
+        "import:hashlib",
+        "import:hmac",
+        "import:re",
+        "import:secrets",
+        "import:store",
+        "import:threading",
+        "import:time",
+        "import:uuid",
+        "scripts/lib.sh"
+      ],
+      "test_references": [
+        "relay/tests/test_relay.py"
+      ],
+      "characterization_cases": [],
+      "parser_declarations": []
+    },
+    {
+      "path": "relay/nexus_relay/cli.py",
+      "category": "CLI/runtime entry",
+      "source_sha256": "ecb33e2f12e19355358ff2ecbab90f5423a41919f428e8c02a7973799055cbb4",
+      "protected": false,
+      "inputs": "Parsed Relay commands/config/instance.",
+      "outputs": "CLI diagnostics and state.",
+      "effects": "Init/config/database writes, invites, lock, HTTP service, reconciliation, container execution via service.",
+      "dependencies": [
+        "import:__future__",
+        "import:argparse",
+        "import:config",
+        "import:contextlib",
+        "import:fcntl",
+        "import:json",
+        "import:nexus",
+        "import:os",
+        "import:pathlib",
+        "import:runner",
+        "import:server",
+        "import:service",
+        "import:store",
+        "import:sys"
+      ],
+      "test_references": [
+        "relay/tests/test_relay.py"
+      ],
+      "characterization_cases": [],
+      "parser_declarations": [
+        "p.add_argument('--adopt-chain-key', action='store_true', help=f'start keying an existing unkeyed log with {CHAIN_KEY_ENV}')",
+        "p.add_argument('--apply', action='store_true', help='make the changes; requires `serve` to be stopped')",
+        "p.add_argument('--engine', choices=('docker', 'podman'), default='podman')",
+        "p.add_argument('--events', type=Path, required=True, help='NEXUS events JSONL (created if missing)')",
+        "p.add_argument('--expect-head', help='SEQ:HASH recorded earlier with `anchor`')",
+        "p.add_argument('--image', default='ante-relay-agent:latest')",
+        "p.add_argument('--instance', type=Path, required=True, help='NEXUS instance JSON with mandate.scope local-relay')",
+        "p.add_argument('--port', type=int, default=8770)",
+        "p.add_argument('--public-origin', help='https origin of your TLS tunnel, e.g. https://box.tailnet.ts.net')",
+        "p.add_argument('name')",
+        "parser.add_argument('--data-dir', type=Path, default=DEFAULT_DIR)",
+        "sub.add_parser('anchor', help='print the current log head to record outside this machine')",
+        "sub.add_parser('init', help='create the data directory, config and owner sign-in link')",
+        "sub.add_parser('invite', help='print a new single-use sign-in link for an existing member')",
+        "sub.add_parser('reconcile', help='repair runs interrupted between NEXUS and the room database (dry run by default)')",
+        "sub.add_parser('serve', help='run the relay')",
+        "sub.add_parser('verify', help='check the log chain and replay the NEXUS events')"
+      ]
+    },
+    {
+      "path": "relay/nexus_relay/config.py",
+      "category": "library",
+      "source_sha256": "3dbd900f2862f5257f0472b883f396ef5ccddb403af07a246043f69f8fe755d9",
+      "protected": false,
+      "inputs": "Local config, instance and runtime settings.",
+      "outputs": "Validated configuration / paths.",
+      "effects": "Reads and initializes local config/state; no model call.",
+      "dependencies": [
+        "import:__future__",
+        "import:dataclasses",
+        "import:ipaddress",
+        "import:json",
+        "import:math",
+        "import:media",
+        "import:os",
+        "import:pathlib",
+        "import:re",
+        "import:stat",
+        "import:urllib.parse",
+        "relay/nexus_relay/policy.py"
+      ],
+      "test_references": [
+        "relay/tests/e2e_container.py",
+        "relay/tests/test_relay.py"
+      ],
+      "characterization_cases": [],
+      "parser_declarations": []
+    },
+    {
+      "path": "relay/nexus_relay/evidence.py",
+      "category": "library",
+      "source_sha256": "48aff96a103b9a97370e2c645cd527bc054e507f94a49f965b5cbd2f63f07ba8",
+      "protected": false,
+      "inputs": "Run output, workspace paths and byte budget.",
+      "outputs": "Bounded manifests and SHA-256 pins.",
+      "effects": "Local bounded file reads; verifies output/workspace hashes.",
+      "dependencies": [
+        "import:__future__",
+        "import:fnmatch",
+        "import:hashlib",
+        "import:json",
+        "import:os",
+        "import:pathlib",
+        "import:stat",
+        "scripts/lib.sh"
+      ],
+      "test_references": [
+        "relay/tests/test_relay.py"
+      ],
+      "characterization_cases": [],
+      "parser_declarations": []
+    },
+    {
+      "path": "relay/nexus_relay/media.py",
+      "category": "library",
+      "source_sha256": "acc1974ff178f632b1a632401adc6990c1972116aaaae0c1042a9b1091cac25a",
+      "protected": false,
+      "inputs": "Message content, media and policy bounds.",
+      "outputs": "Conservative token/input bounds.",
+      "effects": "Pure analysis of supplied data; no URL fetching.",
+      "dependencies": [
+        "import:__future__",
+        "import:base64",
+        "import:binascii",
+        "import:math",
+        "import:struct"
+      ],
+      "test_references": [
+        "relay/tests/test_properties.py",
+        "relay/tests/test_relay.py"
+      ],
+      "characterization_cases": [],
+      "parser_declarations": []
+    },
+    {
+      "path": "relay/nexus_relay/nexus.py",
+      "category": "library",
+      "source_sha256": "d5e5181b2eca2bcba8d3f4529ce0a305e64f483244b9db0d67847fb2afa2d7fd",
+      "protected": false,
+      "inputs": "Instance/events and admission requests.",
+      "outputs": "Replay/admission and projected events.",
+      "effects": "Reads engine/instance/events, appends admitted events.",
+      "dependencies": [
+        "import:__future__",
+        "import:config",
+        "import:datetime",
+        "import:json",
+        "import:os",
+        "import:pathlib",
+        "import:runpy",
+        "import:threading",
+        "scripts/nexus-instance.py"
+      ],
+      "test_references": [
+        "relay/tests/test_relay.py",
+        "scripts/test-nexus-evaluation.py",
+        "scripts/test-nexus-improve.py",
+        "scripts/test-nexus-review.py",
+        "scripts/test-nexus-trial.py"
+      ],
+      "characterization_cases": [],
+      "parser_declarations": []
+    },
+    {
+      "path": "relay/nexus_relay/policy.py",
+      "category": "library",
+      "source_sha256": "1de7019523a8330803d054d687bb2366ea7ffaeec39ca83d9155e94054b6baac",
+      "protected": false,
+      "inputs": "Provider request JSON/headers.",
+      "outputs": "Allowlisted request or policy rejection.",
+      "effects": "No transport; anti-egress rules reject server tools, mcp_servers and URL sources.",
+      "dependencies": [
+        "import:__future__",
+        "import:typing"
+      ],
+      "test_references": [
+        "relay/tests/test_properties.py",
+        "relay/tests/test_relay.py"
+      ],
+      "characterization_cases": [],
+      "parser_declarations": []
+    },
+    {
+      "path": "relay/nexus_relay/proxy.py",
+      "category": "library",
+      "source_sha256": "dae8f36bd79090c58022ab3fec637eb361b63591093964ea5205d0640c7c0851",
+      "protected": false,
+      "inputs": "Local socket, allowed provider requests and meter.",
+      "outputs": "Metered/clamped provider responses.",
+      "effects": "Binds Unix socket, synchronized budget accounting; forwards permitted provider calls.",
+      "dependencies": [
+        "import:__future__",
+        "import:hmac",
+        "import:http.client",
+        "import:http.server",
+        "import:itertools",
+        "import:json",
+        "import:math",
+        "import:media",
+        "import:os",
+        "import:pathlib",
+        "import:policy",
+        "import:socketserver",
+        "import:ssl",
+        "import:threading",
+        "import:urllib.parse"
+      ],
+      "test_references": [
+        "relay/tests/e2e_container.py",
+        "relay/tests/test_properties.py",
+        "relay/tests/test_relay.py"
+      ],
+      "characterization_cases": [],
+      "parser_declarations": []
+    },
+    {
+      "path": "relay/nexus_relay/reconcile.py",
+      "category": "library",
+      "source_sha256": "18a33aff0d0d1a4fde9efd3021230d17ef55151a4633e45905d3e5506f6954a7",
+      "protected": false,
+      "inputs": "Store state, NEXUS contract and incomplete runs.",
+      "outputs": "Repair plan / applied projection.",
+      "effects": "Planning reads; apply repairs local state/events, without retrying uncertain effects.",
+      "dependencies": [
+        "import:__future__",
+        "import:dataclasses",
+        "import:store"
+      ],
+      "test_references": [
+        "relay/tests/test_relay.py"
+      ],
+      "characterization_cases": [],
+      "parser_declarations": []
+    },
+    {
+      "path": "relay/nexus_relay/runner.py",
+      "category": "library",
+      "source_sha256": "ed36c6ed75dba30950e866550f99df84e8dcbc6781a660b09e5b4c7afd688134",
+      "protected": false,
+      "inputs": "Admitted instruction, workspace, runtime image.",
+      "outputs": "Container command / bounded result.",
+      "effects": "Invokes docker/podman with isolation, streams output; no runtime available here.",
+      "dependencies": [
+        "import:__future__",
+        "import:config",
+        "import:dataclasses",
+        "import:hashlib",
+        "import:os",
+        "import:pathlib",
+        "import:re",
+        "import:runpy",
+        "import:secrets",
+        "import:subprocess",
+        "import:threading",
+        "relay/container/forwarder.py",
+        "scripts/build-catalog.py",
+        "scripts/lib.sh"
+      ],
+      "test_references": [
+        "relay/tests/e2e_container.py",
+        "relay/tests/test_relay.py"
+      ],
+      "characterization_cases": [],
+      "parser_declarations": []
+    },
+    {
+      "path": "relay/nexus_relay/server.py",
+      "category": "library",
+      "source_sha256": "122799aeeb532635a2c7b2d9501937cb4de6a51b4609ce49e70c2dcd6aa7d4e1",
+      "protected": false,
+      "inputs": "Authenticated HTTP requests and Relay service.",
+      "outputs": "Room API/static responses.",
+      "effects": "Binds HTTP socket; writes through service after auth and CSRF checks.",
+      "dependencies": [
+        "import:__future__",
+        "import:auth",
+        "import:http.cookies",
+        "import:http.server",
+        "import:json",
+        "import:nexus",
+        "import:pathlib",
+        "import:service",
+        "import:sys",
+        "import:threading",
+        "import:urllib.parse"
+      ],
+      "test_references": [
+        "relay/tests/test_relay.py"
+      ],
+      "characterization_cases": [],
+      "parser_declarations": []
+    },
+    {
+      "path": "relay/nexus_relay/service.py",
+      "category": "library",
+      "source_sha256": "075f04cf42c1c992df6a06b99a5a5f8a60c7e59e59fdb80dab28fe49ec0e4483",
+      "protected": false,
+      "inputs": "Authorized room/task actions, store, contract and runner.",
+      "outputs": "Run/review receipts and evidence.",
+      "effects": "Coordinates database writes, NEXUS events, workspaces, proxy and container invocation.",
+      "dependencies": [
+        "import:__future__",
+        "import:config",
+        "import:json",
+        "import:nexus",
+        "import:proxy",
+        "import:runner",
+        "import:store",
+        "import:threading",
+        "import:uuid",
+        "relay/nexus_relay/reconcile.py"
+      ],
+      "test_references": [
+        "relay/tests/test_relay.py"
+      ],
+      "characterization_cases": [],
+      "parser_declarations": []
+    },
+    {
+      "path": "relay/nexus_relay/store.py",
+      "category": "library",
+      "source_sha256": "b4adafdf9bb29aa10030c7c38dac44a8ca363595a725ab06d5e0471583821866",
+      "protected": false,
+      "inputs": "SQLite path, entries and optional chain key.",
+      "outputs": "Durable rows, log head/hash verification.",
+      "effects": "Transactional SQLite writes and append-only hash/HMAC log; wall-clock timestamps.",
+      "dependencies": [
+        "import:__future__",
+        "import:contextlib",
+        "import:datetime",
+        "import:hashlib",
+        "import:hmac",
+        "import:json",
+        "import:os",
+        "import:pathlib",
+        "import:sqlite3",
+        "import:threading",
+        "scripts/lib.sh"
+      ],
+      "test_references": [
+        "relay/tests/test_relay.py"
+      ],
+      "characterization_cases": [],
+      "parser_declarations": []
+    },
+    {
+      "path": "relay/tests/e2e_container.py",
+      "category": "test harness",
+      "source_sha256": "400237ea35d38117caf439c6674745a6e5c239e0125f9fdcd326c382875e36d4",
+      "protected": false,
+      "inputs": "Synthetic test fixtures / configured property count; see source.",
+      "outputs": "Test assertions, diagnostics and process status.",
+      "effects": "Harness may create/delete temporary fixtures, invoke CLIs or bind sockets; not an operational record.",
+      "dependencies": [
+        "import:__future__",
+        "import:http.client",
+        "import:http.server",
+        "import:json",
+        "import:nexus_relay",
+        "import:os",
+        "import:pathlib",
+        "import:shutil",
+        "import:sys",
+        "import:tempfile",
+        "import:threading",
+        "import:unittest"
+      ],
+      "test_references": [],
+      "characterization_cases": [],
+      "parser_declarations": []
+    },
+    {
+      "path": "relay/tests/test_properties.py",
+      "category": "test harness",
+      "source_sha256": "48e4f550c6ba29b4be4e7d0ee2b3af7a02c62db36ee9f4e198787925c1901c58",
+      "protected": false,
+      "inputs": "Synthetic test fixtures / configured property count; see source.",
+      "outputs": "Test assertions, diagnostics and process status.",
+      "effects": "Harness may create/delete temporary fixtures, invoke CLIs or bind sockets; not an operational record.",
+      "dependencies": [
+        "import:__future__",
+        "import:base64",
+        "import:hypothesis",
+        "import:hypothesis.stateful",
+        "import:math",
+        "import:nexus_relay",
+        "import:os",
+        "import:pathlib",
+        "import:struct",
+        "import:sys",
+        "import:unittest",
+        "import:zlib",
+        "relay/nexus_relay/policy.py",
+        "relay/tests/test_relay.py"
+      ],
+      "test_references": [],
+      "characterization_cases": [],
+      "parser_declarations": []
+    },
+    {
+      "path": "relay/tests/test_relay.py",
+      "category": "test harness",
+      "source_sha256": "b20039ff8b8ee565e9cc9aacbe3b1857be410f5f0112ed4170c246e23309237f",
+      "protected": false,
+      "inputs": "Synthetic test fixtures / configured property count; see source.",
+      "outputs": "Test assertions, diagnostics and process status.",
+      "effects": "Harness may create/delete temporary fixtures, invoke CLIs or bind sockets; not an operational record.",
+      "dependencies": [
+        "import:__future__",
+        "import:base64",
+        "import:dataclasses",
+        "import:hashlib",
+        "import:http.client",
+        "import:io",
+        "import:json",
+        "import:nexus_relay",
+        "import:nexus_relay.cli",
+        "import:os",
+        "import:pathlib",
+        "import:shutil",
+        "import:socket",
+        "import:sqlite3",
+        "import:ssl",
+        "import:struct",
+        "import:subprocess",
+        "import:sys",
+        "import:tempfile",
+        "import:threading",
+        "import:time",
+        "import:unittest",
+        "import:zlib",
+        "relay/nexus_relay/policy.py",
+        "relay/nexus_relay/reconcile.py",
+        "scripts/lib.sh"
+      ],
+      "test_references": [
+        "relay/tests/test_properties.py"
+      ],
+      "characterization_cases": [],
+      "parser_declarations": []
+    },
+    {
+      "path": "scripts/agent-capabilities.py",
+      "category": "CLI/runtime entry",
+      "source_sha256": "ca9081bf17987066504a8461475604c3f2aec997aa199c51f5565c5d757a1b07",
+      "protected": false,
+      "inputs": "Agent slug, observed capability and scope-policy JSON.",
+      "outputs": "Capability report or scoped profile text.",
+      "effects": "render writes --output when supplied.",
+      "dependencies": [
+        "import:__future__",
+        "import:argparse",
+        "import:datetime",
+        "import:hashlib",
+        "import:importlib.util",
+        "import:json",
+        "import:pathlib",
+        "import:re",
+        "import:sys",
+        "scripts/check-agent-privileges.py",
+        "scripts/lib.sh"
+      ],
+      "test_references": [
+        "scripts/test-agent-capabilities.py"
+      ],
+      "characterization_cases": [
+        "agent-capabilities-help",
+        "agent-capabilities-invalid-argument"
+      ],
+      "parser_declarations": [
+        "ap.add_argument('--agent', required=True)",
+        "ap.add_argument('--observation')",
+        "ap.add_argument('--output')",
+        "ap.add_argument('--policy')",
+        "ap.add_argument('command', choices=['inspect', 'render'])"
+      ]
+    },
+    {
+      "path": "scripts/benchmark-conversion.py",
+      "category": "CLI/runtime entry",
+      "source_sha256": "6340d88d0fa99a9c673956176c49eb535edbe380eae89db8129772d1d10fedbc",
+      "protected": false,
+      "inputs": "Scenario, repeats, tool and source fixture.",
+      "outputs": "Measured benchmark summaries / optional JSON.",
+      "effects": "Copies sources into temporary directories; runs conversions; timing is intentionally variable.",
+      "dependencies": [
+        "import:__future__",
+        "import:argparse",
+        "import:dataclasses",
+        "import:json",
+        "import:os",
+        "import:pathlib",
+        "import:platform",
+        "import:resource",
+        "import:shutil",
+        "import:subprocess",
+        "import:sys",
+        "import:tempfile",
+        "import:time",
+        "import:typing",
+        "scripts/convert.sh"
+      ],
+      "test_references": [],
+      "characterization_cases": [
+        "benchmark-conversion-help",
+        "benchmark-conversion-invalid-argument"
+      ],
+      "parser_declarations": [
+        "parser.add_argument('--changed-agent', type=Path, default=DEFAULT_AGENT, help='source agent perturbed in the isolated one-agent-change scenario')",
+        "parser.add_argument('--jobs', type=int, default=0, help='parallel worker count; 0 uses convert.sh default')",
+        "parser.add_argument('--json', type=Path, help='write machine-readable results to this path')",
+        "parser.add_argument('--repeat', type=int, default=1, help='number of runs per scenario')",
+        "parser.add_argument('--scenario', action='append', choices=SCENARIOS, help='scenario to run; repeat the flag to select several (default: all)')",
+        "parser.add_argument('--tool', default='codex', help='representative tool renderer')",
+        "parser.add_argument('--verbose', action='store_true', help='show converter output while benchmarking')"
+      ]
+    },
+    {
+      "path": "scripts/build-catalog.py",
+      "category": "CLI/runtime entry",
+      "source_sha256": "4c4f805e2b8547a025e9593de51c1476bfd470ff3fd8b9b9d4361a9120ff0ab4",
+      "protected": false,
+      "inputs": "Registries and agent frontmatter.",
+      "outputs": "CATALOG.md and optional catalog JSON; --check prints status.",
+      "effects": "Default writes CATALOG.md; --json writes the specified destination.",
+      "dependencies": [
+        "import:__future__",
+        "import:argparse",
+        "import:json",
+        "import:pathlib",
+        "import:re",
+        "import:sys",
+        "scripts/lib.sh",
+        "scripts/lint-agents.sh"
+      ],
+      "test_references": [
+        "scripts/test-nexus-instance.py",
+        "scripts/test-runbook-contracts.py"
+      ],
+      "characterization_cases": [
+        "build-catalog-help",
+        "build-catalog-invalid-argument",
+        "catalog-current"
+      ],
+      "parser_declarations": [
+        "ap.add_argument('--check', action='store_true', help='fail if CATALOG.md is out of date')",
+        "ap.add_argument('--json', metavar='OUT', help='also write a machine-readable catalog to OUT')"
+      ]
+    },
+    {
+      "path": "scripts/build-hermes-plugin.py",
+      "category": "CLI/runtime entry",
+      "source_sha256": "fe3d67b9b788bb6278af2811aada51a32689dab8908042f5e1696b50e8dd18ef",
+      "protected": false,
+      "inputs": "Repo root, catalog, registries and profiles.",
+      "outputs": "Generated Hermes plugin and data.",
+      "effects": "Writes --out (default integrations/hermes).",
+      "dependencies": [
+        "import:__future__",
+        "import:argparse",
+        "import:json",
+        "import:pathlib",
+        "import:re",
+        "import:shutil",
+        "import:textwrap",
+        "relay/nexus_relay/__init__.py",
+        "scripts/check-divisions.sh",
+        "scripts/convert.sh",
+        "scripts/install.sh"
+      ],
+      "test_references": [
+        "scripts/test-convert-fence-model.sh",
+        "scripts/test-convert-parallel-failure.sh",
+        "scripts/test-hermes-plugin.py"
+      ],
+      "characterization_cases": [
+        "build-hermes-plugin-help",
+        "build-hermes-plugin-invalid-argument"
+      ],
+      "parser_declarations": [
+        "parser.add_argument('--out', type=Path, default=None, help='Output directory, default integrations/hermes')",
+        "parser.add_argument('--repo-root', type=Path, default=Path(__file__).resolve().parents[1])"
+      ]
+    },
+    {
+      "path": "scripts/check-agent-originality.sh",
+      "category": "CLI/runtime entry",
+      "source_sha256": "7aa38ceb901d5f209f793b82ece3a511781d9e899bb3e213c4776c023433f244",
+      "protected": false,
+      "inputs": "Candidate agent paths and full roster.",
+      "outputs": "Similarity diagnostics.",
+      "effects": "Read-only; no-args mode compares the full roster.",
+      "dependencies": [
+        "scripts/check-divisions.sh"
+      ],
+      "test_references": [],
+      "characterization_cases": [
+        "check-agent-originality-one-agent"
+      ],
+      "parser_declarations": []
+    },
+    {
+      "path": "scripts/check-agent-privileges.py",
+      "category": "CLI/runtime entry",
+      "source_sha256": "e502c8c2c42753323a2a48541a36402f57aa809e8d48ec5682da0ff6a6ccc6ac",
+      "protected": false,
+      "inputs": "Agent frontmatter and privilege registry.",
+      "outputs": "Validation result or inventory.",
+      "effects": "Read-only.",
+      "dependencies": [
+        "import:__future__",
+        "import:argparse",
+        "import:collections",
+        "import:json",
+        "import:pathlib",
+        "import:re",
+        "import:sys",
+        "import:yaml",
+        "scripts/lib.sh"
+      ],
+      "test_references": [
+        "scripts/test-agent-privileges.py"
+      ],
+      "characterization_cases": [
+        "check-agent-privileges-help",
+        "check-agent-privileges-invalid-argument",
+        "agent-privileges-check"
+      ],
+      "parser_declarations": [
+        "parser.add_argument('--inventory', action='store_true')",
+        "parser.add_argument('--root', default='.')"
+      ]
+    },
+    {
+      "path": "scripts/check-challenger-pairs.py",
+      "category": "CLI/runtime entry",
+      "source_sha256": "7d632b008720114b43b1e3645f352f41df0777c7e3fb8c811e1de476508f3b65",
+      "protected": false,
+      "inputs": "Pair registry, agents and runbooks.",
+      "outputs": "Validation result.",
+      "effects": "Read-only.",
+      "dependencies": [
+        "import:json",
+        "import:pathlib",
+        "import:runpy",
+        "import:sys",
+        "scripts/build-catalog.py"
+      ],
+      "test_references": [
+        "scripts/test-nexus-instance.py"
+      ],
+      "characterization_cases": [
+        "check-challenger-pairs-check"
+      ],
+      "parser_declarations": []
+    },
+    {
+      "path": "scripts/check-divisions.sh",
+      "category": "CLI/runtime entry",
+      "source_sha256": "3a0212542d8216a8dccc2e59f5774927a42cc9f9ad20106347be7978856ce0fc",
+      "protected": false,
+      "inputs": "Tracked paths, divisions registry and lint workflow.",
+      "outputs": "Validation result.",
+      "effects": "Read-only; git ls-files is part of its directory discovery.",
+      "dependencies": [
+        "scripts/convert.sh",
+        "scripts/lint-agents.sh",
+        "scripts/registry.py"
+      ],
+      "test_references": [],
+      "characterization_cases": [
+        "check-divisions-check"
+      ],
+      "parser_declarations": []
+    },
+    {
+      "path": "scripts/check-hermes-config-rewrite.py",
+      "category": "test harness",
+      "source_sha256": "c8b14bc51ec05c8e19c7812fd1ae4eded34fff61bc56ac7a39dd4a9634cb3376",
+      "protected": false,
+      "inputs": "Synthetic test fixtures / configured property count; see source.",
+      "outputs": "Test assertions, diagnostics and process status.",
+      "effects": "Harness may create/delete temporary fixtures, invoke CLIs or bind sockets; not an operational record.",
+      "dependencies": [
+        "import:__future__",
+        "import:os",
+        "import:pathlib",
+        "import:re",
+        "import:subprocess",
+        "import:sys",
+        "import:tempfile",
+        "import:textwrap",
+        "import:yaml",
+        "scripts/install.sh"
+      ],
+      "test_references": [
+        "scripts/check-hermes-config-rewrite.sh"
+      ],
+      "characterization_cases": [],
+      "parser_declarations": []
+    },
+    {
+      "path": "scripts/check-hermes-config-rewrite.sh",
+      "category": "test harness",
+      "source_sha256": "ca94523a001eef807e68d6796aa836dd6668564ac31802e7c187528f10fbf57b",
+      "protected": false,
+      "inputs": "Synthetic test fixtures / configured property count; see source.",
+      "outputs": "Test assertions, diagnostics and process status.",
+      "effects": "Harness may create/delete temporary fixtures, invoke CLIs or bind sockets; not an operational record.",
+      "dependencies": [
+        "scripts/check-hermes-config-rewrite.py",
+        "scripts/install.sh"
+      ],
+      "test_references": [],
+      "characterization_cases": [],
+      "parser_declarations": []
+    },
+    {
+      "path": "scripts/check-hermes-plugin.py",
+      "category": "CLI/runtime entry",
+      "source_sha256": "d2788461ca1b19c36822e478d131f01e777a86ef591161d8d24d72d30fa7987b",
+      "protected": false,
+      "inputs": "Generated plugin builder and synthetic profiles.",
+      "outputs": "Validation result.",
+      "effects": "Builds and loads a temporary plugin; no live Hermes host.",
+      "dependencies": [
+        "import:__future__",
+        "import:importlib.util",
+        "import:json",
+        "import:pathlib",
+        "import:tempfile",
+        "import:typing",
+        "relay/nexus_relay/__init__.py",
+        "scripts/build-hermes-plugin.py"
+      ],
+      "test_references": [],
+      "characterization_cases": [
+        "check-hermes-plugin-check"
+      ],
+      "parser_declarations": []
+    },
+    {
+      "path": "scripts/check-htp-gate0.py",
+      "category": "CLI/runtime entry",
+      "source_sha256": "8d595455dd2beb75f365ee1d9ef22f1aa6a82b115d363482c2a453d0348bec32",
+      "protected": false,
+      "inputs": "HTP machine-readable artifacts.",
+      "outputs": "Structural validation result.",
+      "effects": "Read-only; no chain access.",
+      "dependencies": [
+        "import:__future__",
+        "import:json",
+        "import:pathlib",
+        "import:runpy",
+        "import:sys",
+        "import:yaml",
+        "scripts/build-catalog.py"
+      ],
+      "test_references": [
+        "scripts/test-htp-gate0.py"
+      ],
+      "characterization_cases": [
+        "check-htp-gate0-check"
+      ],
+      "parser_declarations": []
+    },
+    {
+      "path": "scripts/check-runbooks.sh",
+      "category": "CLI/runtime entry",
+      "source_sha256": "27ae3d4df5de7d0b6c29b8d207469645693d977b87ed6abb81a04e02cb931969",
+      "protected": false,
+      "inputs": "Runbook registry, doctrine references and agent files.",
+      "outputs": "Contract/reference validation result.",
+      "effects": "Read-only; structural validity does not establish closure adequacy.",
+      "dependencies": [
+        "scripts/build-catalog.py"
+      ],
+      "test_references": [
+        "scripts/test-runbook-contracts.py"
+      ],
+      "characterization_cases": [
+        "check-runbooks-check"
+      ],
+      "parser_declarations": []
+    },
+    {
+      "path": "scripts/check-security-engagement.py",
+      "category": "CLI/runtime entry",
+      "source_sha256": "22675ddbd64aef00ee7c78b14e95c2f6ab8a59b9e48dfaca5d11df58b2d74787",
+      "protected": false,
+      "inputs": "Agent frontmatter / engagement registry.",
+      "outputs": "Validation result or inventory.",
+      "effects": "Read-only; strict YAML/JSON key loaders.",
+      "dependencies": [
+        "import:argparse",
+        "import:json",
+        "import:pathlib",
+        "import:re",
+        "import:sys",
+        "import:yaml"
+      ],
+      "test_references": [
+        "scripts/test-security-engagement.py"
+      ],
+      "characterization_cases": [
+        "check-security-engagement-help",
+        "check-security-engagement-invalid-argument",
+        "security-engagement-check"
+      ],
+      "parser_declarations": [
+        "ap.add_argument('--inventory', action='store_true')",
+        "ap.add_argument('files', nargs='*')"
+      ]
+    },
+    {
+      "path": "scripts/check-strategy-vocabulary.py",
+      "category": "CLI/runtime entry",
+      "source_sha256": "e9c7b6795c0044a04cbd854c4289cad7ffa38d3ad7f67a6ae6fc9a56d6e48478",
+      "protected": false,
+      "inputs": "contracts.json and handoff/finding templates.",
+      "outputs": "Vocabulary alignment result.",
+      "effects": "Read-only.",
+      "dependencies": [
+        "import:json",
+        "import:pathlib",
+        "import:re",
+        "import:sys"
+      ],
+      "test_references": [],
+      "characterization_cases": [
+        "check-strategy-vocabulary-check"
+      ],
+      "parser_declarations": []
+    },
+    {
+      "path": "scripts/check-tools.sh",
+      "category": "CLI/runtime entry",
+      "source_sha256": "801a79d967abc043a9752100d3d3a445f8dff6c83b08ecd4bdfa5bdaf8c91196",
+      "protected": false,
+      "inputs": "Tools registry, installer and converter implementation.",
+      "outputs": "Validation result and canonical order.",
+      "effects": "Read-only.",
+      "dependencies": [
+        "scripts/convert-engine.sh",
+        "scripts/convert.sh",
+        "scripts/install.sh",
+        "scripts/registry.py"
+      ],
+      "test_references": [],
+      "characterization_cases": [
+        "check-tools-check"
+      ],
+      "parser_declarations": []
+    },
+    {
+      "path": "scripts/convert-engine.sh",
+      "category": "CLI/runtime entry",
+      "source_sha256": "751336b4d71d3523d49fd0a9f0f02f721fe221bb30c524074d8683ae5c3f6c27",
+      "protected": false,
+      "inputs": "Agent files, registries, --tool, --out.",
+      "outputs": "Converted tool files and diagnostics.",
+      "effects": "Rebuilds output directories, removes stale generated files; use isolated output.",
+      "dependencies": [
+        "scripts/build-hermes-plugin.py",
+        "scripts/check-tools.sh",
+        "scripts/convert.sh",
+        "scripts/install.sh",
+        "scripts/lib.sh",
+        "scripts/registry.py"
+      ],
+      "test_references": [
+        "scripts/test-convert-fence-model.sh",
+        "scripts/test-convert-parallel-failure.sh",
+        "scripts/test-convert-slug-collisions.sh",
+        "scripts/test-convert-symlink-output.sh",
+        "scripts/test-incremental-conversion.py",
+        "scripts/test-install-conversion-failure.sh",
+        "scripts/test-lint-fences.sh"
+      ],
+      "characterization_cases": [
+        "convert-engine-help",
+        "convert-engine-invalid-argument"
+      ],
+      "parser_declarations": []
+    },
+    {
+      "path": "scripts/convert.sh",
+      "category": "CLI/runtime entry",
+      "source_sha256": "5830c85967184b5fc5dcfb7d91b45474095515bcf440db2d2b148fd20afe8101",
+      "protected": false,
+      "inputs": "Same CLI as converter, canonical integration state.",
+      "outputs": "Generated adapters and state diagnostics.",
+      "effects": "Delegates to engine/state; default writes integrations/.",
+      "dependencies": [
+        "scripts/convert-engine.sh",
+        "scripts/integration-state.py",
+        "scripts/lib.sh",
+        "scripts/registry.py"
+      ],
+      "test_references": [
+        "scripts/test-cli-usage.sh",
+        "scripts/test-convert-fence-model.sh",
+        "scripts/test-convert-frontmatter.sh",
+        "scripts/test-convert-outputs.sh",
+        "scripts/test-convert-parallel-failure.sh",
+        "scripts/test-convert-slug-collisions.sh",
+        "scripts/test-convert-symlink-output.sh",
+        "scripts/test-incremental-conversion.py",
+        "scripts/test-install-conversion-failure.sh",
+        "scripts/test-install-functional.py",
+        "scripts/test-kimi-adapter.py",
+        "scripts/test-lint-fences.sh"
+      ],
+      "characterization_cases": [
+        "convert-help",
+        "convert-invalid-argument"
+      ],
+      "parser_declarations": []
+    },
+    {
+      "path": "scripts/evaluate-nexus.py",
+      "category": "CLI/runtime entry",
+      "source_sha256": "7a0362d15a675a339b60a2bd6a2b482d08010a3349fee7ea89ac189ca5ea264a",
+      "protected": true,
+      "inputs": "Case definitions, trial rows and optional blind judgments.",
+      "outputs": "Descriptive paired evaluation JSON.",
+      "effects": "Read-only; supplied measurements are not authenticated.",
+      "dependencies": [
+        "import:argparse",
+        "import:datetime",
+        "import:json",
+        "import:math",
+        "import:pathlib",
+        "import:re",
+        "import:statistics",
+        "import:sys",
+        "relay/nexus_relay/nexus.py"
+      ],
+      "test_references": [
+        "scripts/test-nexus-evaluation.py",
+        "scripts/test-nexus-improve.py",
+        "scripts/test-nexus-review.py",
+        "scripts/test-nexus-trial.py"
+      ],
+      "characterization_cases": [
+        "evaluate-nexus-help",
+        "evaluate-nexus-invalid-argument",
+        "evaluate-synthetic-records"
+      ],
+      "parser_declarations": [
+        "ap.add_argument('--cases', default=str(ROOT / 'examples/nexus/evaluation-cases.json'))",
+        "ap.add_argument('--judgments')",
+        "ap.add_argument('--require-paired', action='store_true', help='require at least one fully judged triple, no incomplete pairs and no unjudged submissions')",
+        "ap.add_argument('--runs', required=True)"
+      ]
+    },
+    {
+      "path": "scripts/host-acceptance.py",
+      "category": "CLI/runtime entry",
+      "source_sha256": "22f9c60f383eef406adfee8e5d42a521a3bb8f6165b9cdac38de4fa19108cc6b",
+      "protected": false,
+      "inputs": "Host acceptance records and evidence.",
+      "outputs": "Validation / model observation JSON.",
+      "effects": "Read-only; does not run a host.",
+      "dependencies": [
+        "import:argparse",
+        "import:datetime",
+        "import:hashlib",
+        "import:importlib.util",
+        "import:json",
+        "import:pathlib",
+        "import:sys",
+        "relay/nexus_relay/evidence.py",
+        "scripts/agent-capabilities.py",
+        "scripts/host-session-evidence.py",
+        "scripts/lib.sh"
+      ],
+      "test_references": [
+        "scripts/test-host-acceptance.py"
+      ],
+      "characterization_cases": [
+        "host-acceptance-help",
+        "host-acceptance-invalid-argument"
+      ],
+      "parser_declarations": [
+        "ap.add_argument('--require', choices=['accepted', 'no-unenforced-boundary'], help='exit non-zero unless every record reaches this bar')",
+        "ap.add_argument('--root', default=str(ROOT))",
+        "ap.add_argument('command', choices=['validate', 'emit-observation'])",
+        "ap.add_argument('record', nargs='+')"
+      ]
+    },
+    {
+      "path": "scripts/host-session-evidence.py",
+      "category": "library",
+      "source_sha256": "5c03768b5582e018ed5cd4e2ced42454d7acf5108fee8f3d0caa34f8928cfd71",
+      "protected": false,
+      "inputs": "Recorded stream events and return code.",
+      "outputs": "Conservative evidence assessment values.",
+      "effects": "Library only; no CLI or host invocation.",
+      "dependencies": [
+        "import:json",
+        "import:pathlib"
+      ],
+      "test_references": [],
+      "characterization_cases": [],
+      "parser_declarations": []
+    },
+    {
+      "path": "scripts/i18n/localize-agents-zh.ps1",
+      "category": "CLI/runtime entry",
+      "source_sha256": "10f7956f4b2de59a11c0053b1aa580f26c8ceaf135f158aaf39cde23c051594c",
+      "protected": false,
+      "inputs": "-TargetDirs and translation map.",
+      "outputs": "Localized profile files and counts.",
+      "effects": "Overwrites selected installed Markdown. PowerShell unavailable; not executed.",
+      "dependencies": [],
+      "test_references": [],
+      "characterization_cases": [],
+      "parser_declarations": []
+    },
+    {
+      "path": "scripts/import-openclaw-community.py",
+      "category": "CLI/runtime entry",
+      "source_sha256": "1dd611ec0399919a7f4ab5c57c96de0a104a17ed5b93d4642aff381e3290f295",
+      "protected": false,
+      "inputs": "Pinned source ref, registry and root.",
+      "outputs": "Imported profiles and source registry.",
+      "effects": "Fetches remote raw files even for dry-run; writes imports/registry and removes obsolete imports unless dry-run. Help/errors only.",
+      "dependencies": [
+        "import:__future__",
+        "import:argparse",
+        "import:collections",
+        "import:concurrent.futures",
+        "import:hashlib",
+        "import:json",
+        "import:os",
+        "import:pathlib",
+        "import:re",
+        "import:sys",
+        "import:typing",
+        "import:urllib.parse",
+        "import:urllib.request",
+        "scripts/lib.sh"
+      ],
+      "test_references": [
+        "scripts/test-openclaw-import-provenance.py"
+      ],
+      "characterization_cases": [
+        "import-openclaw-community-help",
+        "import-openclaw-community-invalid-argument"
+      ],
+      "parser_declarations": [
+        "ap.add_argument('--dry-run', action='store_true')",
+        "ap.add_argument('--root', default='.')",
+        "ap.add_argument('--source-ref', default=DEFAULT_SOURCE_REF)",
+        "ap.add_argument('--workers', type=int, default=DEFAULT_WORKERS, help=f'parallel raw-file fetches (default: {DEFAULT_WORKERS}; use 1 for sequential)')"
+      ]
+    },
+    {
+      "path": "scripts/install.sh",
+      "category": "CLI/runtime entry",
+      "source_sha256": "ae31b79f19821d859d81c836a3323ee5421e9a7b4b0fe274907f8dec81f5ab83",
+      "protected": false,
+      "inputs": "Tool detection, selections, install mode and generated adapters.",
+      "outputs": "Installed profiles, router/plugin registration, diagnostics.",
+      "effects": "Writes tool/user config and destinations; replacement/uninstall may remove owned files; only help/error captured here.",
+      "dependencies": [
+        "relay/nexus_relay/__init__.py",
+        "scripts/check-tools.sh",
+        "scripts/convert.sh",
+        "scripts/integration-state.py",
+        "scripts/lib.sh",
+        "scripts/registry.py",
+        "scripts/resolve-agents.py"
+      ],
+      "test_references": [
+        "scripts/check-hermes-config-rewrite.py",
+        "scripts/check-hermes-config-rewrite.sh",
+        "scripts/test-agent-selection.sh",
+        "scripts/test-cli-usage.sh",
+        "scripts/test-install-all-path-collision.sh",
+        "scripts/test-install-continue-after-failure.sh",
+        "scripts/test-install-conversion-failure.sh",
+        "scripts/test-install-functional.py",
+        "scripts/test-install-hermes-destination.sh",
+        "scripts/test-install-link-ownership.sh",
+        "scripts/test-install-openclaw-registration.sh",
+        "scripts/test-install-parallel-logs.sh",
+        "scripts/test-install-selection-completeness.sh",
+        "scripts/test-install.sh",
+        "scripts/test-kimi-adapter.py"
+      ],
+      "characterization_cases": [
+        "install-help",
+        "install-invalid-argument"
+      ],
+      "parser_declarations": []
+    },
+    {
+      "path": "scripts/integration-state.py",
+      "category": "CLI/runtime entry",
+      "source_sha256": "833790e6dc5c846e7dbb5ab9f194a2ecfeac547df01150311bb8c452c48c72e1",
+      "protected": false,
+      "inputs": "Mode, tool, source hashes and adapter state.",
+      "outputs": "Freshness/check explanations and generated files.",
+      "effects": "check/explain read; record/sync write granular state/adapters and may remove stale generated files.",
+      "dependencies": [
+        "import:__future__",
+        "import:argparse",
+        "import:hashlib",
+        "import:json",
+        "import:os",
+        "import:pathlib",
+        "import:shutil",
+        "import:subprocess",
+        "import:sys",
+        "import:tempfile",
+        "import:typing",
+        "scripts/build-hermes-plugin.py",
+        "scripts/convert-engine.sh",
+        "scripts/convert.sh",
+        "scripts/lib.sh",
+        "scripts/registry.py"
+      ],
+      "test_references": [
+        "scripts/test-convert-parallel-failure.sh",
+        "scripts/test-incremental-conversion.py",
+        "scripts/test-install-conversion-failure.sh",
+        "scripts/test-lint-fences.sh"
+      ],
+      "characterization_cases": [
+        "integration-state-help",
+        "integration-state-invalid-argument"
+      ],
+      "parser_declarations": [
+        "parser.add_argument('--force', action='store_true', help='force sync to perform a clean full rebuild')",
+        "parser.add_argument('mode', choices=('check', 'record', 'sync', 'explain'))",
+        "parser.add_argument('tool')"
+      ]
+    },
+    {
+      "path": "scripts/lib.sh",
+      "category": "library",
+      "source_sha256": "62b296e26aa0faf56c23fbcdc49821050d791f060e2ef4e0eea43d4e0f0b79bf",
+      "protected": false,
+      "inputs": "Sourced shell helper arguments and environment.",
+      "outputs": "Metadata / TUI helpers for callers.",
+      "effects": "Library; terminal manipulation is possible in TUI helpers; no standalone CLI.",
+      "dependencies": [
+        "scripts/convert.sh",
+        "scripts/install.sh"
+      ],
+      "test_references": [
+        "relay/tests/test_relay.py",
+        "scripts/test-agent-capabilities.py",
+        "scripts/test-convert-fence-model.sh",
+        "scripts/test-convert-frontmatter.sh",
+        "scripts/test-convert-outputs.sh",
+        "scripts/test-convert-parallel-failure.sh",
+        "scripts/test-convert-slug-collisions.sh",
+        "scripts/test-convert-symlink-output.sh",
+        "scripts/test-host-acceptance.py",
+        "scripts/test-incremental-conversion.py",
+        "scripts/test-install-all-path-collision.sh",
+        "scripts/test-install-continue-after-failure.sh",
+        "scripts/test-install-conversion-failure.sh",
+        "scripts/test-install-hermes-destination.sh",
+        "scripts/test-install-link-ownership.sh",
+        "scripts/test-install-openclaw-registration.sh",
+        "scripts/test-install-parallel-logs.sh",
+        "scripts/test-install-selection-completeness.sh",
+        "scripts/test-install.sh",
+        "scripts/test-lint-fences.sh",
+        "scripts/test-runbook-contracts.py"
+      ],
+      "characterization_cases": [],
+      "parser_declarations": []
+    },
+    {
+      "path": "scripts/lint-agents.sh",
+      "category": "CLI/runtime entry",
+      "source_sha256": "17a7f82342cd14362e7f6ddd8d184c9cef93a6eacd9a80d81d92f2f3482d48e9",
+      "protected": false,
+      "inputs": "Agent Markdown paths or complete division roster.",
+      "outputs": "Frontmatter/section diagnostics.",
+      "effects": "Read-only; noargs validates all agents.",
+      "dependencies": [
+        "scripts/convert-engine.sh",
+        "scripts/convert.sh",
+        "scripts/lib.sh",
+        "scripts/registry.py"
+      ],
+      "test_references": [
+        "scripts/test-changed-agent-files.py",
+        "scripts/test-convert-frontmatter.sh",
+        "scripts/test-folded-frontmatter.sh",
+        "scripts/test-frontmatter-closing.sh",
+        "scripts/test-lint-fences.sh",
+        "scripts/test-lint-qwen-placeholders.sh"
+      ],
+      "characterization_cases": [
+        "lint-agents-one-agent"
+      ],
+      "parser_declarations": []
+    },
+    {
+      "path": "scripts/list-changed-agent-files.py",
+      "category": "CLI/runtime entry",
+      "source_sha256": "a0ab65e38f43bdcf1b075c58ec39a3e21fcb9754a33eea9942a2a720ffd09b7d",
+      "protected": false,
+      "inputs": "Newline paths on stdin and division registry.",
+      "outputs": "Canonical agent paths on stdout.",
+      "effects": "Read-only.",
+      "dependencies": [
+        "import:__future__",
+        "import:argparse",
+        "import:json",
+        "import:pathlib",
+        "import:sys"
+      ],
+      "test_references": [
+        "scripts/test-changed-agent-files.py"
+      ],
+      "characterization_cases": [
+        "list-changed-agent-files-help",
+        "list-changed-agent-files-invalid-argument",
+        "filter-agent-paths"
+      ],
+      "parser_declarations": [
+        "parser.add_argument('--divisions', default='divisions.json')"
+      ]
+    },
+    {
+      "path": "scripts/marketplace-intake.py",
+      "category": "CLI/runtime entry",
+      "source_sha256": "ac12a2c4b04881ccbdd0360594d8945ee1df2403ddac739566ca517df4b66532",
+      "protected": false,
+      "inputs": "Normalized snapshot JSON, --at and thresholds.",
+      "outputs": "HOLD packets with input/payload hashes.",
+      "effects": "Read-only, offline; no replay events, signing, model calls or payload echo.",
+      "dependencies": [
+        "import:__future__",
+        "import:argparse",
+        "import:datetime",
+        "import:hashlib",
+        "import:json",
+        "import:pathlib",
+        "import:re",
+        "import:sys",
+        "scripts/lib.sh"
+      ],
+      "test_references": [
+        "scripts/test-marketplace-intake.py"
+      ],
+      "characterization_cases": [
+        "marketplace-intake-help",
+        "marketplace-intake-invalid-argument",
+        "marketplace-hold",
+        "marketplace-invalid-at",
+        "marketplace-malformed-json",
+        "marketplace-duplicate-key",
+        "marketplace-boolean-integer"
+      ],
+      "parser_declarations": [
+        "parser.add_argument('--at', required=True, help='explicit ISO timestamp with timezone')",
+        "parser.add_argument('--max-age-seconds', type=int, default=86400)",
+        "parser.add_argument('--min-confirmations', type=int, default=12)",
+        "parser.add_argument('snapshot', type=Path)"
+      ]
+    },
+    {
+      "path": "scripts/nexus-anthropic.py",
+      "category": "CLI/runtime entry",
+      "source_sha256": "9a1bb79f42abffdb0be491315eb4faec752dc8bc698392f2f72b354a6fe1555c",
+      "protected": false,
+      "inputs": "Scoped execution packets / observe options.",
+      "outputs": "Observation / execution records.",
+      "effects": "observe and execution invoke the Claude host, may spend and write records; help/errors only.",
+      "dependencies": [
+        "import:__future__",
+        "import:argparse",
+        "import:datetime",
+        "import:hashlib",
+        "import:importlib.util",
+        "import:json",
+        "import:os",
+        "import:pathlib",
+        "import:shutil",
+        "import:subprocess",
+        "import:sys",
+        "import:tempfile",
+        "import:time",
+        "import:uuid",
+        "import:yaml",
+        "scripts/agent-capabilities.py",
+        "scripts/lib.sh",
+        "scripts/nexus-instance.py",
+        "scripts/nexus-routing.py"
+      ],
+      "test_references": [
+        "scripts/test-nexus-anthropic.py"
+      ],
+      "characterization_cases": [
+        "nexus-anthropic-help",
+        "nexus-anthropic-invalid-argument"
+      ],
+      "parser_declarations": [
+        "obs.add_argument('--context-class', choices=['small', 'large'], required=True)",
+        "obs.add_argument('--context-window', type=int)",
+        "obs.add_argument('--declared-cost-per-1k-input', type=float)",
+        "obs.add_argument('--declared-cost-per-1k-output', type=float)",
+        "obs.add_argument('--determinism-need', choices=['exploratory', 'repeatable'], required=True)",
+        "obs.add_argument('--modality', action='append', choices=['text', 'vision', 'audio'], required=True)",
+        "obs.add_argument('--model', required=True)",
+        "obs.add_argument('--output', required=True)",
+        "obs.add_argument('--reasoning-depth', choices=['shallow', 'standard', 'extended'], required=True)",
+        "obs.add_argument('--timeout', type=int, default=600)",
+        "obs.add_argument('--tool-use', choices=['none', 'declared', 'enforced'], required=True)",
+        "obs.add_argument('--valid-hours', type=int, default=24)",
+        "sub.add_parser('observe', help='make one live host call and emit a model observation')"
+      ]
+    },
+    {
+      "path": "scripts/nexus-blind.py",
+      "category": "CLI/runtime entry",
+      "source_sha256": "7d428672b81f9f0a4c637584b22bc903bbdd362778b2a515cae83fbceee0c856",
+      "protected": true,
+      "inputs": "Trial artifacts, cases, salt and seed.",
+      "outputs": "Blinded packet or deterministic submission ID.",
+      "effects": "seal writes a new review directory; submission-id is read-only.",
+      "dependencies": [
+        "import:argparse",
+        "import:hashlib",
+        "import:importlib.util",
+        "import:json",
+        "import:os",
+        "import:pathlib",
+        "import:random",
+        "import:re",
+        "import:shutil",
+        "import:sys",
+        "import:tempfile",
+        "relay/nexus_relay/nexus.py",
+        "scripts/evaluate-nexus.py",
+        "scripts/lib.sh"
+      ],
+      "test_references": [
+        "scripts/test-nexus-evaluation.py",
+        "scripts/test-nexus-review.py",
+        "scripts/test-nexus-trial.py"
+      ],
+      "characterization_cases": [
+        "nexus-blind-help",
+        "nexus-blind-invalid-argument",
+        "blind-submission-id"
+      ],
+      "parser_declarations": [
+        "ap.add_argument('--allow-tells', action='store_true')",
+        "ap.add_argument('--artifacts')",
+        "ap.add_argument('--case')",
+        "ap.add_argument('--cases', help='case material and expected behavior for the reviewer')",
+        "ap.add_argument('--out')",
+        "ap.add_argument('--salt')",
+        "ap.add_argument('--seed', type=int, default=None)",
+        "ap.add_argument('--trial')",
+        "ap.add_argument('--trials')",
+        "ap.add_argument('--variant')",
+        "ap.add_argument('command', choices=['seal', 'submission-id'])"
+      ]
+    },
+    {
+      "path": "scripts/nexus-brief.py",
+      "category": "CLI/runtime entry",
+      "source_sha256": "483a5666b589203df0025be8544e65dd6c2fe1e9e1270983439687aa7492dc7b",
+      "protected": false,
+      "inputs": "Instance, events, explicit --at.",
+      "outputs": "Owner brief JSON or Markdown.",
+      "effects": "Read-only; no owner decisions or acceptance.",
+      "dependencies": [
+        "import:__future__",
+        "import:argparse",
+        "import:copy",
+        "import:importlib.util",
+        "import:json",
+        "import:pathlib",
+        "import:runpy",
+        "import:sys",
+        "scripts/nexus-instance.py",
+        "scripts/nexus-lint.py"
+      ],
+      "test_references": [
+        "scripts/test-nexus-brief.py"
+      ],
+      "characterization_cases": [
+        "nexus-brief-help",
+        "nexus-brief-invalid-argument",
+        "brief-markdown",
+        "brief-json"
+      ],
+      "parser_declarations": [
+        "ap.add_argument('--at', required=True, help='ISO time the brief is computed for (expiry checks)')",
+        "ap.add_argument('--events', required=True)",
+        "ap.add_argument('--json', action='store_true')",
+        "ap.add_argument('instance')"
+      ]
+    },
+    {
+      "path": "scripts/nexus-campaign.py",
+      "category": "CLI/runtime entry",
+      "source_sha256": "15703e36741a23dd0afaa3e13aad5b326addcd79e9a7452dec1b8ba7b4bd706f",
+      "protected": true,
+      "inputs": "External held-out root, trials/judgments and policies.",
+      "outputs": "Campaign status, planned work or throughput comparison.",
+      "effects": "Read-only; reads evaluator-controlled packs only for an authorized evaluation, not in these captures.",
+      "dependencies": [
+        "import:__future__",
+        "import:argparse",
+        "import:importlib.util",
+        "import:json",
+        "import:pathlib",
+        "import:shlex",
+        "import:sys",
+        "relay/nexus_relay/nexus.py",
+        "scripts/evaluate-nexus.py",
+        "scripts/nexus-casepack.py",
+        "scripts/nexus-trial.py"
+      ],
+      "test_references": [
+        "scripts/test-nexus-campaign.py"
+      ],
+      "characterization_cases": [
+        "nexus-campaign-help",
+        "nexus-campaign-invalid-argument"
+      ],
+      "parser_declarations": [
+        "p.add_argument('--held-out', required=True)",
+        "p.add_argument('--improver', action='append', required=True)",
+        "p.add_argument('--policies', default=str(ROOT / 'examples/nexus/budget-policies.json'))",
+        "p.add_argument('--schedule', choices=TRIAL.SCHEDULES, default='sequential')",
+        "p.add_argument('--trials', required=name == 'status')",
+        "p.add_argument(flag, required=True)",
+        "sub.add_parser(name)",
+        "sub.choices['status'].add_argument('--judgments')",
+        "sub.choices['throughput'].add_argument(flag, required=True)"
+      ]
+    },
+    {
+      "path": "scripts/nexus-casepack.py",
+      "category": "CLI/runtime entry",
+      "source_sha256": "4f3c09f6817972f0f4817633020ee3cd1eaadb8017bcc8306afbf43d08d5ff6d",
+      "protected": true,
+      "inputs": "Pack directory / root and author/freeze metadata.",
+      "outputs": "Validation, frozen hash, listing or scaffold.",
+      "effects": "new/freeze write pack files; validate/verify/list read.",
+      "dependencies": [
+        "import:__future__",
+        "import:argparse",
+        "import:datetime",
+        "import:hashlib",
+        "import:json",
+        "import:pathlib",
+        "import:runpy",
+        "import:sys",
+        "scripts/build-catalog.py",
+        "scripts/lib.sh",
+        "scripts/nexus-instance.py"
+      ],
+      "test_references": [
+        "scripts/test-nexus-campaign.py",
+        "scripts/test-nexus-casepack.py",
+        "scripts/test-nexus-improve.py",
+        "scripts/test-nexus-trial.py"
+      ],
+      "characterization_cases": [
+        "nexus-casepack-help",
+        "nexus-casepack-invalid-argument",
+        "casepack-list",
+        "casepack-validate",
+        "casepack-verify"
+      ],
+      "parser_declarations": [
+        "f.add_argument('--at', required=True)",
+        "f.add_argument('--by', required=True)",
+        "f.add_argument('pack')",
+        "n.add_argument('--author', required=True)",
+        "n.add_argument('--case-ref', required=True)",
+        "n.add_argument('--from', dest='template')",
+        "n.add_argument('--split', default='held_out', choices=SPLITS)",
+        "n.add_argument('pack')",
+        "sub.add_parser('freeze')",
+        "sub.add_parser('list')",
+        "sub.add_parser('list').add_argument('root')",
+        "sub.add_parser('new')",
+        "sub.add_parser(name)",
+        "sub.add_parser(name).add_argument('pack')"
+      ]
+    },
+    {
+      "path": "scripts/nexus-improve.py",
+      "category": "CLI/runtime entry",
+      "source_sha256": "59e76184d177ea729bc180e960eef49dfca9cac55511f8fa0f8d539b6e82aa55",
+      "protected": true,
+      "inputs": "Git base/head, protected rules and external held-out evaluations.",
+      "outputs": "PROPOSE/REJECT plus path/metric reasons.",
+      "effects": "Git reads and evaluation reads; no writes, model calls, PR creation or merge.",
+      "dependencies": [
+        "import:__future__",
+        "import:argparse",
+        "import:fnmatch",
+        "import:importlib.util",
+        "import:json",
+        "import:pathlib",
+        "import:subprocess",
+        "import:sys",
+        "relay/nexus_relay/nexus.py",
+        "scripts/evaluate-nexus.py",
+        "scripts/nexus-campaign.py",
+        "scripts/nexus-casepack.py"
+      ],
+      "test_references": [
+        "scripts/test-nexus-improve.py"
+      ],
+      "characterization_cases": [
+        "nexus-improve-help",
+        "nexus-improve-invalid-argument",
+        "improve-invalid-command",
+        "improve-paths-unchanged"
+      ],
+      "parser_declarations": [
+        "p.add_argument('--base', required=True)",
+        "p.add_argument('--head', required=True)",
+        "p.add_argument('--improver', action='append', required=True, help='author label of the proposal (repeatable); held-out packs it wrote are refused')",
+        "p.add_argument('--repo', default=str(ROOT))",
+        "p.add_argument(flag, required=True)",
+        "sub.add_parser(name)"
+      ]
+    },
+    {
+      "path": "scripts/nexus-instance.py",
+      "category": "CLI/runtime entry",
+      "source_sha256": "fbc6dd73dbd620b365cdf0f79e97804ed21dbcd9bb71d2e6f339e1f15df260af",
+      "protected": true,
+      "inputs": "NEXUS schema v1 JSON, optional events/checkpoint, --at.",
+      "outputs": "Validation, plan or replay JSON.",
+      "effects": "Offline; --output writes atomically. Default json.loads accepts duplicate keys.",
+      "dependencies": [
+        "import:__future__",
+        "import:argparse",
+        "import:copy",
+        "import:datetime",
+        "import:hashlib",
+        "import:json",
+        "import:math",
+        "import:os",
+        "import:pathlib",
+        "import:runpy",
+        "import:sys",
+        "import:tempfile",
+        "scripts/build-catalog.py",
+        "scripts/lib.sh",
+        "scripts/nexus-options.py"
+      ],
+      "test_references": [
+        "scripts/test-nexus-improve.py",
+        "scripts/test-nexus-instance.py"
+      ],
+      "characterization_cases": [
+        "nexus-instance-help",
+        "nexus-instance-invalid-argument",
+        "instance-strategic-decision-validate",
+        "instance-strategic-decision-replay",
+        "instance-strategic-decision-plan",
+        "instance-investment-hypothesis-validate",
+        "instance-investment-hypothesis-replay",
+        "instance-investment-hypothesis-plan",
+        "instance-plan-needs-at",
+        "instance-malformed-json",
+        "instance-legacy-duplicate-key"
+      ],
+      "parser_declarations": [
+        "ap.add_argument('--at')",
+        "ap.add_argument('--checkpoint')",
+        "ap.add_argument('--events')",
+        "ap.add_argument('--output')",
+        "ap.add_argument('command', choices=['validate', 'plan', 'replay'])",
+        "ap.add_argument('instance')"
+      ]
+    },
+    {
+      "path": "scripts/nexus-lint.py",
+      "category": "CLI/runtime entry",
+      "source_sha256": "95e1eb259b4008ebbbf23b7b279638bb7c5284a64d8fb8ade57af3695d30b119",
+      "protected": false,
+      "inputs": "Instance JSON and optional --strict.",
+      "outputs": "Shape and warnings JSON.",
+      "effects": "Read-only; strict changes exit status for warnings.",
+      "dependencies": [
+        "import:__future__",
+        "import:argparse",
+        "import:itertools",
+        "import:json",
+        "import:pathlib",
+        "import:runpy",
+        "import:sys",
+        "scripts/nexus-instance.py"
+      ],
+      "test_references": [
+        "scripts/test-nexus-lint.py"
+      ],
+      "characterization_cases": [
+        "nexus-lint-help",
+        "nexus-lint-invalid-argument",
+        "lint-standard",
+        "lint-strict"
+      ],
+      "parser_declarations": [
+        "ap.add_argument('--strict', action='store_true', help='exit 1 on warnings too')",
+        "ap.add_argument('instance')"
+      ]
+    },
+    {
+      "path": "scripts/nexus-optimize.py",
+      "category": "CLI/runtime entry",
+      "source_sha256": "b7c766784a64e05e98139fe74be0a10753d3d58ee556e11d1cff40b29ba4a564",
+      "protected": true,
+      "inputs": "Agent, evidence, scope limit and executor.",
+      "outputs": "Bounded candidate, patch, attempts and proposal JSON.",
+      "effects": "Default claude executor invokes host and spends; fake still writes artifacts. Help/errors only.",
+      "dependencies": [
+        "import:__future__",
+        "import:argparse",
+        "import:datetime",
+        "import:difflib",
+        "import:fnmatch",
+        "import:importlib.util",
+        "import:json",
+        "import:pathlib",
+        "import:re",
+        "import:runpy",
+        "import:subprocess",
+        "import:sys",
+        "scripts/build-catalog.py",
+        "scripts/lint-agents.sh",
+        "scripts/nexus-anthropic.py",
+        "scripts/nexus-casepack.py",
+        "scripts/nexus-improve.py"
+      ],
+      "test_references": [
+        "scripts/test-nexus-optimize.py"
+      ],
+      "characterization_cases": [
+        "nexus-optimize-help",
+        "nexus-optimize-invalid-argument"
+      ],
+      "parser_declarations": [
+        "p.add_argument('--agent', required=True)",
+        "p.add_argument('--evidence', required=True)",
+        "p.add_argument('--executor', choices=('claude', 'fake'), default='claude')",
+        "p.add_argument('--max-change', type=float, default=0.3)",
+        "p.add_argument('--model', default='claude-opus-5-5')",
+        "p.add_argument('--operator', default='optimizer-operator')",
+        "p.add_argument('--out', required=True)",
+        "sub.add_parser('propose')"
+      ]
+    },
+    {
+      "path": "scripts/nexus-options.py",
+      "category": "CLI/runtime entry",
+      "source_sha256": "99561b15dc7ae9634643f5ba6fcf042da88645ebada05c831acfe464344662e5",
+      "protected": false,
+      "inputs": "Factors, admissibility, options and scenarios JSON.",
+      "outputs": "Dominance/frontier comparison, never weighted score.",
+      "effects": "Read-only; no human decision is executed.",
+      "dependencies": [
+        "import:argparse",
+        "import:copy",
+        "import:json",
+        "import:math",
+        "import:pathlib",
+        "import:sys"
+      ],
+      "test_references": [
+        "scripts/test-nexus-evaluation.py"
+      ],
+      "characterization_cases": [
+        "nexus-options-help",
+        "nexus-options-invalid-argument",
+        "option-comparison"
+      ],
+      "parser_declarations": [
+        "ap.add_argument('input')"
+      ]
+    },
+    {
+      "path": "scripts/nexus-pilot.py",
+      "category": "CLI/runtime entry",
+      "source_sha256": "67d3bfc50b72681a17f6d3a8e9a6ccdd8e141c91abfbfae58b564a33f85aa4a9",
+      "protected": false,
+      "inputs": "Instance, authority assertions, observations and events.",
+      "outputs": "Execution records, replay state, acceptance events.",
+      "effects": "step can invoke a host; accept appends owner-supplied events; replay reads. Help/errors only in captures.",
+      "dependencies": [
+        "import:__future__",
+        "import:argparse",
+        "import:datetime",
+        "import:hashlib",
+        "import:importlib.util",
+        "import:json",
+        "import:os",
+        "import:pathlib",
+        "import:sys",
+        "import:tempfile",
+        "import:uuid",
+        "scripts/lib.sh",
+        "scripts/nexus-anthropic.py",
+        "scripts/nexus-instance.py",
+        "scripts/nexus-routing.py"
+      ],
+      "test_references": [
+        "scripts/test-nexus-pilot.py"
+      ],
+      "characterization_cases": [
+        "nexus-pilot-help",
+        "nexus-pilot-invalid-argument"
+      ],
+      "parser_declarations": [
+        "accept_ap.add_argument('--actual-cost', required=True, type=float)",
+        "accept_ap.add_argument('--asserts', help='JSON object of shared-key values; required when the task declares asserts')",
+        "accept_ap.add_argument('--events', required=True)",
+        "accept_ap.add_argument('--execution-record', required=True)",
+        "accept_ap.add_argument('--issuer', required=True)",
+        "accept_ap.add_argument('--predicate-results', help='JSON object, required when --accepted')",
+        "accept_ap.add_argument('instance')",
+        "group.add_argument('--accepted', action='store_true')",
+        "group.add_argument('--rejected', action='store_true')",
+        "replay_ap.add_argument('--events', required=True)",
+        "replay_ap.add_argument('instance')",
+        "step_ap.add_argument('--authority', required=True)",
+        "step_ap.add_argument('--events', required=True)",
+        "step_ap.add_argument('--model-id')",
+        "step_ap.add_argument('--observations', required=True)",
+        "step_ap.add_argument('--records-root', default='records/nexus-execution')",
+        "step_ap.add_argument('instance')",
+        "sub.add_parser('accept')",
+        "sub.add_parser('replay')",
+        "sub.add_parser('step')"
+      ]
+    },
+    {
+      "path": "scripts/nexus-plan.py",
+      "category": "CLI/runtime entry",
+      "source_sha256": "94d5cd76002d09aa75eb26db6d167e758b7e768de367a732496469a782b83e6f",
+      "protected": false,
+      "inputs": "Objective, executor, draft/adoption and owner/time.",
+      "outputs": "Draft instance and adoption verification.",
+      "effects": "draft defaults to host invocation; draft/adopt write files. Help/errors only.",
+      "dependencies": [
+        "import:__future__",
+        "import:argparse",
+        "import:copy",
+        "import:datetime",
+        "import:hashlib",
+        "import:importlib.util",
+        "import:json",
+        "import:pathlib",
+        "import:re",
+        "import:runpy",
+        "import:sys",
+        "scripts/build-catalog.py",
+        "scripts/lib.sh",
+        "scripts/nexus-anthropic.py",
+        "scripts/nexus-instance.py",
+        "scripts/nexus-lint.py"
+      ],
+      "test_references": [
+        "scripts/test-nexus-plan.py"
+      ],
+      "characterization_cases": [
+        "nexus-plan-help",
+        "nexus-plan-invalid-argument"
+      ],
+      "parser_declarations": [
+        "a.add_argument('--accept-warning', action='append', default=[])",
+        "a.add_argument('--at', required=True)",
+        "a.add_argument('--draft', required=True)",
+        "a.add_argument('--owner', required=True)",
+        "d.add_argument('--executor', choices=('claude', 'fake'), default='claude')",
+        "d.add_argument('--model', default='claude-opus-5-5')",
+        "d.add_argument('--objective', required=True)",
+        "d.add_argument('--operator', default='planner-operator')",
+        "d.add_argument('--out', required=True)",
+        "sub.add_parser('adopt')",
+        "sub.add_parser('draft')",
+        "sub.add_parser('verify')",
+        "v.add_argument('--adoption', required=True)",
+        "v.add_argument('--instance', required=True)"
+      ]
+    },
+    {
+      "path": "scripts/nexus-relay.py",
+      "category": "CLI/runtime entry",
+      "source_sha256": "6d572d1709a7de92df763c32122c3bf64ffdb0515deef785c14058ceccfc81d6",
+      "protected": false,
+      "inputs": "Relay subcommand and data-dir.",
+      "outputs": "Delegates to nexus_relay.cli.",
+      "effects": "init/invite/serve/reconcile --apply write state; serve listens and may invoke containers/provider; help/errors only.",
+      "dependencies": [
+        "import:nexus_relay.cli",
+        "import:pathlib",
+        "import:sys"
+      ],
+      "test_references": [],
+      "characterization_cases": [
+        "nexus-relay-help",
+        "nexus-relay-invalid-argument"
+      ],
+      "parser_declarations": []
+    },
+    {
+      "path": "scripts/nexus-review.py",
+      "category": "CLI/runtime entry",
+      "source_sha256": "2211e18e42171d50d55ac7323409d5091591e1542b13a249ff1bfb84692f4b7b",
+      "protected": true,
+      "inputs": "Blinded index, packs, sheets and optional trials.",
+      "outputs": "Reviewer kit / collected judgments.",
+      "effects": "Writes review directories or judgment JSON; no independent operator is authenticated by a label.",
+      "dependencies": [
+        "import:__future__",
+        "import:argparse",
+        "import:datetime",
+        "import:hashlib",
+        "import:importlib.util",
+        "import:json",
+        "import:pathlib",
+        "import:shutil",
+        "import:sys",
+        "relay/nexus_relay/nexus.py",
+        "scripts/evaluate-nexus.py",
+        "scripts/lib.sh",
+        "scripts/nexus-blind.py",
+        "scripts/nexus-casepack.py"
+      ],
+      "test_references": [
+        "scripts/test-nexus-review.py"
+      ],
+      "characterization_cases": [
+        "nexus-review-help",
+        "nexus-review-invalid-argument"
+      ],
+      "parser_declarations": [
+        "c.add_argument('--trials')",
+        "c.add_argument(flag, required=True)",
+        "k.add_argument(flag, required=True)",
+        "sub.add_parser('collect')",
+        "sub.add_parser('kit')"
+      ]
+    },
+    {
+      "path": "scripts/nexus-routing.py",
+      "category": "CLI/runtime entry",
+      "source_sha256": "9d566fabe1b044efc59934ef249441036f15ff1c8d74d721960fc1b94227de5e",
+      "protected": false,
+      "inputs": "Instance, optional observations and --at.",
+      "outputs": "Coverage and admissible target sets.",
+      "effects": "Read-only; does not invoke selected targets.",
+      "dependencies": [
+        "import:argparse",
+        "import:datetime",
+        "import:json",
+        "import:pathlib",
+        "import:sys",
+        "scripts/nexus-options.py"
+      ],
+      "test_references": [
+        "scripts/test-nexus-routing.py"
+      ],
+      "characterization_cases": [
+        "nexus-routing-help",
+        "nexus-routing-invalid-argument",
+        "routing-coverage",
+        "routing-route"
+      ],
+      "parser_declarations": [
+        "ap.add_argument('--at')",
+        "ap.add_argument('--observations')",
+        "ap.add_argument('command', choices=['route', 'coverage'])",
+        "ap.add_argument('instance')"
+      ]
+    },
+    {
+      "path": "scripts/nexus-trial.py",
+      "category": "CLI/runtime entry",
+      "source_sha256": "7e2f5d5f221e8fb74ffe736848afbf4ea0c0fbd462785ea105ef2ba1d2f5f7cd",
+      "protected": true,
+      "inputs": "Frozen pack, variant, policy, owner events and executor.",
+      "outputs": "Trial run state/artifacts and trial rows.",
+      "effects": "Default executor invokes host; fake writes synthetic fixtures; owner accept/resume modifies run state.",
+      "dependencies": [
+        "import:__future__",
+        "import:argparse",
+        "import:concurrent.futures",
+        "import:datetime",
+        "import:hashlib",
+        "import:importlib.util",
+        "import:json",
+        "import:math",
+        "import:os",
+        "import:pathlib",
+        "import:re",
+        "import:secrets",
+        "import:sys",
+        "import:tempfile",
+        "relay/nexus_relay/nexus.py",
+        "scripts/evaluate-nexus.py",
+        "scripts/lib.sh",
+        "scripts/nexus-anthropic.py",
+        "scripts/nexus-blind.py",
+        "scripts/nexus-brief.py",
+        "scripts/nexus-casepack.py",
+        "scripts/nexus-instance.py"
+      ],
+      "test_references": [
+        "scripts/test-nexus-campaign.py",
+        "scripts/test-nexus-improve.py",
+        "scripts/test-nexus-review.py",
+        "scripts/test-nexus-trial.py"
+      ],
+      "characterization_cases": [
+        "nexus-trial-help",
+        "nexus-trial-invalid-argument"
+      ],
+      "parser_declarations": [
+        "a.add_argument('--accept-proposed-asserts', action='store_true')",
+        "a.add_argument('--asserts')",
+        "a.add_argument('--executor', choices=('claude', 'fake'), default='claude')",
+        "a.add_argument('--issuer', required=True)",
+        "a.add_argument('--predicates')",
+        "a.add_argument('--run', required=True)",
+        "a.add_argument('--task-id', required=True)",
+        "b.add_argument('--json', action='store_true')",
+        "b.add_argument('--run', required=True)",
+        "g.add_argument('--accepted', action='store_true')",
+        "g.add_argument('--rejected', action='store_true')",
+        "o.add_argument('--event', required=True)",
+        "o.add_argument('--executor', choices=('claude', 'fake'), default='claude')",
+        "o.add_argument('--run', required=True)",
+        "r.add_argument('--executor', choices=('claude', 'fake'), default='claude')",
+        "r.add_argument('--max-parallel', type=int, default=DEFAULT_MAX_PARALLEL)",
+        "r.add_argument('--policies', default=str(ROOT / 'examples/nexus/budget-policies.json'))",
+        "r.add_argument('--schedule', choices=SCHEDULES, default='sequential')",
+        "r.add_argument(flag, required=True)",
+        "s.add_argument('--executor', choices=('claude', 'fake'), default='claude')",
+        "s.add_argument('--run', required=True)",
+        "sub.add_parser('accept')",
+        "sub.add_parser('brief', help='the owner decision brief for a nexus_instance run')",
+        "sub.add_parser('owner-event')",
+        "sub.add_parser('resume')",
+        "sub.add_parser('run')",
+        "sub.add_parser('status')",
+        "t.add_argument('--run', required=True)"
+      ]
+    },
+    {
+      "path": "scripts/probe-host-claude-code.py",
+      "category": "CLI/runtime entry",
+      "source_sha256": "bd025a54f875c59debe9c9fc61435d7802ea6bf5b66019a97f68a54731afc95e",
+      "protected": false,
+      "inputs": "Agent, policy, output, model and probe options.",
+      "outputs": "Host acceptance record / optional raw stream.",
+      "effects": "Runs live Claude, installs temporary profile, writes probe files/records and restores installed profile; help/errors only.",
+      "dependencies": [
+        "import:argparse",
+        "import:datetime",
+        "import:hashlib",
+        "import:importlib.util",
+        "import:json",
+        "import:os",
+        "import:pathlib",
+        "import:shutil",
+        "import:subprocess",
+        "import:sys",
+        "import:tempfile",
+        "import:time",
+        "import:yaml",
+        "relay/nexus_relay/evidence.py",
+        "scripts/agent-capabilities.py",
+        "scripts/host-acceptance.py",
+        "scripts/host-session-evidence.py",
+        "scripts/lib.sh"
+      ],
+      "test_references": [],
+      "characterization_cases": [
+        "probe-host-claude-code-help",
+        "probe-host-claude-code-invalid-argument"
+      ],
+      "parser_declarations": [
+        "ap.add_argument('--agent', required=True, help='canonical agent slug')",
+        "ap.add_argument('--expiry-wait', type=float, default=180, help='seconds the probe may wait for the policy window to close before reporting the expiry probe NOT_ATTEMPTED')",
+        "ap.add_argument('--keep-raw', action='store_true', help='also store the full stream-json transcript alongside the distilled one')",
+        "ap.add_argument('--model', default='haiku')",
+        "ap.add_argument('--out', required=True)",
+        "ap.add_argument('--policy', required=True, help='scope policy consumed by agent-capabilities.py')",
+        "ap.add_argument('--valid-hours', type=int, default=24)"
+      ]
+    },
+    {
+      "path": "scripts/registry.py",
+      "category": "CLI/runtime entry",
+      "source_sha256": "c22cf5073067bba8e5a2eedacf259a025a0eac5144578e9314db5f1cdf875d8a",
+      "protected": false,
+      "inputs": "Canonical divisions/tools registry and selector.",
+      "outputs": "Keys / field values in canonical order.",
+      "effects": "Read-only.",
+      "dependencies": [
+        "import:__future__",
+        "import:argparse",
+        "import:json",
+        "import:pathlib",
+        "import:sys",
+        "import:typing"
+      ],
+      "test_references": [
+        "scripts/test-cli-usage.sh",
+        "scripts/test-convert-fence-model.sh",
+        "scripts/test-convert-parallel-failure.sh",
+        "scripts/test-convert-slug-collisions.sh",
+        "scripts/test-convert-symlink-output.sh",
+        "scripts/test-incremental-conversion.py",
+        "scripts/test-install-all-path-collision.sh",
+        "scripts/test-install-continue-after-failure.sh",
+        "scripts/test-install-conversion-failure.sh",
+        "scripts/test-install-hermes-destination.sh",
+        "scripts/test-install-link-ownership.sh",
+        "scripts/test-install-openclaw-registration.sh",
+        "scripts/test-install-parallel-logs.sh",
+        "scripts/test-lint-fences.sh"
+      ],
+      "characterization_cases": [
+        "registry-help",
+        "registry-invalid-argument",
+        "registry-divisions",
+        "registry-tools",
+        "registry-converted-tools",
+        "registry-unknown-field",
+        "registry-tool-field"
+      ],
+      "parser_declarations": [
+        "divisions.add_argument('path', nargs='?')",
+        "field.add_argument('field')",
+        "field.add_argument('path', nargs='?')",
+        "field.add_argument('tool')",
+        "sub.add_parser('divisions', help='emit division keys')",
+        "sub.add_parser('tool-field', help='emit one field from one registered tool')",
+        "sub.add_parser('tools', help='emit tool keys in canonical order')",
+        "tools.add_argument('--converted', action='store_true', help='exclude identity/source tools')",
+        "tools.add_argument('--install-kind', choices=sorted(VALID_INSTALL_KINDS))",
+        "tools.add_argument('path', nargs='?')"
+      ]
+    },
+    {
+      "path": "scripts/resolve-agents.py",
+      "category": "CLI/runtime entry",
+      "source_sha256": "c6e31a2b755427ec13927a314f23f3fcec4a0e07535ceabb27f35d45e8f79199",
+      "protected": false,
+      "inputs": "Agent/division/runbook selectors and optional list file.",
+      "outputs": "Resolved adapter slugs or runbook list.",
+      "effects": "Read-only.",
+      "dependencies": [
+        "import:argparse",
+        "import:pathlib",
+        "import:re",
+        "import:runpy",
+        "import:sys",
+        "scripts/build-catalog.py"
+      ],
+      "test_references": [
+        "scripts/test-install-functional.py"
+      ],
+      "characterization_cases": [
+        "resolve-agents-help",
+        "resolve-agents-invalid-argument",
+        "resolve-runbooks",
+        "resolve-one-agent"
+      ],
+      "parser_declarations": [
+        "parser.add_argument('--agent', action='append', default=[])",
+        "parser.add_argument('--agents-file')",
+        "parser.add_argument('--division', action='append', default=[])",
+        "parser.add_argument('--list-runbooks', action='store_true')",
+        "parser.add_argument('--runbook')"
+      ]
+    },
+    {
+      "path": "scripts/test-agent-capabilities.py",
+      "category": "test harness",
+      "source_sha256": "d92a162b98003f46290f35856757ecd5ce6dc7379efc33d9589a0d770d3082d2",
+      "protected": true,
+      "inputs": "Synthetic test fixtures / configured property count; see source.",
+      "outputs": "Test assertions, diagnostics and process status.",
+      "effects": "Harness may create/delete temporary fixtures, invoke CLIs or bind sockets; not an operational record.",
+      "dependencies": [
+        "import:datetime",
+        "import:hashlib",
+        "import:importlib.util",
+        "import:pathlib",
+        "import:tempfile",
+        "import:unittest",
+        "scripts/agent-capabilities.py",
+        "scripts/lib.sh"
+      ],
+      "test_references": [],
+      "characterization_cases": [],
+      "parser_declarations": []
+    },
+    {
+      "path": "scripts/test-agent-privileges.py",
+      "category": "test harness",
+      "source_sha256": "8fe107b218539ff4d0e5f65bf27354d74869a05273567073b51dad03c0c29882",
+      "protected": true,
+      "inputs": "Synthetic test fixtures / configured property count; see source.",
+      "outputs": "Test assertions, diagnostics and process status.",
+      "effects": "Harness may create/delete temporary fixtures, invoke CLIs or bind sockets; not an operational record.",
+      "dependencies": [
+        "import:__future__",
+        "import:importlib.util",
+        "import:pathlib",
+        "import:unittest",
+        "scripts/check-agent-privileges.py"
+      ],
+      "test_references": [],
+      "characterization_cases": [],
+      "parser_declarations": []
+    },
+    {
+      "path": "scripts/test-agent-selection.sh",
+      "category": "test harness",
+      "source_sha256": "d5e7e8c9f2c8f34c580a9e55ab539db742faec37f157a1bf778a4403b82b8625",
+      "protected": true,
+      "inputs": "Synthetic test fixtures / configured property count; see source.",
+      "outputs": "Test assertions, diagnostics and process status.",
+      "effects": "Harness may create/delete temporary fixtures, invoke CLIs or bind sockets; not an operational record.",
+      "dependencies": [
+        "scripts/install.sh"
+      ],
+      "test_references": [],
+      "characterization_cases": [],
+      "parser_declarations": []
+    },
+    {
+      "path": "scripts/test-alpha-research-suite.py",
+      "category": "test harness",
+      "source_sha256": "5af667648a5d580d04c844ad73dbb783d4087f5ae9b1be279f1c51f56a72bcee",
+      "protected": true,
+      "inputs": "Synthetic test fixtures / configured property count; see source.",
+      "outputs": "Test assertions, diagnostics and process status.",
+      "effects": "Harness may create/delete temporary fixtures, invoke CLIs or bind sockets; not an operational record.",
+      "dependencies": [
+        "import:pathlib",
+        "import:re",
+        "import:subprocess",
+        "import:sys"
+      ],
+      "test_references": [],
+      "characterization_cases": [],
+      "parser_declarations": []
+    },
+    {
+      "path": "scripts/test-changed-agent-files.py",
+      "category": "test harness",
+      "source_sha256": "e412e3979003deee6a38c6affefa465e0b8ce5043c9730014ca47fea86091b22",
+      "protected": true,
+      "inputs": "Synthetic test fixtures / configured property count; see source.",
+      "outputs": "Test assertions, diagnostics and process status.",
+      "effects": "Harness may create/delete temporary fixtures, invoke CLIs or bind sockets; not an operational record.",
+      "dependencies": [
+        "import:__future__",
+        "import:pathlib",
+        "import:subprocess",
+        "import:sys",
+        "import:unittest",
+        "scripts/lint-agents.sh",
+        "scripts/list-changed-agent-files.py"
+      ],
+      "test_references": [],
+      "characterization_cases": [],
+      "parser_declarations": []
+    },
+    {
+      "path": "scripts/test-cli-usage.sh",
+      "category": "test harness",
+      "source_sha256": "fec67dcf064d31c6c144deaacf39cff541fb70a1d62c944b2115c05c9abc5acb",
+      "protected": true,
+      "inputs": "Synthetic test fixtures / configured property count; see source.",
+      "outputs": "Test assertions, diagnostics and process status.",
+      "effects": "Harness may create/delete temporary fixtures, invoke CLIs or bind sockets; not an operational record.",
+      "dependencies": [
+        "scripts/convert.sh",
+        "scripts/install.sh",
+        "scripts/registry.py"
+      ],
+      "test_references": [],
+      "characterization_cases": [],
+      "parser_declarations": []
+    },
+    {
+      "path": "scripts/test-convert-fence-model.sh",
+      "category": "test harness",
+      "source_sha256": "ab68ff9b19b0960bc44f1d2133afeca04469267e18bb1b47831f429865329e3d",
+      "protected": true,
+      "inputs": "Synthetic test fixtures / configured property count; see source.",
+      "outputs": "Test assertions, diagnostics and process status.",
+      "effects": "Harness may create/delete temporary fixtures, invoke CLIs or bind sockets; not an operational record.",
+      "dependencies": [
+        "scripts/build-hermes-plugin.py",
+        "scripts/convert-engine.sh",
+        "scripts/convert.sh",
+        "scripts/lib.sh",
+        "scripts/registry.py",
+        "scripts/test-convert-outputs.sh"
+      ],
+      "test_references": [],
+      "characterization_cases": [],
+      "parser_declarations": []
+    },
+    {
+      "path": "scripts/test-convert-frontmatter.sh",
+      "category": "test harness",
+      "source_sha256": "25e6b3f418ab6ec77266bf29c61438e150eb8d8ff4612d1b0bb3999c3d4929b7",
+      "protected": true,
+      "inputs": "Synthetic test fixtures / configured property count; see source.",
+      "outputs": "Test assertions, diagnostics and process status.",
+      "effects": "Harness may create/delete temporary fixtures, invoke CLIs or bind sockets; not an operational record.",
+      "dependencies": [
+        "scripts/convert.sh",
+        "scripts/lib.sh",
+        "scripts/lint-agents.sh"
+      ],
+      "test_references": [],
+      "characterization_cases": [],
+      "parser_declarations": []
+    },
+    {
+      "path": "scripts/test-convert-outputs.sh",
+      "category": "test harness",
+      "source_sha256": "ae2573676722d3e36d67e0e53c11bb56a86308962a1e8c504a0ef5d01800d5a2",
+      "protected": true,
+      "inputs": "Synthetic test fixtures / configured property count; see source.",
+      "outputs": "Test assertions, diagnostics and process status.",
+      "effects": "Harness may create/delete temporary fixtures, invoke CLIs or bind sockets; not an operational record.",
+      "dependencies": [
+        "scripts/convert.sh",
+        "scripts/lib.sh"
+      ],
+      "test_references": [
+        "scripts/test-convert-fence-model.sh"
+      ],
+      "characterization_cases": [],
+      "parser_declarations": []
+    },
+    {
+      "path": "scripts/test-convert-parallel-failure.sh",
+      "category": "test harness",
+      "source_sha256": "14005ae44b9c41218acd4ed98f57edb409769676042c9639fb094b07ee064118",
+      "protected": true,
+      "inputs": "Synthetic test fixtures / configured property count; see source.",
+      "outputs": "Test assertions, diagnostics and process status.",
+      "effects": "Harness may create/delete temporary fixtures, invoke CLIs or bind sockets; not an operational record.",
+      "dependencies": [
+        "scripts/build-hermes-plugin.py",
+        "scripts/convert-engine.sh",
+        "scripts/convert.sh",
+        "scripts/integration-state.py",
+        "scripts/lib.sh",
+        "scripts/registry.py"
+      ],
+      "test_references": [],
+      "characterization_cases": [],
+      "parser_declarations": []
+    },
+    {
+      "path": "scripts/test-convert-slug-collisions.sh",
+      "category": "test harness",
+      "source_sha256": "07a9dfcdf2bb22cd5a6f3bd20065ccb8158b974af77b9c7c6a1c2fd8567e2f0c",
+      "protected": true,
+      "inputs": "Synthetic test fixtures / configured property count; see source.",
+      "outputs": "Test assertions, diagnostics and process status.",
+      "effects": "Harness may create/delete temporary fixtures, invoke CLIs or bind sockets; not an operational record.",
+      "dependencies": [
+        "scripts/convert-engine.sh",
+        "scripts/convert.sh",
+        "scripts/lib.sh",
+        "scripts/registry.py"
+      ],
+      "test_references": [],
+      "characterization_cases": [],
+      "parser_declarations": []
+    },
+    {
+      "path": "scripts/test-convert-symlink-output.sh",
+      "category": "test harness",
+      "source_sha256": "1b8dc553e7e8a929d3b0d0289323b802b9f7f5a168fc2a88a580d5d8bd20ec1c",
+      "protected": true,
+      "inputs": "Synthetic test fixtures / configured property count; see source.",
+      "outputs": "Test assertions, diagnostics and process status.",
+      "effects": "Harness may create/delete temporary fixtures, invoke CLIs or bind sockets; not an operational record.",
+      "dependencies": [
+        "scripts/convert-engine.sh",
+        "scripts/convert.sh",
+        "scripts/lib.sh",
+        "scripts/registry.py"
+      ],
+      "test_references": [],
+      "characterization_cases": [],
+      "parser_declarations": []
+    },
+    {
+      "path": "scripts/test-folded-frontmatter.sh",
+      "category": "test harness",
+      "source_sha256": "eb561ea0d733f93c02f48ab21975edf78dc87aac18f93c23e79bb83972e68620",
+      "protected": true,
+      "inputs": "Synthetic test fixtures / configured property count; see source.",
+      "outputs": "Test assertions, diagnostics and process status.",
+      "effects": "Harness may create/delete temporary fixtures, invoke CLIs or bind sockets; not an operational record.",
+      "dependencies": [
+        "scripts/lint-agents.sh"
+      ],
+      "test_references": [],
+      "characterization_cases": [],
+      "parser_declarations": []
+    },
+    {
+      "path": "scripts/test-frontmatter-closing.sh",
+      "category": "test harness",
+      "source_sha256": "bc1320fcf721f95b5ae727d0ecea33d8c86aee12dc77d7f74a6333964cc3318a",
+      "protected": true,
+      "inputs": "Synthetic test fixtures / configured property count; see source.",
+      "outputs": "Test assertions, diagnostics and process status.",
+      "effects": "Harness may create/delete temporary fixtures, invoke CLIs or bind sockets; not an operational record.",
+      "dependencies": [
+        "scripts/lint-agents.sh"
+      ],
+      "test_references": [],
+      "characterization_cases": [],
+      "parser_declarations": []
+    },
+    {
+      "path": "scripts/test-hermes-plugin.py",
+      "category": "test harness",
+      "source_sha256": "ddaed6472fd6c52b781ce666d70b37e4114212b848ee5390911cb81abd6242cd",
+      "protected": true,
+      "inputs": "Synthetic test fixtures / configured property count; see source.",
+      "outputs": "Test assertions, diagnostics and process status.",
+      "effects": "Harness may create/delete temporary fixtures, invoke CLIs or bind sockets; not an operational record.",
+      "dependencies": [
+        "import:__future__",
+        "import:enum",
+        "import:importlib.util",
+        "import:json",
+        "import:pathlib",
+        "import:runpy",
+        "import:sys",
+        "import:tempfile",
+        "import:types",
+        "import:unittest",
+        "relay/nexus_relay/__init__.py",
+        "scripts/build-hermes-plugin.py"
+      ],
+      "test_references": [],
+      "characterization_cases": [],
+      "parser_declarations": []
+    },
+    {
+      "path": "scripts/test-host-acceptance.py",
+      "category": "test harness",
+      "source_sha256": "5549886d36e7126c19d50ec477014385f740a3f6916687189272c544e5669d0b",
+      "protected": true,
+      "inputs": "Synthetic test fixtures / configured property count; see source.",
+      "outputs": "Test assertions, diagnostics and process status.",
+      "effects": "Harness may create/delete temporary fixtures, invoke CLIs or bind sockets; not an operational record.",
+      "dependencies": [
+        "import:atexit",
+        "import:copy",
+        "import:datetime",
+        "import:hashlib",
+        "import:importlib.util",
+        "import:json",
+        "import:pathlib",
+        "import:sys",
+        "import:tempfile",
+        "scripts/host-acceptance.py",
+        "scripts/lib.sh"
+      ],
+      "test_references": [],
+      "characterization_cases": [],
+      "parser_declarations": []
+    },
+    {
+      "path": "scripts/test-htp-gate0.py",
+      "category": "test harness",
+      "source_sha256": "381bc36f1680fe36470e786c179f6b304333e2d91b98c2d2010bef75fdc3e42b",
+      "protected": true,
+      "inputs": "Synthetic test fixtures / configured property count; see source.",
+      "outputs": "Test assertions, diagnostics and process status.",
+      "effects": "Harness may create/delete temporary fixtures, invoke CLIs or bind sockets; not an operational record.",
+      "dependencies": [
+        "import:importlib.util",
+        "import:pathlib",
+        "import:shutil",
+        "import:tempfile",
+        "import:unittest",
+        "import:yaml",
+        "scripts/check-htp-gate0.py"
+      ],
+      "test_references": [],
+      "characterization_cases": [],
+      "parser_declarations": []
+    },
+    {
+      "path": "scripts/test-incremental-conversion.py",
+      "category": "test harness",
+      "source_sha256": "45becc89622756b03a0c0c3213fdef6138a015bcbae97e5feeb92a0e2a7ab80a",
+      "protected": true,
+      "inputs": "Synthetic test fixtures / configured property count; see source.",
+      "outputs": "Test assertions, diagnostics and process status.",
+      "effects": "Harness may create/delete temporary fixtures, invoke CLIs or bind sockets; not an operational record.",
+      "dependencies": [
+        "import:__future__",
+        "import:json",
+        "import:pathlib",
+        "import:shutil",
+        "import:subprocess",
+        "import:tempfile",
+        "import:unittest",
+        "scripts/convert-engine.sh",
+        "scripts/convert.sh",
+        "scripts/integration-state.py",
+        "scripts/lib.sh",
+        "scripts/registry.py"
+      ],
+      "test_references": [],
+      "characterization_cases": [],
+      "parser_declarations": []
+    },
+    {
+      "path": "scripts/test-install-all-path-collision.sh",
+      "category": "test harness",
+      "source_sha256": "362769f3abb044e2ca04203412e4caf12eb7e960d467ef4f129ce5edaabb253e",
+      "protected": true,
+      "inputs": "Synthetic test fixtures / configured property count; see source.",
+      "outputs": "Test assertions, diagnostics and process status.",
+      "effects": "Harness may create/delete temporary fixtures, invoke CLIs or bind sockets; not an operational record.",
+      "dependencies": [
+        "scripts/install.sh",
+        "scripts/lib.sh",
+        "scripts/registry.py"
+      ],
+      "test_references": [],
+      "characterization_cases": [],
+      "parser_declarations": []
+    },
+    {
+      "path": "scripts/test-install-continue-after-failure.sh",
+      "category": "test harness",
+      "source_sha256": "8e4854a60b12968a730785bd9133538c20efc7d15b2342f9cefc24e3bedea161",
+      "protected": true,
+      "inputs": "Synthetic test fixtures / configured property count; see source.",
+      "outputs": "Test assertions, diagnostics and process status.",
+      "effects": "Harness may create/delete temporary fixtures, invoke CLIs or bind sockets; not an operational record.",
+      "dependencies": [
+        "scripts/install.sh",
+        "scripts/lib.sh",
+        "scripts/registry.py"
+      ],
+      "test_references": [],
+      "characterization_cases": [],
+      "parser_declarations": []
+    },
+    {
+      "path": "scripts/test-install-conversion-failure.sh",
+      "category": "test harness",
+      "source_sha256": "0606da93968560fac67a60af2b68de6846f7dd7beb4f0fed26aa0f9ba31a9736",
+      "protected": true,
+      "inputs": "Synthetic test fixtures / configured property count; see source.",
+      "outputs": "Test assertions, diagnostics and process status.",
+      "effects": "Harness may create/delete temporary fixtures, invoke CLIs or bind sockets; not an operational record.",
+      "dependencies": [
+        "scripts/convert-engine.sh",
+        "scripts/convert.sh",
+        "scripts/install.sh",
+        "scripts/integration-state.py",
+        "scripts/lib.sh",
+        "scripts/registry.py"
+      ],
+      "test_references": [],
+      "characterization_cases": [],
+      "parser_declarations": []
+    },
+    {
+      "path": "scripts/test-install-functional.py",
+      "category": "test harness",
+      "source_sha256": "b2ea0bb662b756340026aaa20afdc58cba77d8634068a46c7aa2aa96eda2f1f4",
+      "protected": true,
+      "inputs": "Synthetic test fixtures / configured property count; see source.",
+      "outputs": "Test assertions, diagnostics and process status.",
+      "effects": "Harness may create/delete temporary fixtures, invoke CLIs or bind sockets; not an operational record.",
+      "dependencies": [
+        "import:json",
+        "import:os",
+        "import:pathlib",
+        "import:shutil",
+        "import:subprocess",
+        "import:tempfile",
+        "import:unittest",
+        "scripts/convert.sh",
+        "scripts/install.sh",
+        "scripts/resolve-agents.py"
+      ],
+      "test_references": [],
+      "characterization_cases": [],
+      "parser_declarations": []
+    },
+    {
+      "path": "scripts/test-install-hermes-destination.sh",
+      "category": "test harness",
+      "source_sha256": "becd92049617b343eb94d73c4a2d21eb75d12da408063e161a452156976f46e2",
+      "protected": true,
+      "inputs": "Synthetic test fixtures / configured property count; see source.",
+      "outputs": "Test assertions, diagnostics and process status.",
+      "effects": "Harness may create/delete temporary fixtures, invoke CLIs or bind sockets; not an operational record.",
+      "dependencies": [
+        "relay/nexus_relay/__init__.py",
+        "scripts/install.sh",
+        "scripts/lib.sh",
+        "scripts/registry.py"
+      ],
+      "test_references": [],
+      "characterization_cases": [],
+      "parser_declarations": []
+    },
+    {
+      "path": "scripts/test-install-link-ownership.sh",
+      "category": "test harness",
+      "source_sha256": "8be145b2ac14df731ee7f2c94783248959f9258a2de59c846924c7dcda465fa8",
+      "protected": true,
+      "inputs": "Synthetic test fixtures / configured property count; see source.",
+      "outputs": "Test assertions, diagnostics and process status.",
+      "effects": "Harness may create/delete temporary fixtures, invoke CLIs or bind sockets; not an operational record.",
+      "dependencies": [
+        "scripts/install.sh",
+        "scripts/lib.sh",
+        "scripts/registry.py"
+      ],
+      "test_references": [],
+      "characterization_cases": [],
+      "parser_declarations": []
+    },
+    {
+      "path": "scripts/test-install-openclaw-registration.sh",
+      "category": "test harness",
+      "source_sha256": "ad50065c61129c722229245c3724a22f7ed4cd5608431685e4dc6d03440d8686",
+      "protected": true,
+      "inputs": "Synthetic test fixtures / configured property count; see source.",
+      "outputs": "Test assertions, diagnostics and process status.",
+      "effects": "Harness may create/delete temporary fixtures, invoke CLIs or bind sockets; not an operational record.",
+      "dependencies": [
+        "scripts/install.sh",
+        "scripts/lib.sh",
+        "scripts/registry.py"
+      ],
+      "test_references": [],
+      "characterization_cases": [],
+      "parser_declarations": []
+    },
+    {
+      "path": "scripts/test-install-parallel-logs.sh",
+      "category": "test harness",
+      "source_sha256": "d2fe18dd6114e35fda9851d33c15c8278961bf688c608526ca38ebb3bb6e7a03",
+      "protected": true,
+      "inputs": "Synthetic test fixtures / configured property count; see source.",
+      "outputs": "Test assertions, diagnostics and process status.",
+      "effects": "Harness may create/delete temporary fixtures, invoke CLIs or bind sockets; not an operational record.",
+      "dependencies": [
+        "scripts/install.sh",
+        "scripts/lib.sh",
+        "scripts/registry.py"
+      ],
+      "test_references": [],
+      "characterization_cases": [],
+      "parser_declarations": []
+    },
+    {
+      "path": "scripts/test-install-selection-completeness.sh",
+      "category": "test harness",
+      "source_sha256": "aae211fc3132d1a5896703191d35587d17d12ecb6c20021ec5e5640a264d537a",
+      "protected": true,
+      "inputs": "Synthetic test fixtures / configured property count; see source.",
+      "outputs": "Test assertions, diagnostics and process status.",
+      "effects": "Harness may create/delete temporary fixtures, invoke CLIs or bind sockets; not an operational record.",
+      "dependencies": [
+        "scripts/install.sh",
+        "scripts/lib.sh"
+      ],
+      "test_references": [],
+      "characterization_cases": [],
+      "parser_declarations": []
+    },
+    {
+      "path": "scripts/test-install.sh",
+      "category": "test harness",
+      "source_sha256": "c0e204cdde285be12b13a2a9ee1ef9704f534888a68bd0b66142e66865a78051",
+      "protected": true,
+      "inputs": "Synthetic test fixtures / configured property count; see source.",
+      "outputs": "Test assertions, diagnostics and process status.",
+      "effects": "Harness may create/delete temporary fixtures, invoke CLIs or bind sockets; not an operational record.",
+      "dependencies": [
+        "scripts/install.sh",
+        "scripts/lib.sh"
+      ],
+      "test_references": [],
+      "characterization_cases": [],
+      "parser_declarations": []
+    },
+    {
+      "path": "scripts/test-kimi-adapter.py",
+      "category": "test harness",
+      "source_sha256": "ac54ac8b5c836991df903c8dc860a32e664270ddc7f9fe7b49d8088077ea5dfd",
+      "protected": true,
+      "inputs": "Synthetic test fixtures / configured property count; see source.",
+      "outputs": "Test assertions, diagnostics and process status.",
+      "effects": "Harness may create/delete temporary fixtures, invoke CLIs or bind sockets; not an operational record.",
+      "dependencies": [
+        "import:__future__",
+        "import:os",
+        "import:pathlib",
+        "import:subprocess",
+        "import:tempfile",
+        "import:unittest",
+        "import:yaml",
+        "scripts/convert.sh",
+        "scripts/install.sh"
+      ],
+      "test_references": [],
+      "characterization_cases": [],
+      "parser_declarations": []
+    },
+    {
+      "path": "scripts/test-lint-fences.sh",
+      "category": "test harness",
+      "source_sha256": "1c2d56e80a921e4e0081d78ef3f39c367b87176ae858a70f3c80308e7052d62f",
+      "protected": true,
+      "inputs": "Synthetic test fixtures / configured property count; see source.",
+      "outputs": "Test assertions, diagnostics and process status.",
+      "effects": "Harness may create/delete temporary fixtures, invoke CLIs or bind sockets; not an operational record.",
+      "dependencies": [
+        "scripts/convert-engine.sh",
+        "scripts/convert.sh",
+        "scripts/integration-state.py",
+        "scripts/lib.sh",
+        "scripts/lint-agents.sh",
+        "scripts/registry.py"
+      ],
+      "test_references": [],
+      "characterization_cases": [],
+      "parser_declarations": []
+    },
+    {
+      "path": "scripts/test-lint-qwen-placeholders.sh",
+      "category": "test harness",
+      "source_sha256": "8f9fc76a6fc11e7e2628cdda246d86fd3fd0b33f8f3260f4c1be6841fef4c1c6",
+      "protected": true,
+      "inputs": "Synthetic test fixtures / configured property count; see source.",
+      "outputs": "Test assertions, diagnostics and process status.",
+      "effects": "Harness may create/delete temporary fixtures, invoke CLIs or bind sockets; not an operational record.",
+      "dependencies": [
+        "scripts/lint-agents.sh"
+      ],
+      "test_references": [],
+      "characterization_cases": [],
+      "parser_declarations": []
+    },
+    {
+      "path": "scripts/test-marketplace-intake.py",
+      "category": "test harness",
+      "source_sha256": "14a0a5071b05022731c20c89d23b8e244891099e1ba3676363c378b44edeeae4",
+      "protected": true,
+      "inputs": "Synthetic test fixtures / configured property count; see source.",
+      "outputs": "Test assertions, diagnostics and process status.",
+      "effects": "Harness may create/delete temporary fixtures, invoke CLIs or bind sockets; not an operational record.",
+      "dependencies": [
+        "import:copy",
+        "import:datetime",
+        "import:importlib.util",
+        "import:json",
+        "import:pathlib",
+        "import:subprocess",
+        "import:sys",
+        "import:tempfile",
+        "import:unittest",
+        "scripts/marketplace-intake.py"
+      ],
+      "test_references": [],
+      "characterization_cases": [],
+      "parser_declarations": []
+    },
+    {
+      "path": "scripts/test-nexus-anthropic.py",
+      "category": "test harness",
+      "source_sha256": "9d3d4d610e91469605ec34168e56739671cc48f4c7449003f9cb88a176fc98d8",
+      "protected": true,
+      "inputs": "Synthetic test fixtures / configured property count; see source.",
+      "outputs": "Test assertions, diagnostics and process status.",
+      "effects": "Harness may create/delete temporary fixtures, invoke CLIs or bind sockets; not an operational record.",
+      "dependencies": [
+        "import:__future__",
+        "import:importlib.util",
+        "import:json",
+        "import:os",
+        "import:pathlib",
+        "import:unittest",
+        "scripts/nexus-anthropic.py"
+      ],
+      "test_references": [],
+      "characterization_cases": [],
+      "parser_declarations": []
+    },
+    {
+      "path": "scripts/test-nexus-brief.py",
+      "category": "test harness",
+      "source_sha256": "ba279456841c9ed58429bd1fc46d8857adf039aec6507d90e21391f45ffad0a5",
+      "protected": true,
+      "inputs": "Synthetic test fixtures / configured property count; see source.",
+      "outputs": "Test assertions, diagnostics and process status.",
+      "effects": "Harness may create/delete temporary fixtures, invoke CLIs or bind sockets; not an operational record.",
+      "dependencies": [
+        "import:contextlib",
+        "import:importlib.util",
+        "import:io",
+        "import:json",
+        "import:pathlib",
+        "import:tempfile",
+        "import:unittest",
+        "scripts/nexus-brief.py"
+      ],
+      "test_references": [],
+      "characterization_cases": [],
+      "parser_declarations": []
+    },
+    {
+      "path": "scripts/test-nexus-campaign.py",
+      "category": "test harness",
+      "source_sha256": "8054fa13414ddd90b7c220a84b45936161d0bf679ec54ced4b9ca086183eace0",
+      "protected": true,
+      "inputs": "Synthetic test fixtures / configured property count; see source.",
+      "outputs": "Test assertions, diagnostics and process status.",
+      "effects": "Harness may create/delete temporary fixtures, invoke CLIs or bind sockets; not an operational record.",
+      "dependencies": [
+        "import:importlib.util",
+        "import:json",
+        "import:pathlib",
+        "import:shutil",
+        "import:tempfile",
+        "import:unittest",
+        "scripts/nexus-campaign.py",
+        "scripts/nexus-casepack.py",
+        "scripts/nexus-trial.py"
+      ],
+      "test_references": [],
+      "characterization_cases": [],
+      "parser_declarations": []
+    },
+    {
+      "path": "scripts/test-nexus-casepack.py",
+      "category": "test harness",
+      "source_sha256": "2f7b81d9fab4c63ca5db2fdb051b0d93c65782121c70698ca4aec61e6f4aeadc",
+      "protected": true,
+      "inputs": "Synthetic test fixtures / configured property count; see source.",
+      "outputs": "Test assertions, diagnostics and process status.",
+      "effects": "Harness may create/delete temporary fixtures, invoke CLIs or bind sockets; not an operational record.",
+      "dependencies": [
+        "import:importlib.util",
+        "import:json",
+        "import:pathlib",
+        "import:shutil",
+        "import:tempfile",
+        "import:unittest",
+        "scripts/nexus-casepack.py"
+      ],
+      "test_references": [],
+      "characterization_cases": [],
+      "parser_declarations": []
+    },
+    {
+      "path": "scripts/test-nexus-evaluation.py",
+      "category": "test harness",
+      "source_sha256": "de42e3ba5a7a1790c10a995d6193224965dbad9d2ff1cff738158db242b6258b",
+      "protected": true,
+      "inputs": "Synthetic test fixtures / configured property count; see source.",
+      "outputs": "Test assertions, diagnostics and process status.",
+      "effects": "Harness may create/delete temporary fixtures, invoke CLIs or bind sockets; not an operational record.",
+      "dependencies": [
+        "import:importlib.util",
+        "import:json",
+        "import:pathlib",
+        "import:shutil",
+        "import:tempfile",
+        "import:unittest",
+        "relay/nexus_relay/nexus.py",
+        "scripts/evaluate-nexus.py",
+        "scripts/nexus-blind.py",
+        "scripts/nexus-options.py"
+      ],
+      "test_references": [],
+      "characterization_cases": [],
+      "parser_declarations": []
+    },
+    {
+      "path": "scripts/test-nexus-improve.py",
+      "category": "test harness",
+      "source_sha256": "a36e01fb2ed6d8cb476aa272db3ed3165dbaf34a58af9b6f1725e5a402c9261d",
+      "protected": true,
+      "inputs": "Synthetic test fixtures / configured property count; see source.",
+      "outputs": "Test assertions, diagnostics and process status.",
+      "effects": "Harness may create/delete temporary fixtures, invoke CLIs or bind sockets; not an operational record.",
+      "dependencies": [
+        "import:importlib.util",
+        "import:json",
+        "import:pathlib",
+        "import:shutil",
+        "import:subprocess",
+        "import:tempfile",
+        "import:unittest",
+        "relay/nexus_relay/nexus.py",
+        "scripts/evaluate-nexus.py",
+        "scripts/nexus-casepack.py",
+        "scripts/nexus-improve.py",
+        "scripts/nexus-instance.py",
+        "scripts/nexus-trial.py",
+        "scripts/test-nexus-instance.py"
+      ],
+      "test_references": [],
+      "characterization_cases": [],
+      "parser_declarations": []
+    },
+    {
+      "path": "scripts/test-nexus-instance.py",
+      "category": "test harness",
+      "source_sha256": "c4f47a54a15fca98170f30c0db8eca854d03a96f413e25e42c8101b38bed79c5",
+      "protected": true,
+      "inputs": "Synthetic test fixtures / configured property count; see source.",
+      "outputs": "Test assertions, diagnostics and process status.",
+      "effects": "Harness may create/delete temporary fixtures, invoke CLIs or bind sockets; not an operational record.",
+      "dependencies": [
+        "import:copy",
+        "import:datetime",
+        "import:importlib.util",
+        "import:json",
+        "import:pathlib",
+        "import:runpy",
+        "import:unittest",
+        "scripts/build-catalog.py",
+        "scripts/check-challenger-pairs.py",
+        "scripts/nexus-instance.py"
+      ],
+      "test_references": [
+        "scripts/test-nexus-improve.py"
+      ],
+      "characterization_cases": [],
+      "parser_declarations": []
+    },
+    {
+      "path": "scripts/test-nexus-lint.py",
+      "category": "test harness",
+      "source_sha256": "5f6dede7f7ecd4878783c545201291704c942b048009055b5407f99a412571f8",
+      "protected": true,
+      "inputs": "Synthetic test fixtures / configured property count; see source.",
+      "outputs": "Test assertions, diagnostics and process status.",
+      "effects": "Harness may create/delete temporary fixtures, invoke CLIs or bind sockets; not an operational record.",
+      "dependencies": [
+        "import:copy",
+        "import:importlib.util",
+        "import:json",
+        "import:pathlib",
+        "import:tempfile",
+        "import:unittest",
+        "scripts/nexus-lint.py"
+      ],
+      "test_references": [],
+      "characterization_cases": [],
+      "parser_declarations": []
+    },
+    {
+      "path": "scripts/test-nexus-optimize.py",
+      "category": "test harness",
+      "source_sha256": "e0d1f474bff01bb6c92d29f3f15cf9056b2963d260383063714ebb331af022b5",
+      "protected": true,
+      "inputs": "Synthetic test fixtures / configured property count; see source.",
+      "outputs": "Test assertions, diagnostics and process status.",
+      "effects": "Harness may create/delete temporary fixtures, invoke CLIs or bind sockets; not an operational record.",
+      "dependencies": [
+        "import:importlib.util",
+        "import:json",
+        "import:pathlib",
+        "import:subprocess",
+        "import:tempfile",
+        "import:unittest",
+        "scripts/nexus-optimize.py"
+      ],
+      "test_references": [],
+      "characterization_cases": [],
+      "parser_declarations": []
+    },
+    {
+      "path": "scripts/test-nexus-pilot.py",
+      "category": "test harness",
+      "source_sha256": "25898fbf08d79b37a2dd7cf4b669bf12326e301268c36340e2f0ab1e14e1d2a9",
+      "protected": true,
+      "inputs": "Synthetic test fixtures / configured property count; see source.",
+      "outputs": "Test assertions, diagnostics and process status.",
+      "effects": "Harness may create/delete temporary fixtures, invoke CLIs or bind sockets; not an operational record.",
+      "dependencies": [
+        "import:__future__",
+        "import:datetime",
+        "import:importlib.util",
+        "import:json",
+        "import:pathlib",
+        "import:tempfile",
+        "import:unittest",
+        "scripts/nexus-pilot.py"
+      ],
+      "test_references": [],
+      "characterization_cases": [],
+      "parser_declarations": []
+    },
+    {
+      "path": "scripts/test-nexus-plan.py",
+      "category": "test harness",
+      "source_sha256": "dc27779beb3c8d51889e021e49b9d3cb4a729f810a8486e348bd57a1f5a1809d",
+      "protected": true,
+      "inputs": "Synthetic test fixtures / configured property count; see source.",
+      "outputs": "Test assertions, diagnostics and process status.",
+      "effects": "Harness may create/delete temporary fixtures, invoke CLIs or bind sockets; not an operational record.",
+      "dependencies": [
+        "import:copy",
+        "import:importlib.util",
+        "import:json",
+        "import:pathlib",
+        "import:tempfile",
+        "import:unittest",
+        "scripts/nexus-plan.py"
+      ],
+      "test_references": [],
+      "characterization_cases": [],
+      "parser_declarations": []
+    },
+    {
+      "path": "scripts/test-nexus-review.py",
+      "category": "test harness",
+      "source_sha256": "65890783ed6af5ab18ac6098c9e86e3709728c3767b6cde8502ca14320422853",
+      "protected": true,
+      "inputs": "Synthetic test fixtures / configured property count; see source.",
+      "outputs": "Test assertions, diagnostics and process status.",
+      "effects": "Harness may create/delete temporary fixtures, invoke CLIs or bind sockets; not an operational record.",
+      "dependencies": [
+        "import:importlib.util",
+        "import:json",
+        "import:pathlib",
+        "import:shutil",
+        "import:tempfile",
+        "import:unittest",
+        "relay/nexus_relay/nexus.py",
+        "scripts/evaluate-nexus.py",
+        "scripts/nexus-blind.py",
+        "scripts/nexus-review.py",
+        "scripts/nexus-trial.py"
+      ],
+      "test_references": [],
+      "characterization_cases": [],
+      "parser_declarations": []
+    },
+    {
+      "path": "scripts/test-nexus-routing.py",
+      "category": "test harness",
+      "source_sha256": "ea2933afb3e2a0f111135bba5fef42aea7975c32301e4e502f58bd7d63f0f842",
+      "protected": true,
+      "inputs": "Synthetic test fixtures / configured property count; see source.",
+      "outputs": "Test assertions, diagnostics and process status.",
+      "effects": "Harness may create/delete temporary fixtures, invoke CLIs or bind sockets; not an operational record.",
+      "dependencies": [
+        "import:datetime",
+        "import:importlib.util",
+        "import:json",
+        "import:pathlib",
+        "import:sys",
+        "import:tempfile",
+        "scripts/nexus-routing.py"
+      ],
+      "test_references": [],
+      "characterization_cases": [],
+      "parser_declarations": []
+    },
+    {
+      "path": "scripts/test-nexus-trial.py",
+      "category": "test harness",
+      "source_sha256": "3432ea616df66435c83215f6a9add24174fb7b5cb568fd7155d6073e9a21a3d6",
+      "protected": true,
+      "inputs": "Synthetic test fixtures / configured property count; see source.",
+      "outputs": "Test assertions, diagnostics and process status.",
+      "effects": "Harness may create/delete temporary fixtures, invoke CLIs or bind sockets; not an operational record.",
+      "dependencies": [
+        "import:importlib.util",
+        "import:json",
+        "import:pathlib",
+        "import:shutil",
+        "import:tempfile",
+        "import:unittest",
+        "relay/nexus_relay/nexus.py",
+        "scripts/evaluate-nexus.py",
+        "scripts/nexus-blind.py",
+        "scripts/nexus-casepack.py",
+        "scripts/nexus-trial.py"
+      ],
+      "test_references": [],
+      "characterization_cases": [],
+      "parser_declarations": []
+    },
+    {
+      "path": "scripts/test-openclaw-import-provenance.py",
+      "category": "test harness",
+      "source_sha256": "2af02ccb54d960194e8d9894ceff28e20be2128df4e2d45352ed9098804a3813",
+      "protected": true,
+      "inputs": "Synthetic test fixtures / configured property count; see source.",
+      "outputs": "Test assertions, diagnostics and process status.",
+      "effects": "Harness may create/delete temporary fixtures, invoke CLIs or bind sockets; not an operational record.",
+      "dependencies": [
+        "import:__future__",
+        "import:importlib.util",
+        "import:pathlib",
+        "import:unittest",
+        "scripts/import-openclaw-community.py"
+      ],
+      "test_references": [],
+      "characterization_cases": [],
+      "parser_declarations": []
+    },
+    {
+      "path": "scripts/test-runbook-contracts.py",
+      "category": "test harness",
+      "source_sha256": "b82c7e9f5cb58a2f5759e1cb64a828db78ccaae788ea18ec231194178e5f631f",
+      "protected": true,
+      "inputs": "Synthetic test fixtures / configured property count; see source.",
+      "outputs": "Test assertions, diagnostics and process status.",
+      "effects": "Harness may create/delete temporary fixtures, invoke CLIs or bind sockets; not an operational record.",
+      "dependencies": [
+        "import:copy",
+        "import:hashlib",
+        "import:json",
+        "import:pathlib",
+        "import:shutil",
+        "import:subprocess",
+        "import:tempfile",
+        "import:unittest",
+        "scripts/build-catalog.py",
+        "scripts/check-runbooks.sh",
+        "scripts/lib.sh"
+      ],
+      "test_references": [],
+      "characterization_cases": [],
+      "parser_declarations": []
+    },
+    {
+      "path": "scripts/test-security-engagement.py",
+      "category": "test harness",
+      "source_sha256": "4d15f595475a4baf6a4bc07628a04f0f5d912b7dc2cb93c32a7f4acc1b989435",
+      "protected": true,
+      "inputs": "Synthetic test fixtures / configured property count; see source.",
+      "outputs": "Test assertions, diagnostics and process status.",
+      "effects": "Harness may create/delete temporary fixtures, invoke CLIs or bind sockets; not an operational record.",
+      "dependencies": [
+        "import:copy",
+        "import:importlib.util",
+        "import:json",
+        "import:pathlib",
+        "import:subprocess",
+        "import:sys",
+        "import:tempfile",
+        "scripts/check-security-engagement.py"
+      ],
+      "test_references": [],
+      "characterization_cases": [],
+      "parser_declarations": []
+    },
+    {
+      "path": "scripts/verify-release.sh",
+      "category": "CLI/runtime entry",
+      "source_sha256": "71a7622df244fc64b26cb02df7723b495ac2c2dcde78546eb0b1db7205f5f0fa",
+      "protected": true,
+      "inputs": "Working checkout and conversion test flags.",
+      "outputs": "Release-gate logs / exit status.",
+      "effects": "Runs test/check suites, including temporary fixture conversions and Relay sockets. Stops at first failing command.",
+      "dependencies": [
+        "scripts/agent-capabilities.py",
+        "scripts/build-catalog.py",
+        "scripts/check-agent-privileges.py",
+        "scripts/check-challenger-pairs.py",
+        "scripts/check-hermes-plugin.py",
+        "scripts/check-htp-gate0.py",
+        "scripts/check-security-engagement.py",
+        "scripts/check-strategy-vocabulary.py",
+        "scripts/host-acceptance.py",
+        "scripts/install.sh",
+        "scripts/marketplace-intake.py",
+        "scripts/nexus-anthropic.py",
+        "scripts/nexus-brief.py",
+        "scripts/nexus-campaign.py",
+        "scripts/nexus-casepack.py",
+        "scripts/nexus-improve.py",
+        "scripts/nexus-instance.py",
+        "scripts/nexus-lint.py",
+        "scripts/nexus-optimize.py",
+        "scripts/nexus-pilot.py",
+        "scripts/nexus-plan.py",
+        "scripts/nexus-review.py",
+        "scripts/nexus-routing.py",
+        "scripts/nexus-trial.py",
+        "scripts/test-agent-capabilities.py",
+        "scripts/test-agent-privileges.py",
+        "scripts/test-agent-selection.sh",
+        "scripts/test-alpha-research-suite.py",
+        "scripts/test-changed-agent-files.py",
+        "scripts/test-convert-frontmatter.sh",
+        "scripts/test-convert-outputs.sh",
+        "scripts/test-hermes-plugin.py",
+        "scripts/test-host-acceptance.py",
+        "scripts/test-htp-gate0.py",
+        "scripts/test-incremental-conversion.py",
+        "scripts/test-install-functional.py",
+        "scripts/test-install.sh",
+        "scripts/test-kimi-adapter.py",
+        "scripts/test-marketplace-intake.py",
+        "scripts/test-nexus-anthropic.py",
+        "scripts/test-nexus-brief.py",
+        "scripts/test-nexus-campaign.py",
+        "scripts/test-nexus-casepack.py",
+        "scripts/test-nexus-evaluation.py",
+        "scripts/test-nexus-improve.py",
+        "scripts/test-nexus-instance.py",
+        "scripts/test-nexus-lint.py",
+        "scripts/test-nexus-optimize.py",
+        "scripts/test-nexus-pilot.py",
+        "scripts/test-nexus-plan.py",
+        "scripts/test-nexus-review.py",
+        "scripts/test-nexus-routing.py",
+        "scripts/test-nexus-trial.py",
+        "scripts/test-openclaw-import-provenance.py",
+        "scripts/test-runbook-contracts.py",
+        "scripts/test-security-engagement.py"
+      ],
+      "test_references": [],
+      "characterization_cases": [],
+      "parser_declarations": []
+    }
+  ],
+  "line_coverage": null,
+  "line_coverage_reason": "No coverage instrumentation was run."
+}
