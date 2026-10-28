@@ -124,8 +124,10 @@ def compare(log_path: str, ledger_path: str, at: str, min_history: int = MIN_HIS
         shadow_brier = sum(r[0] for r in rows) / len(rows)
         real_brier = sum(r[1] for r in rows) / len(rows)
         candidates.append({**base, 'result': 'MEASURED', 'shadow_brier': round(shadow_brier, 6),
-                           'real_brier': round(real_brier, 6), 'eligible_for_proposal': shadow_brier < real_brier})
+                           'real_brier': round(real_brier, 6),
+                           'eligible_for_proposal': shadow_brier < real_brier and len(rows) >= MIN_HISTORY})
     return {'kind': 'shadow_trial', 'at': ante_time.iso(ante_time.parse(at, 'at')), 'min_history': min_history,
+            'eligibility_floor': MIN_HISTORY,
             'candidates': candidates,
             'note': 'Eligibility only permits an ante develop proposal; a shadow candidate is never adopted here.'}
 

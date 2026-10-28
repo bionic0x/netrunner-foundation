@@ -1,0 +1,102 @@
+{
+  "artifact_sha256": "c2543a226b69a7d737c502f7f729f898fee3e86fc02f4d0d1f34278d6bf05229",
+  "at": "2026-10-28T12:00:00Z",
+  "body": {
+    "culmination": {
+      "review_question": "Is more coordination still reducing conflicts, or has the problem become capacity?",
+      "signal": "coordination meetings grow while conflicts no longer fall"
+    },
+    "reserve": {
+      "contingency": "equipment failure or a proven emergency",
+      "cost_of_not_using": "10 hours of deferrable demand wait one more week",
+      "time_to_engage": "same day",
+      "what": "10 instrument hours per week"
+    },
+    "thresholds": [
+      {
+        "effect_lag": "one cycle",
+        "id": "urgent-share",
+        "indicator": "share of hours declared urgent without a new deadline",
+        "kind": "leading",
+        "owner": "consortium coordinator",
+        "response": "adjust",
+        "threshold": "above 10% in a cycle"
+      },
+      {
+        "effect_lag": "immediate",
+        "id": "essential-over-capacity",
+        "indicator": "essential demand",
+        "kind": "leading",
+        "owner": "consortium council",
+        "response": "pause",
+        "threshold": "above 90 hours in two consecutive cycles"
+      },
+      {
+        "effect_lag": "one week",
+        "id": "reserve-consumed",
+        "indicator": "incident reserve used for ordinary work",
+        "kind": "lagging",
+        "owner": "technical staff lead",
+        "response": "terminate",
+        "threshold": "reserve fully consumed twice in a cycle"
+      }
+    ]
+  },
+  "case_id": "lab-consortium",
+  "claim_history": {
+    "a-inflates": [
+      {
+        "command": "map",
+        "origin": "external",
+        "ref": "council-minutes-2026-09",
+        "status": "ATTRIBUTED_INTENT"
+      }
+    ],
+    "cap-100": [
+      {
+        "command": "frame",
+        "origin": "external",
+        "ref": "lab-maintenance-log-w43",
+        "status": "EVIDENCE"
+      }
+    ],
+    "demand-110": [
+      {
+        "command": "frame",
+        "origin": "external",
+        "ref": "reservation-export-2026-10-21",
+        "status": "EVIDENCE"
+      }
+    ],
+    "priority-50": [
+      {
+        "command": "frame",
+        "origin": "external",
+        "ref": "funder-deadline-letters",
+        "status": "EVIDENCE"
+      }
+    ],
+    "slack-20": [
+      {
+        "command": "cause",
+        "origin": "owner",
+        "ref": "booking forecast for weeks 45-46",
+        "status": "ASSUMPTION"
+      }
+    ]
+  },
+  "claims": [],
+  "command": "watch",
+  "findings": [],
+  "independence_level": null,
+  "input_sha256": "afd9ec964fd3ab54c9657d9ed4ee09e31d18ee0bd0bb7e663305ec778bc28f52",
+  "next_decision": "Write the termination contract before committing (ante close).",
+  "parents": [
+    {
+      "artifact_sha256": "fc02126b99d0bc538a5b573cd2e9d3508c95f6e18c6eb1fb1eaff0e114b429fb",
+      "command": "options"
+    }
+  ],
+  "schema_version": 2,
+  "verdict": null
+}

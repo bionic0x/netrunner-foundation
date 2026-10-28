@@ -1,0 +1,182 @@
+{
+  "artifact_sha256": "3dc4bdb4aca789ee4696dfe11778f9377e6ffe79a2544584402cb03f0036c3ef",
+  "at": "2026-10-28T13:00:00Z",
+  "body": {
+    "admissible_verdicts": [
+      "PROCEED_WITH_CONDITIONS",
+      "HOLD",
+      "REDESIGN",
+      "REJECT"
+    ],
+    "classes": [
+      "ACCEPTED_RISK"
+    ],
+    "doctrine_sha256": "ac92df4ffe92ddf666e84fafd1fb4648a85ca103f4bea2e9b91fa15df921b3be",
+    "misuse_analysis": {
+      "street": "9b779a6783be2bf0c8bf27261f468b6ccd17c599aa9c08171a272f6c5706b9a4",
+      "uncovered_metrics": []
+    },
+    "names": {
+      "causal": "Causal / Causal",
+      "conversion": "De conversión / Conversion",
+      "epistemic": "Epistémica / Epistemic",
+      "exit": "De salida / Exit",
+      "interactive": "Interactiva / Interactive",
+      "legitimacy": "De legitimidad / Legitimacy",
+      "purpose": "Política / Political-purpose"
+    },
+    "not_applicable": [],
+    "passed": [
+      "conversion",
+      "epistemic",
+      "exit",
+      "interactive",
+      "legitimacy",
+      "purpose"
+    ],
+    "plan_metrics": [
+      "share of hours declared urgent",
+      "essential demand per cycle"
+    ],
+    "reading": "Non-additive: one fatal defect removes PROCEED and PROCEED_WITH_CONDITIONS.",
+    "status_counts": {
+      "CONDITIONAL": 1,
+      "FAIL": 0,
+      "NOT_APPLICABLE": 0,
+      "PASS": 6
+    },
+    "tests": {
+      "causal": {
+        "evidence": [
+          "slack-20"
+        ],
+        "finding": {
+          "class": "ACCEPTED_RISK",
+          "owner": "consortium council",
+          "reason": "bounded three-cycle trial with a pause threshold"
+        },
+        "reason": "the mechanism depends on deferrable hours fitting confirmed slack",
+        "status": "CONDITIONAL"
+      },
+      "conversion": {
+        "evidence": [
+          "cap-100",
+          "priority-50"
+        ],
+        "finding": null,
+        "reason": "90 ordinary hours cover the 50 priority hours",
+        "status": "PASS"
+      },
+      "epistemic": {
+        "evidence": [
+          "a-inflates",
+          "slack-20"
+        ],
+        "finding": null,
+        "reason": "the inflation risk stays an attributed intent; slack stays an assumption",
+        "status": "PASS"
+      },
+      "exit": {
+        "evidence": [
+          "cap-100"
+        ],
+        "finding": null,
+        "reason": "pause and terminate thresholds and a conservation contract exist",
+        "status": "PASS"
+      },
+      "interactive": {
+        "evidence": [
+          "a-inflates"
+        ],
+        "finding": null,
+        "reason": "opposition, cooperation and a funder shift are each tied to a decision",
+        "status": "PASS"
+      },
+      "legitimacy": {
+        "evidence": [
+          "demand-110"
+        ],
+        "finding": null,
+        "reason": "criteria apply to every member with an appeal path",
+        "status": "PASS"
+      },
+      "purpose": {
+        "evidence": [
+          "priority-50"
+        ],
+        "finding": null,
+        "reason": "priority hours serve the purpose of a shared infrastructure members value",
+        "status": "PASS"
+      }
+    }
+  },
+  "case_id": "lab-consortium",
+  "claim_history": {
+    "a-inflates": [
+      {
+        "command": "map",
+        "origin": "external",
+        "ref": "council-minutes-2026-09",
+        "status": "ATTRIBUTED_INTENT"
+      }
+    ],
+    "cap-100": [
+      {
+        "command": "frame",
+        "origin": "external",
+        "ref": "lab-maintenance-log-w43",
+        "status": "EVIDENCE"
+      }
+    ],
+    "demand-110": [
+      {
+        "command": "frame",
+        "origin": "external",
+        "ref": "reservation-export-2026-10-21",
+        "status": "EVIDENCE"
+      }
+    ],
+    "priority-50": [
+      {
+        "command": "frame",
+        "origin": "external",
+        "ref": "funder-deadline-letters",
+        "status": "EVIDENCE"
+      }
+    ],
+    "slack-20": [
+      {
+        "command": "cause",
+        "origin": "owner",
+        "ref": "booking forecast for weeks 45-46",
+        "status": "ASSUMPTION"
+      }
+    ]
+  },
+  "claims": [],
+  "command": "cohere",
+  "findings": [],
+  "independence_level": "SEPARATED_CONTEXT",
+  "input_sha256": "336098a23123b2ac98dac78553122d02e53daf73cb9b7faaaa2622c3dc15634c",
+  "next_decision": "Sweep the fourteen pathologies (ante pathology), then decide.",
+  "parents": [
+    {
+      "artifact_sha256": "dbcd3f8552ac57d0fb012db9327e95752f3f253ba3b28829fd6e2bce64dd3b86",
+      "command": "cause"
+    },
+    {
+      "artifact_sha256": "d6e55f031b0bbfb954dccf850690412029f568e3a1ccdd8b962aed6cff9d2574",
+      "command": "frame"
+    },
+    {
+      "artifact_sha256": "a4e9a714ee77a69296f58be4412b2b58df8703d46d4b011d8ded18526afac0d1",
+      "command": "map"
+    },
+    {
+      "artifact_sha256": "9b779a6783be2bf0c8bf27261f468b6ccd17c599aa9c08171a272f6c5706b9a4",
+      "command": "street"
+    }
+  ],
+  "schema_version": 2,
+  "verdict": null
+}
