@@ -25,5 +25,211 @@
     "operational",
     "tactical",
     "technical"
+  ],
+  "test_statuses": [
+    "PASS",
+    "CONDITIONAL",
+    "FAIL",
+    "NOT_APPLICABLE"
+  ],
+  "finding_classes": [
+    "FATAL_DEFECT",
+    "ACCEPTED_RISK",
+    "PENDING_EVIDENCE"
+  ],
+  "test_status_rules": {
+    "status_and_triage": "A test has a status (test_statuses) and, when it is not PASS or NOT_APPLICABLE, a separate triage class (finding_classes). FAIL is always FATAL_DEFECT; CONDITIONAL is ACCEPTED_RISK or PENDING_EVIDENCE.",
+    "not_applicable": "NOT_APPLICABLE needs a stated reason, never counts as PASS, and is forbidden where not_applicable_allowed is false (epistemic, exit)."
+  },
+  "coherence_tests": [
+    {
+      "id": "purpose",
+      "name": "Política / Political-purpose",
+      "aliases": [
+        "Governing-object"
+      ],
+      "question": "Does the immediate result serve the superior purpose?",
+      "not_applicable_allowed": true
+    },
+    {
+      "id": "causal",
+      "name": "Causal / Causal",
+      "aliases": [],
+      "question": "Is there an explicit explanation of how the action produces the effect?",
+      "not_applicable_allowed": true
+    },
+    {
+      "id": "interactive",
+      "name": "Interactiva / Interactive",
+      "aliases": [],
+      "question": "Does the design survive a competent reaction or adaptation?",
+      "not_applicable_allowed": true
+    },
+    {
+      "id": "conversion",
+      "name": "De conversión / Conversion",
+      "aliases": [],
+      "question": "Do the available resources convert into the required control or capacity?",
+      "not_applicable_allowed": true
+    },
+    {
+      "id": "legitimacy",
+      "name": "De legitimidad / Legitimacy",
+      "aliases": [],
+      "question": "Does the method preserve the cooperation and authority needed to hold the result?",
+      "not_applicable_allowed": true
+    },
+    {
+      "id": "epistemic",
+      "name": "Epistémica / Epistemic",
+      "aliases": [],
+      "question": "Are evidence, hypotheses, assumptions, attributed intentions and unknowns separated, and does the separation survive the summary?",
+      "not_applicable_allowed": false
+    },
+    {
+      "id": "exit",
+      "name": "De salida / Exit",
+      "aliases": [],
+      "question": "Are there criteria to stop, adapt, transfer, terminate and conserve?",
+      "not_applicable_allowed": false
+    }
+  ],
+  "pathologies": [
+    {
+      "id": "level_inversion",
+      "number": 1,
+      "name": "Inversión de niveles / Level inversion",
+      "aliases": [],
+      "definition": "A tactical or local metric replaces the superior result.",
+      "mechanism": "Executors are rewarded for local results and adapt the purpose to their metrics.",
+      "correction": "Evaluate each success by its contribution to the end state."
+    },
+    {
+      "id": "nominal_objective",
+      "number": 2,
+      "name": "Objetivo nominal / Nominal objective",
+      "aliases": [],
+      "definition": "An end is declared without an observable success condition.",
+      "mechanism": "An abstract word lets each actor understand something different.",
+      "correction": "Write an observable and sufficient condition."
+    },
+    {
+      "id": "imaginary_centre",
+      "number": 3,
+      "name": "Centro de gravedad imaginario / Imaginary Centre of Gravity",
+      "aliases": [
+        "Imaginary center"
+      ],
+      "definition": "The visible target is mistaken for the systemic dependency.",
+      "mechanism": "Importance is inferred from visibility, rank or familiarity.",
+      "correction": "State a counterfactual dependency and look for substitutes."
+    },
+    {
+      "id": "concept_confusion",
+      "number": 4,
+      "name": "Confusión de conceptos / Concept confusion",
+      "aliases": [
+        "Concept collapse"
+      ],
+      "definition": "Centre of gravity, Schwerpunkt, decisive point and vulnerability are used as synonyms.",
+      "mechanism": "One word names the source of power, the own focus and the accessible target.",
+      "correction": "Declare the convention and give each term its own question."
+    },
+    {
+      "id": "dispersion",
+      "number": 5,
+      "name": "Dispersión / Dispersion",
+      "aliases": [],
+      "definition": "Every priority is funded and none receives decisive concentration.",
+      "mechanism": "Each demand obtains priority without reducing another.",
+      "correction": "Fix the main effort, the minimums and the renunciations."
+    },
+    {
+      "id": "frictionless_plan",
+      "number": 6,
+      "name": "Plan sin fricción / Frictionless plan",
+      "aliases": [
+        "Friction denial"
+      ],
+      "definition": "Success requires perfect coordination, data and timing.",
+      "mechanism": "The schedule assumes perfect data, means and decisions.",
+      "correction": "Test coordination failures and preserve margins."
+    },
+    {
+      "id": "disoriented_speed",
+      "number": 7,
+      "name": "Velocidad desorientada / Disoriented speed",
+      "aliases": [],
+      "definition": "Faster action on a false or unrevised model.",
+      "mechanism": "The organisation rewards immediate response and penalises revising assumptions.",
+      "correction": "Separate detection, interpretation, authorisation and effect times."
+    },
+    {
+      "id": "denied_culmination",
+      "number": 8,
+      "name": "Culminación negada / Denied culmination",
+      "aliases": [],
+      "definition": "Early success justifies continuing after the marginal sign has changed.",
+      "mechanism": "Past success is used to justify the next commitment.",
+      "correction": "Compare the marginal benefit of continuing with consolidating."
+    },
+    {
+      "id": "reflex_symmetry",
+      "number": 9,
+      "name": "Simetría refleja / Reflex symmetry",
+      "aliases": [
+        "Mirrored symmetry"
+      ],
+      "definition": "Competing where the adversary converts better.",
+      "mechanism": "Each move of the adversary fixes our own response (the way the pathology reproduces itself).",
+      "correction": "Recover the purpose and compare domains of action."
+    },
+    {
+      "id": "illegitimate_victory",
+      "number": 10,
+      "name": "Victoria ilegítima / Illegitimate victory",
+      "aliases": [],
+      "definition": "The method destroys the authority or cooperation needed to consolidate the result.",
+      "mechanism": "The immediate effect hides damage to later cooperation.",
+      "correction": "Examine procedure, distribution and capacity for repair."
+    },
+    {
+      "id": "intent_attribution",
+      "number": 11,
+      "name": "Atribución de intención / Intent attribution",
+      "aliases": [
+        "Attributed intention as fact"
+      ],
+      "definition": "A psychological inference is treated as fact.",
+      "mechanism": "Every ambiguity confirms a hostile explanation.",
+      "correction": "Separate observation, attribution and alternatives."
+    },
+    {
+      "id": "metric_substitution",
+      "number": 12,
+      "name": "Sustitución métrica / Metric substitution",
+      "aliases": [],
+      "definition": "The indicator is optimised at the expense of the end.",
+      "mechanism": "Incentives change the record or the conduct to improve the number.",
+      "correction": "Review the relation between measure, mechanism and result."
+    },
+    {
+      "id": "escalation_of_commitment",
+      "number": 13,
+      "name": "Escalada de compromiso / Escalation of commitment",
+      "aliases": [],
+      "definition": "Past cost becomes an argument for more future cost.",
+      "mechanism": "Withdrawing threatens the identity of whoever decided before.",
+      "correction": "Compare options from the present, excluding unrecoverable costs."
+    },
+    {
+      "id": "chronic_personalization",
+      "number": 14,
+      "name": "Personalización crónica / Chronic personalization",
+      "aliases": [],
+      "definition": "Recurrent conflicts are renegotiated from zero because no institution absorbs them.",
+      "mechanism": "Gaps in procedure are resolved through relationships and selective precedent.",
+      "correction": "Define rule, authority, exception and appeal."
+    }
   ]
 }

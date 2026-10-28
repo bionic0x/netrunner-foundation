@@ -1,0 +1,63 @@
+# Two characterization harnesses, one contract
+
+Two harnesses froze the legacy command lines at `86addea` independently, before
+any code moved:
+
+| Harness | Location | Cases | Storage |
+|---|---|---|---|
+| Normalised (this branch, phase 0, `5e74ff3`) | `tests/characterization/cases.json`, `golden/<id>.json`, `run.py` | 114 over 37 Python programs | exit code, stdout, stderr and written files as text; the checkout path becomes `<ROOT>`, the per-case temporary directory `<TMP>` |
+| Raw bytes (`foundation/phase-0`, Codex) | `tests/characterization/manifest.json`, `golden/<id>.stdout`/`.stderr`, `test_legacy_cli.py` | 116 over 43 entry points, shell scripts included | raw bytes, no normalisation, SHA-256 per stream in the manifest |
+
+Neither set is regenerated. Frozen outputs are evidence about the base commit;
+re-recording them after the refactor would make them evidence about the
+refactor instead.
+
+## Comparison
+
+`foundation/tools/compare_characterization.py` reads both manifests and the
+frozen outputs and classifies each invocation (script plus arguments, with
+`{ROOT}/` removed because both run from the repository root). The result, with
+the SHA-256 of both input manifests, is in
+`foundation/evidence/characterization-comparison.json`.
+
+| Class | Cases | Meaning |
+|---|---:|---|
+| `same_bytes` | 50 | Same invocation, same exit code, byte-identical stdout and stderr in both frozen sets |
+| `disagree` | 0 | — |
+| only in the normalised set | 64 | Mostly cases that write files, use temporary directories or fixtures (registry, resolve-agents, routing, plans with `--output`, replay checkpoints) |
+| only in the raw set | 66 | Mostly shell entry points (`install.sh`, `convert*.sh`, `check-*.sh`, `lint-agents.sh`), Relay and host-probe help, unknown-option errors |
+| **Union** | **180** | distinct invocations under contract |
+
+Fifty cases recorded by different harnesses, with different interpreters
+(CPython 3.11.17 and 3.11.18) and different environment rules, agree byte for
+byte. That is the strongest available evidence that both recordings describe
+the base and not their harness.
+
+## What the comparison found
+
+Running the raw-byte contract against each phase of this branch (manifest
+hashes, read-only):
+
+| Phase tip | Raw-byte contract | Difference |
+|---|---|---|
+| phase 0 `5e74ff3` | 115/116 | `check-divisions.sh` reports `foundation/` and `tests/` as unknown divisions: phase 0 added the directories, phase 1 (`f3ee0dc`) registers them. Codex's phase 0 registers them in the same change. |
+| phase 1 `fc93d9c` | 116/116 | — |
+| phases 2–6 | 115/116 | `check-runbooks.sh` appended "9/9 strategy command chains declared." to its success line (D-009, `23dcdd6`). This is a v1 output change the normalised set did not cover. |
+| decisions branch | **116/116** | the success line is restored byte for byte; the `strategy_commands` validation stays and only speaks on failure |
+
+The normalised harness passes 114/114 at every phase.
+
+## Consolidation
+
+1. Both harnesses stay, each with its own frozen outputs and its own runner;
+   file names do not collide (`<id>.json` against `<id>.stdout`/`<id>.stderr`),
+   and the raw harness's orphan guard looks only at `.stdout`/`.stderr`.
+2. The 50 overlapping cases stay in both sets: they cost seconds and they are
+   the cross-check above. Where a future difference appears in one set and not
+   the other, the raw-byte record governs, because it carries no normalisation.
+3. The release gate runs both (`tests/characterization/run.py` and
+   `python3 -m unittest discover -s tests/characterization`), proposed for the
+   protected `verify-release.sh` in `foundation/proposals/ci-wiring.patch`.
+4. Codex's branch is merged into this one once its third batch of frozen streams
+   is published; until then the comparison uses its manifest, which lists all
+   116 cases and their hashes.
