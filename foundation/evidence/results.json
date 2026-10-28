@@ -180,12 +180,114 @@
     "repository_creation_submitted": true,
     "remote_changes": true,
     "draft_pull_request": null,
-    "reason": "Import explicitly authorized and completed. Connector returns 404 for the private destination; browser upload in progress.",
+    "reason": "Ten PRs verified merged (#1 and #3\u2013#11). Foundation and both frozen characterization harnesses are integrated in foundation/base-86addea. PR #2 remains open: it downgrades mcp to 1.29.0 and OSV reports four fixable vulnerabilities (one high, three medium). Main retains the later imported source history.",
     "proposed_import_source": "bionic0x/Ante-agency-agents",
     "proposed_visibility": "private",
     "automatic_approval_review": "initial rejection resolved by explicit user authorization",
     "repository_created": true,
     "imported_main_commit": "9c54ba227875633068e4eee919770b324b745d9c",
-    "comparison_base_branch": "foundation/base-86addea"
+    "comparison_base_branch": "foundation/base-86addea",
+    "phase0_upload_complete": true,
+    "confirmed_upload_groups": {
+      "foundation_documents": 8,
+      "evidence": 16,
+      "characterization_harness": 5,
+      "golden_files": 233
+    },
+    "pending_uploads": [],
+    "remote_byte_verification": {
+      "archive_commit": "4b7558bd353960d0708a453d31d3d7da9c0c2604",
+      "golden_stream_hashes": 232,
+      "protected_paths": 91,
+      "license_notices_intact": true,
+      "scope": "Archive preceding the division-checker edit and final editorial updates"
+    },
+    "merge_requested_by_user": true,
+    "merges_performed": [
+      {
+        "pr": 1,
+        "commit": "15ffb29",
+        "verified": true,
+        "base": "main"
+      },
+      {
+        "pr": 10,
+        "commit": "c63356b",
+        "verified": true,
+        "base": "foundation/claude/phase-6"
+      },
+      {
+        "pr": 9,
+        "commit": "8d04116",
+        "base": "foundation/claude/phase-5",
+        "verified": true
+      },
+      {
+        "pr": 8,
+        "verified": true,
+        "commit": "df95f62",
+        "base": "foundation/claude/phase-4"
+      },
+      {
+        "pr": 7,
+        "verified": true,
+        "commit": "64919f6",
+        "base": "foundation/claude/phase-3"
+      },
+      {
+        "pr": 6,
+        "verified": true,
+        "commit": "dae74bd",
+        "base": "foundation/claude/phase-2"
+      },
+      {
+        "pr": 5,
+        "verified": true,
+        "commit": "bc903d8",
+        "base": "foundation/claude/phase-1"
+      },
+      {
+        "pr": 4,
+        "verified": true,
+        "commit": "75538f5",
+        "base": "foundation/claude/phase-0"
+      },
+      {
+        "pr": 3,
+        "verified": true,
+        "commit": "409508c",
+        "base": "foundation/base-86addea"
+      },
+      {
+        "pr": 11,
+        "verified": true,
+        "commit": "d2d57a7",
+        "base": "foundation/base-86addea"
+      }
+    ],
+    "existing_phase0_pull_request": "https://github.com/bionic0x/neuromancers-foundation/pull/3",
+    "existing_consolidation_pull_request": "https://github.com/bionic0x/neuromancers-foundation/pull/10",
+    "remaining_pull_requests": [
+      {
+        "pr": 2,
+        "status": "OPEN",
+        "reason": "OSV failed: mcp 1.29.0 has 4 known vulnerabilities (1 high, 3 medium), fixed in 1.30.0",
+        "job": "https://github.com/bionic0x/neuromancers-foundation/actions/runs/40733306601/job/122975085995?pr=2"
+      }
+    ],
+    "foundation_integrated_branch": "foundation/base-86addea",
+    "foundation_merge_commit": "d2d57a7",
+    "ci_limitations": "Consolidation head 3955813 had 12/13 successful checks and macOS queued. PR #11 had 10/13 successful checks at merge; runbooks/tools were running and macOS queued. No complete green final release is claimed by this operator.",
+    "audit_branch": "foundation/phase-0",
+    "raw_corpus_merged_into_foundation": true,
+    "pr11_review": {
+      "diff_files": 268,
+      "raw_files_with_matching_git_blob_ids": 237,
+      "mismatches": 0,
+      "production_paths_beyond_docs_and_corpus": [],
+      "head": "275ab22",
+      "reported_foundation_tests": 169,
+      "operator_reran_tests": false
+    }
   }
 }
