@@ -1,0 +1,6 @@
+usage: check-agent-privileges.py [-h] [--root ROOT] [--inventory]
+
+options:
+  -h, --help   show this help message and exit
+  --root ROOT
+  --inventory

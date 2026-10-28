@@ -1,0 +1,32 @@
+usage: benchmark-conversion.py [-h]
+                               [--scenario {full-sequential,full-parallel,representative-tool,one-agent-change}]
+                               [--repeat REPEAT] [--tool TOOL] [--jobs JOBS]
+                               [--changed-agent CHANGED_AGENT] [--json JSON]
+                               [--verbose]
+
+Measure conversion performance without turning timing into a CI gate. The
+harness deliberately reports evidence rather than enforcing thresholds. It
+covers the four cases useful for comparing converter changes: * full-
+sequential: complete conversion with the default sequential path * full-
+parallel: complete conversion using convert.sh --parallel * representative-
+tool: one per-agent renderer (Codex by default) * one-agent-change: an
+isolated checkout copy with one source agent perturbed, followed by a full
+sequential conversion. Today this measures the rebuild cost after a one-agent
+edit; future incremental work can use the same case. Examples: python3
+scripts/benchmark-conversion.py python3 scripts/benchmark-conversion.py
+--repeat 3 --json benchmark.json python3 scripts/benchmark-conversion.py
+--scenario representative-tool --tool codex
+
+options:
+  -h, --help            show this help message and exit
+  --scenario {full-sequential,full-parallel,representative-tool,one-agent-change}
+                        scenario to run; repeat the flag to select several
+                        (default: all)
+  --repeat REPEAT       number of runs per scenario
+  --tool TOOL           representative tool renderer
+  --jobs JOBS           parallel worker count; 0 uses convert.sh default
+  --changed-agent CHANGED_AGENT
+                        source agent perturbed in the isolated one-agent-
+                        change scenario
+  --json JSON           write machine-readable results to this path
+  --verbose             show converter output while benchmarking

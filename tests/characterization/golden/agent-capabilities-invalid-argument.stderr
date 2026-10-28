@@ -1,0 +1,4 @@
+usage: agent-capabilities.py [-h] --agent AGENT [--observation OBSERVATION]
+                             [--policy POLICY] [--output OUTPUT]
+                             {inspect,render}
+agent-capabilities.py: error: the following arguments are required: command, --agent

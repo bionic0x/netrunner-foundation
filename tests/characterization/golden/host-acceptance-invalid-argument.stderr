@@ -1,0 +1,4 @@
+usage: host-acceptance.py [-h] [--require {accepted,no-unenforced-boundary}]
+                          [--root ROOT]
+                          {validate,emit-observation} record [record ...]
+host-acceptance.py: error: the following arguments are required: command, record

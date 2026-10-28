@@ -1,0 +1,42 @@
+usage: check-security-engagement.py [-h] [--inventory] [files ...]
+
+check-security-engagement.py — enforce the engagement contract for security agents.
+
+The repository already treats a `tools:` declaration as a security-relevant claim
+that CI validates against a closed registry (scripts/agent-tools.json). It applied
+that discipline to *capabilities* and stopped there. An agent that simulates an
+adversary is at least as sensitive as one that declares a write tool, yet the
+rules of engagement lived only as uneven prose: one offensive agent spelled them
+out fourteen times, another not at all.
+
+This check closes that gap. Every agent under the security division must declare
+an `engagement:` class from scripts/security-engagement.json, and each class
+carries required policy language that must appear in the prose body:
+
+  passive-analysis     reads and reports; no obligation beyond honest classification
+  active-defensive     acts on the operator's own assets under change control, and
+                       states that the declaration is not authorization
+  authorized-offensive requires prior written authorization, a defined scope, a
+                       stop/abort condition, a no-destruction limit, and the same
+                       not-authorization statement
+
+The class is a claim; this check validates vocabulary and required phrases, not
+semantic consistency, authorization signatures or host behavior. A declaration
+is never itself authorization — the operator's mandate, scope and law decide that.
+
+The check is intentionally conservative about MISDECLARATION: an agent whose body
+reads as offensive (exploitation, intrusion) while declaring a passive class is
+flagged for human review. The advisory is not a complete classifier and does not
+prevent a misleading passive declaration from passing CI.
+
+Usage:
+  check-security-engagement.py                 # scan the whole security division
+  check-security-engagement.py FILE...         # check specific files
+  check-security-engagement.py --inventory     # print the per-agent classification
+
+positional arguments:
+  files
+
+options:
+  -h, --help   show this help message and exit
+  --inventory

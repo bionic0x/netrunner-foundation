@@ -1,0 +1,61 @@
+{
+  "option_comparison": null,
+  "instance_id": "SYNTHETIC-INVESTMENT-HYPOTHESIS-001",
+  "decision_state": "PROCEED",
+  "tasks": [
+    {
+      "task_id": "H1",
+      "agent": "finance-macro-regime-alpha",
+      "level": "operational",
+      "vector": "causal",
+      "status": "SUCCEEDED",
+      "blockers": [
+        "INSTANCE_CLOSED"
+      ],
+      "ready": false
+    },
+    {
+      "task_id": "V1",
+      "agent": "finance-quant-alpha-validator",
+      "level": "operational",
+      "vector": "adversarial",
+      "status": "SUCCEEDED",
+      "blockers": [
+        "DEPENDENCY_REVIEW:H1",
+        "INSTANCE_CLOSED"
+      ],
+      "ready": false
+    },
+    {
+      "task_id": "A1",
+      "agent": "specialized-strategic-assurance-lead",
+      "level": "strategic",
+      "vector": "assurance",
+      "status": "SUCCEEDED",
+      "blockers": [
+        "DEPENDENCY_REVIEW:V1",
+        "INSTANCE_CLOSED"
+      ],
+      "ready": false
+    }
+  ],
+  "spent": 3,
+  "reserve": 2,
+  "reserve_released": 0,
+  "uncommitted_cost": 5,
+  "open_dissent": [],
+  "assertion_conflicts": {},
+  "challenger_gates": {
+    "H1": {
+      "pair": "macro-quant",
+      "challenger": "finance-quant-alpha-validator",
+      "verdict": "PROCEED_WITH_CONDITIONS",
+      "status": "FAVOURABLE",
+      "open": true
+    }
+  },
+  "shared_model_tasks": {},
+  "shared_source_roots": {},
+  "execution_authority": false,
+  "mode": "OFFLINE_CONTRACT_REPLAY"
+}

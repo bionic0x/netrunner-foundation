@@ -1,0 +1,36 @@
+convert.sh — Convert agency agent .md files into tool-specific formats.
+
+Reads all agent files from the standard category directories and outputs
+converted files to integrations/<tool>/. Run this to regenerate all
+integration files after adding or modifying agents.
+
+Usage:
+  ./scripts/convert.sh [--tool <name>] [--out <dir>] [--parallel] [--jobs N] [--help]
+
+Options:
+  --tool <name>    Convert one tool (default: all).
+  --out <dir>      Write to <dir>/<tool>/ instead of integrations/<tool>/.
+  --parallel       When tool is 'all', run independent tools in parallel (output order may vary).
+  --jobs N         Max parallel jobs when using --parallel (default: nproc or 4).
+  --help, -h       Show this help.
+
+Tools:
+  antigravity  — Antigravity skill files (~/.gemini/config/skills/)
+  gemini-cli   — Gemini CLI subagent files (~/.gemini/agents/*.md)
+  opencode     — OpenCode agent files (.opencode/agents/*.md)
+  cursor       — Cursor rule files (.cursor/rules/*.mdc)
+  aider        — Single CONVENTIONS.md for Aider
+  windsurf     — Single .windsurfrules for Windsurf
+  openclaw     — OpenClaw workspaces (integrations/openclaw/<agent>/SOUL.md)
+  qwen         — Qwen Code SubAgent files (~/.qwen/agents/*.md)
+  zcode        — ZCode agent files (.zcode/agents/*.md · ~/.config/zcode/agents/*.md)
+  kimi         — Kimi Code CLI agent files (~/.config/kimi/agents/)
+  codex        — Codex custom agent TOML files (~/.codex/agents/*.toml)
+  osaurus      — Osaurus skill files (~/.osaurus/skills/<name>/SKILL.md)
+  hermes       — Hermes lazy-router plugin (one plugin + on-disk agent index)
+  vibe         — Mistral Vibe agent TOML + prompt files (~/.vibe/agents/*.toml + ~/.vibe/prompts/*.md)
+  dsh          — DeepSeek Harness skill files (.dsh/skills/<name>/SKILL.md)
+  all          — All tools (default)
+
+Output is written to integrations/<tool>/ relative to the repo root.
+This script never touches user config dirs — see install.sh for that.
