@@ -1,0 +1,4 @@
+usage: marketplace-intake.py [-h] --at AT [--max-age-seconds MAX_AGE_SECONDS]
+                             [--min-confirmations MIN_CONFIRMATIONS]
+                             snapshot
+marketplace-intake.py: error: the following arguments are required: snapshot, --at

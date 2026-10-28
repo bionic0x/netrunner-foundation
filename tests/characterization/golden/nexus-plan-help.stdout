@@ -1,0 +1,34 @@
+usage: nexus-plan.py [-h] {draft,adopt,verify} ...
+
+nexus-plan.py — a planner agent drafts a NEXUS task graph; the owner adopts it (Overdrive, Phase 3).
+
+Writing an instance by hand is the slowest step before any NEXUS run. A planner
+agent can draft it, but an agent that writes its own mandate grants itself
+authority, money and deadlines. So the split is fixed:
+
+  the owner writes   objective.json: runbook, mandate (owner, reviewers,
+                     authority, scope, expiry), objective (purpose, non-object,
+                     success condition, constraints), budget, claims, and a
+                     plain-language brief of the problem
+  the planner writes only the task graph: tasks, agents from the runbook
+                     roster, levels, vectors, mechanisms, dependencies,
+                     assertion keys, resource scopes, per-task limits
+  this tool          assembles the instance, has the engine validate it, feeds
+                     any refusal back to the planner (at most two repairs), and
+                     runs the plan linter
+  the owner adopts   `adopt` pins the instance hash with the owner's name and
+                     time, and refuses unless every linter warning is accepted
+                     by code. `verify` checks a pinned adoption later.
+
+    nexus-plan.py draft  --objective FILE --out DIR [--model M] [--operator NAME] [--executor claude|fake]
+    nexus-plan.py adopt  --draft DIR --owner NAME --at ISO [--accept-warning CODE ...]
+    nexus-plan.py verify --instance FILE --adoption FILE
+
+The planner call is the only model call; `draft --executor fake` makes none.
+Nothing here runs a task, accepts a result or spends from the instance budget.
+
+positional arguments:
+  {draft,adopt,verify}
+
+options:
+  -h, --help            show this help message and exit

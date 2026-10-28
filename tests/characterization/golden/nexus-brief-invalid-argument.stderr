@@ -1,0 +1,2 @@
+usage: nexus-brief.py [-h] --events EVENTS --at AT [--json] instance
+nexus-brief.py: error: the following arguments are required: instance, --events, --at

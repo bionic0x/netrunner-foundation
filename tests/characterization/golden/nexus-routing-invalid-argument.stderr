@@ -1,0 +1,3 @@
+usage: nexus-routing.py [-h] [--observations OBSERVATIONS] [--at AT]
+                        {route,coverage} instance
+nexus-routing.py: error: the following arguments are required: command, instance

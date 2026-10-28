@@ -1,0 +1,37 @@
+{
+  "instance_id": "SYNTHETIC-STRATEGIC-DECISION-001",
+  "status": "WARNINGS",
+  "shape": {
+    "tasks": 3,
+    "depth": 2,
+    "critical_path": [
+      "B",
+      "C"
+    ],
+    "levels": {
+      "1": [
+        "A",
+        "B"
+      ],
+      "2": [
+        "C"
+      ]
+    },
+    "widest_level": 2,
+    "sinks": [
+      "C"
+    ]
+  },
+  "findings": [
+    {
+      "severity": "WARN",
+      "code": "BUDGET_HEADROOM",
+      "tasks": [
+        "A",
+        "B",
+        "C"
+      ],
+      "message": "task cost limits sum to 9, above the ordinary budget of 8 (10 minus reserve 2); retries can only be paid by an owner releasing reserve"
+    }
+  ]
+}

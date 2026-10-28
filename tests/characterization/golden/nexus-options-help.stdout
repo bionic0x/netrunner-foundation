@@ -1,0 +1,10 @@
+usage: nexus-options.py [-h] input
+
+Compare declared factors without weighted scores or compensating fatal
+defects.
+
+positional arguments:
+  input
+
+options:
+  -h, --help  show this help message and exit
