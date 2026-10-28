@@ -277,7 +277,7 @@
     ],
     "foundation_integrated_branch": "foundation/base-86addea",
     "foundation_merge_commit": "d2d57a7",
-    "ci_limitations": "Consolidation head 3955813 had 12/13 successful checks and macOS queued. PR #11 had 10/13 successful checks at merge; runbooks/tools were running and macOS queued. No complete green final release is claimed by this operator.",
+    "ci_limitations": "PR #11 now reports all 13 checks passed on head 275ab22. This is hosted CI for that PR, not a new local full release run or a claim that the protected Foundation CI proposal has been applied.",
     "audit_branch": "foundation/phase-0",
     "raw_corpus_merged_into_foundation": true,
     "pr11_review": {
@@ -288,6 +288,29 @@
       "head": "275ab22",
       "reported_foundation_tests": 169,
       "operator_reran_tests": false
+    },
+    "ci_followup": {
+      "pr": 11,
+      "head": "275ab22",
+      "successful_checks": 13,
+      "total_checks": 13,
+      "observed_in": "GitHub merged PR conversation",
+      "not_a_local_release_rerun": true
+    },
+    "pr2_correction_proposal": {
+      "path": "foundation/proposals/pr-2-restore-semgrep.patch",
+      "files": [
+        ".github/requirements/semgrep.in",
+        ".github/requirements/semgrep.txt"
+      ],
+      "method": "Mechanically reverse only the two Semgrep sections of the verified PR #2 diff",
+      "verified_restores_original_git_blob_ids": true,
+      "preserves_updates": [
+        "zizmor 1.31.1",
+        "hypothesis 6.170.5"
+      ],
+      "applied_to_protected_paths": false,
+      "needs_owner_decision": "Mandate section 11 requires asking before any non-extraction change to a protected path."
     }
   }
 }
