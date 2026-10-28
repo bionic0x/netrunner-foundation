@@ -85,3 +85,18 @@ Baseline/characterization are `SELF`. A separate clean-context agent review is
 `SEPARATED_CONTEXT` if recorded in `REVIEW.md`; it cannot stand in for an
 independent operator with authority to pause. No authority is created by these
 reports, labels or successful parsings.
+
+## Separate Claude execution reported during delivery
+
+The user supplied a phase-0 report for local commit `5e74ff3`. Its checked-in
+`foundation/BASELINE.md` was subsequently read from
+`bionic0x/Ante-agency-agents` at that ref. It records CPython 3.11.18, complete
+release exit 0 (430 unittest tests, one Hypothesis module skipped; 32/32
+conversions), a separate Relay run with Hypothesis (131 tests, zero skips), and
+114 stable characterization cases. These are that execution's reported results,
+not reruns or independent measurements by this operator. The raw logs were not
+inspected. The 114-case corpus and this PR's 116-case corpus remain distinct.
+
+A fresh Unix-socket probe in this environment still returns
+`PermissionError: [Errno 1] Operation not permitted`. It does not invalidate the
+other environment's reported result and does not make this patch's gate green.

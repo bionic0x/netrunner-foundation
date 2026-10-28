@@ -37,7 +37,10 @@ pinned base; imported `main` has advanced and is preserved. Upload uses the
 browser because the connector cannot access the new private repository.
 
 Claude separately reports a passing full baseline and 114 frozen cases on local
-commit `5e74ff3`. Those logs and files were not available for inspection here;
-they are not substituted for the measured runs or the 116 cases in this PR.
+commit `5e74ff3`. The baseline report at that
+commit was read through GitHub: it records release exit 0 with Hypothesis skipped
+inside the release run, followed by Relay 131/131 with no skips after installing
+Hypothesis. Its raw logs were not reproduced here. This source report is not
+substituted for the measured local runs or the 116 cases in this PR.
 The doctrine comparison with `STRATEGIC-CONTROL-PLANE` is corrected in the ADR.
 Remaining prerequisites are in `TASKS.md`.

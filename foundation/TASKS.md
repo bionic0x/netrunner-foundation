@@ -19,7 +19,8 @@ preserved; no phases are silently combined or declared complete.
 - [x] Complete GitHub browser authentication; the signed-in dashboard is verified.
 - [x] Obtain explicit authorization for the private full-history import.
 - [x] Create the private destination and verify imported history in GitHub.
-- [ ] Create `bionic0x/neuromancers-foundation`, upload phase 0 and open its draft PR.
+- [x] Create `bionic0x/neuromancers-foundation` and upload the complete raw-byte corpus.
+- [ ] Consolidate this evidence with Claude's existing phase-0/decisions PRs instead of opening a duplicate phase-0 PR.
 - [ ] Resolve protected, human-authored extraction/contract prerequisites.
 - [ ] Phase 1 PR: extract shared core, doctrine, NEXUS and registry with byte parity.
 - [ ] Phase 2 PR: thirteen typed commands, lineage, independence and runbooks.
@@ -51,3 +52,30 @@ preserved; no phases are silently combined or declared complete.
 No external model calls, monetary actions, legal/production actions, participant
 communications, private held-out access, remote changes or merges are authorized
 by a successful validation label in this preparation.
+
+## Delivery interruption
+
+The destination is private and the history import is complete. Browser-confirmed
+commits contain eight foundation documents, sixteen evidence files, five harness
+files and the first two batches of one hundred golden files. The final 33 golden
+files, the division-checker edit and latest editorial updates are still pending.
+Remote byte verification and the phase-0 draft PR are not complete.
+
+The user subsequently requested merging all PRs in the active destination.
+No PR was merged. Browser automatic approval review became unavailable due to a
+usage limit; the GitHub connector cannot access the private destination (404 and
+PR-search permission error). Existing authorization remains recorded. Do not
+bypass the review failure or silently merge in the upstream repository.
+
+## Resumed delivery
+
+Browser access recovered. The third batch of 33 golden files and the unprotected
+division-checker edit are published on `foundation/phase-0`. A downloaded archive
+verified all 232 expected-stream SHA-256 values, the 91 original protected paths,
+the license and third-party notices. That archive preceded the checker edit;
+final whole-tree comparison follows publication of these editorial updates.
+
+Claude has meanwhile published phases 0–6 in PRs #3–#9 and consolidation in #10.
+Keep this audit branch as evidence and use the existing PRs. PR #1 (the pinned
+setup-python action update) is verified merged into main at `15ffb29`. Other
+merges remain under review; no unmeasured CI result is asserted.
