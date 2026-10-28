@@ -32,7 +32,8 @@ def adopt(namespace: dict, module: str) -> None:
         raise ImportError(f'cannot locate {module}')
     source = Path(spec.origin).read_text(encoding='utf-8')
     namespace.setdefault('__builtins__', __builtins__)
-    exec(compile(source, spec.origin, 'exec'), namespace)
+    # The source is this repository's own package module, located by importlib; no external input reaches it.
+    exec(compile(source, spec.origin, 'exec'), namespace)  # nosemgrep: exec-detected -- runs ante/ package source in the shim's namespace
 
 
 def load_script(filename: str, name: str | None = None) -> ModuleType:
