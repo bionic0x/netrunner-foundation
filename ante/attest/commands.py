@@ -5,6 +5,7 @@
                                                              unsigned D-020 approval
     ante attest key PUBLIC.pem --principal WHO --principal-type human
                                                              a trust-store entry to pin (through D-020)
+    ante attest keygen --out KEY.pem --public PUBLIC.pem     new encrypted signing key (as the signing account)
     ante sign DOCUMENT --key KEY.pem --method ID --at T [--head REV] [--out FILE]
     ante verify SIGNED [--trust FILE] [--repo DIR] [--artefact FILE] [--head REV]
 
@@ -332,6 +333,69 @@ def _approval(args) -> int:
     return EXIT_OK
 
 
+def _passphrase_twice() -> bytes:
+    first = read_passphrase('New passphrase for the signing key: ')
+    if read_passphrase('Type it again: ') != first:
+        raise SignError('the two passphrases differ; nothing was written')
+    return first
+
+
+def _create_new(path: Path, data: bytes, mode: int) -> None:
+    """Write a new file; an existing file or a symbolic link is never overwritten."""
+    try:
+        fd = os.open(path, os.O_WRONLY | os.O_CREAT | os.O_EXCL | getattr(os, 'O_NOFOLLOW', 0), mode)
+    except OSError as exc:
+        raise SignError(f'{path}: {exc.strerror or exc}') from None
+    with os.fdopen(fd, 'wb') as handle:
+        handle.write(data)
+
+
+def generate_key(out: Path, public: Path, passphrase=_passphrase_twice, *, root: Path = ROOT,
+                 checkout_uid: int | None = None) -> str:
+    """Create an encrypted PKCS#8 Ed25519 key (mode 600) and its public PEM; return the did:key.
+
+    It follows the rules of ``read_key_file``: outside the checkout, run by an
+    account that does not own the checkout, passphrase typed twice on the
+    terminal. The private key is encrypted before it touches the disk.
+    """
+    if not hasattr(os, 'geteuid'):
+        raise SignError('signing needs POSIX file ownership; this platform is not supported')
+    if _inside(out.expanduser().resolve(), root.resolve()):
+        raise SignError('the private key would be inside the checkout; keep it outside the repository')
+    owner = root.resolve().stat().st_uid if checkout_uid is None else checkout_uid
+    if os.geteuid() == owner:
+        raise SignError('ante attest keygen is running as the account that owns the checkout; '
+                        'run it as the separate signing account')
+    module, _ = eddsa.ed25519()
+    from cryptography.hazmat.primitives import serialization
+    out = out.expanduser()
+    public = public.expanduser()
+    for target in (out, public):
+        if target.exists() or target.is_symlink():
+            raise SignError(f'{target} already exists; nothing was written')
+    secret = passphrase()
+    key = module.Ed25519PrivateKey.generate()
+    private_pem = key.private_bytes(serialization.Encoding.PEM, serialization.PrivateFormat.PKCS8,
+                                    serialization.BestAvailableEncryption(secret))
+    public_pem = key.public_key().public_bytes(serialization.Encoding.PEM,
+                                               serialization.PublicFormat.SubjectPublicKeyInfo)
+    raw = key.public_key().public_bytes(serialization.Encoding.Raw, serialization.PublicFormat.Raw)
+    _create_new(out, private_pem, 0o600)
+    _create_new(public, public_pem, 0o644)
+    return trust.did_key(raw)
+
+
+def _keygen(args) -> int:
+    try:
+        method = generate_key(Path(args.out), Path(args.public))
+    except (SignError, eddsa.CryptoUnavailable) as exc:
+        print(f'REFUSED {exc}', file=sys.stderr)
+        return EXIT_INVALID
+    print(f'wrote {args.out} (private, encrypted, mode 600) and {args.public} (public)')
+    print(f'verification method: {method}')
+    return EXIT_OK
+
+
 def _key(args) -> int:
     try:
         module, _ = eddsa.ed25519()
@@ -397,3 +461,7 @@ def add_parser(sub) -> None:
     key.add_argument('--principal-type', required=True, choices=trust.PRINCIPAL_TYPES)
     key.add_argument('--kind', action='append', choices=documents.KINDS)
     key.set_defaults(handler=_key)
+    gen = inner.add_parser('keygen', help='create an encrypted signing key; run it as the separate signing account')
+    gen.add_argument('--out', required=True, help='private key file (new, outside the checkout, mode 600)')
+    gen.add_argument('--public', required=True, help='public key PEM to write')
+    gen.set_defaults(handler=_keygen)
