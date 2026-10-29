@@ -339,7 +339,7 @@ two commands (for example `load` and `misuse`) would remove it.
 
 ---
 
-## D-017 · CI wiring is delivered as a patch for a protected commit — PROPOSED
+## D-017 · CI wiring for the foundation checks — APPLIED, owner approval pending
 
 The prompt asks for the new checks in `verify-release.sh` and the runbook
 workflow. Both `scripts/verify-release.sh` and `.github/**` are protected paths,
@@ -351,6 +351,10 @@ checks, and the institutional self-test run on `foundation/selftest-register.jso
 and published to the job summary (reported, never failing the build, as the
 self-test doctrine requires). The patch applies cleanly to this branch and the
 release gate was run with it applied.
+
+**Applied** in `54d4cce` as an agent-authored `protected:` commit (D-020), with
+`setup-python` pinned to the v7.1.0 SHA `main` uses. It lands when the owner
+approves `.github/workflows/check-runbooks.yml` and `scripts/verify-release.sh`.
 
 ---
 

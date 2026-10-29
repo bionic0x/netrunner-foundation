@@ -56,9 +56,8 @@ The normalised harness passes 114/114 at every phase.
    the cross-check above. Where a future difference appears in one set and not
    the other, the raw-byte record governs, because it carries no normalisation.
 3. The release gate runs both (`tests/characterization/run.py` and
-   `python3 -m unittest discover -s tests/characterization`), proposed for the
-   protected `verify-release.sh` and the workflow in
-   `foundation/proposals/ci-wiring.patch`.
+   `python3 -m unittest discover -s tests/characterization`), from
+   `scripts/verify-release.sh` and the `ante-foundation` CI job (D-017).
 4. Codex's branch (`foundation/phase-0` at `b60af82`, all three batches of
    frozen streams) is merged into this one without regenerating anything. Its
    manifest is byte-identical to the one the comparison above was run on; after

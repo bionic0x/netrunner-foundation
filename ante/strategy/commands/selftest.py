@@ -11,10 +11,10 @@ human-recorded entries of an evidence register:
 The command never upgrades a row by itself. It lists, per row, the mechanisms the
 repository can show mechanically (``mechanisms``) so the reviewer knows what to
 examine, and it publishes every row that is not ``PASS``. There is no score.
-It is meant to run before every release with its result published
-(``foundation/proposals/ci-wiring.patch``, which needs the owner's protected
-commit, D-017); a row in ``FAIL`` is reported, not hidden, and does not break the
-build (the doctrine: CI does not certify these predicates).
+It runs before every release — in ``scripts/verify-release.sh`` and in the
+``ante-foundation`` CI job, which publishes it to the job summary (D-017); a row
+in ``FAIL`` is reported, not hidden, and does not break the build (the doctrine:
+CI does not certify these predicates).
 
 Input fields::
 
