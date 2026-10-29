@@ -10,14 +10,14 @@
   `ach`, `watch`, `close`, `cohere`, `pathology`, `nodal`, `decide` — plus
   `selftest` and `ante run` (chain completeness per runbook). Each refuses its
   characteristic defect (`street` classifies every misuse scenario by Goodhart
-  variant and requires the adversarial one for each metric); `decide` admits only what `cohere` leaves admissible and
-  refuses `PROCEED` without an independent review, a termination contract, dated
+  variant and requires the adversarial one for each metric); `decide` admits
+  only what `cohere` leaves admissible and refuses `PROCEED` without an independent review, a termination contract, dated
   expectations, or with a load-bearing assumption not accepted as a named risk.
 - Learning layer: hash-chained decision ledger with frozen decision snapshots,
   reconciliation, calibration (Brier, Murphy decomposition on exact forecast
   groups, ECE and its binning sensitivity, skill only against a pre-declared
-  baseline, a policy floor on distinct decisions) or `INSUFFICIENT_SAMPLE`, patterns guarded by
-  a permutation test with Bonferroni correction, cumulative-drift review
+  baseline, a policy floor on distinct decisions) or `INSUFFICIENT_SAMPLE`,
+  patterns guarded by a permutation test with Bonferroni correction, cumulative-drift review
   (`jackpot`, with a CUSUM on forecast error), shadow trials (`stub`), weak signals
   and a discard archive.
 - Self-development: `ante develop` proposes bounded changes, judges them with the
