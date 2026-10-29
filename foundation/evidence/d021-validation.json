@@ -1,0 +1,78 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-29",
+  "base_commit": "b719f5789b20288d8fa519f747ed4dac1d560674",
+  "scope": "Exact D-021 patch applied only in an isolated review worktree; no protected production path changed",
+  "python": "3.11.17",
+  "checks": [
+    {
+      "name": "Foundation suite",
+      "tests": 199,
+      "exit_code": 0,
+      "duration_seconds": 119.197
+    },
+    {
+      "name": "Legacy nexus-improve suite",
+      "tests": 15,
+      "exit_code": 0,
+      "duration_seconds": 113.446
+    },
+    {
+      "name": "Normalized characterization",
+      "matched": 114,
+      "total": 114,
+      "exit_code": 0
+    },
+    {
+      "name": "Raw-byte characterization",
+      "cases": 116,
+      "additional_regressions": 3,
+      "test_methods": 4,
+      "exit_code": 0,
+      "duration_seconds": 10.193
+    },
+    {
+      "name": "Protection union",
+      "previous_overdrive_patterns": 23,
+      "previous_foundation_patterns": 26,
+      "canonical_patterns": 50,
+      "patterns_removed": 0,
+      "frozen_profile_paths_added": 3,
+      "future_attest_pattern_added": true
+    },
+    {
+      "name": "Limits, editable scopes and sample floor",
+      "unchanged": [
+        "max_open_proposals",
+        "campaign_spend_usd",
+        "consecutive_regressions_to_stop",
+        "editable_scopes",
+        "finding_min_sample"
+      ]
+    }
+  ],
+  "complete_local_release_gate": null,
+  "complete_local_release_gate_reason": "PermissionError: [Errno 1] Operation not permitted",
+  "hosted_ci_for_the_proposed_runtime_patch": null,
+  "hosted_ci_reason": "Protected source patch is not approved or applied to GitHub; the documentation PR only tests unchanged production code. Hosted target-patch checks are required after approval.",
+  "independence_level": "SELF",
+  "independent_operator_review": null,
+  "log_sha256": {
+    "d021-foundation.stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "d021-foundation.stderr.log": "f9f220991c4f8cc96a959c4e4bd4454e0a49425c0385d65514d5ae99865e253f",
+    "d021-improve.stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "d021-improve.stderr.log": "12081e4e0a55e82ec8d17a4a5f9eef157034cf02cefce3744553f565c7d424ca",
+    "d021-normalized.stdout.log": "1dbf58c57a1e230fc02909484996235883187aaf86d8d24fd7734fbbfb18c02d",
+    "d021-normalized.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "d021-raw.stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "d021-raw.stderr.log": "4da8fea8318f1ecd64fb0e240d87c2ca6c463eee4a52262aa256a80aacaf5113"
+  },
+  "patch_sha256": "fdea84af57869af77b3aa49bcdff175e40ccc096c6220821c2fde5189f6d929a",
+  "post_test_documentation_addition": {
+    "path": "foundation/DECISIONS.md",
+    "sha256": "92ba7d02f0e0c346f2142a8a9c861773fee49f26aeb03a74a688360a3258ab47",
+    "runtime_and_test_source_bytes_unchanged": true,
+    "tested_four_file_patch_sha256": "8584e9024a378e464a6d44df16d93ccdc448c04676558b9efd277d0f7723bd45",
+    "reason": "Include the exact decision-record update in the same owner approval; no extra protected edit is left implicit."
+  }
+}
