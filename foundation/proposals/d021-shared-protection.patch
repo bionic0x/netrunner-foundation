@@ -67,8 +67,30 @@ index 991ac2e..a55b381 100644
          overdrive=tuple(overdrive['protected']),
          frozen=frozen_mod.paths(repo, ref),
          finding_min_sample=int(policy.get('finding_min_sample', 30)),
+diff --git a/foundation/ATTEST.md b/foundation/ATTEST.md
+index 463d05a..45b9d90 100644
+--- a/foundation/ATTEST.md
++++ b/foundation/ATTEST.md
+@@ -15,7 +15,7 @@ exact bytes. Four boundaries follow from that and are enforced, not only stated.
+ |---|---|---|
+ | Epistemic | A signature never moves a claim from `HYPOTHESIS` or `ATTRIBUTED_INTENT` to `EVIDENCE`. It shows integrity of a record, not truth about the world. | No module under `ante/strategy`, `learn`, `constructs`, `ice`, `develop`, `turing`, `core` or `doctrine` imports `ante.attest` (`test_no_strategy_learning_or_construct_module_reads_a_signature`). |
+ | Authorisation | A valid signature or proof never replaces the owner's mandate or the host's control. | `ante verify` reports `authorizes_action: false` for every document; a receipt has no field that could carry a permission (`test_receipt_carries_no_authority`). |
+-| Self-development | A change to the verifier, its tests or the trust store cannot be approved or signed by the loop that benefits from it. | `ante/attest/**` and `foundation/attest/**` are protected in both manifests; `tests/**` already was (`test_the_verifier_and_the_trust_store_are_protected_from_self_development`). |
++| Self-development | A change to the verifier, its tests or the trust store cannot be approved or signed by the loop that benefits from it. | The shared `strategy/overdrive-protected.json` manifest protects `ante/attest/**`, `foundation/attest/**` and `tests/**`; schema 2 of `foundation/develop-policy.json` pins that same manifest for the develop loop (`test_the_verifier_and_the_trust_store_are_protected_from_self_development`). |
+ | Independence | A record signed with the system's or the owner's own key is still an internal record. A signature does not make it independent corroboration. | A verified receipt reports `evidence_origin: SYSTEM`, a verified approval `PINNED_HUMAN_KEY`, anything else `UNVERIFIED`; nothing reads that report back into a claim. |
+ 
+ A bare key signature also does not prove that a person was present. `ante sign`
+@@ -151,7 +151,7 @@ verified. Every failure carries a reason: `MALFORMED`, `SCHEMA_INVALID`,
+ | T05 | Replaying a receipt triggers an action | Verification is read-only; `authorizes_action: false` | Tested (`test_verification_is_read_only_and_repeatable`) |
+ | T06 | Receipt names code or policy that did not run | Commit, `ante/` tree and policy re-checked from git; dirty state refused | Tested (`test_uncommitted_code_or_policy_is_refused`, `test_receipt_for_other_code_or_policy_or_artefact_fails`) |
+ | T07 | The system attests its own observation | `evidence_origin: SYSTEM`; no judging module reads signatures | Tested (`test_no_strategy_learning_or_construct_module_reads_a_signature`) |
+-| T08 | An agent alters the verifier or the trust store | Protected in both manifests; changes only through D-020 | Tested (`test_the_verifier_and_the_trust_store_are_protected_from_self_development`) |
++| T08 | An agent alters the verifier or the trust store | Shared base-revision manifest used by both entry points; changes only through D-020 | Tested (`test_the_verifier_and_the_trust_store_are_protected_from_self_development`, `test_both_entry_points_refuse_foundation_and_frozen_evaluators`) |
+ | T09 | Private content leaks through signed metadata | Closed schemas of hashes, object ids, paths and references | Tested (`test_receipt_carries_no_authority`, schema tests) |
+ | T10 | False signing time | `created` and `issued_at` are the signer's statement | Documented; a time witness is outside G1a |
+ | T11 | A key is compromised after signing | Removing the key from the store invalidates all its signatures; no historical trust | Rotation and dated revocation are G1b |
 diff --git a/foundation/DECISIONS.md b/foundation/DECISIONS.md
-index 66fac7c..95ee2e4 100644
+index 66fac7c..4e480ef 100644
 --- a/foundation/DECISIONS.md
 +++ b/foundation/DECISIONS.md
 @@ -222,7 +222,7 @@ that reads `runbooks.json`).
@@ -116,9 +138,9 @@ index 66fac7c..95ee2e4 100644
 -`overdrive-protected.json` in a hand-written `protected:` commit, so a single
 -policy file governs every self-improvement path. Until then both lists apply.
 +**Decision under D-021.** `strategy/overdrive-protected.json` is the shared
-+protected-path manifest for both path checks: all 23 original Overdrive patterns,
-+all 26 Foundation patterns, three frozen reviewer paths and `ante/attest/**`,
-+deduplicated to 50 patterns without removing any earlier rule.
++protected-path manifest for both path checks: all 25 current Overdrive patterns,
++all 28 Foundation patterns, three frozen reviewer paths and `ante/attest/**`,
++deduplicated to 51 patterns without removing any earlier rule.
 +`foundation/develop-policy.json` schema 2 retains editable scopes and limits
 +(one open proposal, 50 USD committed per campaign, stop after two consecutive
 +held-out regressions), names that exact shared manifest and has no duplicate
@@ -128,8 +150,8 @@ index 66fac7c..95ee2e4 100644
 +The exact patch is owner-authorized external maintenance under D-020's narrow
 +handwritten exception; agent authorship is recorded honestly. Neither loop may
 +change this policy or use that maintenance authorization. The three frozen
-+profiles remain pinned by their registry's hashes. Future attestation code is
-+protected in advance; no signer or host identity service is implemented here.
++profiles remain pinned by their registry's hashes. The existing G1a verifier and trust store remain protected; this migration
++adds no signer, key authority or host identity service.
  
  **How the gate keeps its evaluator honest.** The candidate is applied in a
  worktree at the base; `nexus-improve.py` and the characterization harness with
@@ -156,7 +178,7 @@ index 66fac7c..95ee2e4 100644
  
  ---
  
-@@ -443,6 +452,25 @@ P2 approval is not misrepresented as approval of identical bytes.
+@@ -443,6 +452,26 @@ P2 approval is not misrepresented as approval of identical bytes.
  
  ---
  
@@ -172,10 +194,11 @@ index 66fac7c..95ee2e4 100644
 +retain their preparation history; the application receipt records the actual
 +owner decision and resulting commits.
 +
-+The G0/G1a design candidates remain separate. Replacing their duplicated-list
-+wording with one pinned manifest is explicit in the approved D-021 scope; no
-+cryptographic signer, key material, authenticated independent review, host action
-+authorization or permission to execute follows from these records.
++G1a, integrated through PR #23, is preserved. The shared manifest retains its
++`ante/attest/**` and `foundation/attest/**` rules. This policy migration neither
++expands signing authority nor grants host execution permission. The source G0/G1a
++drafts' duplicated-list wording is reconciled explicitly with one pinned
++manifest; the runtime signer and trust-store semantics are unchanged.
 +
 +---
 +
@@ -183,7 +206,7 @@ index 66fac7c..95ee2e4 100644
  
  Recorded independently on `foundation/phase-0` (head `b60af82`) and kept verbatim below, headings one level down. Its ADR numbers are a separate series from the D-numbers above. ADR-0003 (no agent-generated change to protected paths, even under a `protected:` title) is stricter than D-003; D-020 now records the owner-approved narrow maintenance exception. The historical ADR text is retained verbatim.
 diff --git a/foundation/develop-policy.json b/foundation/develop-policy.json
-index 93f2726..25c2c55 100644
+index 569b839..25c2c55 100644
 --- a/foundation/develop-policy.json
 +++ b/foundation/develop-policy.json
 @@ -1,6 +1,6 @@
@@ -195,7 +218,7 @@ index 93f2726..25c2c55 100644
    "max_open_proposals": 1,
    "campaign_spend_usd": 50,
    "consecutive_regressions_to_stop": 2,
-@@ -28,34 +28,7 @@
+@@ -28,36 +28,7 @@
      "ante/nexus/**",
      "ante/registry/**"
    ],
@@ -212,6 +235,8 @@ index 93f2726..25c2c55 100644
 -    "ante/_compat.py",
 -    "ante/paths.py",
 -    "ante/strategy/**",
+-    "ante/attest/**",
+-    "foundation/attest/**",
 -    "ante/cli.py",
 -    "ante/deck.py",
 -    "ante/__init__.py",
@@ -233,13 +258,13 @@ index 93f2726..25c2c55 100644
 +  "protected_manifest": "strategy/overdrive-protected.json"
  }
 diff --git a/strategy/overdrive-protected.json b/strategy/overdrive-protected.json
-index 3c7d26a..a319ad2 100644
+index 9b283e7..534695f 100644
 --- a/strategy/overdrive-protected.json
 +++ b/strategy/overdrive-protected.json
-@@ -24,7 +24,34 @@
-     "scripts/test-*.py",
-     "scripts/test-*.sh",
+@@ -26,7 +26,33 @@
      "scripts/verify-release.sh",
+     "ante/attest/**",
+     "foundation/attest/**",
 -    ".github/**"
 +    ".github/**",
 +    "foundation/develop-policy.json",
@@ -267,17 +292,41 @@ index 3c7d26a..a319ad2 100644
 +    "scripts/**",
 +    "finance/finance-quant-alpha-validator.md",
 +    "specialized/strategic-red-team.md",
-+    "marketing/marketing-strategic-red-team.md",
-+    "ante/attest/**"
++    "marketing/marketing-strategic-red-team.md"
    ],
    "held_out_packs": "examples/nexus/casepacks/*/ whose pack.json declares split held_out, at the base or the head of the proposal"
  }
+diff --git a/tests/foundation/test_attest.py b/tests/foundation/test_attest.py
+index 9869e70..2fd75b6 100644
+--- a/tests/foundation/test_attest.py
++++ b/tests/foundation/test_attest.py
+@@ -612,15 +612,16 @@ class Boundaries(unittest.TestCase):
+                 self.assertFalse({m for m in modules if m.startswith('ante.attest')}, str(path))
+ 
+     def test_the_verifier_and_the_trust_store_are_protected_from_self_development(self):
+-        """T08: both manifests protect the verifier, the trust store and their tests."""
++        """T08: both entry points share protection for verifier, trust store and tests."""
+         import fnmatch
+         targets = ('ante/attest/eddsa.py', 'ante/attest/trust.py', 'foundation/attest/trusted-keys.json',
+                    'tests/foundation/test_attest.py', 'tests/foundation/vectors/eddsa-jcs-2022/signedJCS.json')
+-        develop = json.loads((ROOT / 'foundation/develop-policy.json').read_text())['protected']
++        develop = json.loads((ROOT / 'foundation/develop-policy.json').read_text())
++        self.assertEqual(2, develop['schema_version'])
++        self.assertEqual('strategy/overdrive-protected.json', develop['protected_manifest'])
++        self.assertNotIn('protected', develop)
+         overdrive = json.loads((ROOT / 'strategy/overdrive-protected.json').read_text())['protected']
+         for target in targets:
+-            self.assertTrue(any(fnmatch.fnmatch(target, pattern) for pattern in develop), target)
+-        for target in targets[:3]:
+             self.assertTrue(any(fnmatch.fnmatch(target, pattern) for pattern in overdrive), target)
+ 
+ 
 diff --git a/tests/foundation/test_shared_protection_policy.py b/tests/foundation/test_shared_protection_policy.py
 new file mode 100644
-index 0000000..ed63d9f
+index 0000000..8b4d0db
 --- /dev/null
 +++ b/tests/foundation/test_shared_protection_policy.py
-@@ -0,0 +1,78 @@
+@@ -0,0 +1,79 @@
 +"""The two development entry points share protection at their base revision."""
 +import json
 +import runpy
@@ -323,6 +372,7 @@ index 0000000..ed63d9f
 +        frozen = json.loads((self.repo / 'ante/constructs/frozen.json').read_text())
 +        protected = [policy.POLICY_PATH, policy.OVERDRIVE_PATH, 'ante/develop/policy.py',
 +                     'ante/turing/lock.py', 'ante/attest/kernel.py',
++                     'foundation/attest/trusted-keys.json',
 +                     'tests/foundation/future_test.py', 'scripts/future-evaluator.py',
 +                     '.github/workflows/future.yml']
 +        protected += [entry['path'] for entry in frozen['frozen_reviewers']]
