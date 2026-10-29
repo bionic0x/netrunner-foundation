@@ -1,4 +1,4 @@
-# Decision record — Ante Foundation
+# Decision record — Netrunner Foundation
 
 One entry per structural decision: context, decision, alternatives, consequences.
 Status is `ACCEPTED` when the refactor relies on it, `PROPOSED` when it waits for
@@ -45,7 +45,7 @@ are characterised through `--help` and usage errors only.
 
 ---
 
-## D-003 · Protected scripts during the extraction — PROPOSED
+## D-003 · Protected scripts during the extraction — ACCEPTED AS AMENDED BY D-020
 
 **Context.** Nine NEXUS programs, every `test-*` file, `verify-release.sh` and
 `.github/**` are protected. The prompt asks for the old scripts to become thin
@@ -63,13 +63,13 @@ proven by its characterization cases. Wiring `tests/characterization` and
 `ante/` (two implementations of the evaluator — rejected: the evaluator would
 stop being one thing); wrap everything in one commit (not reviewable line by line).
 
-**Consequences.** The owner reviews those commits as the human author of record.
+**Consequences.** The owner reviews and explicitly authorizes the exact protected
+patches. Actual human or agent authorship is recorded separately from approval.
 Nothing in the self-development loop (Phase 4) can produce or modify them.
 
-**Authorship clarification (29 October 2026).** D-020 proposes explicit,
-patch-scoped owner authorization while retaining real authorship. Reviewing an
-agent's work does not make it handwritten; the old author-of-record inference
-above is disputed and does not grant a maintenance agent permission.
+**Authorship amendment (29 October 2026).** The owner accepted D-020 option C and
+the exact P0–P3 + R1 packet. Patch-scoped authorization retains real authorship;
+reviewing an agent's work does not make it handwritten or authorize other work.
 
 ---
 
@@ -344,18 +344,18 @@ two commands (for example `load` and `misuse`) would remove it.
 
 ---
 
-## D-017 · CI wiring is delivered as a patch for a protected commit — PROPOSED
+## D-017 · Foundation CI wiring — ACCEPTED AND APPLIED VIA D-020
 
-The prompt asks for the new checks in `verify-release.sh` and the runbook
-workflow. Both `scripts/verify-release.sh` and `.github/**` are protected paths,
-and adding steps is not a mechanical extraction, so this branch does not edit
-them (§11). `foundation/proposals/ci-wiring.patch` adds, as a `protected:`
-commit applied under D-020 once the owner approves its two files: the characterization recordings, the
-extraction check, the foundation tests, the frozen-reviewer and defence-layer
-checks, and the institutional self-test run on `foundation/selftest-register.json`
-and published to the job summary (reported, never failing the build, as the
-self-test doctrine requires). The patch applies cleanly to this branch and the
-release gate was run with it applied.
+The owner approved the exact `foundation/proposals/ci-wiring.patch` in the
+D-020 packet on 29 October 2026. It is applied to `scripts/verify-release.sh`
+and `.github/workflows/check-runbooks.yml` in separate `protected:` commits,
+with Codex authorship and human approval recorded separately.
+
+Both frozen characterization harnesses, extraction verification, the Foundation
+suite, frozen-reviewer and defence-layer checks, and the reported institutional
+self-test now run in the new Foundation CI job. The self-test is published to
+the job summary without turning its reported rows into certification. Final
+hosted results are recorded in `foundation/evidence/d020-execution.json`.
 
 ---
 
@@ -404,44 +404,48 @@ acting on it; all were confirmed.
 What the review could not settle from its inputs, and stays as stated before:
 independence labels, Turing reviews and model reviews are self-declared; the
 self-test and the CI steps run in CI only after the owner applies
-`ci-wiring.patch` (D-017).
+`ci-wiring-v7.1.patch` (D-017).
 
 ---
 
-## D-020 · Protected maintenance: explicit owner authorization and truthful authorship — PROPOSED (owner)
+## D-020 · Protected maintenance: explicit owner authorization and truthful authorship — ACCEPTED (owner)
 
-**Recommended option C.** Keep the self-development loop unable to modify any
-protected path. Outside that loop, an owner-supervised maintenance agent may
-prepare or apply only an exact patch explicitly approved by the owner. Record
-the actual author, human approver and applicator separately. Approval does not
-turn agent-generated code into handwritten human authorship; this route needs
-an explicit mandate amendment/exception.
+**Decision, 29 October 2026.** The owner approved option C and the exact
+P0–P3 + R1 packet after reviewing PR #13. The self-development loop remains
+unable to modify protected paths. A maintenance agent outside that loop may
+prepare or apply an exact patch only with specific owner authorization. Actual
+author, human approver and applicator are recorded separately. This is an
+explicit amendment to the handwritten requirement, not a relabelling of generated
+code as handwritten.
 
-**Precedent.** The owner specifically authorized Codex's two-file Semgrep rollback
-in PR #2 (`79cb744`), merged as `b793d22` after 13/13 hosted checks passed. That
-exception does not itself authorize any other protected change.
+**Applied scope.** P1 aligns the protected policy wording without changing its
+23 patterns. P2 wires both characterization harnesses and Foundation checks into
+CI and the release gate. P3 fixes deterministic selection in the legacy review
+test. The owner ratified retaining `7b213eb` with its actual agent provenance
+(R1), without rewriting shared history. No other protected change is authorized.
 
-**Concrete packet.** [D-020-PROTECTED-MAINTENANCE.md](D-020-PROTECTED-MAINTENANCE.md)
-defines the procedure and the pending decisions: P0 (rule adoption), P1 (align
-the protected policy wording), P2 (`ci-wiring.patch`), P3
-(`test-nexus-review-glob.patch`) and R1 (retain `7b213eb` with truthful agent
-provenance and explicit ratification of its narrow exception). Exact patch and
-source hashes are in `proposals/d020-approval-packet.json`.
+**Evidence.** [D-020-PROTECTED-MAINTENANCE.md](D-020-PROTECTED-MAINTENANCE.md) and
+`proposals/d020-approval-packet.json` retain the approved procedure, exact patch
+and file hashes, and the direct approval's scope. Application and hosted results
+are recorded in `evidence/d020-execution.json`.
 
-**Reconciliation.** Keep D-003's isolated, reviewable changes and ADR-0003's
-truthful authorship. Replace the inference that owner review establishes human
-authorship with explicit owner authorization. Existing independence, held-out,
-Turing and merge controls still apply. A repository receipt is not authority.
+**Controls.** Existing independence, held-out, Turing, pause and merge controls
+still apply. A JSON receipt, Git signature, commit prefix or passing CI is not
+authority or evidence of independent review. Future patches need their own
+approval; already-authorized scope must not trigger repeated confirmation.
+D-018 remains a separate main-integration decision.
 
-**Until the owner decides.** This is a proposal, not a standing permission. No
-pending protected patch is applied by publishing this record. The evaluator's
-protected list is unchanged. D-018 stays with the main-integration decision.
+**P2 consolidation revision.** The owner later explicitly instructed Codex to
+decide P2 and consolidate the branches. The selected variant uses the existing
+main-compatible `setup-python` v7.1.0 pin and retains `fetch-depth: 0`. Its full
+reference and one-line delta are separately hashed in the packet. The original
+P2 approval is not misrepresented as approval of identical bytes.
 
 ---
 
 ## Codex line — `foundation/phase-0` (raw-byte harness)
 
-Recorded independently on `foundation/phase-0` (head `b60af82`) and kept verbatim below, headings one level down. Its ADR numbers are a separate series from the D-numbers above. ADR-0003 (no agent-generated change to protected paths, even under a `protected:` title) is stricter than D-003; that disagreement is open and belongs to the owner (see D-020).
+Recorded independently on `foundation/phase-0` (head `b60af82`) and kept verbatim below, headings one level down. Its ADR numbers are a separate series from the D-numbers above. ADR-0003 (no agent-generated change to protected paths, even under a `protected:` title) is stricter than D-003; D-020 now records the owner-approved narrow maintenance exception. The historical ADR text is retained verbatim.
 
 ## Foundation structural decisions
 

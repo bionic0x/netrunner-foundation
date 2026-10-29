@@ -1,4 +1,13 @@
-# Ante Foundation source and license declaration
+# Netrunner Foundation source and license declaration
+
+**Current identity (29 October 2026):** `bionic0x/netrunner-foundation`, public.
+The owner requested the Netrunner Foundation name and consolidation on `main`.
+The `ante` package/CLI and existing license are retained. The dated preparation
+record below describes the earlier destination and access constraints; current
+state is in [NETRUNNER-FOUNDATION.md](NETRUNNER-FOUNDATION.md).
+
+## Historical preparation record
+
 
 This preparation derives from **bionic0x/Ante-agency-agents**, exact base commit
 `86addea22f6060f2c50e81c67c6dadf978ea3749`.
