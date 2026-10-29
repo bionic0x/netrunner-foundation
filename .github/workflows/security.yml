@@ -104,4 +104,5 @@ jobs:
             --lockfile requirements.txt:.github/requirements/validation.txt \
             --lockfile requirements.txt:.github/requirements/zizmor.txt \
             --lockfile requirements.txt:.github/requirements/semgrep.txt \
+            --lockfile requirements.txt:.github/requirements/attest.txt \
             --lockfile requirements.txt:relay/tests/requirements-property.txt

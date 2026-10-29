@@ -1,0 +1,9 @@
+# Local signatures (ante sign / ante verify, foundation/ATTEST.md).
+# cryptography is the only runtime dependency; cffi and pycparser are its own.
+# rfc8785 is test-only: tests/foundation/test_attest.py cross-checks the signed
+# subset against it, and no module under ante/ may import it.
+# Versions released at least two weeks before they were pinned.
+cryptography==50.0.2
+cffi==2.1.1
+pycparser==3.1
+rfc8785==0.1.4
