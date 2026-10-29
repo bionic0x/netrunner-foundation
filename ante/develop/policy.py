@@ -1,17 +1,13 @@
 """What the develop loop may and may not touch, read from the base revision.
 
-Two lists apply together and the stricter one wins:
+``strategy/overdrive-protected.json`` is the shared protected-path manifest for
+schema 2 policies. ``foundation/develop-policy.json`` keeps editable scopes and
+loop limits, and names that exact manifest without carrying a second list.
+Historical schema 1 revisions retain their extra protected list when loaded.
+Frozen reviewer fingerprints remain in ``ante/constructs/frozen.json``.
 
-- ``strategy/overdrive-protected.json`` — the evaluator, held-out packs, tests and
-  CI (``nexus-improve.py paths`` enforces it);
-- ``foundation/develop-policy.json`` — the foundation's own protected paths (the
-  gate, the Turing lock, ICE layers, constructs, doctrine, claims discipline,
-  this policy) plus the scopes a proposal may edit and the loop's limits;
-- ``ante/constructs/frozen.json`` — frozen reviewer profiles, which sit inside
-  editable agent divisions but judge rather than learn.
-
-Both are read **at the base revision**: a proposal is judged by the rules that
-existed before it, so it cannot loosen them.
+Every input is read **at the base revision**: a proposal is judged by the rules
+that existed before it, so it cannot loosen them.
 """
 from __future__ import annotations
 
@@ -51,11 +47,11 @@ class Policy:
 
     def classify(self, path: str) -> str | None:
         """Why ``path`` may not be changed, or None if it may."""
+        if path in self.frozen:
+            return 'frozen reviewer (ante/constructs/frozen.json)'
         for pattern in self.overdrive:
             if fnmatch.fnmatchcase(path, pattern):
                 return f'protected by strategy/overdrive-protected.json ({pattern})'
-        if path in self.frozen:
-            return 'frozen reviewer (ante/constructs/frozen.json)'
         for pattern in self.protected:
             if fnmatch.fnmatchcase(path, pattern):
                 return f'protected by {POLICY_PATH} ({pattern})'
@@ -70,12 +66,23 @@ def at_ref(repo: Path, ref: str) -> Policy:
         overdrive = json.loads(git(repo, 'show', f'{ref}:{OVERDRIVE_PATH}'))
     except json.JSONDecodeError as exc:
         raise PolicyError(f'policy at {ref} is not valid JSON: {exc}') from None
+    version = policy.get('schema_version')
+    if type(version) is not int:
+        raise PolicyError('develop policy schema_version must be an integer')
+    if version == 1:
+        legacy_protected = tuple(policy['protected'])
+    elif version == 2:
+        if policy.get('protected_manifest') != OVERDRIVE_PATH or 'protected' in policy:
+            raise PolicyError('schema 2 requires the shared protected manifest and no shadow list')
+        legacy_protected = ()
+    else:
+        raise PolicyError(f'unsupported develop policy schema_version: {version}')
     return Policy(
         max_open_proposals=int(policy['max_open_proposals']),
         campaign_spend_usd=float(policy['campaign_spend_usd']),
         consecutive_regressions_to_stop=int(policy['consecutive_regressions_to_stop']),
         editable_scopes=tuple(policy['editable_scopes']),
-        protected=tuple(policy['protected']),
+        protected=legacy_protected,
         overdrive=tuple(overdrive['protected']),
         frozen=frozen_mod.paths(repo, ref),
         finding_min_sample=int(policy.get('finding_min_sample', 30)),

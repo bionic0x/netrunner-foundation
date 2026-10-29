@@ -222,7 +222,7 @@ that reads `runbooks.json`).
 
 ---
 
-## D-010 · `PROCEED` requires an independent coherence review — PROPOSED
+## D-010 · `PROCEED` requires an independent coherence review — ACCEPTED VIA D-021
 
 **Context.** Invariant 10 says a review by the same operator, model and context
 is a coherence function, not a barrier; VIII.9 is satisfied only by
@@ -231,8 +231,9 @@ is a coherence function, not a barrier; VIII.9 is satisfied only by
 **Decision.** `ante decide` accepts `PROCEED` only when the `cohere` parent was
 produced at `INDEPENDENT_OPERATOR`. With `SELF` or `SEPARATED_CONTEXT` the owner
 can still decide `PROCEED_WITH_CONDITIONS` and name the independent review as a
-condition. This is a design choice of the foundation, made explicit for the owner
-to confirm or relax.
+condition. D-021 ratifies this existing floor without relaxing it. The label is
+structurally checked, not independently authenticated identity or execution
+authority; those remain host and organisational responsibilities.
 
 ---
 
@@ -258,7 +259,7 @@ other providers in `providers.json` are refused until one is written.
 
 ---
 
-## D-013 · The develop loop's own protected list lives beside Overdrive's — PROPOSED
+## D-013 · One shared protected-path manifest — ACCEPTED VIA D-021
 
 `ante develop` must never change the evaluator that judges it. Overdrive already
 protects its evaluator in `strategy/overdrive-protected.json`, and
@@ -267,16 +268,21 @@ same protection (the gate, the Turing lock, ICE layers, constructs, doctrine and
 claims discipline, the ledger, characterization tests) and declares which scopes
 a proposal may edit at all.
 
-Changing `overdrive-protected.json` is itself a change to a protected path, so
-this branch does not touch it. Instead `foundation/develop-policy.json` holds the
-foundation's protected list, the editable scopes and the loop's limits (one open
-proposal, 50 USD committed per campaign, stop after two consecutive held-out
-regressions), and protects itself. The gate applies both lists, read at the base
-revision, and the stricter wins.
+**Decision under D-021.** `strategy/overdrive-protected.json` is the shared
+protected-path manifest for both path checks: all 25 current Overdrive patterns,
+all 28 Foundation patterns, three frozen reviewer paths and `ante/attest/**`,
+deduplicated to 51 patterns without removing any earlier rule.
+`foundation/develop-policy.json` schema 2 retains editable scopes and limits
+(one open proposal, 50 USD committed per campaign, stop after two consecutive
+held-out regressions), names that exact shared manifest and has no duplicate
+list. Historical schema 1 bases still load their extra list. Alternate schema 2
+sources, shadow lists and unsupported schema versions are refused.
 
-**Proposal for the owner.** Merge the develop protected list into
-`overdrive-protected.json` in a hand-written `protected:` commit, so a single
-policy file governs every self-improvement path. Until then both lists apply.
+The exact patch is owner-authorized external maintenance under D-020's narrow
+handwritten exception; agent authorship is recorded honestly. Neither loop may
+change this policy or use that maintenance authorization. The three frozen
+profiles remain pinned by their registry's hashes. The existing G1a verifier and trust store remain protected; this migration
+adds no signer, key authority or host identity service.
 
 **How the gate keeps its evaluator honest.** The candidate is applied in a
 worktree at the base; `nexus-improve.py` and the characterization harness with
@@ -289,7 +295,7 @@ touches `.github/**`.
 
 ---
 
-## D-014 · The Turing lock counts autonomy cumulatively — PROPOSED
+## D-014 · The Turing lock counts autonomy cumulatively — ACCEPTED VIA D-021
 
 Each proposal declares an integer `autonomy_delta` on six dimensions
 (permissions, budget, scope, gate thresholds, frequency, human-review reduction).
@@ -304,8 +310,11 @@ single-step reviewer saw. A proposal that declares no change but adds lines abou
 budgets, limits, approvals, permissions or thresholds trips a heuristic wire
 (`UNDECLARED_AUTONOMY`) and is held. Review records are self-declared like every
 independence label in Ante: the lock checks form, coverage, date, hash and that
-the loop did not write them, not who the reviewer is. The limit and window are
-constants in `ante/turing/lock.py`, a protected path, for the owner to set.
+the loop did not write them, not who the reviewer is. D-021 ratifies the unchanged limit of 4 and window of 90 days in
+`ante/turing/lock.py`. They are explicit policy defaults, not measured safety
+guarantees. No review label is promoted into authenticated identity by this
+ratification; a future host trust boundary needs a separate implementation and
+owner decision.
 
 ---
 
@@ -440,6 +449,27 @@ decide P2 and consolidate the branches. The selected variant uses the existing
 main-compatible `setup-python` v7.1.0 pin and retains `fetch-depth: 0`. Its full
 reference and one-line delta are separately hashed in the packet. The original
 P2 approval is not misrepresented as approval of identical bytes.
+
+---
+
+## D-021 · Shared protection and retained independence controls — ACCEPTED
+
+The preparation packet `proposals/d021-approval-packet.json` describes the
+exact scope; `evidence/d021-execution.json` records the actual owner decision
+and application. The accepted decision ratifies D-010's existing independence
+floor and D-014's existing cumulative defaults, and authorizes the exact D-013
+shared-policy migration outside the development loop. Its scope includes this
+decision record so implementation and governance can land together. Approval does not turn agent-authored changes into handwritten
+code or create standing permission for later changes. The proposal and validation
+retain their preparation history; the application receipt records the actual
+owner decision and resulting commits.
+
+G1a and its signer-isolation follow-up, integrated through PRs #23 and #26,
+are preserved. The shared manifest retains its
+`ante/attest/**` and `foundation/attest/**` rules. This policy migration neither
+expands signing authority nor grants host execution permission. The source G0/G1a
+drafts' duplicated-list wording is reconciled explicitly with one pinned
+manifest; the runtime signer and trust-store semantics are unchanged.
 
 ---
 

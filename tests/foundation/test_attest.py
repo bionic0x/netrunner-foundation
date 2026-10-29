@@ -815,15 +815,16 @@ class Boundaries(unittest.TestCase):
             self.assertFalse({m for m in modules if m.startswith('ante.attest')} or 'attest' in from_ante, name)
 
     def test_the_verifier_and_the_trust_store_are_protected_from_self_development(self):
-        """T08: both manifests protect the verifier, the trust store and their tests."""
+        """T08: both entry points share protection for verifier, trust store and tests."""
         import fnmatch
         targets = ('ante/attest/eddsa.py', 'ante/attest/trust.py', 'foundation/attest/trusted-keys.json',
                    'tests/foundation/test_attest.py', 'tests/foundation/vectors/eddsa-jcs-2022/signedJCS.json')
-        develop = json.loads((ROOT / 'foundation/develop-policy.json').read_text())['protected']
+        develop = json.loads((ROOT / 'foundation/develop-policy.json').read_text())
+        self.assertEqual(2, develop['schema_version'])
+        self.assertEqual('strategy/overdrive-protected.json', develop['protected_manifest'])
+        self.assertNotIn('protected', develop)
         overdrive = json.loads((ROOT / 'strategy/overdrive-protected.json').read_text())['protected']
         for target in targets:
-            self.assertTrue(any(fnmatch.fnmatch(target, pattern) for pattern in develop), target)
-        for target in targets[:3]:
             self.assertTrue(any(fnmatch.fnmatch(target, pattern) for pattern in overdrive), target)
 
 
