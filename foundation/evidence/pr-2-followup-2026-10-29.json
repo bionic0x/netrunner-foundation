@@ -1,0 +1,57 @@
+{
+  "recorded_on": "2026-10-29",
+  "repository": "bionic0x/neuromancers-foundation",
+  "pull_request": 2,
+  "owner_authorization": {
+    "received": true,
+    "scope": [
+      ".github/requirements/semgrep.in",
+      ".github/requirements/semgrep.txt"
+    ],
+    "operation": "Apply the exact previously reviewed rollback; rerun hosted CI; merge when green",
+    "does_not_relabel_agent_authorship_as_human": true
+  },
+  "correction_commit": "79cb744d945d5100fd16abe9306153b64ad7d401",
+  "restored_blobs": {
+    ".github/requirements/semgrep.in": "afb8d7d760ca5e86d2df98640f9adc810fe8269f",
+    ".github/requirements/semgrep.txt": "bb6d2a98c424affc00bcc1cc7c4194f176f3ce9d"
+  },
+  "final_diff_verification": {
+    "remaining_files": 4,
+    "remaining_diff_identical_to_original_zizmor_and_hypothesis_updates": true,
+    "semgrep_diff_remaining": false
+  },
+  "ci": {
+    "successful": 13,
+    "total": 13,
+    "in_progress": [],
+    "known_vulnerabilities_scanner": "SUCCESS",
+    "gitleaks": "SUCCESS",
+    "semgrep": "SUCCESS",
+    "zizmor": "SUCCESS",
+    "macos_installer": "SUCCESS (8 minutes)"
+  },
+  "merge": {
+    "verified": true,
+    "commit": "b793d22f78854b83dc85c2da28691c9c04543ec9",
+    "base": "main",
+    "reason": null
+  },
+  "foundation_pr_11": {
+    "merged": true,
+    "commit": "d2d57a7",
+    "successful_checks": 13,
+    "total_checks": 13
+  },
+  "other_protected_proposals": {
+    "ci-wiring.patch": "Reviewed; git apply --check passes on frozen base; not applied to repository",
+    "test-nexus-review-glob.patch": "Reviewed; git apply --check passes on frozen base; not applied to repository"
+  },
+  "independent_operator_review": null,
+  "independent_operator_review_reason": "No new independent operator review was performed; approval and hosted CI do not authenticate that status.",
+  "pull_request_inventory": {
+    "open": 0,
+    "closed": 11,
+    "all_pr_numbers_1_through_11_verified_merged": true
+  }
+}
