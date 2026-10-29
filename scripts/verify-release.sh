@@ -37,6 +37,16 @@ python3 scripts/test-nexus-brief.py
 python3 scripts/test-nexus-plan.py
 python3 scripts/test-nexus-optimize.py
 python3 -m unittest discover -s relay/tests
+# Ante Foundation: behavioural contract, mechanical moves, foundation tests,
+# frozen reviewers, defence-layer independence, published self-test.
+python3 tests/characterization/run.py
+python3 -m unittest discover -s tests/characterization
+python3 foundation/tools/extraction.py verify
+python3 -m unittest discover -s tests/foundation -p 'test_*.py'
+python3 scripts/ante constructs verify
+python3 scripts/ante ice layers >/dev/null
+python3 scripts/ante selftest foundation/selftest-register.json --at "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
+  | python3 -c 'import json,sys; d=json.load(sys.stdin); print("\n".join("self-test row %s: %s" % (r["row"], r["result"]) for r in d["body"]["rows"]))'
 python3 scripts/nexus-instance.py validate examples/nexus/strategic-decision.instance.json >/dev/null
 python3 scripts/nexus-instance.py validate examples/nexus/investment-hypothesis.instance.json >/dev/null
 python3 scripts/check-challenger-pairs.py

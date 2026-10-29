@@ -1,0 +1,192 @@
+{
+  "schema_version": 1,
+  "decision": "D-020",
+  "status": "PROPOSED_OWNER_DECISION",
+  "prepared_on": "2026-10-29",
+  "repository": "bionic0x/neuromancers-foundation",
+  "branch": "foundation/codex/d020",
+  "review_base_commit": "cc027eda68ea281ac80d194ac3c19821541b016b",
+  "approval_is_not_authenticated_by_this_file": true,
+  "proposed_rule": "Owner-authorized, patch-scoped maintenance outside the self-development loop, with real authorship and human approval recorded separately",
+  "standing_authority_granted": false,
+  "self_development_protected_path_ban_retained": true,
+  "policy_adoption": {
+    "id": "P0",
+    "owner_approval": "PENDING",
+    "scope": "Adopt the proposed D-020 C rule; permit only separately approved exact maintenance patches"
+  },
+  "patches": [
+    {
+      "id": "P1",
+      "file": "foundation/proposals/d020-maintenance-policy.patch",
+      "sha256": "9d92cbd4c2cc1d2a7465a9705ae89e2ce9956550c754d70483fbc3db1d229f2b",
+      "paths": [
+        "strategy/overdrive-protected.json",
+        "strategy/NEXUS-OVERDRIVE.md"
+      ],
+      "purpose": "Align protected policy wording; retain the exact protected list and the self-improver prohibition",
+      "owner_approval": "PENDING",
+      "applied_to_repository": false,
+      "input_files": {
+        "strategy/overdrive-protected.json": {
+          "sha256": "12ec5106611a6f650a1c4c32b13f35b88291fb70dc154dc1bc3e65dc3ae268af",
+          "git_blob": "2ce39b3c0110a0b79acc9b745223892cf77aa949"
+        },
+        "strategy/NEXUS-OVERDRIVE.md": {
+          "sha256": "3d19967a4bd1a38217e713fafcd57a1215db97660cce8a0e84d14c5784a5020b",
+          "git_blob": "43a859a3fa3f63f9399c5aa9f1a944a3ed6b2946"
+        }
+      },
+      "output_files": {
+        "strategy/overdrive-protected.json": {
+          "sha256": "a63a9c655edccbec1f4bfe93688450f79ba5a219f1d8cf96e2012e7f0221ab9b",
+          "git_blob": "3c7d26a02bb3488fefeddb71feb7a930ddfcfedc"
+        },
+        "strategy/NEXUS-OVERDRIVE.md": {
+          "sha256": "6a9eb5b095827f4fcbf2ca0f3a3bc73fbc031cff8557fdf8ef3acc22f2597f08",
+          "git_blob": "2ab9fbf3981733975007b59807902830860cd5d0"
+        }
+      }
+    },
+    {
+      "id": "P2",
+      "file": "foundation/proposals/ci-wiring.patch",
+      "sha256": "64d1085836748b669906833b4c54e669da70f2bb20cb94756b6a86dd2df65d42",
+      "paths": [
+        ".github/workflows/check-runbooks.yml",
+        "scripts/verify-release.sh"
+      ],
+      "purpose": "Run both characterization harnesses and Foundation checks; publish the institutional self-test",
+      "owner_approval": "PENDING",
+      "applied_to_repository": false,
+      "input_files": {
+        ".github/workflows/check-runbooks.yml": {
+          "sha256": "ec926fb2febdd440d742b8b49514964c25fb497a620c32a452b53c07300eba82",
+          "git_blob": "5237b8f273073ac099263759a428bf8c5ff3e1de"
+        },
+        "scripts/verify-release.sh": {
+          "sha256": "71a7622df244fc64b26cb02df7723b495ac2c2dcde78546eb0b1db7205f5f0fa",
+          "git_blob": "4b0231f6defc8c394c1882112a4e234c26d0f282"
+        }
+      },
+      "output_files": {
+        ".github/workflows/check-runbooks.yml": {
+          "sha256": "0dc9196a4a9d1ffdea030c016ea092f479dfa6626f79d40d953995365f9ff72a",
+          "git_blob": "0ced0867883a536896080869eab9d3a90f0545cb"
+        },
+        "scripts/verify-release.sh": {
+          "sha256": "f9675af8ccce4387dcd50dcc98effc33038596669d6918195af4f8fc2d5df122",
+          "git_blob": "226947ec7653733ce5de28d6702a6b826392b4dc"
+        }
+      }
+    },
+    {
+      "id": "P3",
+      "file": "foundation/proposals/test-nexus-review-glob.patch",
+      "sha256": "78e1ebfd20d33cdb8d925abf6a568ed3f3ee5857d9ec0d168a858b2be802b332",
+      "paths": [
+        "scripts/test-nexus-review.py"
+      ],
+      "purpose": "Select a reviewed Markdown artifact deterministically, excluding REVIEWER.md",
+      "owner_approval": "PENDING",
+      "applied_to_repository": false,
+      "input_files": {
+        "scripts/test-nexus-review.py": {
+          "sha256": "65890783ed6af5ab18ac6098c9e86e3709728c3767b6cde8502ca14320422853",
+          "git_blob": "38d7b1c572c3b15574b90958c146fcc99b770c58"
+        }
+      },
+      "output_files": {
+        "scripts/test-nexus-review.py": {
+          "sha256": "a8b6a7f3020b0a9e2ae5d98c5f60b53561bc398f46a2ff491f0c7847512852a3",
+          "git_blob": "0ed507c5148cf9b08f2957ca8db5cb4b9014ce4b"
+        }
+      }
+    }
+  ],
+  "prior_commit_disposition": {
+    "id": "R1",
+    "commit": "7b213ebfa876bc8f44c185b19d7484009bb8f205",
+    "path": "strategy/contracts.json",
+    "proposal": "Retain the merged commit with honest agent authorship and explicit owner ratification of the narrow mandate exception; no rewrite or relabelling as handwritten",
+    "owner_ratification": "PENDING",
+    "parent": "752af9dc2e0b022b73d5f7f1b78f8c0e94ae6e38",
+    "diff_sha256": "eaf85e012af4cd7e27ae82883dcc8cbe420880c52292f4366559ba2840770003",
+    "changed_files": 1,
+    "git_index": "3e4d41f..6e072d5 100644",
+    "declared_commit_actor": "claude",
+    "declared_coauthor": "Claude Opus 5.5 <noreply@anthropic.com>"
+  },
+  "observed_precedent": {
+    "pr": 2,
+    "correction_commit": "79cb744d945d5100fd16abe9306153b64ad7d401",
+    "merge_commit": "b793d22f78854b83dc85c2da28691c9c04543ec9",
+    "explicit_owner_approval_scope": [
+      ".github/requirements/semgrep.in",
+      ".github/requirements/semgrep.txt"
+    ],
+    "successful_checks": 13,
+    "total_checks": 13,
+    "does_not_approve_this_packet": true
+  },
+  "source_evidence": [
+    {
+      "path": "scripts/test-nexus-review.py",
+      "bytes": 6012,
+      "sha256": "65890783ed6af5ab18ac6098c9e86e3709728c3767b6cde8502ca14320422853",
+      "git_blob": "38d7b1c572c3b15574b90958c146fcc99b770c58"
+    },
+    {
+      "path": "foundation/DECISIONS.md",
+      "bytes": 32445,
+      "sha256": "1c8cb6b38fcf821088627cb68bc9b227b12a9eda8c4a94c3bb2f7e02e1bdc7af",
+      "git_blob": "c3a0df2bf87022c0e0bdc64d98606f7776d60089"
+    },
+    {
+      "path": "strategy/overdrive-protected.json",
+      "bytes": 1135,
+      "sha256": "12ec5106611a6f650a1c4c32b13f35b88291fb70dc154dc1bc3e65dc3ae268af",
+      "git_blob": "2ce39b3c0110a0b79acc9b745223892cf77aa949"
+    },
+    {
+      "path": "strategy/NEXUS-OVERDRIVE.md",
+      "bytes": 9275,
+      "sha256": "3d19967a4bd1a38217e713fafcd57a1215db97660cce8a0e84d14c5784a5020b",
+      "git_blob": "43a859a3fa3f63f9399c5aa9f1a944a3ed6b2946"
+    },
+    {
+      "path": "foundation/proposals/ci-wiring.patch",
+      "bytes": 3057,
+      "sha256": "64d1085836748b669906833b4c54e669da70f2bb20cb94756b6a86dd2df65d42",
+      "git_blob": "d493319803d324eb97f6964e3f6ebb02f27d2e44"
+    },
+    {
+      "path": "foundation/proposals/test-nexus-review-glob.patch",
+      "bytes": 642,
+      "sha256": "78e1ebfd20d33cdb8d925abf6a568ed3f3ee5857d9ec0d168a858b2be802b332",
+      "git_blob": "d693d417312a7e20cef37ccca165e926c0c45e61"
+    },
+    {
+      "path": ".github/workflows/check-runbooks.yml",
+      "bytes": 3406,
+      "sha256": "ec926fb2febdd440d742b8b49514964c25fb497a620c32a452b53c07300eba82",
+      "git_blob": "5237b8f273073ac099263759a428bf8c5ff3e1de"
+    },
+    {
+      "path": "scripts/verify-release.sh",
+      "bytes": 2688,
+      "sha256": "71a7622df244fc64b26cb02df7723b495ac2c2dcde78546eb0b1db7205f5f0fa",
+      "git_blob": "4b0231f6defc8c394c1882112a4e234c26d0f282"
+    }
+  ],
+  "independence_level": "SELF",
+  "independent_operator_review": null,
+  "independent_operator_review_reason": "No independent operator reviewed this preparation. Human approval, a Git signature and a declared label do not authenticate independence.",
+  "autonomy_assessment": null,
+  "autonomy_assessment_reason": "This is an unadopted documentation/proposal packet. No authenticated Turing review or expanded execution permission is claimed.",
+  "prepared_by": {
+    "agent": "Codex",
+    "acting_github_account": "bionic0x",
+    "owner_is_not_claimed_as_human_author": true
+  }
+}

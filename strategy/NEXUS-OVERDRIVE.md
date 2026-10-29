@@ -132,8 +132,12 @@ instead of the work (XV.12). Three rules prevent that.
 1. **The improver cannot touch the judge.** Paths listed in
    `strategy/overdrive-protected.json` — held-out packs, the evaluator, the blind
    sealer, judgments, the improvement gate itself, the engine's judgment rules,
-   the release gate and CI — may not change in a self-improvement proposal. Changing
-   them needs a separate, human-authored pull request.
+   the release gate and CI — may not change in a self-improvement proposal.
+   Maintenance happens outside that loop, in a separate pull request with
+   `protected:` commits and explicit owner authorization of the exact patch
+   (D-020). Record the actual human or agent author separately from the human
+   approver. Review, a commit prefix and passing CI do not grant authorization;
+   without the owner's scoped approval the maintenance change remains HOLD.
 2. **No composite score.** A proposal is admitted only if, on held-out packs,
    it is no worse than the baseline on every metric beyond the declared tolerance
    and better on at least one. Fatal defects get zero tolerance.
