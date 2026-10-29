@@ -73,7 +73,7 @@ def _check_created(value: Any) -> None:
     try:
         datetime.strptime(value, '%Y-%m-%dT%H:%M:%SZ')
     except ValueError:
-        raise ProofError(f'created {value!r} is not a real UTC time') from None
+        raise ProofError('created is not a real UTC time') from None
 
 
 def valid_context(value: Any) -> bool:
@@ -166,7 +166,7 @@ def verify(secured: Any, resolve: KeyResolver) -> Verification:
         return result
     key = resolve(method, purpose)
     if key is None:
-        result.reason, result.detail = 'UNTRUSTED_KEY', f'{method} is not pinned for {purpose}'
+        result.reason, result.detail = 'UNTRUSTED_KEY', 'the verification method is not pinned for this purpose and kind'
         return result
     try:
         module, invalid = ed25519()

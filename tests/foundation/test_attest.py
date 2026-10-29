@@ -132,6 +132,19 @@ class SignedSubset(unittest.TestCase):
             with self.subTest(data=data), self.assertRaises(jcs.CanonicalError):
                 jcs.loads(data)
 
+    def test_hostile_input_is_refused_with_a_reason_not_a_crash(self):
+        for data in (b'[' * 100000, b'{"a":' + b'9' * 5000 + b'}', b'"' + b'a' * (jcs.MAX_BYTES + 1) + b'"'):
+            with self.assertRaises(jcs.CanonicalError):
+                jcs.loads(data)
+
+    def test_errors_do_not_echo_the_input(self):
+        secret = 'k' + 'Z' * 200
+        for data in ('{"%s":1,"%s":2}' % (secret, secret), '{"a":1.%s}' % ('5' * 50), '{"%s":"\u00e9"}' % secret):
+            with self.assertRaises(jcs.CanonicalError) as caught:
+                jcs.loads(data.encode())
+            self.assertNotIn('ZZZZ', str(caught.exception))
+            self.assertNotIn('5555', str(caught.exception))
+
     def test_booleans_are_not_integers_and_safe_integers_pass(self):
         self.assertEqual(b'{"a":true,"b":9007199254740991,"c":-9007199254740991,"d":null}',
                          jcs.canonical({'b': 2 ** 53 - 1, 'a': True, 'd': None, 'c': -(2 ** 53 - 1)}))
@@ -458,7 +471,8 @@ class Documents(unittest.TestCase):
         path = self.sign(document)
         report = self.verify(path, repo=str(self.repo.dir), head=head)
         self.assertTrue(report['verified'], report)
-        self.assertEqual('PINNED_HUMAN_KEY', report['evidence_origin'])
+        self.assertEqual('CALLER_TRUST_STORE', report['evidence_origin'])
+        self.assertEqual((False, str(self.store)), (report['trust_store']['default'], report['trust_store']['path']))
         self.assertFalse(report['authorizes_action'])
         (self.repo.dir / 'notes.md').write_text('changed again\n')
         later = self.repo.commit('different change')
@@ -470,12 +484,17 @@ class Documents(unittest.TestCase):
         base = git(self.repo.dir, 'rev-parse', 'HEAD')
         (self.repo.dir / 'notes.md').write_text('changed\n')
         head = self.repo.commit('change')
-        first = documents.approval(base, head, ['apply'], 'PR#0', 'agent:test', AT, self.repo.dir)
+        path = self.sign(documents.approval(base, head, ['apply'], 'PR#0', 'agent:test', AT, self.repo.dir))
+        # the same edit replayed on a base that has moved on is a different candidate
+        git(self.repo.dir, 'checkout', '-q', base)
         (self.repo.dir / 'other.md').write_text('x\n')
         moved = self.repo.commit('base moved')
-        second = documents.approval(head, moved, ['apply'], 'PR#0', 'agent:test', AT, self.repo.dir)
-        self.assertNotEqual(first['base_commit'], second['base_commit'])
-        self.assertNotEqual(first['patch_sha256'], second['patch_sha256'])
+        (self.repo.dir / 'notes.md').write_text('changed\n')
+        replay = self.repo.commit('same change on the moved base')
+        report = self.verify(path, repo=str(self.repo.dir), head=replay)
+        self.assertEqual('REPOSITORY_MISMATCH', report['reason'])
+        self.assertFalse(report['checks']['result_tree'])
+        self.assertNotEqual(moved, base)
 
     def test_approval_schema_refuses_unknown_scope_and_unsorted_paths(self):
         base = git(self.repo.dir, 'rev-parse', 'HEAD')
@@ -483,6 +502,7 @@ class Documents(unittest.TestCase):
         head = self.repo.commit('change')
         document = documents.approval(base, head, ['apply'], 'PR#0', 'agent:test', AT, self.repo.dir)
         for bad in ({**document, 'scope': ['execute']}, {**document, 'scope': ['merge', 'apply']},
+                    {**document, 'scope': [{'a': 'b'}]}, {**document, 'object_format': ['sha1']},
                     {**document, 'paths': document['paths'] * 2}, {**document, 'policy': 'D-021'},
                     {**document, 'author': ' '}):
             with self.assertRaises(documents.DocumentError):
@@ -515,12 +535,128 @@ class Documents(unittest.TestCase):
         path.write_text(text)
         self.assertEqual('MALFORMED', self.verify(path)['reason'])
 
+    def commit_store(self, entries: list[dict]) -> None:
+        (self.repo.dir / 'foundation' / 'attest').mkdir(parents=True, exist_ok=True)
+        (self.repo.dir / 'foundation' / 'attest' / 'trusted-keys.json').write_text(
+            json.dumps({'schema_version': 1, 'keys': entries}))
+        self.repo.commit('pin')
+
+    def approval_and_head(self):
+        base = git(self.repo.dir, 'rev-parse', 'HEAD')
+        (self.repo.dir / 'notes.md').write_text('changed\n')
+        head = self.repo.commit('change')
+        return self.sign(documents.approval(base, head, ['apply'], 'PR#0', 'agent:test', AT, self.repo.dir)), head
+
     def test_the_shipped_store_verifies_nothing_yet(self):
+        self.commit_store([])
+        self.assertEqual(b'{"keys":[],"schema_version":1}', jcs.canonical(jcs.loads(trust.STORE.read_bytes())))
         artefact = self.repo.artefact()
         path = self.sign(documents.receipt(artefact, AT, self.repo.dir))
-        report = commands.verify_file(str(path), None, None, None, None)
+        report = commands.verify_file(str(path), None, None, None, None, root=self.repo.dir)
         self.assertEqual(('UNTRUSTED_KEY', False, 'UNVERIFIED'),
                          (report['reason'], report['verified'], report['evidence_origin']))
+
+    def test_the_default_store_is_read_from_head_and_claims_a_pinned_key(self):
+        self.commit_store([entry(self.raw)])
+        path, head = self.approval_and_head()
+        report = commands.verify_file(str(path), None, str(self.repo.dir), None, head, root=self.repo.dir)
+        self.assertTrue(report['verified'], report)
+        self.assertEqual('PINNED_HUMAN_KEY', report['evidence_origin'])
+        self.assertEqual('HEAD:foundation/attest/trusted-keys.json', report['trust_store']['path'])
+        self.assertTrue(report['trust_store']['default'])
+
+    def test_an_uncommitted_verifier_or_store_fails_every_verification(self):
+        self.commit_store([entry(self.raw)])
+        path, head = self.approval_and_head()
+        for target in ('foundation/attest/trusted-keys.json', 'ante/attest/eddsa.py'):
+            with self.subTest(target=target):
+                file = self.repo.dir / target
+                file.parent.mkdir(parents=True, exist_ok=True)
+                original = file.read_bytes() if file.exists() else None
+                file.write_text('{"schema_version": 1, "keys": []}' if target.endswith('json') else '# patched\n')
+                report = commands.verify_file(str(path), None, str(self.repo.dir), None, head, root=self.repo.dir)
+                self.assertEqual(('VERIFIER_MODIFIED', False), (report['reason'], report['verified']))
+                if original is None:
+                    file.unlink()
+                else:
+                    file.write_bytes(original)
+
+    def test_an_approval_verifies_only_against_a_candidate(self):
+        path, head = self.approval_and_head()
+        for repo, candidate in ((None, None), (str(self.repo.dir), None)):
+            report = self.verify(path, repo=repo, head=candidate)
+            self.assertEqual(('CANDIDATE_REQUIRED', False, True),
+                             (report['reason'], report['verified'], report['signature_valid']))
+
+    def test_blob_ids_are_checked(self):
+        base = git(self.repo.dir, 'rev-parse', 'HEAD')
+        (self.repo.dir / 'notes.md').write_text('changed\n')
+        (self.repo.dir / 'added.txt').write_text('new\n')
+        head = self.repo.commit('change')
+        document = documents.approval(base, head, ['apply'], 'PR#0', 'agent:test', AT, self.repo.dir)
+        document['paths'][0]['result_blob'] = 'e' * 40
+        report = self.verify(self.sign(document), repo=str(self.repo.dir), head=head)
+        self.assertEqual(('REPOSITORY_MISMATCH', False), (report['reason'], report['checks']['blobs']))
+
+    def test_a_file_name_cannot_hide_the_patch(self):
+        base = git(self.repo.dir, 'rev-parse', 'HEAD')
+        (self.repo.dir / 'notes.md').write_text('changed\n')
+        (self.repo.dir / ':(exclude)notes.md').write_text('x\n')
+        head = self.repo.commit('change with pathspec magic in a name')
+        names = [entry['path'] for entry in documents.approval(base, head, ['apply'], 'PR', 'a', AT,
+                                                                self.repo.dir)['paths']]
+        patch = documents._patch(self.repo.dir, base, head, names)
+        self.assertIn(b'b/notes.md', patch)
+        self.assertIn(b'+changed', patch)
+
+    def test_the_patch_hash_ignores_local_git_configuration_and_attributes(self):
+        base = git(self.repo.dir, 'rev-parse', 'HEAD')
+        (self.repo.dir / 'notes.md').write_text('changed\n')
+        head = self.repo.commit('change')
+        before = documents.bindings(base, head, self.repo.dir)
+        git(self.repo.dir, 'config', 'diff.noprefix', 'true')
+        git(self.repo.dir, 'config', 'diff.mnemonicPrefix', 'true')
+        git(self.repo.dir, 'config', 'diff.context', '9')
+        (self.repo.dir / '.gitattributes').write_text('* -diff\n')
+        self.assertEqual(before, documents.bindings(base, head, self.repo.dir))
+
+    def test_unverified_reports_do_not_echo_the_document(self):
+        artefact = self.repo.artefact()
+        path = self.sign(documents.receipt(artefact, AT, self.repo.dir))
+        data = json.loads(path.read_text())
+        data['proof']['verificationMethod'] = 'did:example:' + 'A' * 5000
+        path.write_text(json.dumps(data))
+        report = self.verify(path)
+        self.assertEqual('UNTRUSTED_KEY', report['reason'])
+        self.assertIsNone(report['verification_method'])
+        self.assertNotIn('AAAA', json.dumps(report))
+
+    def test_only_assertion_method_proofs_verify(self):
+        store = store_file(self.tmp, [entry(self.raw, purposes=['assertionMethod', 'authentication'])])
+        artefact = self.repo.artefact()
+        document = documents.receipt(artefact, AT, self.repo.dir)
+        signed = eddsa.create(document, self.method, 'authentication', AT, self.key.sign)
+        path = self.tmp / 'auth.json'
+        path.write_text(json.dumps(signed))
+        report = commands.verify_file(str(path), str(store), None, None, None)
+        self.assertEqual('UNTRUSTED_KEY', report['reason'])
+
+    def test_signing_rederives_the_approval_from_the_checkout(self):
+        base = git(self.repo.dir, 'rev-parse', 'HEAD')
+        (self.repo.dir / 'notes.md').write_text('changed\n')
+        head = self.repo.commit('change')
+        document = documents.approval(base, head, ['apply'], 'PR#0', 'agent:test', AT, self.repo.dir)
+        commands.check_before_signing(document, head, self.repo.dir)
+        with self.assertRaisesRegex(commands.SignError, '--head'):
+            commands.check_before_signing(document, None, self.repo.dir)
+        forged = {**document, 'result_tree': ('0' if document['result_tree'][0] != '0' else '1') + document['result_tree'][1:]}
+        with self.assertRaisesRegex(commands.SignError, 'result_tree'):
+            commands.check_before_signing(forged, head, self.repo.dir)
+        self.assertIn('notes.md', commands.summary(document))
+        receipt = documents.receipt(self.repo.artefact(), AT, self.repo.dir)
+        commands.check_before_signing(receipt, None, self.repo.dir)
+        with self.assertRaisesRegex(commands.SignError, 'policy'):
+            commands.check_before_signing({**receipt, 'policy_sha256': 'f' * 64}, None, self.repo.dir)
 
 
 # --------------------------------------------------------------------------- signing guards and CLI
@@ -580,6 +716,7 @@ class SigningGuards(unittest.TestCase):
         unsigned.write_text(json.dumps(documents.receipt(repo.artefact(), AT, repo.dir)))
         key_bytes = self.write_key(self.tmp).read_bytes()
         with mock.patch.object(commands, 'read_key_file', return_value=key_bytes), \
+                mock.patch.object(commands, 'check_before_signing'), \
                 mock.patch.object(os, 'open', side_effect=OSError('no tty')):
             code, out, err = run(['sign', str(unsigned), '--key', str(self.write_key(self.tmp)),
                                   '--method', self.method, '--at', AT])
@@ -632,13 +769,18 @@ class SigningGuards(unittest.TestCase):
 
 class Boundaries(unittest.TestCase):
     def test_no_strategy_learning_or_construct_module_reads_a_signature(self):
-        """T07: a signature cannot reach a claim status; nothing that judges evidence imports attest."""
-        for folder in ('strategy', 'learn', 'constructs', 'ice', 'develop', 'turing', 'core', 'doctrine'):
-            for path in (ROOT / 'ante' / folder).rglob('*.py'):
-                tree = ast.parse(path.read_text(encoding='utf-8'))
-                modules = {node.module for node in ast.walk(tree) if isinstance(node, ast.ImportFrom) and node.module}
-                modules |= {alias.name for node in ast.walk(tree) if isinstance(node, ast.Import) for alias in node.names}
-                self.assertFalse({m for m in modules if m.startswith('ante.attest')}, str(path))
+        """T07: a signature cannot reach a claim status; only the CLI and attest itself import attest."""
+        allowed = {'ante/cli.py'}
+        for path in (ROOT / 'ante').rglob('*.py'):
+            name = str(path.relative_to(ROOT))
+            if name in allowed or name.startswith('ante/attest/'):
+                continue
+            tree = ast.parse(path.read_text(encoding='utf-8'))
+            modules = {node.module for node in ast.walk(tree) if isinstance(node, ast.ImportFrom) and node.module}
+            modules |= {alias.name for node in ast.walk(tree) if isinstance(node, ast.Import) for alias in node.names}
+            from_ante = {alias.name for node in ast.walk(tree) if isinstance(node, ast.ImportFrom)
+                         and node.module == 'ante' for alias in node.names}
+            self.assertFalse({m for m in modules if m.startswith('ante.attest')} or 'attest' in from_ante, name)
 
     def test_the_verifier_and_the_trust_store_are_protected_from_self_development(self):
         """T08: both manifests protect the verifier, the trust store and their tests."""

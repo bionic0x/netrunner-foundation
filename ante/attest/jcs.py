@@ -23,6 +23,7 @@ from typing import Any
 
 MAX_SAFE_INTEGER = 2 ** 53 - 1
 MAX_DEPTH = 32
+MAX_BYTES = 4 * 1024 * 1024
 
 
 class CanonicalError(ValueError):
@@ -32,7 +33,7 @@ class CanonicalError(ValueError):
 def _check_text(text: str, where: str) -> None:
     for ch in text:
         if not ' ' <= ch <= '~':
-            raise CanonicalError(f'{where}: only printable ASCII is signed (found U+{ord(ch):04X})')
+            raise CanonicalError(f'{where}: only printable ASCII is signed')
 
 
 def check(value: Any, where: str = '$', depth: int = 0) -> None:
@@ -53,11 +54,11 @@ def check(value: Any, where: str = '$', depth: int = 0) -> None:
             check(item, f'{where}[{index}]', depth + 1)
         return
     if type(value) is dict:
-        for key, item in value.items():
+        for index, (key, item) in enumerate(value.items()):
             if type(key) is not str:
                 raise CanonicalError(f'{where}: object key is not a string')
-            _check_text(key, f'{where} key')
-            check(item, f'{where}.{key}', depth + 1)
+            _check_text(key, f'{where} key #{index}')
+            check(item, f'{where} member #{index}', depth + 1)
         return
     raise CanonicalError(f'{where}: {type(value).__name__} is not signed (no floats, no other types)')
 
@@ -73,32 +74,40 @@ def _no_duplicates(pairs: list[tuple[str, Any]]) -> dict:
     result: dict = {}
     for key, value in pairs:
         if key in result:
-            raise CanonicalError(f'duplicate key {key!r}')
+            raise CanonicalError('duplicate object key')
         result[key] = value
     return result
 
 
 def _no_float(text: str) -> Any:
-    raise CanonicalError(f'number {text} is not an integer (no floats are signed)')
+    raise CanonicalError('a number that is not an integer (no floats are signed)')
 
 
 def _no_constant(text: str) -> Any:
-    raise CanonicalError(f'{text} is not JSON')
+    raise CanonicalError('NaN or Infinity is not JSON')
 
 
 def loads(data: bytes | str) -> Any:
-    """Parse JSON strictly: UTF-8, no duplicate keys, no floats, no NaN, subset only."""
+    """Parse JSON strictly: bounded size, UTF-8, no duplicate keys, no floats, no NaN, subset only."""
+    if len(data) > MAX_BYTES:
+        raise CanonicalError(f'larger than {MAX_BYTES} bytes')
     if isinstance(data, bytes):
         try:
             data = data.decode('utf-8')
         except UnicodeDecodeError as exc:
-            raise CanonicalError(f'not UTF-8: {exc}') from None
-    if data.startswith('﻿'):
+            raise CanonicalError('not UTF-8') from None
+    if data.startswith('\ufeff'):
         raise CanonicalError('byte order mark is not accepted')
     try:
         value = json.loads(data, object_pairs_hook=_no_duplicates,
                            parse_float=_no_float, parse_constant=_no_constant)
+    except CanonicalError:
+        raise
     except json.JSONDecodeError as exc:
-        raise CanonicalError(f'not JSON: {exc}') from None
+        raise CanonicalError(f'not JSON (line {exc.lineno}, column {exc.colno})') from None
+    except RecursionError:
+        raise CanonicalError(f'nested deeper than {MAX_DEPTH}') from None
+    except ValueError:
+        raise CanonicalError('not JSON (number too large to parse)') from None
     check(value)
     return value

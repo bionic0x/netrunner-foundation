@@ -17,13 +17,15 @@ G1a has no process keys, and a later process identity must use its own key.
 """
 from __future__ import annotations
 
+import hashlib
 from dataclasses import dataclass
 from pathlib import Path
 
 from ante.attest import jcs, multibase
 from ante.paths import ROOT
 
-STORE = ROOT / 'foundation' / 'attest' / 'trusted-keys.json'
+STORE_PATH = 'foundation/attest/trusted-keys.json'
+STORE = ROOT / STORE_PATH
 PRINCIPAL_TYPES = ('human', 'process')
 ENTRY_KEYS = {'verification_method', 'public_key_multibase', 'principal', 'principal_type',
               'proof_purposes', 'kinds'}
@@ -79,23 +81,32 @@ class Store:
     def __init__(self, keys: list[Key], source: str):
         self.keys = {key.method: key for key in keys}
         self.source = source
+        self.sha256: str | None = None
+
+    @classmethod
+    def from_bytes(cls, data: bytes, source: str) -> 'Store':
+        try:
+            value = jcs.loads(data)
+        except jcs.CanonicalError as exc:
+            raise TrustError(f'{source}: {exc}') from None
+        if not isinstance(value, dict) or value.get('schema_version') != 1 or not isinstance(value.get('keys'), list):
+            raise TrustError(f'{source}: expected {{"schema_version": 1, "keys": [...]}}')
+        keys = [_entry(item, index) for index, item in enumerate(value['keys'])]
+        methods = [key.method for key in keys]
+        if len(set(methods)) != len(methods):
+            raise TrustError(f'{source}: a verification method is pinned twice')
+        store = cls(keys, source)
+        store.sha256 = hashlib.sha256(data).hexdigest()
+        return store
 
     @classmethod
     def load(cls, path: Path | str = STORE) -> 'Store':
         target = Path(path)
         try:
-            data = jcs.loads(target.read_bytes())
+            data = target.read_bytes()
         except OSError as exc:
             raise TrustError(f'{target}: {exc.strerror or exc}') from None
-        except jcs.CanonicalError as exc:
-            raise TrustError(f'{target}: {exc}') from None
-        if not isinstance(data, dict) or data.get('schema_version') != 1 or not isinstance(data.get('keys'), list):
-            raise TrustError(f'{target}: expected {{"schema_version": 1, "keys": [...]}}')
-        keys = [_entry(item, index) for index, item in enumerate(data['keys'])]
-        methods = [key.method for key in keys]
-        if len(set(methods)) != len(methods):
-            raise TrustError(f'{target}: a verification method is pinned twice')
-        return cls(keys, str(target))
+        return cls.from_bytes(data, str(target))
 
     def resolver(self, kind: str):
         """A key resolver for documents of ``kind``; ``None`` means untrusted."""
