@@ -31,6 +31,13 @@
 - `strategy/contracts.json` carries the seven coherence tests and fourteen
   pathologies (D-004, accepted by the owner), in a separate `protected:` commit.
 
+## Agency upstream synchronization — 2026-10-28
+
+- Merge 66 upstream commits through `b37b5bb`, adding Electrical Engineer and
+  profile corrections while retaining Ante doctrine, runtime and CI controls.
+- Regenerate the 507-agent catalog, Hermes metadata and converter fingerprints
+  from the merged source; retain Ante README information architecture.
+
 ## ACT-LABS marketplace patterns and offline intake — 2026-10-28
 
 - Assess ACT-LABS-IO discovery, event processing and task lifecycle patterns at
@@ -41,6 +48,20 @@
 - Document source limitations, existing-role handoffs and requirements for a
   future MCP/live adapter; no ACT code, credentials, signer or SDK is imported.
 - Add 15 boundary tests to local release validation and Runbook CI.
+
+## NEXUS Overdrive: held-out packs stay outside the repository — 2026-10-16
+
+- Fix `strategy/NEXUS-CASEPACK-AUTHORING.md`. Its steps created held-out packs
+  under `examples/nexus/casepacks/`, asked authors to submit them in a pull
+  request, and ran the campaign on that root, contradicting its own isolation
+  section and a root the campaign refuses. The steps now use a private
+  `$HELD_OUT` directory outside the checkout, add the linter and `list`, and say
+  never to commit or post a held-out pack.
+- `nexus-casepack.py new` and `freeze` now refuse a `held_out` pack whose
+  directory resolves inside the checkout (symlinks included), so the mistake
+  stops at the author's first command instead of at campaign time.
+  `--split development` is unaffected. Three regression tests, one of which keeps
+  the guide's commands out of the repository.
 
 ## Upstream synchronization and MCP advisory remediation — 2026-10-16
 
