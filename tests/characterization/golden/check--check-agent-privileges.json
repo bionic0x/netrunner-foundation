@@ -3,5 +3,5 @@
   "exit": 0,
   "files": {},
   "stderr": "",
-  "stdout": "Privilege schema: 506 agents scanned; 37 tools declarations; 6 observed/6 registered tokens; 0 error(s).\n"
+  "stdout": "Privilege schema: 507 agents scanned; 37 tools declarations; 6 observed/6 registered tokens; 0 error(s).\n"
 }

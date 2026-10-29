@@ -69,3 +69,17 @@ On the merged tree: raw-byte harness 116/116 plus its two division regressions
 and its runner-timeout regression (4 unittest methods, 14.8 s); normalised
 harness 114/114. Codex's records (`BASELINE.md`, `DECISIONS.md`,
 `INVENTORY.md`) are kept verbatim after this branch's, in their own section.
+
+## Rebaselines
+
+A recording changes only by a reviewed rebaseline in its own commit, recorded
+on the case itself (`rebaselined`: decision, original commit, commit recorded
+at, reason). Every other recording still describes `86addea`.
+
+| Decision | Cases (normalised / raw) | From → at | Reason |
+|---|---|---|---|
+| D-018 | `catalog--check` / `catalog-current`; `check--check-agent-privileges` / `agent-privileges-check` | `86addea` → `b793d22` | `main` added one agent profile upstream; both commands now count 507 agents instead of 506. Recorded from `main`'s own scripts (not the merged tree) with each harness's own runner, two identical runs per case. |
+
+Before re-recording, `main` at `b793d22` reproduced the other 112 normalised
+recordings unchanged. The two cases still agree byte for byte across harnesses,
+so the comparison above is unchanged: 50 shared, 0 disagreeing, 180 in the union.

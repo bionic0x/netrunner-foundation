@@ -1430,8 +1430,14 @@
       ],
       "stdin": "",
       "returncode": 0,
-      "stdout_sha256": "f880593c4dcba697561f619c3db323c19cba3ef688759f137e9c3ffb74d219f6",
-      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      "stdout_sha256": "b6574b423520f108e1dfca6f23c53209c979904885b301daf45356225341ba31",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "rebaselined": {
+        "decision": "D-018",
+        "from_commit": "86addea",
+        "recorded_at_commit": "b793d22",
+        "reason": "main added one agent profile upstream (Electrical Engineer); the command now counts 507 agents. Re-recorded from main's own scripts, two identical runs; no other case changed."
+      }
     },
     {
       "id": "security-engagement-check",
@@ -1455,8 +1461,14 @@
       ],
       "stdin": "",
       "returncode": 0,
-      "stdout_sha256": "f3ce93775b581e66c1ad02c1e16303b18d2232aa8cce2dd2c8490758a3356904",
-      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      "stdout_sha256": "63c11ba9d039cf770f3d19708c9bcd70ff55439c65666d055a2665388eeac18c",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "rebaselined": {
+        "decision": "D-018",
+        "from_commit": "86addea",
+        "recorded_at_commit": "b793d22",
+        "reason": "main added one agent profile upstream (Electrical Engineer); the command now counts 507 agents. Re-recorded from main's own scripts, two identical runs; no other case changed."
+      }
     },
     {
       "id": "marketplace-hold",

@@ -854,7 +854,13 @@
       "script": "build-catalog.py",
       "args": [
         "--check"
-      ]
+      ],
+      "rebaselined": {
+        "decision": "D-018",
+        "from_commit": "86addea",
+        "recorded_at_commit": "b793d22",
+        "reason": "main added one agent profile upstream (Electrical Engineer); the command now counts 507 agents. Re-recorded from main's own scripts, two identical runs; no other case changed."
+      }
     },
     {
       "id": "check--check-challenger-pairs",
@@ -879,7 +885,13 @@
     {
       "id": "check--check-agent-privileges",
       "script": "check-agent-privileges.py",
-      "args": []
+      "args": [],
+      "rebaselined": {
+        "decision": "D-018",
+        "from_commit": "86addea",
+        "recorded_at_commit": "b793d22",
+        "reason": "main added one agent profile upstream (Electrical Engineer); the command now counts 507 agents. Re-recorded from main's own scripts, two identical runs; no other case changed."
+      }
     }
   ]
 }

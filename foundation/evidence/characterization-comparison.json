@@ -484,17 +484,6 @@
         "2026-10-28T12:00:00Z"
       ],
       "normalised_id": null,
-      "raw_id": "marketplace-malformed-json",
-      "class": "only_raw"
-    },
-    {
-      "script": "marketplace-intake.py",
-      "args": [
-        "/dev/stdin",
-        "--at",
-        "2026-10-28T12:00:00Z"
-      ],
-      "normalised_id": null,
       "raw_id": "marketplace-boolean-integer",
       "class": "only_raw"
     },
@@ -507,6 +496,17 @@
       ],
       "normalised_id": null,
       "raw_id": "marketplace-duplicate-key",
+      "class": "only_raw"
+    },
+    {
+      "script": "marketplace-intake.py",
+      "args": [
+        "/dev/stdin",
+        "--at",
+        "2026-10-28T12:00:00Z"
+      ],
+      "normalised_id": null,
+      "raw_id": "marketplace-malformed-json",
       "class": "only_raw"
     },
     {
@@ -1230,7 +1230,7 @@
         "/dev/stdin"
       ],
       "normalised_id": null,
-      "raw_id": "instance-malformed-json",
+      "raw_id": "instance-legacy-duplicate-key",
       "class": "only_raw"
     },
     {
@@ -1240,7 +1240,7 @@
         "/dev/stdin"
       ],
       "normalised_id": null,
-      "raw_id": "instance-legacy-duplicate-key",
+      "raw_id": "instance-malformed-json",
       "class": "only_raw"
     },
     {
@@ -1862,13 +1862,13 @@
   "inputs": {
     "normalised_manifest": {
       "path": "tests/characterization/cases.json",
-      "sha256": "0578099c8a040f9f35272904ec066bc447e7455293d0b2cdb13e60a33603d683",
-      "commit": "5e74ff3"
+      "sha256": "606d00b60103d168a60e5b516140b66f935ae66f3631e95c1b63e1814dbd5f9b",
+      "commit": "5e74ff3; two cases re-recorded at b793d22 (D-018)"
     },
     "raw_manifest": {
       "path": "tests/characterization/manifest.json",
-      "sha256": "952b0954b3e925d454e2832c17f65c8a41a00ac880528debf36e2d378898acf1",
-      "commit": "b60af82 (foundation/phase-0, all three stream batches published; merged)"
+      "sha256": "05be2cebe0735da80f45dc1098f8bd362bc998ec62bd8e2756ef9934a0c51737",
+      "commit": "b60af82 (foundation/phase-0, all three batches; merged); two cases re-recorded at b793d22 (D-018)"
     },
     "raw_golden": {
       "path": "tests/characterization/golden",
