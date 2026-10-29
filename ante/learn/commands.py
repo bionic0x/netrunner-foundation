@@ -7,28 +7,20 @@ profiles by itself: those changes go through ``ante develop`` and a human merge.
 
     ante learn record DECIDE.json --ledger L --at T [--runbook R] [--agent A] [--synthetic]
     ante learn reconcile OBSERVATIONS.json --ledger L --at T
-    ante learn calibrate --ledger L --at T [--min-sample N] [--out FILE]
+    ante learn calibrate --ledger L --at T [--min-sample N] [--policy FILE] [--out FILE]
     ante learn patterns  --ledger L --at T [--min-group N] [--out FILE]
     ante learn verify    --ledger L
 
 When too few decisions have been reconciled, the honest output is that nothing
 has been learned yet: ``INSUFFICIENT_SAMPLE``, not a number.
 
-``calibrate`` reports, per group with enough decisive predictions:
-
-    brier                 mean squared error of the declared midpoint against the outcome
-    base_rate             share of CONFIRMED in the group
-    brier_reference       Brier of always forecasting that base rate: base_rate (1 - base_rate).
-                          In-sample climatology, so a generous reference.
-    brier_skill_score     1 - brier / brier_reference; null when the reference is 0
-                          (every outcome the same: there was nothing to forecast)
-    murphy                reliability (miscalibration, lower is better), resolution
-                          (higher is better) and uncertainty, on the reliability bins.
-                          brier = reliability - resolution + uncertainty + within_bin;
-                          within_bin is exactly 0 only when forecasts inside a bin are equal.
-    ece                   expected calibration error on the declared bins, plus the same
-                          error under other binnings and their spread: with small samples
-                          the number moves with the binning, and the spread says how much.
+``calibrate`` keeps the Brier score and the five-bin reliability curve and adds,
+per group with enough decisive predictions, the descriptive diagnostics of
+``ante.learn.calibration`` (``foundation/CALIBRATION-CONTRACT.md``): Murphy
+decomposition on exact forecast groups, ECE with its binning sensitivity, the
+number of distinct originating decisions, and a Brier skill score only against a
+baseline declared in a ``--policy`` file dated before every evaluated decision.
+``--at`` is a cutoff: entries recorded after it are not read.
 
 None of these changes thresholds, routing or profiles by itself.
 """
@@ -42,7 +34,7 @@ from ante import registry
 from ante.constructs import frozen, snapshot as snapshot_mod
 from ante.core import canon, io, schema
 from ante.core import time as ante_time
-from ante.learn import apophenia, jackpot, ledger
+from ante.learn import apophenia, calibration, jackpot, ledger
 from ante.strategy import artifact
 
 OUTCOMES = ('CONFIRMED', 'REFUTED', 'INCONCLUSIVE', 'NOT_YET_OBSERVABLE')
@@ -50,7 +42,6 @@ DECISIVE = ('CONFIRMED', 'REFUTED')
 BINS = ((0.0, 0.2), (0.2, 0.4), (0.4, 0.6), (0.6, 0.8), (0.8, 1.0001))
 SCHEMA_VERSION = 1
 CALIBRATION_SCHEMA_VERSION = 2
-ECE_ALTERNATIVES = (('equal_width_10', 'width', 10), ('equal_mass_5', 'mass', 5))
 
 
 class LearnError(ValueError):
@@ -152,10 +143,14 @@ def _midpoint(expectation: dict) -> float:
     return (low + high) / 2
 
 
-def calibrate(ledger_path: str, at: str, min_sample: int) -> dict:
+def calibrate(ledger_path: str, at: str, min_sample: int, policy_path: str | None = None) -> dict:
     if min_sample < 1:
         raise LearnError('the minimum sample must be at least 1')
-    entries = ledger.read(ledger_path)
+    # A historical --at cannot see reconciliations appended after it.
+    cutoff = ante_time.parse(at, 'at')
+    entries = [e for e in ledger.read(ledger_path) if ante_time.parse(e['at'], 'ledger.at') <= cutoff]
+    policy = calibration.parse_policy(io.load_document(policy_path)) if policy_path else None
+    floor = max(min_sample, policy['minimum_sample']) if policy else min_sample
     decided = ledger.decisions(entries)
     latest = _latest_outcomes(entries)
     excluded = {'synthetic': 0, 'not_decisive': 0, 'unreconciled': 0}
@@ -175,86 +170,49 @@ def calibrate(ledger_path: str, at: str, min_sample: int) -> dict:
                 continue
             rows.append({'runbook': payload['runbook'] or 'unlabelled', 'agent': payload['agent'] or 'unlabelled',
                          'kind': expectation.get('kind', 'unlabelled'), 'p': _midpoint(expectation),
-                         'o': 1 if outcome['payload']['outcome'] == 'CONFIRMED' else 0})
+                         'o': 1 if outcome['payload']['outcome'] == 'CONFIRMED' else 0,
+                         'decision': sha, 'decided_at': payload['artifact']['at']})
     groups = []
     for dimension in ('all', 'runbook', 'agent', 'kind'):
         keys = sorted({'all'} if dimension == 'all' else {r[dimension] for r in rows})
         for key in keys:
             members = rows if dimension == 'all' else [r for r in rows if r[dimension] == key]
-            group = _calibration_group(dimension, key, members, min_sample)
+            group = _calibration_group(dimension, key, members, floor, policy)
             if dimension == 'agent' and frozen.is_frozen_agent(key):
                 group['frozen_reviewer'] = True
                 group['note'] = 'frozen reviewer: reported for reading, never a target of ante develop'
             groups.append(group)
     return {'schema_version': CALIBRATION_SCHEMA_VERSION, 'kind': 'calibration', 'at': _at(at),
             'ledger_head': entries[-1]['entry_hash'] if entries else ledger.GENESIS,
-            'min_sample': min_sample, 'decisive_predictions': len(rows), 'excluded': excluded, 'groups': groups,
+            'min_sample': floor, 'requested_min_sample': min_sample,
+            'decisive_predictions': len(rows), 'excluded': excluded, 'groups': groups,
+            'analysis_mode': 'EXPLORATORY' if policy is None else 'POLICY_DECLARED_NOT_AUTHENTICATED',
+            'calibration_policy': calibration.policy_receipt(policy),
             'method': ('Brier score on the midpoint of each declared interval; CONFIRMED = 1, REFUTED = 0. '
-                       'Skill against the in-sample base rate; Murphy decomposition and ECE on five '
-                       'equal-width bins, ECE also under other binnings.')}
+                       'Diagnostics: foundation/CALIBRATION-CONTRACT.md.')}
 
 
-def _round(value: float | None) -> float | None:
-    return None if value is None else round(value, 6)
-
-
-def _bins_by_width(rows: list[dict], count: int) -> list[list[dict]]:
-    edges = [index / count for index in range(count)] + [1.0001]
-    return [[r for r in rows if edges[k] <= r['p'] < edges[k + 1]] for k in range(count)]
-
-
-def _bins_by_mass(rows: list[dict], count: int) -> list[list[dict]]:
-    ordered = sorted(rows, key=lambda r: r['p'])
-    size, extra = divmod(len(ordered), count)
-    groups, start = [], 0
-    for k in range(count):
-        end = start + size + (1 if k < extra else 0)
-        groups.append(ordered[start:end])
-        start = end
-    return groups
-
-
-def _ece(groups: list[list[dict]], total: int) -> float:
-    return sum(len(g) / total * abs(sum(r['o'] for r in g) / len(g) - sum(r['p'] for r in g) / len(g))
-               for g in groups if g)
-
-
-def _calibration_group(dimension: str, key: str, rows: list[dict], min_sample: int) -> dict:
+def _calibration_group(dimension: str, key: str, rows: list[dict], min_sample: int,
+                       policy: dict | None = None) -> dict:
     base = {'dimension': dimension, 'key': key, 'n': len(rows)}
     if len(rows) < min_sample:
         return {**base, 'result': 'INSUFFICIENT_SAMPLE', 'brier': None,
                 'reason': f'{len(rows)} decisive predictions; {min_sample} declared as the minimum'}
-    n = len(rows)
-    brier = sum((r['p'] - r['o']) ** 2 for r in rows) / n
-    base_rate = sum(r['o'] for r in rows) / n
-    reference = base_rate * (1 - base_rate)
-    declared = [[r for r in rows if low <= r['p'] < high] for low, high in BINS]
-    curve, reliability, resolution = [], 0.0, 0.0
-    for (low, high), members in zip(BINS, declared):
-        mean_forecast = sum(r['p'] for r in members) / len(members) if members else None
-        observed = sum(r['o'] for r in members) / len(members) if members else None
-        if members:
-            reliability += len(members) * (mean_forecast - observed) ** 2 / n
-            resolution += len(members) * (observed - base_rate) ** 2 / n
+    if policy is not None:
+        # Expectations of one decision are correlated: the policy floor counts decisions.
+        distinct = len({r['decision'] for r in rows})
+        if distinct < policy['minimum_sample']:
+            return {**base, 'result': 'INSUFFICIENT_SAMPLE', 'brier': None, 'distinct_decisions': distinct,
+                    'reason': f'{distinct} distinct decisions; {policy["minimum_sample"]} required by the policy'}
+    brier = sum((r['p'] - r['o']) ** 2 for r in rows) / len(rows)
+    curve = []
+    for low, high in BINS:
+        members = [r for r in rows if low <= r['p'] < high]
         curve.append({'bin': [low, min(high, 1.0)], 'n': len(members),
-                      'mean_forecast': _round(mean_forecast), 'observed_rate': _round(observed)})
-    ece_declared = _ece(declared, n)
-    alternatives = {'equal_width_5': ece_declared}
-    for name, kind, count in ECE_ALTERNATIVES:
-        groups = _bins_by_width(rows, count) if kind == 'width' else _bins_by_mass(rows, count)
-        alternatives[name] = _ece(groups, n)
-    skill = None if reference == 0 else 1 - brier / reference
+                      'mean_forecast': round(sum(r['p'] for r in members) / len(members), 6) if members else None,
+                      'observed_rate': round(sum(r['o'] for r in members) / len(members), 6) if members else None})
     return {**base, 'result': 'MEASURED', 'brier': round(brier, 6), 'reliability': curve,
-            'base_rate': _round(base_rate), 'brier_reference': _round(reference),
-            'brier_skill_score': _round(skill),
-            **({'brier_skill_score_reason': 'every outcome in the group is the same; there was nothing to forecast'}
-               if skill is None else {}),
-            'murphy': {'reliability': _round(reliability), 'resolution': _round(resolution),
-                       'uncertainty': _round(reference),
-                       'within_bin': _round(brier - (reliability - resolution + reference))},
-            'ece': {'declared_bins': 'equal_width_5', 'value': _round(ece_declared),
-                    'by_binning': {k: _round(v) for k, v in alternatives.items()},
-                    'spread': _round(max(alternatives.values()) - min(alternatives.values()))}}
+            'diagnostics': calibration.summarize(rows, policy)}
 
 
 def patterns(ledger_path: str, at: str, min_group: int, seed: int = 20261028) -> dict:
@@ -345,8 +303,9 @@ def add_parser(sub) -> None:
     rec.add_argument('--synthetic', action='store_true', help='fixture data; excluded from calibration and patterns')
     rcn = lsub.add_parser('reconcile', help='record observed outcomes of dated expectations')
     rcn.add_argument('observations')
-    cal = lsub.add_parser('calibrate', help='Brier, skill, Murphy decomposition and ECE, or INSUFFICIENT_SAMPLE')
+    cal = lsub.add_parser('calibrate', help='Brier, Murphy decomposition, ECE and skill against a declared baseline, or INSUFFICIENT_SAMPLE')
     cal.add_argument('--min-sample', type=int, default=30)
+    cal.add_argument('--policy', help='versioned calibration policy (minimum sample >= 30; optional fixed baseline)')
     cal.add_argument('--out')
     pat = lsub.add_parser('patterns', help='candidate patterns that survive the apophenia guard')
     pat.add_argument('--min-group', type=int, default=3)
@@ -379,7 +338,7 @@ def main(args) -> int:
             added = reconcile(args.observations, args.ledger, args.at)
             print(f'{len(added)} reconciliation(s) recorded; head {added[-1]["entry_hash"]}')
         elif args.learn_command == 'calibrate':
-            _emit(calibrate(args.ledger, args.at, args.min_sample), args.out)
+            _emit(calibrate(args.ledger, args.at, args.min_sample, args.policy), args.out)
         elif args.learn_command == 'patterns':
             _emit(patterns(args.ledger, args.at, args.min_group), args.out)
         else:
@@ -388,7 +347,8 @@ def main(args) -> int:
     except (artifact.LineageError, ledger.LedgerError) as exc:
         print(f'LINEAGE {exc}', file=sys.stderr)
         return 3
-    except (LearnError, frozen.ConstructError, io.InputError, schema.SchemaError, ante_time.TimeError) as exc:
+    except (LearnError, calibration.CalibrationError, frozen.ConstructError, io.InputError, schema.SchemaError,
+            ante_time.TimeError) as exc:
         print(f'INVALID {exc}', file=sys.stderr)
         return 2
     return 0
