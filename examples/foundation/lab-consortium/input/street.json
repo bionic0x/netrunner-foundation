@@ -10,6 +10,7 @@
       "misuse": [
         {
           "actor": "uni-a",
+          "variant": "adversarial",
           "reuse": "relabel ordinary requests as urgent so they jump the queue",
           "effect_on_purpose": "urgent hours crowd out the requests the label was meant to protect",
           "indicator": "urgent requests without a deadline document attached",
@@ -17,10 +18,19 @@
         },
         {
           "actor": "council",
+          "variant": "adversarial",
           "reuse": "push the share down by refusing urgent labels to show the metric improving",
           "effect_on_purpose": "real deadlines are missed while the indicator looks healthy",
           "indicator": "missed external deadlines on requests that were refused the urgent label",
           "countermeasure": "report missed deadlines beside the share every cycle"
+        },
+        {
+          "actor": "council",
+          "variant": "regressional",
+          "reuse": "rank cycles by the urgent share and copy the settings of the best one",
+          "effect_on_purpose": "the best-looking cycle was partly luck in how requests were labelled, so the copied settings protect nothing",
+          "indicator": "deadline hits per cycle, compared across the cycles ranked best and worst by urgent share",
+          "countermeasure": "judge settings over several cycles against deadline hits, never on one cycle's share"
         }
       ]
     },
@@ -32,10 +42,19 @@
       "misuse": [
         {
           "actor": "research-teams",
+          "variant": "adversarial",
           "reuse": "split one essential booking into several smaller ones to look less dominant",
           "effect_on_purpose": "the capacity trigger fires late because demand looks fragmented",
           "indicator": "bookings by one team within the same week whose sum exceeds its declared need",
           "countermeasure": "aggregate essential demand by project, not by booking"
+        },
+        {
+          "actor": "research-teams",
+          "variant": "extremal",
+          "reuse": "stop booking hours that will not be served once the laboratory is full",
+          "effect_on_purpose": "near saturation recorded demand understates need, so the capacity trigger never fires",
+          "indicator": "requests withdrawn or never filed that teams report in the cycle review",
+          "countermeasure": "collect declared need per project each cycle, independent of bookings"
         }
       ]
     },
@@ -47,6 +66,7 @@
       "misuse": [
         {
           "actor": "uni-a",
+          "variant": "adversarial",
           "reuse": "obtain generic deadline letters that cover every request",
           "effect_on_purpose": "the document becomes a formality and inflation resumes",
           "indicator": "deadline letters reused across unrelated projects",

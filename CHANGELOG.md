@@ -9,7 +9,8 @@
   of Strategy — `frame`, `map`, `cause`, `focus`, `options`, `react`, `street`,
   `ach`, `watch`, `close`, `cohere`, `pathology`, `nodal`, `decide` — plus
   `selftest` and `ante run` (chain completeness per runbook). Each refuses its
-  characteristic defect; `decide` admits only what `cohere` leaves admissible and
+  characteristic defect (`street` classifies every misuse scenario by Goodhart
+  variant and requires the adversarial one for each metric); `decide` admits only what `cohere` leaves admissible and
   refuses `PROCEED` without an independent review, a termination contract, dated
   expectations, or with a load-bearing assumption not accepted as a named risk.
 - Learning layer: hash-chained decision ledger with frozen decision snapshots,
@@ -27,7 +28,7 @@
   before the move: 114 normalised cases and 116 raw-byte cases (180 distinct
   invocations; the 50 they share agree byte for byte).
   Runbooks declare `strategy_commands` and `material`.
-- Synthetic end-to-end example in `examples/foundation/`; 179 foundation tests.
+- Synthetic end-to-end example in `examples/foundation/`; 182 foundation tests.
   Owner
   decisions pending: D-003, D-010, D-013, D-014, D-016, D-017, D-020 (`foundation/DECISIONS.md`).
 - `strategy/contracts.json` carries the seven coherence tests and fourteen

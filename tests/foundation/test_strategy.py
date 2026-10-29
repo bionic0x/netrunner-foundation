@@ -434,6 +434,37 @@ class Street(Base):
         doc['instruments'][0]['misuse'][0]['actor'] = 'uni-z'
         self.rejects('street', doc, 'UNKNOWN_ACTOR')
 
+    def test_every_scenario_names_its_goodhart_variant(self):
+        doc = load('street')
+        del doc['instruments'][0]['misuse'][0]['variant']
+        code, _, err = self.chain.run('street', doc, ['frame', 'map'])
+        self.assertEqual(2, code)
+        self.assertIn('variant', err)
+        doc = load('street')
+        doc['instruments'][0]['misuse'][0]['variant'] = 'perverse'
+        code, _, err = self.chain.run('street', doc, ['frame', 'map'])
+        self.assertEqual(2, code)
+        self.assertIn('regressional, extremal, causal, adversarial', err)
+
+    def test_a_metric_needs_an_adversarial_scenario_but_a_rule_does_not(self):
+        doc = load('street')
+        metric = doc['instruments'][1]
+        metric['misuse'] = [s for s in metric['misuse'] if s['variant'] != 'adversarial']
+        self.rejects('street', doc, 'ADVERSARIAL_MISUSE_MISSING')
+        doc = load('street')
+        rule = doc['instruments'][2]
+        rule['misuse'][0]['variant'] = 'causal'
+        self.assertEqual(0, self.chain.run('street', doc, ['frame', 'map'])[0])
+
+    def test_unconsidered_variants_are_reported_not_refused(self):
+        self.assertEqual(0, self.chain.run('street', load('street'), ['frame', 'map'])[0])
+        art = self.chain.artefact('street')
+        self.assertEqual({'urgent-share': ['extremal', 'causal'], 'essential-demand': ['regressional', 'causal']},
+                         art['body']['unconsidered_variants'])
+        self.assertEqual(['GOODHART_VARIANTS_UNCONSIDERED'] * 2, [f['code'] for f in art['findings']])
+        rows = {i['id']: i['goodhart_variants'] for i in art['body']['misuse_analysis']}
+        self.assertEqual(['regressional', 'adversarial'], rows['urgent-share'])
+
     def test_a_plan_metric_without_misuse_analysis_cannot_pass_the_interactive_test(self):
         code, _, err = self.chain.run('cohere', load('cohere'), ['frame', 'cause', 'map'])
         self.assertEqual(0, code, err)

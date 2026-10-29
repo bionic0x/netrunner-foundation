@@ -15,7 +15,7 @@ and the learning loop:
 | 4 | `focus` | the dependency to act on, with substitution and horizon |
 | 5 | `options` | options that differ in mechanism, continuity baseline included |
 | 6 | `react` | competent opposition, unexpected cooperation, a third-party shift |
-| 7 | `street` | how each metric and rule could be gamed, and how that would show |
+| 7 | `street` | how each metric and rule could be gamed, by Goodhart variant, and how that would show |
 | 8 | `ach` | competing hypotheses with shared sources counted once |
 | 9 | `watch` | indicators tied to responses, reserve, culmination signal |
 | 10 | `close` | the termination contract, designed before the commitment |
