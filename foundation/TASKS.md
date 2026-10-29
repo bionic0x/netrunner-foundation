@@ -79,3 +79,13 @@ Claude has meanwhile published phases 0–6 in PRs #3–#9 and consolidation in 
 Keep this audit branch as evidence and use the existing PRs. PR #1 (the pinned
 setup-python action update) is verified merged into main at `15ffb29`. Other
 merges remain under review; no unmeasured CI result is asserted.
+
+
+## Follow-up — 29 October 2026
+
+- [x] Apply the explicitly owner-authorized two-file Semgrep rollback in PR #2 (`79cb744`).
+- [x] Verify all 13 new hosted checks passed, including security and macOS.
+- [x] Merge PR #2 into main (`b793d22`); all PRs #1–#11 are now merged.
+- [x] Confirm PR #11 also finished with 13/13 hosted checks passed.
+
+GitHub shows 0 open and 11 closed PRs. The dated [delivery checkpoint](evidence/delivery-checkpoint-2026-10-29.md) supersedes the earlier PR #2 blocker. Foundation remains on `foundation/base-86addea`; D-020 for the other protected proposals and D-018 for main integration remain pending. The two-file exception records agent authorship with explicit owner authorization.
