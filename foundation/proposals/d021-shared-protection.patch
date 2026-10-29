@@ -68,29 +68,29 @@ index 991ac2e..a55b381 100644
          frozen=frozen_mod.paths(repo, ref),
          finding_min_sample=int(policy.get('finding_min_sample', 30)),
 diff --git a/foundation/ATTEST.md b/foundation/ATTEST.md
-index 463d05a..45b9d90 100644
+index 03ba6f0..f04f5ae 100644
 --- a/foundation/ATTEST.md
 +++ b/foundation/ATTEST.md
 @@ -15,7 +15,7 @@ exact bytes. Four boundaries follow from that and are enforced, not only stated.
  |---|---|---|
  | Epistemic | A signature never moves a claim from `HYPOTHESIS` or `ATTRIBUTED_INTENT` to `EVIDENCE`. It shows integrity of a record, not truth about the world. | No module under `ante/strategy`, `learn`, `constructs`, `ice`, `develop`, `turing`, `core` or `doctrine` imports `ante.attest` (`test_no_strategy_learning_or_construct_module_reads_a_signature`). |
  | Authorisation | A valid signature or proof never replaces the owner's mandate or the host's control. | `ante verify` reports `authorizes_action: false` for every document; a receipt has no field that could carry a permission (`test_receipt_carries_no_authority`). |
--| Self-development | A change to the verifier, its tests or the trust store cannot be approved or signed by the loop that benefits from it. | `ante/attest/**` and `foundation/attest/**` are protected in both manifests; `tests/**` already was (`test_the_verifier_and_the_trust_store_are_protected_from_self_development`). |
-+| Self-development | A change to the verifier, its tests or the trust store cannot be approved or signed by the loop that benefits from it. | The shared `strategy/overdrive-protected.json` manifest protects `ante/attest/**`, `foundation/attest/**` and `tests/**`; schema 2 of `foundation/develop-policy.json` pins that same manifest for the develop loop (`test_the_verifier_and_the_trust_store_are_protected_from_self_development`). |
+-| Self-development | A change to the verifier, its tests or the trust store cannot be approved or signed by the loop that benefits from it. | `ante/attest/**` and `foundation/attest/**` are protected in both manifests; the tests under `tests/**` are protected in `foundation/develop-policy.json` (`test_the_verifier_and_the_trust_store_are_protected_from_self_development`). The manifests bind proposals, not the checkout a verifier runs from, which is why the default store is read from HEAD and a modified verifier fails. |
++| Self-development | A change to the verifier, its tests or the trust store cannot be approved or signed by the loop that benefits from it. | The shared `strategy/overdrive-protected.json` manifest protects `ante/attest/**`, `foundation/attest/**` and `tests/**`; schema 2 of `foundation/develop-policy.json` pins that same manifest for the develop loop (`test_the_verifier_and_the_trust_store_are_protected_from_self_development`). The manifests bind proposals, not the checkout a verifier runs from, which is why the default store is read from HEAD and a modified verifier fails. |
  | Independence | A record signed with the system's or the owner's own key is still an internal record. A signature does not make it independent corroboration. | A verified receipt reports `evidence_origin: SYSTEM`, a verified approval `PINNED_HUMAN_KEY`, anything else `UNVERIFIED`; nothing reads that report back into a claim. |
  
  A bare key signature also does not prove that a person was present. `ante sign`
-@@ -151,7 +151,7 @@ verified. Every failure carries a reason: `MALFORMED`, `SCHEMA_INVALID`,
+@@ -185,7 +185,7 @@ reason: `MALFORMED`, `SCHEMA_INVALID`, `UNSUPPORTED_PROOF`, `CONTEXT_MISMATCH`,
  | T05 | Replaying a receipt triggers an action | Verification is read-only; `authorizes_action: false` | Tested (`test_verification_is_read_only_and_repeatable`) |
  | T06 | Receipt names code or policy that did not run | Commit, `ante/` tree and policy re-checked from git; dirty state refused | Tested (`test_uncommitted_code_or_policy_is_refused`, `test_receipt_for_other_code_or_policy_or_artefact_fails`) |
  | T07 | The system attests its own observation | `evidence_origin: SYSTEM`; no judging module reads signatures | Tested (`test_no_strategy_learning_or_construct_module_reads_a_signature`) |
 -| T08 | An agent alters the verifier or the trust store | Protected in both manifests; changes only through D-020 | Tested (`test_the_verifier_and_the_trust_store_are_protected_from_self_development`) |
 +| T08 | An agent alters the verifier or the trust store | Shared base-revision manifest used by both entry points; changes only through D-020 | Tested (`test_the_verifier_and_the_trust_store_are_protected_from_self_development`, `test_both_entry_points_refuse_foundation_and_frozen_evaluators`) |
- | T09 | Private content leaks through signed metadata | Closed schemas of hashes, object ids, paths and references | Tested (`test_receipt_carries_no_authority`, schema tests) |
+ | T09 | Private content leaks through signed metadata or reports | Closed schemas of hashes, object ids, paths and references; errors and unverified reports echo nothing from the input | Tested (`test_errors_do_not_echo_the_input`, `test_unverified_reports_do_not_echo_the_document`, `test_receipt_carries_no_authority`, schema tests) |
  | T10 | False signing time | `created` and `issued_at` are the signer's statement | Documented; a time witness is outside G1a |
  | T11 | A key is compromised after signing | Removing the key from the store invalidates all its signatures; no historical trust | Rotation and dated revocation are G1b |
 diff --git a/foundation/DECISIONS.md b/foundation/DECISIONS.md
-index 66fac7c..4e480ef 100644
+index 66fac7c..d47d8b8 100644
 --- a/foundation/DECISIONS.md
 +++ b/foundation/DECISIONS.md
 @@ -222,7 +222,7 @@ that reads `runbooks.json`).
@@ -178,7 +178,7 @@ index 66fac7c..4e480ef 100644
  
  ---
  
-@@ -443,6 +452,26 @@ P2 approval is not misrepresented as approval of identical bytes.
+@@ -443,6 +452,27 @@ P2 approval is not misrepresented as approval of identical bytes.
  
  ---
  
@@ -194,7 +194,8 @@ index 66fac7c..4e480ef 100644
 +retain their preparation history; the application receipt records the actual
 +owner decision and resulting commits.
 +
-+G1a, integrated through PR #23, is preserved. The shared manifest retains its
++G1a and its signer-isolation follow-up, integrated through PRs #23 and #26,
++are preserved. The shared manifest retains its
 +`ante/attest/**` and `foundation/attest/**` rules. This policy migration neither
 +expands signing authority nor grants host execution permission. The source G0/G1a
 +drafts' duplicated-list wording is reconciled explicitly with one pinned
@@ -297,11 +298,11 @@ index 9b283e7..534695f 100644
    "held_out_packs": "examples/nexus/casepacks/*/ whose pack.json declares split held_out, at the base or the head of the proposal"
  }
 diff --git a/tests/foundation/test_attest.py b/tests/foundation/test_attest.py
-index 9869e70..2fd75b6 100644
+index 819a18c..3077fc8 100644
 --- a/tests/foundation/test_attest.py
 +++ b/tests/foundation/test_attest.py
-@@ -612,15 +612,16 @@ class Boundaries(unittest.TestCase):
-                 self.assertFalse({m for m in modules if m.startswith('ante.attest')}, str(path))
+@@ -783,15 +783,16 @@ class Boundaries(unittest.TestCase):
+             self.assertFalse({m for m in modules if m.startswith('ante.attest')} or 'attest' in from_ante, name)
  
      def test_the_verifier_and_the_trust_store_are_protected_from_self_development(self):
 -        """T08: both manifests protect the verifier, the trust store and their tests."""
