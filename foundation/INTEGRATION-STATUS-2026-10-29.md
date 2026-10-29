@@ -1,5 +1,26 @@
 # Integration status addendum — 29 October 2026
 
+## Current consolidation update
+
+The owner subsequently requested **Netrunner Foundation**. The public repository
+is now `bionic0x/netrunner-foundation`; its CLI remains `ante`. Main includes the
+Foundation integration and D-020 (#12, #13, #15), the public entrypoint (#20) and
+the later Foundation stack (#16–#19, #21), inspected at `039e88da3f51947235c3e5114cdf6df39a4ecb0a`.
+
+The owner directly approved D-020 option C, P0–P3 and R1 in the task conversation,
+and later explicitly delegated the P2 variant decision and branch consolidation.
+That direct instruction supplies the narrow maintenance authorization recorded
+in the updated D-020 packet. It is not independent identity verification and
+is not a standing grant to the self-development loop. The v7.1.0 revision is
+scoped and hashed separately; it must pass CI on its own candidate head.
+
+[NETRUNNER-FOUNDATION.md](NETRUNNER-FOUNDATION.md) and its branch inventory are
+the current consolidation record. The earlier inspection below is retained as
+a dated snapshot; its “pending” observations have been superseded where stated.
+
+## Earlier inspection
+
+
 **Live integration target at inspection:** `bionic0x/neuromancers-foundation`, public, `main` at `ff16cbe6c7c77799c3f4fc2bce987c68c5b29699`. Original source: `bionic0x/Ante-agency-agents`, source commit `86addea22f6060f2c50e81c67c6dadf978ea3749` (historical baseline).
 
 This is an addendum, not an alteration of dated historical decisions. The initial private-repository statement in `foundation/FORK.md`, phase-0 HOLD in `foundation/TASKS.md`, and statuses in the original D-020 packet are snapshots of the preparation they describe, **not authoritative current deployment status**.
