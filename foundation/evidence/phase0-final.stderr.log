@@ -1,0 +1,9 @@
+test_foundation_and_tests_are_infrastructure (test_division_infrastructure.DivisionInfrastructure.test_foundation_and_tests_are_infrastructure) ... ok
+test_unknown_division_remains_rejected (test_division_infrastructure.DivisionInfrastructure.test_unknown_division_remains_rejected) ... ok
+test_frozen_contracts (test_legacy_cli.LegacyCLI.test_frozen_contracts) ... ok
+test_exited_parent_with_child_holding_pipes_is_bounded (test_runner_timeout.RunnerTimeout.test_exited_parent_with_child_holding_pipes_is_bounded) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 9.562s
+
+OK

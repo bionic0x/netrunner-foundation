@@ -1,0 +1,17 @@
+usage: nexus-pilot.py [-h] {step,accept,replay} ...
+
+Bounded live-execution pilot for NEXUS. The pilot composes three existing
+authorities without replacing any of them: * nexus-instance.py decides which
+task is ready; * nexus-routing.py decides which observed targets are
+admissible; * an operator authorization decides whether a live model call may
+occur. One `step` executes at most one task. It appends a NEXUS `start` event
+and stores an execution record, then stops in AWAITING_ACCEPTANCE. A separate
+`accept` operation appends the NEXUS `finish` event. This separation is
+deliberate: COMPLETED by a model host is not the same claim as accepted by the
+NEXUS task contract. `replay` never calls a provider.
+
+positional arguments:
+  {step,accept,replay}
+
+options:
+  -h, --help            show this help message and exit

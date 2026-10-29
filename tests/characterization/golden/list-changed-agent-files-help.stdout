@@ -1,0 +1,8 @@
+usage: list-changed-agent-files.py [-h] [--divisions DIVISIONS]
+
+Read newline-delimited changed paths on stdin and emit canonical agent
+Markdown paths.
+
+options:
+  -h, --help            show this help message and exit
+  --divisions DIVISIONS

@@ -1,0 +1,37 @@
+[
+  {
+    "id": "clinic-reminder-release",
+    "case_ref": "qa-versus-purpose",
+    "split": "held_out",
+    "author": "claude-session-pack-author",
+    "frozen": true
+  },
+  {
+    "id": "freight-exclusivity-lapse",
+    "case_ref": "expired-premise",
+    "split": "held_out",
+    "author": "claude-session-pack-author",
+    "frozen": true
+  },
+  {
+    "id": "harbor-pricing-intent",
+    "case_ref": "attributed-intent",
+    "split": "held_out",
+    "author": "claude-session-pack-author",
+    "frozen": true
+  },
+  {
+    "id": "level-inversion-northwind",
+    "case_ref": "level-inversion",
+    "split": "development",
+    "author": "overdrive-maintainers (synthetic example)",
+    "frozen": true
+  },
+  {
+    "id": "shared-source-market",
+    "case_ref": "shared-source",
+    "split": "development",
+    "author": "overdrive-maintainers (synthetic example)",
+    "frozen": true
+  }
+]

@@ -1,0 +1,44 @@
+usage: nexus-blind.py [-h] [--trials TRIALS] [--artifacts ARTIFACTS]
+                      [--cases CASES] [--out OUT] [--allow-tells]
+                      [--seed SEED] [--case CASE] [--trial TRIAL]
+                      [--variant VARIANT] [--salt SALT]
+                      {seal,submission-id}
+
+nexus-blind.py — build a review packet with direct pipeline labels removed.
+
+Blinding that relies on a reviewer not looking is not blinding. Two things
+defeat it in practice, and both are mechanical:
+
+  the filename   `nexus-instance-level-inversion.md` announces the variant
+                 before the artifact is opened.
+  the artifact   a run that narrates its own pipeline ("delegating to the
+                 orchestrator", "as a single agent I will…") announces it in
+                 the first paragraph.
+
+`seal` addresses the first by copying every artifact to an opaque submission id
+and emitting the packet in shuffled order. It addresses the second by scanning
+for tells and refusing to seal a packet that contains them, as a screening step. Preserve the original artifacts: redactions need a uniform,
+preregistered procedure. No keyword scan can guarantee blinded review.
+
+The variant assignment stays in the trials file, which the reviewer never
+receives. evaluate-nexus.py joins the two after the judgments are sealed.
+
+Usage:
+  nexus-blind.py seal --trials host-trials.json --artifacts runs/ --out review/
+  nexus-blind.py seal ... --allow-tells      # record them instead of refusing
+
+positional arguments:
+  {seal,submission-id}
+
+options:
+  -h, --help            show this help message and exit
+  --trials TRIALS
+  --artifacts ARTIFACTS
+  --cases CASES         case material and expected behavior for the reviewer
+  --out OUT
+  --allow-tells
+  --seed SEED
+  --case CASE
+  --trial TRIAL
+  --variant VARIANT
+  --salt SALT

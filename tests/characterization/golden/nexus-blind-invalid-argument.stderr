@@ -1,0 +1,6 @@
+usage: nexus-blind.py [-h] [--trials TRIALS] [--artifacts ARTIFACTS]
+                      [--cases CASES] [--out OUT] [--allow-tells]
+                      [--seed SEED] [--case CASE] [--trial TRIAL]
+                      [--variant VARIANT] [--salt SALT]
+                      {seal,submission-id}
+nexus-blind.py: error: the following arguments are required: command

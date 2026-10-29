@@ -1,0 +1,1878 @@
+{
+  "counts": {
+    "only_normalised": 64,
+    "only_raw": 66,
+    "same_bytes": 50
+  },
+  "normalised_total": 114,
+  "raw_total": 116,
+  "union": 180,
+  "rows": [
+    {
+      "script": "agent-capabilities.py",
+      "args": [],
+      "normalised_id": "noargs--agent-capabilities",
+      "raw_id": null,
+      "class": "only_normalised"
+    },
+    {
+      "script": "agent-capabilities.py",
+      "args": [
+        "--foundation-unknown-option"
+      ],
+      "normalised_id": null,
+      "raw_id": "agent-capabilities-invalid-argument",
+      "class": "only_raw"
+    },
+    {
+      "script": "agent-capabilities.py",
+      "args": [
+        "--help"
+      ],
+      "normalised_id": "help--agent-capabilities",
+      "raw_id": "agent-capabilities-help",
+      "stdout_file_matches_manifest": true,
+      "stderr_file_matches_manifest": true,
+      "class": "same_bytes"
+    },
+    {
+      "script": "benchmark-conversion.py",
+      "args": [
+        "--foundation-unknown-option"
+      ],
+      "normalised_id": null,
+      "raw_id": "benchmark-conversion-invalid-argument",
+      "class": "only_raw"
+    },
+    {
+      "script": "benchmark-conversion.py",
+      "args": [
+        "--help"
+      ],
+      "normalised_id": "help--benchmark-conversion",
+      "raw_id": "benchmark-conversion-help",
+      "stdout_file_matches_manifest": true,
+      "stderr_file_matches_manifest": true,
+      "class": "same_bytes"
+    },
+    {
+      "script": "build-catalog.py",
+      "args": [
+        "--check"
+      ],
+      "normalised_id": "catalog--check",
+      "raw_id": "catalog-current",
+      "stdout_file_matches_manifest": true,
+      "stderr_file_matches_manifest": true,
+      "class": "same_bytes"
+    },
+    {
+      "script": "build-catalog.py",
+      "args": [
+        "--foundation-unknown-option"
+      ],
+      "normalised_id": null,
+      "raw_id": "build-catalog-invalid-argument",
+      "class": "only_raw"
+    },
+    {
+      "script": "build-catalog.py",
+      "args": [
+        "--help"
+      ],
+      "normalised_id": "help--build-catalog",
+      "raw_id": "build-catalog-help",
+      "stdout_file_matches_manifest": true,
+      "stderr_file_matches_manifest": true,
+      "class": "same_bytes"
+    },
+    {
+      "script": "build-hermes-plugin.py",
+      "args": [
+        "--foundation-unknown-option"
+      ],
+      "normalised_id": null,
+      "raw_id": "build-hermes-plugin-invalid-argument",
+      "class": "only_raw"
+    },
+    {
+      "script": "build-hermes-plugin.py",
+      "args": [
+        "--help"
+      ],
+      "normalised_id": "help--build-hermes-plugin",
+      "raw_id": "build-hermes-plugin-help",
+      "stdout_file_matches_manifest": true,
+      "stderr_file_matches_manifest": true,
+      "class": "same_bytes"
+    },
+    {
+      "script": "check-agent-originality.sh",
+      "args": [
+        "engineering/engineering-frontend-developer.md"
+      ],
+      "normalised_id": null,
+      "raw_id": "check-agent-originality-one-agent",
+      "class": "only_raw"
+    },
+    {
+      "script": "check-agent-privileges.py",
+      "args": [],
+      "normalised_id": "check--check-agent-privileges",
+      "raw_id": "agent-privileges-check",
+      "stdout_file_matches_manifest": true,
+      "stderr_file_matches_manifest": true,
+      "class": "same_bytes"
+    },
+    {
+      "script": "check-agent-privileges.py",
+      "args": [
+        "--foundation-unknown-option"
+      ],
+      "normalised_id": null,
+      "raw_id": "check-agent-privileges-invalid-argument",
+      "class": "only_raw"
+    },
+    {
+      "script": "check-agent-privileges.py",
+      "args": [
+        "--help"
+      ],
+      "normalised_id": "help--check-agent-privileges",
+      "raw_id": "check-agent-privileges-help",
+      "stdout_file_matches_manifest": true,
+      "stderr_file_matches_manifest": true,
+      "class": "same_bytes"
+    },
+    {
+      "script": "check-challenger-pairs.py",
+      "args": [],
+      "normalised_id": "check--check-challenger-pairs",
+      "raw_id": "check-challenger-pairs-check",
+      "stdout_file_matches_manifest": true,
+      "stderr_file_matches_manifest": true,
+      "class": "same_bytes"
+    },
+    {
+      "script": "check-divisions.sh",
+      "args": [],
+      "normalised_id": null,
+      "raw_id": "check-divisions-check",
+      "class": "only_raw"
+    },
+    {
+      "script": "check-hermes-plugin.py",
+      "args": [],
+      "normalised_id": null,
+      "raw_id": "check-hermes-plugin-check",
+      "class": "only_raw"
+    },
+    {
+      "script": "check-htp-gate0.py",
+      "args": [],
+      "normalised_id": "check--check-htp-gate0",
+      "raw_id": "check-htp-gate0-check",
+      "stdout_file_matches_manifest": true,
+      "stderr_file_matches_manifest": true,
+      "class": "same_bytes"
+    },
+    {
+      "script": "check-runbooks.sh",
+      "args": [],
+      "normalised_id": null,
+      "raw_id": "check-runbooks-check",
+      "class": "only_raw"
+    },
+    {
+      "script": "check-security-engagement.py",
+      "args": [],
+      "normalised_id": "check--check-security-engagement",
+      "raw_id": "security-engagement-check",
+      "stdout_file_matches_manifest": true,
+      "stderr_file_matches_manifest": true,
+      "class": "same_bytes"
+    },
+    {
+      "script": "check-security-engagement.py",
+      "args": [
+        "--foundation-unknown-option"
+      ],
+      "normalised_id": null,
+      "raw_id": "check-security-engagement-invalid-argument",
+      "class": "only_raw"
+    },
+    {
+      "script": "check-security-engagement.py",
+      "args": [
+        "--help"
+      ],
+      "normalised_id": "help--check-security-engagement",
+      "raw_id": "check-security-engagement-help",
+      "stdout_file_matches_manifest": true,
+      "stderr_file_matches_manifest": true,
+      "class": "same_bytes"
+    },
+    {
+      "script": "check-strategy-vocabulary.py",
+      "args": [],
+      "normalised_id": "check--check-strategy-vocabulary",
+      "raw_id": "check-strategy-vocabulary-check",
+      "stdout_file_matches_manifest": true,
+      "stderr_file_matches_manifest": true,
+      "class": "same_bytes"
+    },
+    {
+      "script": "check-tools.sh",
+      "args": [],
+      "normalised_id": null,
+      "raw_id": "check-tools-check",
+      "class": "only_raw"
+    },
+    {
+      "script": "convert-engine.sh",
+      "args": [
+        "--foundation-unknown-option"
+      ],
+      "normalised_id": null,
+      "raw_id": "convert-engine-invalid-argument",
+      "class": "only_raw"
+    },
+    {
+      "script": "convert-engine.sh",
+      "args": [
+        "--help"
+      ],
+      "normalised_id": null,
+      "raw_id": "convert-engine-help",
+      "class": "only_raw"
+    },
+    {
+      "script": "convert.sh",
+      "args": [
+        "--foundation-unknown-option"
+      ],
+      "normalised_id": null,
+      "raw_id": "convert-invalid-argument",
+      "class": "only_raw"
+    },
+    {
+      "script": "convert.sh",
+      "args": [
+        "--help"
+      ],
+      "normalised_id": null,
+      "raw_id": "convert-help",
+      "class": "only_raw"
+    },
+    {
+      "script": "evaluate-nexus.py",
+      "args": [],
+      "normalised_id": "noargs--evaluate-nexus",
+      "raw_id": null,
+      "class": "only_normalised"
+    },
+    {
+      "script": "evaluate-nexus.py",
+      "args": [
+        "--foundation-unknown-option"
+      ],
+      "normalised_id": null,
+      "raw_id": "evaluate-nexus-invalid-argument",
+      "class": "only_raw"
+    },
+    {
+      "script": "evaluate-nexus.py",
+      "args": [
+        "--help"
+      ],
+      "normalised_id": "help--evaluate-nexus",
+      "raw_id": "evaluate-nexus-help",
+      "stdout_file_matches_manifest": true,
+      "stderr_file_matches_manifest": true,
+      "class": "same_bytes"
+    },
+    {
+      "script": "evaluate-nexus.py",
+      "args": [
+        "--runs",
+        "examples/nexus/host-trials.json"
+      ],
+      "normalised_id": "evaluate--runs-only",
+      "raw_id": null,
+      "class": "only_normalised"
+    },
+    {
+      "script": "evaluate-nexus.py",
+      "args": [
+        "--runs",
+        "examples/nexus/host-trials.json",
+        "--judgments",
+        "examples/nexus/host-judgments.json"
+      ],
+      "normalised_id": "evaluate--runs-judgments",
+      "raw_id": "evaluate-synthetic-records",
+      "stdout_file_matches_manifest": true,
+      "stderr_file_matches_manifest": true,
+      "class": "same_bytes"
+    },
+    {
+      "script": "evaluate-nexus.py",
+      "args": [
+        "--runs",
+        "examples/nexus/host-trials.json",
+        "--judgments",
+        "examples/nexus/host-judgments.json",
+        "--require-paired"
+      ],
+      "normalised_id": "evaluate--require-paired",
+      "raw_id": null,
+      "class": "only_normalised"
+    },
+    {
+      "script": "host-acceptance.py",
+      "args": [
+        "--foundation-unknown-option"
+      ],
+      "normalised_id": null,
+      "raw_id": "host-acceptance-invalid-argument",
+      "class": "only_raw"
+    },
+    {
+      "script": "host-acceptance.py",
+      "args": [
+        "--help"
+      ],
+      "normalised_id": "help--host-acceptance",
+      "raw_id": "host-acceptance-help",
+      "stdout_file_matches_manifest": true,
+      "stderr_file_matches_manifest": true,
+      "class": "same_bytes"
+    },
+    {
+      "script": "import-openclaw-community.py",
+      "args": [
+        "--foundation-unknown-option"
+      ],
+      "normalised_id": null,
+      "raw_id": "import-openclaw-community-invalid-argument",
+      "class": "only_raw"
+    },
+    {
+      "script": "import-openclaw-community.py",
+      "args": [
+        "--help"
+      ],
+      "normalised_id": "help--import-openclaw-community",
+      "raw_id": "import-openclaw-community-help",
+      "stdout_file_matches_manifest": true,
+      "stderr_file_matches_manifest": true,
+      "class": "same_bytes"
+    },
+    {
+      "script": "install.sh",
+      "args": [
+        "--foundation-unknown-option"
+      ],
+      "normalised_id": null,
+      "raw_id": "install-invalid-argument",
+      "class": "only_raw"
+    },
+    {
+      "script": "install.sh",
+      "args": [
+        "--help"
+      ],
+      "normalised_id": null,
+      "raw_id": "install-help",
+      "class": "only_raw"
+    },
+    {
+      "script": "integration-state.py",
+      "args": [],
+      "normalised_id": "noargs--integration-state",
+      "raw_id": null,
+      "class": "only_normalised"
+    },
+    {
+      "script": "integration-state.py",
+      "args": [
+        "--foundation-unknown-option"
+      ],
+      "normalised_id": null,
+      "raw_id": "integration-state-invalid-argument",
+      "class": "only_raw"
+    },
+    {
+      "script": "integration-state.py",
+      "args": [
+        "--help"
+      ],
+      "normalised_id": "help--integration-state",
+      "raw_id": "integration-state-help",
+      "stdout_file_matches_manifest": true,
+      "stderr_file_matches_manifest": true,
+      "class": "same_bytes"
+    },
+    {
+      "script": "lint-agents.sh",
+      "args": [
+        "engineering/engineering-frontend-developer.md"
+      ],
+      "normalised_id": null,
+      "raw_id": "lint-agents-one-agent",
+      "class": "only_raw"
+    },
+    {
+      "script": "list-changed-agent-files.py",
+      "args": [],
+      "normalised_id": null,
+      "raw_id": "filter-agent-paths",
+      "class": "only_raw"
+    },
+    {
+      "script": "list-changed-agent-files.py",
+      "args": [
+        "--foundation-unknown-option"
+      ],
+      "normalised_id": null,
+      "raw_id": "list-changed-agent-files-invalid-argument",
+      "class": "only_raw"
+    },
+    {
+      "script": "list-changed-agent-files.py",
+      "args": [
+        "--help"
+      ],
+      "normalised_id": "help--list-changed-agent-files",
+      "raw_id": "list-changed-agent-files-help",
+      "stdout_file_matches_manifest": true,
+      "stderr_file_matches_manifest": true,
+      "class": "same_bytes"
+    },
+    {
+      "script": "marketplace-intake.py",
+      "args": [],
+      "normalised_id": "noargs--marketplace-intake",
+      "raw_id": null,
+      "class": "only_normalised"
+    },
+    {
+      "script": "marketplace-intake.py",
+      "args": [
+        "--foundation-unknown-option"
+      ],
+      "normalised_id": null,
+      "raw_id": "marketplace-intake-invalid-argument",
+      "class": "only_raw"
+    },
+    {
+      "script": "marketplace-intake.py",
+      "args": [
+        "--help"
+      ],
+      "normalised_id": "help--marketplace-intake",
+      "raw_id": "marketplace-intake-help",
+      "stdout_file_matches_manifest": true,
+      "stderr_file_matches_manifest": true,
+      "class": "same_bytes"
+    },
+    {
+      "script": "marketplace-intake.py",
+      "args": [
+        "/dev/stdin",
+        "--at",
+        "2026-10-28T12:00:00Z"
+      ],
+      "normalised_id": null,
+      "raw_id": "marketplace-boolean-integer",
+      "class": "only_raw"
+    },
+    {
+      "script": "marketplace-intake.py",
+      "args": [
+        "/dev/stdin",
+        "--at",
+        "2026-10-28T12:00:00Z"
+      ],
+      "normalised_id": null,
+      "raw_id": "marketplace-duplicate-key",
+      "class": "only_raw"
+    },
+    {
+      "script": "marketplace-intake.py",
+      "args": [
+        "/dev/stdin",
+        "--at",
+        "2026-10-28T12:00:00Z"
+      ],
+      "normalised_id": null,
+      "raw_id": "marketplace-malformed-json",
+      "class": "only_raw"
+    },
+    {
+      "script": "marketplace-intake.py",
+      "args": [
+        "examples/marketplace/act-task.snapshot.json",
+        "--at",
+        "2026-09-20T12:00:00"
+      ],
+      "normalised_id": "marketplace--intake-naive-time",
+      "raw_id": null,
+      "class": "only_normalised"
+    },
+    {
+      "script": "marketplace-intake.py",
+      "args": [
+        "examples/marketplace/act-task.snapshot.json",
+        "--at",
+        "2026-09-20T12:00:00Z"
+      ],
+      "normalised_id": "marketplace--intake",
+      "raw_id": null,
+      "class": "only_normalised"
+    },
+    {
+      "script": "marketplace-intake.py",
+      "args": [
+        "examples/marketplace/act-task.snapshot.json",
+        "--at",
+        "2026-09-20T12:00:00Z",
+        "--min-confirmations",
+        "1000"
+      ],
+      "normalised_id": "marketplace--intake-confirmations",
+      "raw_id": null,
+      "class": "only_normalised"
+    },
+    {
+      "script": "marketplace-intake.py",
+      "args": [
+        "examples/marketplace/act-task.snapshot.json",
+        "--at",
+        "2026-10-28T12:00:00Z"
+      ],
+      "normalised_id": null,
+      "raw_id": "marketplace-hold",
+      "class": "only_raw"
+    },
+    {
+      "script": "marketplace-intake.py",
+      "args": [
+        "examples/marketplace/act-task.snapshot.json",
+        "--at",
+        "2027-01-01T00:00:00Z"
+      ],
+      "normalised_id": "marketplace--intake-late",
+      "raw_id": null,
+      "class": "only_normalised"
+    },
+    {
+      "script": "marketplace-intake.py",
+      "args": [
+        "examples/marketplace/act-task.snapshot.json",
+        "--at",
+        "invalid"
+      ],
+      "normalised_id": null,
+      "raw_id": "marketplace-invalid-at",
+      "class": "only_raw"
+    },
+    {
+      "script": "marketplace-intake.py",
+      "args": [
+        "{FIX}/duplicate-keys.json",
+        "--at",
+        "2026-09-20T12:00:00Z"
+      ],
+      "normalised_id": "marketplace--intake-duplicate",
+      "raw_id": null,
+      "class": "only_normalised"
+    },
+    {
+      "script": "nexus-anthropic.py",
+      "args": [],
+      "normalised_id": "noargs--nexus-anthropic",
+      "raw_id": null,
+      "class": "only_normalised"
+    },
+    {
+      "script": "nexus-anthropic.py",
+      "args": [
+        "--foundation-unknown-option"
+      ],
+      "normalised_id": null,
+      "raw_id": "nexus-anthropic-invalid-argument",
+      "class": "only_raw"
+    },
+    {
+      "script": "nexus-anthropic.py",
+      "args": [
+        "--help"
+      ],
+      "normalised_id": "help--nexus-anthropic",
+      "raw_id": "nexus-anthropic-help",
+      "stdout_file_matches_manifest": true,
+      "stderr_file_matches_manifest": true,
+      "class": "same_bytes"
+    },
+    {
+      "script": "nexus-blind.py",
+      "args": [],
+      "normalised_id": "noargs--nexus-blind",
+      "raw_id": null,
+      "class": "only_normalised"
+    },
+    {
+      "script": "nexus-blind.py",
+      "args": [
+        "--foundation-unknown-option"
+      ],
+      "normalised_id": null,
+      "raw_id": "nexus-blind-invalid-argument",
+      "class": "only_raw"
+    },
+    {
+      "script": "nexus-blind.py",
+      "args": [
+        "--help"
+      ],
+      "normalised_id": "help--nexus-blind",
+      "raw_id": "nexus-blind-help",
+      "stdout_file_matches_manifest": true,
+      "stderr_file_matches_manifest": true,
+      "class": "same_bytes"
+    },
+    {
+      "script": "nexus-blind.py",
+      "args": [
+        "submission-id",
+        "--case",
+        "level-inversion-northwind",
+        "--trial",
+        "1",
+        "--variant",
+        "fixed_team",
+        "--salt",
+        "characterization"
+      ],
+      "normalised_id": "blind--submission-id",
+      "raw_id": null,
+      "class": "only_normalised"
+    },
+    {
+      "script": "nexus-blind.py",
+      "args": [
+        "submission-id",
+        "--case",
+        "synthetic",
+        "--trial",
+        "0",
+        "--variant",
+        "single_agent",
+        "--salt",
+        "synthetic-fixture"
+      ],
+      "normalised_id": null,
+      "raw_id": "blind-submission-id",
+      "class": "only_raw"
+    },
+    {
+      "script": "nexus-brief.py",
+      "args": [],
+      "normalised_id": "noargs--nexus-brief",
+      "raw_id": null,
+      "class": "only_normalised"
+    },
+    {
+      "script": "nexus-brief.py",
+      "args": [
+        "--foundation-unknown-option"
+      ],
+      "normalised_id": null,
+      "raw_id": "nexus-brief-invalid-argument",
+      "class": "only_raw"
+    },
+    {
+      "script": "nexus-brief.py",
+      "args": [
+        "--help"
+      ],
+      "normalised_id": "help--nexus-brief",
+      "raw_id": "nexus-brief-help",
+      "stdout_file_matches_manifest": true,
+      "stderr_file_matches_manifest": true,
+      "class": "same_bytes"
+    },
+    {
+      "script": "nexus-brief.py",
+      "args": [
+        "examples/nexus/investment-hypothesis.instance.json",
+        "--events",
+        "examples/nexus/investment-hypothesis.events.jsonl",
+        "--at",
+        "2026-09-20T12:00:00Z"
+      ],
+      "normalised_id": "brief--investment",
+      "raw_id": null,
+      "class": "only_normalised"
+    },
+    {
+      "script": "nexus-brief.py",
+      "args": [
+        "examples/nexus/strategic-decision.instance.json",
+        "--events",
+        "examples/nexus/strategic-decision.events.jsonl",
+        "--at",
+        "2026-09-20T12:00:00Z"
+      ],
+      "normalised_id": "brief--strategic",
+      "raw_id": null,
+      "class": "only_normalised"
+    },
+    {
+      "script": "nexus-brief.py",
+      "args": [
+        "examples/nexus/strategic-decision.instance.json",
+        "--events",
+        "examples/nexus/strategic-decision.events.jsonl",
+        "--at",
+        "2026-09-20T12:00:00Z",
+        "--json"
+      ],
+      "normalised_id": "brief--strategic-json",
+      "raw_id": null,
+      "class": "only_normalised"
+    },
+    {
+      "script": "nexus-brief.py",
+      "args": [
+        "examples/nexus/strategic-decision.instance.json",
+        "--events",
+        "examples/nexus/strategic-decision.events.jsonl",
+        "--at",
+        "2026-10-28T12:00:00Z"
+      ],
+      "normalised_id": null,
+      "raw_id": "brief-markdown",
+      "class": "only_raw"
+    },
+    {
+      "script": "nexus-brief.py",
+      "args": [
+        "examples/nexus/strategic-decision.instance.json",
+        "--events",
+        "examples/nexus/strategic-decision.events.jsonl",
+        "--at",
+        "2026-10-28T12:00:00Z",
+        "--json"
+      ],
+      "normalised_id": null,
+      "raw_id": "brief-json",
+      "class": "only_raw"
+    },
+    {
+      "script": "nexus-campaign.py",
+      "args": [],
+      "normalised_id": "noargs--nexus-campaign",
+      "raw_id": null,
+      "class": "only_normalised"
+    },
+    {
+      "script": "nexus-campaign.py",
+      "args": [
+        "--foundation-unknown-option"
+      ],
+      "normalised_id": null,
+      "raw_id": "nexus-campaign-invalid-argument",
+      "class": "only_raw"
+    },
+    {
+      "script": "nexus-campaign.py",
+      "args": [
+        "--help"
+      ],
+      "normalised_id": "help--nexus-campaign",
+      "raw_id": "nexus-campaign-help",
+      "stdout_file_matches_manifest": true,
+      "stderr_file_matches_manifest": true,
+      "class": "same_bytes"
+    },
+    {
+      "script": "nexus-campaign.py",
+      "args": [
+        "status",
+        "--held-out",
+        "examples/nexus/casepacks",
+        "--improver",
+        "characterization",
+        "--trials",
+        "examples/nexus/host-trials.json"
+      ],
+      "normalised_id": "campaign--status-in-checkout",
+      "raw_id": null,
+      "class": "only_normalised"
+    },
+    {
+      "script": "nexus-campaign.py",
+      "args": [
+        "status",
+        "--held-out",
+        "{TMP}/packs",
+        "--improver",
+        "characterization",
+        "--trials",
+        "examples/nexus/host-trials.json",
+        "--judgments",
+        "examples/nexus/host-judgments.json"
+      ],
+      "normalised_id": "campaign--status-copied",
+      "raw_id": null,
+      "class": "only_normalised"
+    },
+    {
+      "script": "nexus-casepack.py",
+      "args": [],
+      "normalised_id": "noargs--nexus-casepack",
+      "raw_id": null,
+      "class": "only_normalised"
+    },
+    {
+      "script": "nexus-casepack.py",
+      "args": [
+        "--foundation-unknown-option"
+      ],
+      "normalised_id": null,
+      "raw_id": "nexus-casepack-invalid-argument",
+      "class": "only_raw"
+    },
+    {
+      "script": "nexus-casepack.py",
+      "args": [
+        "--help"
+      ],
+      "normalised_id": "help--nexus-casepack",
+      "raw_id": "nexus-casepack-help",
+      "stdout_file_matches_manifest": true,
+      "stderr_file_matches_manifest": true,
+      "class": "same_bytes"
+    },
+    {
+      "script": "nexus-casepack.py",
+      "args": [
+        "list",
+        "examples/nexus/casepacks"
+      ],
+      "normalised_id": "casepack--list",
+      "raw_id": "casepack-list",
+      "stdout_file_matches_manifest": true,
+      "stderr_file_matches_manifest": true,
+      "class": "same_bytes"
+    },
+    {
+      "script": "nexus-casepack.py",
+      "args": [
+        "validate",
+        "examples/nexus/casepacks/clinic-reminder-release"
+      ],
+      "normalised_id": "casepack--validate-clinic-reminder-release",
+      "raw_id": null,
+      "class": "only_normalised"
+    },
+    {
+      "script": "nexus-casepack.py",
+      "args": [
+        "validate",
+        "examples/nexus/casepacks/freight-exclusivity-lapse"
+      ],
+      "normalised_id": "casepack--validate-freight-exclusivity-lapse",
+      "raw_id": null,
+      "class": "only_normalised"
+    },
+    {
+      "script": "nexus-casepack.py",
+      "args": [
+        "validate",
+        "examples/nexus/casepacks/harbor-pricing-intent"
+      ],
+      "normalised_id": "casepack--validate-harbor-pricing-intent",
+      "raw_id": null,
+      "class": "only_normalised"
+    },
+    {
+      "script": "nexus-casepack.py",
+      "args": [
+        "validate",
+        "examples/nexus/casepacks/level-inversion-northwind"
+      ],
+      "normalised_id": "casepack--validate-level-inversion-northwind",
+      "raw_id": "casepack-validate",
+      "stdout_file_matches_manifest": true,
+      "stderr_file_matches_manifest": true,
+      "class": "same_bytes"
+    },
+    {
+      "script": "nexus-casepack.py",
+      "args": [
+        "validate",
+        "examples/nexus/casepacks/shared-source-market"
+      ],
+      "normalised_id": "casepack--validate-shared-source-market",
+      "raw_id": null,
+      "class": "only_normalised"
+    },
+    {
+      "script": "nexus-casepack.py",
+      "args": [
+        "validate",
+        "{TMP}/nope"
+      ],
+      "normalised_id": "casepack--validate-missing",
+      "raw_id": null,
+      "class": "only_normalised"
+    },
+    {
+      "script": "nexus-casepack.py",
+      "args": [
+        "verify",
+        "examples/nexus/casepacks/clinic-reminder-release"
+      ],
+      "normalised_id": "casepack--verify-clinic-reminder-release",
+      "raw_id": null,
+      "class": "only_normalised"
+    },
+    {
+      "script": "nexus-casepack.py",
+      "args": [
+        "verify",
+        "examples/nexus/casepacks/freight-exclusivity-lapse"
+      ],
+      "normalised_id": "casepack--verify-freight-exclusivity-lapse",
+      "raw_id": null,
+      "class": "only_normalised"
+    },
+    {
+      "script": "nexus-casepack.py",
+      "args": [
+        "verify",
+        "examples/nexus/casepacks/harbor-pricing-intent"
+      ],
+      "normalised_id": "casepack--verify-harbor-pricing-intent",
+      "raw_id": null,
+      "class": "only_normalised"
+    },
+    {
+      "script": "nexus-casepack.py",
+      "args": [
+        "verify",
+        "examples/nexus/casepacks/level-inversion-northwind"
+      ],
+      "normalised_id": "casepack--verify-level-inversion-northwind",
+      "raw_id": "casepack-verify",
+      "stdout_file_matches_manifest": true,
+      "stderr_file_matches_manifest": true,
+      "class": "same_bytes"
+    },
+    {
+      "script": "nexus-casepack.py",
+      "args": [
+        "verify",
+        "examples/nexus/casepacks/shared-source-market"
+      ],
+      "normalised_id": "casepack--verify-shared-source-market",
+      "raw_id": null,
+      "class": "only_normalised"
+    },
+    {
+      "script": "nexus-improve.py",
+      "args": [],
+      "normalised_id": "noargs--nexus-improve",
+      "raw_id": null,
+      "class": "only_normalised"
+    },
+    {
+      "script": "nexus-improve.py",
+      "args": [
+        "--foundation-unknown-option"
+      ],
+      "normalised_id": null,
+      "raw_id": "nexus-improve-invalid-argument",
+      "class": "only_raw"
+    },
+    {
+      "script": "nexus-improve.py",
+      "args": [
+        "--help"
+      ],
+      "normalised_id": "help--nexus-improve",
+      "raw_id": "nexus-improve-help",
+      "stdout_file_matches_manifest": true,
+      "stderr_file_matches_manifest": true,
+      "class": "same_bytes"
+    },
+    {
+      "script": "nexus-improve.py",
+      "args": [
+        "paths",
+        "--base",
+        "86addea22f6060f2c50e81c67c6dadf978ea3749",
+        "--head",
+        "86addea22f6060f2c50e81c67c6dadf978ea3749",
+        "--repo",
+        "."
+      ],
+      "normalised_id": null,
+      "raw_id": "improve-paths-unchanged",
+      "class": "only_raw"
+    },
+    {
+      "script": "nexus-improve.py",
+      "args": [
+        "paths",
+        "--base",
+        "HEAD",
+        "--head",
+        "HEAD"
+      ],
+      "normalised_id": "improve--paths-head",
+      "raw_id": null,
+      "class": "only_normalised"
+    },
+    {
+      "script": "nexus-improve.py",
+      "args": [
+        "protected",
+        "--base",
+        "86addea22f6060f2c50e81c67c6dadf978ea3749",
+        "--head",
+        "86addea22f6060f2c50e81c67c6dadf978ea3749",
+        "--repo",
+        "."
+      ],
+      "normalised_id": null,
+      "raw_id": "improve-invalid-command",
+      "class": "only_raw"
+    },
+    {
+      "script": "nexus-instance.py",
+      "args": [],
+      "normalised_id": "noargs--nexus-instance",
+      "raw_id": null,
+      "class": "only_normalised"
+    },
+    {
+      "script": "nexus-instance.py",
+      "args": [
+        "--foundation-unknown-option"
+      ],
+      "normalised_id": null,
+      "raw_id": "nexus-instance-invalid-argument",
+      "class": "only_raw"
+    },
+    {
+      "script": "nexus-instance.py",
+      "args": [
+        "--help"
+      ],
+      "normalised_id": "help--nexus-instance",
+      "raw_id": "nexus-instance-help",
+      "stdout_file_matches_manifest": true,
+      "stderr_file_matches_manifest": true,
+      "class": "same_bytes"
+    },
+    {
+      "script": "nexus-instance.py",
+      "args": [
+        "explode",
+        "examples/nexus/strategic-decision.instance.json"
+      ],
+      "normalised_id": "instance--bad-action",
+      "raw_id": null,
+      "class": "only_normalised"
+    },
+    {
+      "script": "nexus-instance.py",
+      "args": [
+        "plan",
+        "examples/nexus/investment-hypothesis.instance.json",
+        "--events",
+        "examples/nexus/investment-hypothesis.events.jsonl",
+        "--at",
+        "2026-10-28T12:00:00Z"
+      ],
+      "normalised_id": null,
+      "raw_id": "instance-investment-hypothesis-plan",
+      "class": "only_raw"
+    },
+    {
+      "script": "nexus-instance.py",
+      "args": [
+        "plan",
+        "examples/nexus/strategic-decision.instance.json"
+      ],
+      "normalised_id": "instance--plan-without-at",
+      "raw_id": "instance-plan-needs-at",
+      "stdout_file_matches_manifest": true,
+      "stderr_file_matches_manifest": true,
+      "class": "same_bytes"
+    },
+    {
+      "script": "nexus-instance.py",
+      "args": [
+        "plan",
+        "examples/nexus/strategic-decision.instance.json",
+        "--at",
+        "2026-09-20T12:00:00Z"
+      ],
+      "normalised_id": "instance--plan-strategic",
+      "raw_id": null,
+      "class": "only_normalised"
+    },
+    {
+      "script": "nexus-instance.py",
+      "args": [
+        "plan",
+        "examples/nexus/strategic-decision.instance.json",
+        "--at",
+        "2026-09-20T12:00:00Z",
+        "--output",
+        "{TMP}/plan.json"
+      ],
+      "normalised_id": "instance--plan-output",
+      "raw_id": null,
+      "class": "only_normalised"
+    },
+    {
+      "script": "nexus-instance.py",
+      "args": [
+        "plan",
+        "examples/nexus/strategic-decision.instance.json",
+        "--events",
+        "examples/nexus/strategic-decision.events.jsonl",
+        "--at",
+        "2026-10-28T12:00:00Z"
+      ],
+      "normalised_id": null,
+      "raw_id": "instance-strategic-decision-plan",
+      "class": "only_raw"
+    },
+    {
+      "script": "nexus-instance.py",
+      "args": [
+        "replay",
+        "examples/nexus/investment-hypothesis.instance.json",
+        "--events",
+        "examples/nexus/investment-hypothesis.events.jsonl"
+      ],
+      "normalised_id": null,
+      "raw_id": "instance-investment-hypothesis-replay",
+      "class": "only_raw"
+    },
+    {
+      "script": "nexus-instance.py",
+      "args": [
+        "replay",
+        "examples/nexus/investment-hypothesis.instance.json",
+        "--events",
+        "examples/nexus/investment-hypothesis.events.jsonl",
+        "--at",
+        "2026-09-20T12:00:00Z"
+      ],
+      "normalised_id": "instance--replay-investment",
+      "raw_id": null,
+      "class": "only_normalised"
+    },
+    {
+      "script": "nexus-instance.py",
+      "args": [
+        "replay",
+        "examples/nexus/strategic-decision.instance.json",
+        "--events",
+        "examples/nexus/strategic-decision.events.jsonl"
+      ],
+      "normalised_id": null,
+      "raw_id": "instance-strategic-decision-replay",
+      "class": "only_raw"
+    },
+    {
+      "script": "nexus-instance.py",
+      "args": [
+        "replay",
+        "examples/nexus/strategic-decision.instance.json",
+        "--events",
+        "examples/nexus/strategic-decision.events.jsonl",
+        "--at",
+        "2026-09-20T12:00:00Z"
+      ],
+      "normalised_id": "instance--replay-strategic",
+      "raw_id": null,
+      "class": "only_normalised"
+    },
+    {
+      "script": "nexus-instance.py",
+      "args": [
+        "replay",
+        "examples/nexus/strategic-decision.instance.json",
+        "--events",
+        "examples/nexus/strategic-decision.events.jsonl",
+        "--at",
+        "2026-09-20T12:00:00Z",
+        "--checkpoint",
+        "{TMP}/ck.json"
+      ],
+      "normalised_id": "instance--replay-checkpoint-missing",
+      "raw_id": null,
+      "class": "only_normalised"
+    },
+    {
+      "script": "nexus-instance.py",
+      "args": [
+        "validate",
+        "/dev/stdin"
+      ],
+      "normalised_id": null,
+      "raw_id": "instance-legacy-duplicate-key",
+      "class": "only_raw"
+    },
+    {
+      "script": "nexus-instance.py",
+      "args": [
+        "validate",
+        "/dev/stdin"
+      ],
+      "normalised_id": null,
+      "raw_id": "instance-malformed-json",
+      "class": "only_raw"
+    },
+    {
+      "script": "nexus-instance.py",
+      "args": [
+        "validate",
+        "examples/nexus/investment-hypothesis.instance.json"
+      ],
+      "normalised_id": "instance--validate-investment",
+      "raw_id": "instance-investment-hypothesis-validate",
+      "stdout_file_matches_manifest": true,
+      "stderr_file_matches_manifest": true,
+      "class": "same_bytes"
+    },
+    {
+      "script": "nexus-instance.py",
+      "args": [
+        "validate",
+        "examples/nexus/strategic-decision.instance.json"
+      ],
+      "normalised_id": "instance--validate-strategic",
+      "raw_id": "instance-strategic-decision-validate",
+      "stdout_file_matches_manifest": true,
+      "stderr_file_matches_manifest": true,
+      "class": "same_bytes"
+    },
+    {
+      "script": "nexus-instance.py",
+      "args": [
+        "validate",
+        "{FIX}/array.json"
+      ],
+      "normalised_id": "instance--validate-array",
+      "raw_id": null,
+      "class": "only_normalised"
+    },
+    {
+      "script": "nexus-instance.py",
+      "args": [
+        "validate",
+        "{FIX}/duplicate-keys.json"
+      ],
+      "normalised_id": "instance--validate-duplicate-keys",
+      "raw_id": null,
+      "class": "only_normalised"
+    },
+    {
+      "script": "nexus-instance.py",
+      "args": [
+        "validate",
+        "{FIX}/truncated.json"
+      ],
+      "normalised_id": "instance--validate-truncated",
+      "raw_id": null,
+      "class": "only_normalised"
+    },
+    {
+      "script": "nexus-instance.py",
+      "args": [
+        "validate",
+        "{TMP}/nope.json"
+      ],
+      "normalised_id": "instance--validate-missing",
+      "raw_id": null,
+      "class": "only_normalised"
+    },
+    {
+      "script": "nexus-lint.py",
+      "args": [],
+      "normalised_id": "noargs--nexus-lint",
+      "raw_id": null,
+      "class": "only_normalised"
+    },
+    {
+      "script": "nexus-lint.py",
+      "args": [
+        "--foundation-unknown-option"
+      ],
+      "normalised_id": null,
+      "raw_id": "nexus-lint-invalid-argument",
+      "class": "only_raw"
+    },
+    {
+      "script": "nexus-lint.py",
+      "args": [
+        "--help"
+      ],
+      "normalised_id": "help--nexus-lint",
+      "raw_id": "nexus-lint-help",
+      "stdout_file_matches_manifest": true,
+      "stderr_file_matches_manifest": true,
+      "class": "same_bytes"
+    },
+    {
+      "script": "nexus-lint.py",
+      "args": [
+        "examples/nexus/investment-hypothesis.instance.json"
+      ],
+      "normalised_id": "lint--investment",
+      "raw_id": null,
+      "class": "only_normalised"
+    },
+    {
+      "script": "nexus-lint.py",
+      "args": [
+        "examples/nexus/strategic-decision.instance.json"
+      ],
+      "normalised_id": "lint--strategic",
+      "raw_id": "lint-standard",
+      "stdout_file_matches_manifest": true,
+      "stderr_file_matches_manifest": true,
+      "class": "same_bytes"
+    },
+    {
+      "script": "nexus-lint.py",
+      "args": [
+        "examples/nexus/strategic-decision.instance.json",
+        "--strict"
+      ],
+      "normalised_id": "lint--strategic-strict",
+      "raw_id": "lint-strict",
+      "stdout_file_matches_manifest": true,
+      "stderr_file_matches_manifest": true,
+      "class": "same_bytes"
+    },
+    {
+      "script": "nexus-lint.py",
+      "args": [
+        "{FIX}/duplicate-keys.json"
+      ],
+      "normalised_id": "lint--duplicate",
+      "raw_id": null,
+      "class": "only_normalised"
+    },
+    {
+      "script": "nexus-optimize.py",
+      "args": [],
+      "normalised_id": "noargs--nexus-optimize",
+      "raw_id": null,
+      "class": "only_normalised"
+    },
+    {
+      "script": "nexus-optimize.py",
+      "args": [
+        "--foundation-unknown-option"
+      ],
+      "normalised_id": null,
+      "raw_id": "nexus-optimize-invalid-argument",
+      "class": "only_raw"
+    },
+    {
+      "script": "nexus-optimize.py",
+      "args": [
+        "--help"
+      ],
+      "normalised_id": "help--nexus-optimize",
+      "raw_id": "nexus-optimize-help",
+      "stdout_file_matches_manifest": true,
+      "stderr_file_matches_manifest": true,
+      "class": "same_bytes"
+    },
+    {
+      "script": "nexus-options.py",
+      "args": [],
+      "normalised_id": "noargs--nexus-options",
+      "raw_id": null,
+      "class": "only_normalised"
+    },
+    {
+      "script": "nexus-options.py",
+      "args": [
+        "--foundation-unknown-option"
+      ],
+      "normalised_id": null,
+      "raw_id": "nexus-options-invalid-argument",
+      "class": "only_raw"
+    },
+    {
+      "script": "nexus-options.py",
+      "args": [
+        "--help"
+      ],
+      "normalised_id": "help--nexus-options",
+      "raw_id": "nexus-options-help",
+      "stdout_file_matches_manifest": true,
+      "stderr_file_matches_manifest": true,
+      "class": "same_bytes"
+    },
+    {
+      "script": "nexus-options.py",
+      "args": [
+        "examples/nexus/options.json"
+      ],
+      "normalised_id": "options--example",
+      "raw_id": "option-comparison",
+      "stdout_file_matches_manifest": true,
+      "stderr_file_matches_manifest": true,
+      "class": "same_bytes"
+    },
+    {
+      "script": "nexus-options.py",
+      "args": [
+        "{FIX}/duplicate-keys.json"
+      ],
+      "normalised_id": "options--duplicate",
+      "raw_id": null,
+      "class": "only_normalised"
+    },
+    {
+      "script": "nexus-pilot.py",
+      "args": [],
+      "normalised_id": "noargs--nexus-pilot",
+      "raw_id": null,
+      "class": "only_normalised"
+    },
+    {
+      "script": "nexus-pilot.py",
+      "args": [
+        "--foundation-unknown-option"
+      ],
+      "normalised_id": null,
+      "raw_id": "nexus-pilot-invalid-argument",
+      "class": "only_raw"
+    },
+    {
+      "script": "nexus-pilot.py",
+      "args": [
+        "--help"
+      ],
+      "normalised_id": "help--nexus-pilot",
+      "raw_id": "nexus-pilot-help",
+      "stdout_file_matches_manifest": true,
+      "stderr_file_matches_manifest": true,
+      "class": "same_bytes"
+    },
+    {
+      "script": "nexus-pilot.py",
+      "args": [
+        "replay",
+        "examples/nexus/investment-hypothesis.instance.json",
+        "--events",
+        "examples/nexus/investment-hypothesis.events.jsonl"
+      ],
+      "normalised_id": "pilot--replay-investment",
+      "raw_id": null,
+      "class": "only_normalised"
+    },
+    {
+      "script": "nexus-pilot.py",
+      "args": [
+        "replay",
+        "examples/nexus/strategic-decision.instance.json",
+        "--events",
+        "examples/nexus/strategic-decision.events.jsonl"
+      ],
+      "normalised_id": "pilot--replay-strategic",
+      "raw_id": null,
+      "class": "only_normalised"
+    },
+    {
+      "script": "nexus-plan.py",
+      "args": [],
+      "normalised_id": "noargs--nexus-plan",
+      "raw_id": null,
+      "class": "only_normalised"
+    },
+    {
+      "script": "nexus-plan.py",
+      "args": [
+        "--foundation-unknown-option"
+      ],
+      "normalised_id": null,
+      "raw_id": "nexus-plan-invalid-argument",
+      "class": "only_raw"
+    },
+    {
+      "script": "nexus-plan.py",
+      "args": [
+        "--help"
+      ],
+      "normalised_id": "help--nexus-plan",
+      "raw_id": "nexus-plan-help",
+      "stdout_file_matches_manifest": true,
+      "stderr_file_matches_manifest": true,
+      "class": "same_bytes"
+    },
+    {
+      "script": "nexus-relay.py",
+      "args": [
+        "--foundation-unknown-option"
+      ],
+      "normalised_id": null,
+      "raw_id": "nexus-relay-invalid-argument",
+      "class": "only_raw"
+    },
+    {
+      "script": "nexus-relay.py",
+      "args": [
+        "--help"
+      ],
+      "normalised_id": "help--nexus-relay",
+      "raw_id": "nexus-relay-help",
+      "stdout_file_matches_manifest": true,
+      "stderr_file_matches_manifest": true,
+      "class": "same_bytes"
+    },
+    {
+      "script": "nexus-review.py",
+      "args": [],
+      "normalised_id": "noargs--nexus-review",
+      "raw_id": null,
+      "class": "only_normalised"
+    },
+    {
+      "script": "nexus-review.py",
+      "args": [
+        "--foundation-unknown-option"
+      ],
+      "normalised_id": null,
+      "raw_id": "nexus-review-invalid-argument",
+      "class": "only_raw"
+    },
+    {
+      "script": "nexus-review.py",
+      "args": [
+        "--help"
+      ],
+      "normalised_id": "help--nexus-review",
+      "raw_id": "nexus-review-help",
+      "stdout_file_matches_manifest": true,
+      "stderr_file_matches_manifest": true,
+      "class": "same_bytes"
+    },
+    {
+      "script": "nexus-routing.py",
+      "args": [],
+      "normalised_id": "noargs--nexus-routing",
+      "raw_id": null,
+      "class": "only_normalised"
+    },
+    {
+      "script": "nexus-routing.py",
+      "args": [
+        "--foundation-unknown-option"
+      ],
+      "normalised_id": null,
+      "raw_id": "nexus-routing-invalid-argument",
+      "class": "only_raw"
+    },
+    {
+      "script": "nexus-routing.py",
+      "args": [
+        "--help"
+      ],
+      "normalised_id": "help--nexus-routing",
+      "raw_id": "nexus-routing-help",
+      "stdout_file_matches_manifest": true,
+      "stderr_file_matches_manifest": true,
+      "class": "same_bytes"
+    },
+    {
+      "script": "nexus-routing.py",
+      "args": [
+        "coverage",
+        "examples/nexus/investment-hypothesis.instance.json"
+      ],
+      "normalised_id": "routing--coverage-investment",
+      "raw_id": null,
+      "class": "only_normalised"
+    },
+    {
+      "script": "nexus-routing.py",
+      "args": [
+        "coverage",
+        "examples/nexus/strategic-decision.instance.json"
+      ],
+      "normalised_id": "routing--coverage-strategic",
+      "raw_id": null,
+      "class": "only_normalised"
+    },
+    {
+      "script": "nexus-routing.py",
+      "args": [
+        "coverage",
+        "examples/nexus/strategic-decision.instance.json",
+        "--at",
+        "2026-10-28T12:00:00Z"
+      ],
+      "normalised_id": null,
+      "raw_id": "routing-coverage",
+      "class": "only_raw"
+    },
+    {
+      "script": "nexus-routing.py",
+      "args": [
+        "route",
+        "examples/nexus/strategic-decision.instance.json",
+        "--at",
+        "2026-09-20T12:00:00Z"
+      ],
+      "normalised_id": "routing--route-strategic",
+      "raw_id": null,
+      "class": "only_normalised"
+    },
+    {
+      "script": "nexus-routing.py",
+      "args": [
+        "route",
+        "examples/nexus/strategic-decision.instance.json",
+        "--at",
+        "2026-10-28T12:00:00Z"
+      ],
+      "normalised_id": null,
+      "raw_id": "routing-route",
+      "class": "only_raw"
+    },
+    {
+      "script": "nexus-routing.py",
+      "args": [
+        "route",
+        "{FIX}/duplicate-keys.json",
+        "--at",
+        "2026-09-20T12:00:00Z"
+      ],
+      "normalised_id": "routing--route-duplicate",
+      "raw_id": null,
+      "class": "only_normalised"
+    },
+    {
+      "script": "nexus-trial.py",
+      "args": [],
+      "normalised_id": "noargs--nexus-trial",
+      "raw_id": null,
+      "class": "only_normalised"
+    },
+    {
+      "script": "nexus-trial.py",
+      "args": [
+        "--foundation-unknown-option"
+      ],
+      "normalised_id": null,
+      "raw_id": "nexus-trial-invalid-argument",
+      "class": "only_raw"
+    },
+    {
+      "script": "nexus-trial.py",
+      "args": [
+        "--help"
+      ],
+      "normalised_id": "help--nexus-trial",
+      "raw_id": "nexus-trial-help",
+      "stdout_file_matches_manifest": true,
+      "stderr_file_matches_manifest": true,
+      "class": "same_bytes"
+    },
+    {
+      "script": "probe-host-claude-code.py",
+      "args": [
+        "--foundation-unknown-option"
+      ],
+      "normalised_id": null,
+      "raw_id": "probe-host-claude-code-invalid-argument",
+      "class": "only_raw"
+    },
+    {
+      "script": "probe-host-claude-code.py",
+      "args": [
+        "--help"
+      ],
+      "normalised_id": "help--probe-host-claude-code",
+      "raw_id": "probe-host-claude-code-help",
+      "stdout_file_matches_manifest": true,
+      "stderr_file_matches_manifest": true,
+      "class": "same_bytes"
+    },
+    {
+      "script": "registry.py",
+      "args": [],
+      "normalised_id": "noargs--registry",
+      "raw_id": null,
+      "class": "only_normalised"
+    },
+    {
+      "script": "registry.py",
+      "args": [
+        "--foundation-unknown-option"
+      ],
+      "normalised_id": null,
+      "raw_id": "registry-invalid-argument",
+      "class": "only_raw"
+    },
+    {
+      "script": "registry.py",
+      "args": [
+        "--help"
+      ],
+      "normalised_id": "help--registry",
+      "raw_id": "registry-help",
+      "stdout_file_matches_manifest": true,
+      "stderr_file_matches_manifest": true,
+      "class": "same_bytes"
+    },
+    {
+      "script": "registry.py",
+      "args": [
+        "divisions"
+      ],
+      "normalised_id": "registry--divisions",
+      "raw_id": "registry-divisions",
+      "stdout_file_matches_manifest": true,
+      "stderr_file_matches_manifest": true,
+      "class": "same_bytes"
+    },
+    {
+      "script": "registry.py",
+      "args": [
+        "tool-field",
+        "codex",
+        "installKind"
+      ],
+      "normalised_id": null,
+      "raw_id": "registry-tool-field",
+      "class": "only_raw"
+    },
+    {
+      "script": "registry.py",
+      "args": [
+        "tool-field",
+        "codex",
+        "install_kind"
+      ],
+      "normalised_id": null,
+      "raw_id": "registry-unknown-field",
+      "class": "only_raw"
+    },
+    {
+      "script": "registry.py",
+      "args": [
+        "tools"
+      ],
+      "normalised_id": "registry--tools",
+      "raw_id": "registry-tools",
+      "stdout_file_matches_manifest": true,
+      "stderr_file_matches_manifest": true,
+      "class": "same_bytes"
+    },
+    {
+      "script": "registry.py",
+      "args": [
+        "tools",
+        "--converted"
+      ],
+      "normalised_id": null,
+      "raw_id": "registry-converted-tools",
+      "class": "only_raw"
+    },
+    {
+      "script": "resolve-agents.py",
+      "args": [
+        "--agent",
+        "engineering-frontend-developer"
+      ],
+      "normalised_id": null,
+      "raw_id": "resolve-one-agent",
+      "class": "only_raw"
+    },
+    {
+      "script": "resolve-agents.py",
+      "args": [
+        "--agent",
+        "no-such-agent-xyz"
+      ],
+      "normalised_id": "resolve--unknown-agent",
+      "raw_id": null,
+      "class": "only_normalised"
+    },
+    {
+      "script": "resolve-agents.py",
+      "args": [
+        "--foundation-unknown-option"
+      ],
+      "normalised_id": null,
+      "raw_id": "resolve-agents-invalid-argument",
+      "class": "only_raw"
+    },
+    {
+      "script": "resolve-agents.py",
+      "args": [
+        "--help"
+      ],
+      "normalised_id": "help--resolve-agents",
+      "raw_id": "resolve-agents-help",
+      "stdout_file_matches_manifest": true,
+      "stderr_file_matches_manifest": true,
+      "class": "same_bytes"
+    },
+    {
+      "script": "resolve-agents.py",
+      "args": [
+        "--list-runbooks"
+      ],
+      "normalised_id": "resolve--list-runbooks",
+      "raw_id": "resolve-runbooks",
+      "stdout_file_matches_manifest": true,
+      "stderr_file_matches_manifest": true,
+      "class": "same_bytes"
+    },
+    {
+      "script": "resolve-agents.py",
+      "args": [
+        "--runbook",
+        "strategic-decision"
+      ],
+      "normalised_id": "resolve--runbook-first",
+      "raw_id": null,
+      "class": "only_normalised"
+    }
+  ],
+  "inputs": {
+    "normalised_manifest": {
+      "path": "tests/characterization/cases.json",
+      "sha256": "606d00b60103d168a60e5b516140b66f935ae66f3631e95c1b63e1814dbd5f9b",
+      "commit": "5e74ff3; two cases re-recorded at b793d22 (D-018)"
+    },
+    "raw_manifest": {
+      "path": "tests/characterization/manifest.json",
+      "sha256": "05be2cebe0735da80f45dc1098f8bd362bc998ec62bd8e2756ef9934a0c51737",
+      "commit": "b60af82 (foundation/phase-0, all three batches; merged); two cases re-recorded at b793d22 (D-018)"
+    },
+    "raw_golden": {
+      "path": "tests/characterization/golden",
+      "note": "each overlapping case checks the .stdout/.stderr files against the manifest hashes"
+    }
+  }
+}

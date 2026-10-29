@@ -1,0 +1,2 @@
+usage: check-security-engagement.py [-h] [--inventory] [files ...]
+check-security-engagement.py: error: unrecognized arguments: --foundation-unknown-option

@@ -1,0 +1,21 @@
+usage: nexus-relay [-h] [--data-dir DATA_DIR]
+                   {init,invite,serve,verify,anchor,reconcile} ...
+
+Contract-admitted, container-isolated agent runs.
+
+positional arguments:
+  {init,invite,serve,verify,anchor,reconcile}
+    init                create the data directory, config and owner sign-in
+                        link
+    invite              print a new single-use sign-in link for an existing
+                        member
+    serve               run the relay
+    verify              check the log chain and replay the NEXUS events
+    anchor              print the current log head to record outside this
+                        machine
+    reconcile           repair runs interrupted between NEXUS and the room
+                        database (dry run by default)
+
+options:
+  -h, --help            show this help message and exit
+  --data-dir DATA_DIR

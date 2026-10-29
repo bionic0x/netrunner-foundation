@@ -1,0 +1,54 @@
+usage: nexus-trial.py [-h] {run,accept,owner-event,resume,status,brief} ...
+
+nexus-trial.py — run one evaluation trial on a frozen case pack (NEXUS Overdrive, Phase 1).
+
+Three variants answer the same frozen pack with the same model, host adapter and
+budget policy, so that a difference in the judged metrics can be attributed to
+how the work was organised rather than to more material, more money or another
+model (strategy/NEXUS-MEASUREMENT-PROTOCOL.md):
+
+  single_agent    one call to the pack's single agent
+  fixed_team      the pack's fixed roster, called once each, in order
+  nexus_instance  the pack's NEXUS instance, admitted event by event by the
+                  engine; every result waits for owner acceptance (P1)
+
+The nexus_instance schedule is `sequential` (one task at a time, the Phase 1
+baseline) or `parallel` (Phase 2: every ready task the engine admits starts at
+once, up to --max-parallel). A trials file records one schedule in a
+`<trials>.schedule` manifest and refuses rows from the other.
+
+    nexus-trial.py run    --pack DIR --variant V --trial-id T --model M --policy ID \
+                          --operator NAME --runs DIR --artifacts DIR --trials FILE [--executor claude|fake]
+                          [--schedule sequential|parallel] [--max-parallel N]
+    nexus-trial.py accept --run DIR --task-id X (--accepted|--rejected) --issuer NAME \
+                          [--predicates JSON] [--asserts JSON | --accept-proposed-asserts]
+    nexus-trial.py owner-event --run DIR --event JSON   # resolve_conflict, dissent_response, decision...
+    nexus-trial.py resume --run DIR
+    nexus-trial.py status --run DIR
+    nexus-trial.py brief  --run DIR [--json]   # what is waiting on the owner, and why
+
+A finished run writes exactly one row to --trials, in the format evaluate-nexus.py
+accepts, and one artifact named after an opaque submission id for nexus-blind.py.
+
+Instrumentation rules, applied identically to all variants:
+  cost_usd, tokens_total  sums of host-reported counters; if the host omits one,
+                          the run ends INCOMPLETE_INSTRUMENTATION and writes no row
+                          (unavailable data is never entered as zero)
+  wall_time_seconds       sum of measured model-call time; owner waiting time is
+                          recorded in the run record but excluded, because the
+                          other variants have no owner gate to wait on. Calls
+                          made concurrently count once, at the longest of them
+  invalid_decisions       output-contract failures of the final artifact (each
+                          required section missing or repeated)
+  rework_cycles           results the owner rejected and that were redone
+
+The runner never spends money without an explicit `run` command, and the fake
+executor exists only to test the runner itself; its rows are labelled
+host_version "fake-executor" and must never be mixed with live trials.
+
+positional arguments:
+  {run,accept,owner-event,resume,status,brief}
+    brief               the owner decision brief for a nexus_instance run
+
+options:
+  -h, --help            show this help message and exit

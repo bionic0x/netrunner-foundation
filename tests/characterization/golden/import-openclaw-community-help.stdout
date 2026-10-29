@@ -1,0 +1,11 @@
+usage: import-openclaw-community.py [-h] [--source-ref SOURCE_REF]
+                                    [--root ROOT] [--workers WORKERS]
+                                    [--dry-run]
+
+options:
+  -h, --help            show this help message and exit
+  --source-ref SOURCE_REF
+  --root ROOT
+  --workers WORKERS     parallel raw-file fetches (default: 8; use 1 for
+                        sequential)
+  --dry-run

@@ -1,0 +1,8 @@
+{
+  "paths": {
+    "changed": [],
+    "violations": []
+  },
+  "decision": "PROPOSE",
+  "note": "PROPOSE permits a pull request for human review; this gate never merges."
+}

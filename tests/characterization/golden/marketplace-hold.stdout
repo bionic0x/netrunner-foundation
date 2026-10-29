@@ -1,0 +1,31 @@
+{
+  "at": "2026-10-28T12:00:00+00:00",
+  "duplicate_count": 0,
+  "input_sha256": "66eaebf4e9024514d4db7afe774328a5abfc780a5119eb6bf1b3231f951e20fd",
+  "mode": "offline-review-only",
+  "packets": [
+    {
+      "claim_status": "ASSUMPTION",
+      "decision_state": "HOLD",
+      "event_key": "eip155:42161:0x1111111111111111111111111111111111111111:0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:0",
+      "execution_authorized": false,
+      "external_meaning": "assignment_reported",
+      "external_state": "ASSIGNED",
+      "hold_reasons": [
+        "OWNER_MANDATE_REQUIRED",
+        "INDEPENDENT_SOURCE_VERIFICATION_REQUIRED"
+      ],
+      "observation_sha256": "cab02635e90d57bc21343dc7dedc365444cdb0a28de3ed1dc88d3d301b71ecf7",
+      "payload_sha256": "78f5d96fda26e32bca16212ba3fa567a210f0c09714dd00a202c8def2f828c4d",
+      "payment_authorized": false,
+      "payment_state": "NOT_OBSERVED",
+      "review_runbook": "strategic-decision",
+      "task_key": "eip155:42161:0x1111111111111111111111111111111111111111:42"
+    }
+  ],
+  "policy": {
+    "max_age_seconds": 86400,
+    "min_confirmations": 12
+  },
+  "schema_version": 1
+}

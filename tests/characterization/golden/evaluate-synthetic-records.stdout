@@ -1,0 +1,19 @@
+{
+  "status": "NOT_MEASURED",
+  "reason": "No recorded host trials supplied. An empty trial set is not a neutral result; nothing about the variants has been measured.",
+  "comparisons": [],
+  "missing_cases": [
+    "attributed-intent",
+    "budget",
+    "competent-reaction",
+    "conservation",
+    "cooperation",
+    "expired-premise",
+    "level-inversion",
+    "network-scope",
+    "qa-versus-purpose",
+    "recovery",
+    "selective-hold",
+    "shared-source"
+  ]
+}

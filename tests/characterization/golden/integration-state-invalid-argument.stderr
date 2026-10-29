@@ -1,0 +1,2 @@
+usage: integration-state.py [-h] [--force] {check,record,sync,explain} tool
+integration-state.py: error: the following arguments are required: mode, tool

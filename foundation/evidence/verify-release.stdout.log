@@ -1,0 +1,239 @@
+Privilege schema: 506 agents scanned; 37 tools declarations; 6 observed/6 registered tokens; 0 error(s).
+
+Results: 22/22 security agents pass the language checks for their declared engagement class (0 findings)
+
+Results: PASSED (0 failures)
+Linting 506 agent files...
+
+WARN  finance/finance-catalyst-expectations-analyst.md: missing recommended section 'Core Mission'
+WARN  finance/finance-catalyst-expectations-analyst.md: missing recommended section 'Critical Rules'
+WARN  finance/finance-investment-thesis-challenger.md: missing recommended section 'Core Mission'
+WARN  finance/finance-investment-thesis-challenger.md: missing recommended section 'Critical Rules'
+WARN  finance/finance-market-data-research-integrity.md: missing recommended section 'Core Mission'
+WARN  finance/finance-market-data-research-integrity.md: missing recommended section 'Critical Rules'
+WARN  finance/finance-onchain-capital-flows-market-structure.md: missing recommended section 'Core Mission'
+WARN  finance/finance-onchain-capital-flows-market-structure.md: missing recommended section 'Critical Rules'
+WARN  finance/finance-portfolio-risk-allocation-architect.md: missing recommended section 'Core Mission'
+WARN  finance/finance-portfolio-risk-allocation-architect.md: missing recommended section 'Critical Rules'
+WARN  finance/finance-protocol-fundamentals-token-value-capture.md: missing recommended section 'Core Mission'
+WARN  finance/finance-protocol-fundamentals-token-value-capture.md: missing recommended section 'Critical Rules'
+WARN  testing/testing-evidence-collector.md: missing recommended section 'Core Mission'
+WARN  testing/testing-evidence-collector.md: missing recommended section 'Critical Rules'
+
+Results: 0 error(s), 14 warning(s) in 506 files.
+PASSED
+PASSED: 19 divisions consistent across divisions.json, runtime discovery, directories, and CI.
+PASSED: 17 tools validated from tools.json; 15 converted, 2 source/identity; installer, detection and renderer coverage complete.
+Canonical order: claude-code codex gemini-cli copilot qwen cursor opencode osaurus aider antigravity kimi openclaw windsurf hermes vibe zcode dsh
+PASSED: 9 runbooks, 134 agent slug references, 28 required artifacts, 9/9 termination contracts — references and required metadata are structurally valid; closure adequacy requires human review.
+Extracted heredoc: 8769 chars, 235 lines
+
+OK: all 21 regression cases passed
+PASSED: CATALOG.md is current (506 agents, 9 runbooks).
+runbooks.json sha256=01056db79044c03ce85600bfbadeba7752a88056a78daa89c955e78260197f8b
+PASSED: claim register, security finding register and standard handoff preserve all epistemic states
+
+Results: PASSED (0 failures)
+{
+  "run_id": "level-inversion-northwind/cli/single_agent",
+  "status": "COMPLETE",
+  "spent": {
+    "cost_usd": 0.01,
+    "tokens_total": 1000,
+    "calls": 1,
+    "wall_time_seconds": 1.0
+  },
+  "row": {
+    "submission_id": "c8c7e0e6dee84d01",
+    "case_id": "level-inversion",
+    "trial_id": "cli",
+    "variant": "single_agent",
+    "model_version": "claude-test",
+    "host_version": "fake-executor",
+    "evidence_ref": "level-inversion-northwind/cli/single_agent#sha256:567654fa82ced761fc887bedebe052ffd6cb8d7b2652d80719d3365ec53ed95b",
+    "operator": "op-1",
+    "inputs_hash": "sha256:5decad51b5f086d4c5dc2f78bafa017d02e22a912af94eeaa4dafd515ff51fe2",
+    "budget_policy_ref": "p",
+    "started_at": "2026-10-28T15:20:08Z",
+    "cost_usd": 0.01,
+    "tokens_total": 1000,
+    "wall_time_seconds": 1.0,
+    "invalid_decisions": 0,
+    "rework_cycles": 0
+  }
+}
+{
+  "instance_id": "casepack-level-inversion-northwind",
+  "status": "CLEAN",
+  "shape": {
+    "tasks": 3,
+    "depth": 2,
+    "critical_path": [
+      "B",
+      "C"
+    ],
+    "levels": {
+      "1": [
+        "A",
+        "B"
+      ],
+      "2": [
+        "C"
+      ]
+    },
+    "widest_level": 2,
+    "sinks": [
+      "C"
+    ]
+  },
+  "findings": []
+}
+{
+  "instance_id": "casepack-level-inversion-northwind",
+  "status": "WARNINGS",
+  "shape": {
+    "tasks": 3,
+    "depth": 2,
+    "critical_path": [
+      "A",
+      "C"
+    ],
+    "levels": {
+      "1": [
+        "A",
+        "B"
+      ],
+      "2": [
+        "C"
+      ]
+    },
+    "widest_level": 2,
+    "sinks": [
+      "B",
+      "C"
+    ]
+  },
+  "findings": [
+    {
+      "severity": "WARN",
+      "code": "MULTIPLE_SINKS",
+      "tasks": [
+        "B",
+        "C"
+      ],
+      "message": "more than one final task; the deliverable concatenates them instead of integrating them"
+    }
+  ]
+}
+{
+  "instance_id": "casepack-level-inversion-northwind",
+  "status": "WARNINGS",
+  "shape": {
+    "tasks": 3,
+    "depth": 2,
+    "critical_path": [
+      "A",
+      "C"
+    ],
+    "levels": {
+      "1": [
+        "A",
+        "B"
+      ],
+      "2": [
+        "C"
+      ]
+    },
+    "widest_level": 2,
+    "sinks": [
+      "B",
+      "C"
+    ]
+  },
+  "findings": [
+    {
+      "severity": "WARN",
+      "code": "MULTIPLE_SINKS",
+      "tasks": [
+        "B",
+        "C"
+      ],
+      "message": "more than one final task; the deliverable concatenates them instead of integrating them"
+    }
+  ]
+}
+{
+  "judgments": 3,
+  "out": "/tmp/tmph99y5vxz/cli.json"
+}
+{
+  "status": "DRAFTED",
+  "objective": "/workspace/scratch/1470bd876a88/ante-foundation/examples/nexus/planner-objective.example.json",
+  "planner_agent": "agents-orchestrator",
+  "attempts": [
+    {
+      "attempt": 1,
+      "engine_refusal": null,
+      "cost_usd": 0.0,
+      "tokens_total": 0,
+      "evidence_ref": "fake-planner",
+      "model_version": "claude-opus-5-5"
+    }
+  ],
+  "instance_sha256": "cbbc222c7ec6b6984f0be4d2a59b6bf675ff64b8a7e13f1dd5b3ce35d8a44659",
+  "lint_status": "CLEAN",
+  "warnings": []
+}
+{
+  "schema_version": 1,
+  "instance_id": "SYNTHETIC-STRATEGIC-DECISION-001",
+  "instance_sha256": "cbbc222c7ec6b6984f0be4d2a59b6bf675ff64b8a7e13f1dd5b3ce35d8a44659",
+  "adopted_by": "fixture-owner",
+  "adopted_at": "2026-10-11T10:00:00Z",
+  "accepted_warnings": [],
+  "planner_agent": "agents-orchestrator",
+  "planner_evidence": [
+    "fake-planner"
+  ]
+}
+{
+  "status": "PROPOSED",
+  "agent": "general-strategy-director",
+  "path": "specialized/general-strategy-director.md",
+  "improver": "profile-optimizer",
+  "attempts": [
+    {
+      "attempt": 1,
+      "refusal": null,
+      "cost_usd": 0.0,
+      "evidence_ref": "fake-optimizer"
+    }
+  ],
+  "evidence_packs": [
+    "level-inversion-northwind"
+  ],
+  "body_change": 0.013,
+  "next_steps": [
+    "apply proposal.patch on a branch; run development trials",
+    "independent evaluator: nexus-improve.py gate --improver profile-optimizer on private held-out packs",
+    "a human reviews and merges only on PROPOSE"
+  ]
+}
+log chain intact (6 entries); NEXUS replay accepted 2 events
+nothing to reconcile
+record: run r_3038b04a0a6f41a1944a0fbc0b284cde NEXUS finish (rejected); the review note was lost and stays empty
+run r_3038b04a0a6f41a1944a0fbc0b284cde: recorded NEXUS finish as rejected
+log chain intact (8 entries); NEXUS replay accepted 2 events
+would record: run r_b44326b8ef914e19bf98e2d04bb8c26f NEXUS finish (accepted); the review note was lost and stays empty
+dry run; nothing changed. Re-run with --apply while `serve` is stopped.
+record: run r_b44326b8ef914e19bf98e2d04bb8c26f NEXUS finish (accepted); the review note was lost and stays empty
+run r_b44326b8ef914e19bf98e2d04bb8c26f: recorded NEXUS finish as accepted
+log chain intact (8 entries); NEXUS replay accepted 2 events
+recover: run r_d5f41de1ac5446f79c9bbd95ae17c1df was interrupted; it is marked completed with an error (charged its full reservation if NEXUS started it) and then needs a review
+recovered interrupted run r_d5f41de1ac5446f79c9bbd95ae17c1df
+log chain intact (8 entries); NEXUS replay accepted 2 events
+log chain intact (8 entries); NEXUS replay accepted 2 events
+log chain intact (8 entries); NEXUS replay accepted 2 events
+log chain intact (6 entries); NEXUS replay accepted 2 events
+log chain intact (8 entries); NEXUS replay accepted 2 events
+log chain intact (8 entries); NEXUS replay accepted 2 events

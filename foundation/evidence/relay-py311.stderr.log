@@ -1,0 +1,637 @@
+test_worst_category_fits_the_hold (test_properties.HoldCoversEveryBillingCategory.test_worst_category_fits_the_hold) ... ok
+test_any_pdf_is_held_at_the_input_limit (test_properties.MediaProperties.test_any_pdf_is_held_at_the_input_limit) ... ok
+test_bound_never_crashes_never_undercuts_text_and_never_exceeds_the_input_limit (test_properties.MediaProperties.test_bound_never_crashes_never_undercuts_text_and_never_exceeds_the_input_limit) ... ok
+test_images_are_held_at_least_at_their_billed_visual_tokens (test_properties.MediaProperties.test_images_are_held_at_least_at_their_billed_visual_tokens) ... ok
+test_a_denied_beta_anywhere_in_the_header_is_refused (test_properties.PolicyProperties.test_a_denied_beta_anywhere_in_the_header_is_refused) ... ok
+test_policy_refuses_or_passes_arbitrary_json_and_never_crashes (test_properties.PolicyProperties.test_policy_refuses_or_passes_arbitrary_json_and_never_crashes) ... ok
+test_safe_requests_pass_and_any_single_forbidden_part_is_refused (test_properties.PolicyProperties.test_safe_requests_pass_and_any_single_forbidden_part_is_refused) ... ok
+test_whatever_passes_contains_nothing_outside_the_safe_set (test_properties.PolicyProperties.test_whatever_passes_contains_nothing_outside_the_safe_set) ... ok
+test_late_settlements_never_change_a_frozen_cost (test_properties.SettleAfterCloseTests.test_late_settlements_never_change_a_frozen_cost) ... ok
+runTest (hypothesis.stateful.MeterMachine.TestCase.runTest) ... ok
+test_external_anchor_and_nexus_citations_catch_rewrites (test_relay.AnchorTests.test_external_anchor_and_nexus_citations_catch_rewrites) ... ok
+test_activity_keeps_a_session_alive (test_relay.AuthTests.test_activity_keeps_a_session_alive) ... ok
+test_disabling_a_member_kills_sessions_and_invites (test_relay.AuthTests.test_disabling_a_member_kills_sessions_and_invites) ... ok
+test_expired_invite_is_refused (test_relay.AuthTests.test_expired_invite_is_refused) ... ok
+test_idle_session_expires (test_relay.AuthTests.test_idle_session_expires) ... ok
+test_invite_is_single_use_and_never_stored_raw (test_relay.AuthTests.test_invite_is_single_use_and_never_stored_raw) ... ok
+test_only_one_owner_and_owner_cannot_be_disabled (test_relay.AuthTests.test_only_one_owner_and_owner_cannot_be_disabled) ... ok
+test_rate_limiter (test_relay.AuthTests.test_rate_limiter) ... ok
+test_sessions_can_be_listed_and_revoked_by_id (test_relay.AuthTests.test_sessions_can_be_listed_and_revoked_by_id) ... ok
+test_adopting_a_key_on_a_legacy_log_is_explicit (test_relay.ChainTests.test_adopting_a_key_on_a_legacy_log_is_explicit) ... ok
+test_downgrade_to_plain_with_key_record_removed_is_detected (test_relay.ChainTests.test_downgrade_to_plain_with_key_record_removed_is_detected) ... ok
+test_keyed_chain_detects_a_full_rewrite (test_relay.ChainTests.test_keyed_chain_detects_a_full_rewrite) ... ok
+test_keyed_log_refuses_missing_or_wrong_key (test_relay.ChainTests.test_keyed_log_refuses_missing_or_wrong_key) ... ok
+test_short_keys_are_rejected (test_relay.ChainTests.test_short_keys_are_rejected) ... ok
+test_unkeyed_chain_can_be_reforged (test_relay.ChainTests.test_unkeyed_chain_can_be_reforged) ... ok
+test_extra_request_fields_cannot_enable_egress_or_pricing (test_relay.ConfigTests.test_extra_request_fields_cannot_enable_egress_or_pricing) ... ok
+test_load_refuses_group_readable_files (test_relay.ConfigTests.test_load_refuses_group_readable_files) ... ok
+test_media_limits_have_safe_floors (test_relay.ConfigTests.test_media_limits_have_safe_floors) ... ok
+test_prices_must_be_finite_non_negative_numbers (test_relay.ConfigTests.test_prices_must_be_finite_non_negative_numbers) ... ok
+test_refuses_non_loopback_bind (test_relay.ConfigTests.test_refuses_non_loopback_bind) ... ok
+test_refuses_plain_http_public_origin_off_loopback (test_relay.ConfigTests.test_refuses_plain_http_public_origin_off_loopback) ... ok
+test_refuses_unknown_keys_and_unsafe_values (test_relay.ConfigTests.test_refuses_unknown_keys_and_unsafe_values) ... ok
+test_usd_requires_prices_and_https_upstream (test_relay.ConfigTests.test_usd_requires_prices_and_https_upstream) ... ok
+test_control_file_classification (test_relay.EvidenceTests.test_control_file_classification) ... ok
+test_file_disappearing_during_scan_marks_manifest_incomplete (test_relay.EvidenceTests.test_file_disappearing_during_scan_marks_manifest_incomplete) ... ok
+test_manifest_never_follows_links_or_blocks_on_special_files (test_relay.EvidenceTests.test_manifest_never_follows_links_or_blocks_on_special_files) ... ok
+test_unreadable_subtree_marks_manifest_incomplete (test_relay.EvidenceTests.test_unreadable_subtree_marks_manifest_incomplete) ... ok
+test_nested_images_and_pdfs_are_found (test_relay.MediaTests.test_nested_images_and_pdfs_are_found) ... ok
+test_png_visual_tokens_follow_the_patch_formula_up_to_the_cap (test_relay.MediaTests.test_png_visual_tokens_follow_the_patch_formula_up_to_the_cap) ... ok
+test_text_keeps_the_byte_bound_and_never_exceeds_the_input_limit (test_relay.MediaTests.test_text_keeps_the_byte_bound_and_never_exceeds_the_input_limit) ... ok
+test_unreadable_or_other_images_are_charged_the_cap (test_relay.MediaTests.test_unreadable_or_other_images_are_charged_the_cap) ... ok
+test_hold_covers_configured_cache_read_rate (test_relay.MeterSettlementTests.test_hold_covers_configured_cache_read_rate) ... ok
+test_proxy_stop_accounts_for_pending_requests_before_persisting_cost (test_relay.MeterSettlementTests.test_proxy_stop_accounts_for_pending_requests_before_persisting_cost) ... ok
+test_settlement_never_makes_pending_cost_available_again (test_relay.MeterSettlementTests.test_settlement_never_makes_pending_cost_available_again) ... ok
+test_older_databases_gain_new_columns (test_relay.MigrationTests.test_older_databases_gain_new_columns) ... ok
+test_engine_refuses_blocked_and_unauthorised_starts (test_relay.NexusTests.test_engine_refuses_blocked_and_unauthorised_starts) ... ok
+test_events_file_is_private (test_relay.NexusTests.test_events_file_is_private) ... ok
+test_hold_blocks_the_task (test_relay.NexusTests.test_hold_blocks_the_task) ... ok
+test_instance_must_be_local_relay (test_relay.NexusTests.test_instance_must_be_local_relay) ... ok
+test_released_reserve_widens_relay_reservations (test_relay.NexusTests.test_released_reserve_widens_relay_reservations) ... ok
+test_start_reserves_and_finish_requires_every_predicate (test_relay.NexusTests.test_start_reserves_and_finish_requires_every_predicate) ... ok
+test_budget_exhaustion_stops_the_run (test_relay.ProxyTests.test_budget_exhaustion_stops_the_run) ... ERROR
+test_claude_code_shaped_requests_are_forwarded_unchanged (test_relay.ProxyTests.test_claude_code_shaped_requests_are_forwarded_unchanged)
+The default agent must keep working: shape captured from Claude Code 2.1.295 --bare. ... ERROR
+test_compressible_images_are_held_at_their_visual_tokens (test_relay.ProxyTests.test_compressible_images_are_held_at_their_visual_tokens)
+Regression: 50 valid 2576x1449 PNGs fit in ~40 KB but bill >= 239,200 input tokens. ... ERROR
+test_concurrent_requests_never_exceed_the_reservation (test_relay.ProxyTests.test_concurrent_requests_never_exceed_the_reservation) ... ERROR
+test_count_tokens_has_its_own_field_set (test_relay.ProxyTests.test_count_tokens_has_its_own_field_set) ... ERROR
+test_count_tokens_is_not_held (test_relay.ProxyTests.test_count_tokens_is_not_held) ... ERROR
+test_denied_betas_are_refused (test_relay.ProxyTests.test_denied_betas_are_refused) ... ERROR
+test_each_provider_side_capability_is_refused (test_relay.ProxyTests.test_each_provider_side_capability_is_refused) ... ERROR
+test_generation_requires_max_tokens (test_relay.ProxyTests.test_generation_requires_max_tokens) ... ERROR
+test_idle_and_excess_connections_are_bounded (test_relay.ProxyTests.test_idle_and_excess_connections_are_bounded) ... ERROR
+test_image_hold_clamps_max_tokens_by_visual_tokens (test_relay.ProxyTests.test_image_hold_clamps_max_tokens_by_visual_tokens) ... ERROR
+test_incomplete_stream_is_charged_its_full_hold (test_relay.ProxyTests.test_incomplete_stream_is_charged_its_full_hold) ... ERROR
+test_max_tokens_is_clamped_to_the_remaining_budget (test_relay.ProxyTests.test_max_tokens_is_clamped_to_the_remaining_budget) ... ERROR
+test_meters_streaming_usage (test_relay.ProxyTests.test_meters_streaming_usage) ... ERROR
+test_oversized_body_is_refused (test_relay.ProxyTests.test_oversized_body_is_refused) ... ERROR
+test_owner_can_allow_a_named_extra_field (test_relay.ProxyTests.test_owner_can_allow_a_named_extra_field) ... ERROR
+test_pdf_is_held_at_the_model_input_limit (test_relay.ProxyTests.test_pdf_is_held_at_the_model_input_limit) ... ERROR
+test_provider_side_egress_poc_is_refused (test_relay.ProxyTests.test_provider_side_egress_poc_is_refused)
+Regression for the review finding: the agent asks the provider to reach the network. ... ERROR
+test_query_string_is_forwarded_to_the_fixed_upstream_path (test_relay.ProxyTests.test_query_string_is_forwarded_to_the_fixed_upstream_path) ... ERROR
+test_refuses_wrong_token_and_paths (test_relay.ProxyTests.test_refuses_wrong_token_and_paths) ... ERROR
+test_swaps_token_for_key_and_meters_json_usage (test_relay.ProxyTests.test_swaps_token_for_key_and_meters_json_usage) ... ERROR
+test_thinking_budget_follows_the_clamp_or_is_refused (test_relay.ProxyTests.test_thinking_budget_follows_the_clamp_or_is_refused) ... ERROR
+test_upstream_errors_are_not_charged (test_relay.ProxyTests.test_upstream_errors_are_not_charged) ... ERROR
+test_upstream_tls_verifies_certificates_and_hostnames (test_relay.ProxyTests.test_upstream_tls_verifies_certificates_and_hostnames) ... ok
+test_usd_refuses_unpriced_models (test_relay.ProxyTests.test_usd_refuses_unpriced_models) ... ERROR
+test_apply_refuses_to_run_beside_another_relay_process (test_relay.ReconcileTests.test_apply_refuses_to_run_beside_another_relay_process) ... ok
+test_finish_that_disagrees_with_the_log_is_left_for_a_person (test_relay.ReconcileTests.test_finish_that_disagrees_with_the_log_is_left_for_a_person) ... needs a person: run r_910d958646fa432cb3f1a778518946fa: interrupted review, NEXUS finish not projected: finish cost differs from the chained run.completed entry; finish cites a relay-output digest that differs from the chained run.completed entry; finish cites a relay-workspace digest that differs from the chained run.completed entry
+ok
+test_interrupted_rejection_is_recorded_as_rejected (test_relay.ReconcileTests.test_interrupted_rejection_is_recorded_as_rejected) ... ok
+test_interrupted_review_is_stuck_until_reconciled (test_relay.ReconcileTests.test_interrupted_review_is_stuck_until_reconciled) ... ok
+test_interrupted_run_is_recovered_offline (test_relay.ReconcileTests.test_interrupted_run_is_recovered_offline) ... ok
+test_tampered_chain_blocks_any_repair (test_relay.ReconcileTests.test_tampered_chain_blocks_any_repair) ... FAIL: log seq 1: content does not match its hash
+ok
+test_command_is_hardened_and_carries_no_key (test_relay.RunnerTests.test_command_is_hardened_and_carries_no_key) ... ok
+test_engine_detection_reads_engine_info (test_relay.RunnerTests.test_engine_detection_reads_engine_info) ... ok
+test_engine_gets_no_model_key (test_relay.RunnerTests.test_engine_gets_no_model_key) ... ok
+test_forwarder_enforces_the_deadline_inside_the_container (test_relay.RunnerTests.test_forwarder_enforces_the_deadline_inside_the_container) ... ok
+test_reference_dockerfile_is_pinned (test_relay.RunnerTests.test_reference_dockerfile_is_pinned) ... ok
+test_refuses_root (test_relay.RunnerTests.test_refuses_root) ... ok
+test_rootful_engine_is_refused_by_default (test_relay.RunnerTests.test_rootful_engine_is_refused_by_default) ... ok
+test_run_never_pulls_and_tags_are_detected (test_relay.RunnerTests.test_run_never_pulls_and_tags_are_detected) ... ok
+test_socket_is_mounted_read_only_and_deadline_is_passed (test_relay.RunnerTests.test_socket_is_mounted_read_only_and_deadline_is_passed) ... ok
+test_stop_does_not_block_the_caller (test_relay.RunnerTests.test_stop_does_not_block_the_caller) ... ok
+test_timeout_holds_when_engine_kill_fails (test_relay.RunnerTests.test_timeout_holds_when_engine_kill_fails) ... ok
+test_unsafe_names_never_reach_paths (test_relay.RunnerTests.test_unsafe_names_never_reach_paths) ... ok
+test_host_prefixed_secure_cookie (test_relay.SecureCookieTests.test_host_prefixed_secure_cookie) ... ok
+test_api_requires_session (test_relay.ServerTests.test_api_requires_session) ... ok
+test_csp_enforces_trusted_types (test_relay.ServerTests.test_csp_enforces_trusted_types) ... ok
+test_http_connections_are_bounded (test_relay.ServerTests.test_http_connections_are_bounded) ... ok
+test_internal_errors_do_not_leak (test_relay.ServerTests.test_internal_errors_do_not_leak) ... ok
+test_join_is_rate_limited (test_relay.ServerTests.test_join_is_rate_limited) ... ok
+test_join_sets_hardened_cookie_and_is_single_use (test_relay.ServerTests.test_join_sets_hardened_cookie_and_is_single_use) ... ok
+test_owner_session_admin_is_owner_only (test_relay.ServerTests.test_owner_session_admin_is_owner_only) ... ok
+test_rejects_unknown_host_header (test_relay.ServerTests.test_rejects_unknown_host_header) ... ok
+test_security_headers_and_static_page (test_relay.ServerTests.test_security_headers_and_static_page) ... ok
+test_ui_never_uses_inner_html (test_relay.ServerTests.test_ui_never_uses_inner_html) ... ok
+test_writes_need_origin_and_csrf (test_relay.ServerTests.test_writes_need_origin_and_csrf) ... ok
+test_changed_output_is_refused_at_review (test_relay.ServiceTests.test_changed_output_is_refused_at_review) ... ok
+test_consistent_edit_of_artifact_and_row_is_refused (test_relay.ServiceTests.test_consistent_edit_of_artifact_and_row_is_refused) ... ok
+test_control_file_changes_need_explicit_acknowledgement (test_relay.ServiceTests.test_control_file_changes_need_explicit_acknowledgement) ... ok
+test_double_approval_cannot_start_twice (test_relay.ServiceTests.test_double_approval_cannot_start_twice) ... ok
+test_edited_cost_never_reaches_nexus (test_relay.ServiceTests.test_edited_cost_never_reaches_nexus) ... ok
+test_forged_completion_entry_is_refused_with_a_keyed_chain (test_relay.ServiceTests.test_forged_completion_entry_is_refused_with_a_keyed_chain) ... ok
+test_full_lifecycle_is_admitted_metered_and_verifiable (test_relay.ServiceTests.test_full_lifecycle_is_admitted_metered_and_verifiable) ... ok
+test_hash_budget_exhaustion_fails_the_run (test_relay.ServiceTests.test_hash_budget_exhaustion_fails_the_run) ... ok
+test_message_limits (test_relay.ServiceTests.test_message_limits) ... ok
+test_oversized_workspace_fails_the_run (test_relay.ServiceTests.test_oversized_workspace_fails_the_run) ... ok
+test_owner_name_must_match_mandate (test_relay.ServiceTests.test_owner_name_must_match_mandate) ... ok
+test_recover_charges_the_reservation (test_relay.ServiceTests.test_recover_charges_the_reservation) ... ok
+test_refused_start_runs_nothing (test_relay.ServiceTests.test_refused_start_runs_nothing) ... ok
+test_roles_are_enforced (test_relay.ServiceTests.test_roles_are_enforced) ... ok
+test_running_as_root_fails_the_run_safely (test_relay.ServiceTests.test_running_as_root_fails_the_run_safely) ... ok
+test_truncated_workspace_cannot_be_accepted (test_relay.ServiceTests.test_truncated_workspace_cannot_be_accepted) ... ok
+test_unchanged_control_files_are_not_flagged_again (test_relay.ServiceTests.test_unchanged_control_files_are_not_flagged_again) ... ok
+test_unit_mismatch_is_refused (test_relay.ServiceTests.test_unit_mismatch_is_refused) ... ok
+test_verify_detects_finish_not_projected_to_database (test_relay.ServiceTests.test_verify_detects_finish_not_projected_to_database) ... ok
+test_verify_detects_missing_or_changed_archived_artifacts (test_relay.ServiceTests.test_verify_detects_missing_or_changed_archived_artifacts) ... ok
+test_verify_flags_finish_citing_other_digests (test_relay.ServiceTests.test_verify_flags_finish_citing_other_digests) ... ok
+test_workspace_manifest_is_part_of_the_evidence (test_relay.ServiceTests.test_workspace_manifest_is_part_of_the_evidence) ... ok
+test_chain_verifies_and_is_append_only (test_relay.StoreTests.test_chain_verifies_and_is_append_only) ... ok
+test_database_file_is_private (test_relay.StoreTests.test_database_file_is_private) ... ok
+test_tampering_is_detected (test_relay.StoreTests.test_tampering_is_detected) ... ok
+
+======================================================================
+ERROR: test_budget_exhaustion_stops_the_run (test_relay.ProxyTests.test_budget_exhaustion_stops_the_run)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/1470bd876a88/ante-foundation/relay/tests/test_relay.py", line 819, in test_budget_exhaustion_stops_the_run
+    p, meter = self.make(up, reserved=400)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/scratch/1470bd876a88/ante-foundation/relay/tests/test_relay.py", line 534, in make
+    p.start()
+  File "/workspace/scratch/1470bd876a88/ante-foundation/relay/nexus_relay/proxy.py", line 321, in start
+    self._server = _Server(str(self.socket_path), Handler, self.max_connections)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/scratch/1470bd876a88/ante-foundation/relay/nexus_relay/proxy.py", line 226, in __init__
+    super().__init__(path, handler)
+  File "/root/.local/share/uv/python/cpython-3.11.17-linux-x86_64-gnu/lib/python3.11/socketserver.py", line 452, in __init__
+    self.socket = socket.socket(self.address_family,
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.local/share/uv/python/cpython-3.11.17-linux-x86_64-gnu/lib/python3.11/socket.py", line 232, in __init__
+    _socket.socket.__init__(self, family, type, proto, fileno)
+PermissionError: [Errno 1] Operation not permitted
+
+======================================================================
+ERROR: test_claude_code_shaped_requests_are_forwarded_unchanged (test_relay.ProxyTests.test_claude_code_shaped_requests_are_forwarded_unchanged)
+The default agent must keep working: shape captured from Claude Code 2.1.295 --bare.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/1470bd876a88/ante-foundation/relay/tests/test_relay.py", line 645, in test_claude_code_shaped_requests_are_forwarded_unchanged
+    self.make(up)
+  File "/workspace/scratch/1470bd876a88/ante-foundation/relay/tests/test_relay.py", line 534, in make
+    p.start()
+  File "/workspace/scratch/1470bd876a88/ante-foundation/relay/nexus_relay/proxy.py", line 321, in start
+    self._server = _Server(str(self.socket_path), Handler, self.max_connections)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/scratch/1470bd876a88/ante-foundation/relay/nexus_relay/proxy.py", line 226, in __init__
+    super().__init__(path, handler)
+  File "/root/.local/share/uv/python/cpython-3.11.17-linux-x86_64-gnu/lib/python3.11/socketserver.py", line 452, in __init__
+    self.socket = socket.socket(self.address_family,
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.local/share/uv/python/cpython-3.11.17-linux-x86_64-gnu/lib/python3.11/socket.py", line 232, in __init__
+    _socket.socket.__init__(self, family, type, proto, fileno)
+PermissionError: [Errno 1] Operation not permitted
+
+======================================================================
+ERROR: test_compressible_images_are_held_at_their_visual_tokens (test_relay.ProxyTests.test_compressible_images_are_held_at_their_visual_tokens)
+Regression: 50 valid 2576x1449 PNGs fit in ~40 KB but bill >= 239,200 input tokens.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/1470bd876a88/ante-foundation/relay/tests/test_relay.py", line 687, in test_compressible_images_are_held_at_their_visual_tokens
+    p, meter = self.make(up, reserved=200_000)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/scratch/1470bd876a88/ante-foundation/relay/tests/test_relay.py", line 534, in make
+    p.start()
+  File "/workspace/scratch/1470bd876a88/ante-foundation/relay/nexus_relay/proxy.py", line 321, in start
+    self._server = _Server(str(self.socket_path), Handler, self.max_connections)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/scratch/1470bd876a88/ante-foundation/relay/nexus_relay/proxy.py", line 226, in __init__
+    super().__init__(path, handler)
+  File "/root/.local/share/uv/python/cpython-3.11.17-linux-x86_64-gnu/lib/python3.11/socketserver.py", line 452, in __init__
+    self.socket = socket.socket(self.address_family,
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.local/share/uv/python/cpython-3.11.17-linux-x86_64-gnu/lib/python3.11/socket.py", line 232, in __init__
+    _socket.socket.__init__(self, family, type, proto, fileno)
+PermissionError: [Errno 1] Operation not permitted
+
+======================================================================
+ERROR: test_concurrent_requests_never_exceed_the_reservation (test_relay.ProxyTests.test_concurrent_requests_never_exceed_the_reservation)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/1470bd876a88/ante-foundation/relay/tests/test_relay.py", line 772, in test_concurrent_requests_never_exceed_the_reservation
+    p, meter = self.make(up, reserved=1000)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/scratch/1470bd876a88/ante-foundation/relay/tests/test_relay.py", line 534, in make
+    p.start()
+  File "/workspace/scratch/1470bd876a88/ante-foundation/relay/nexus_relay/proxy.py", line 321, in start
+    self._server = _Server(str(self.socket_path), Handler, self.max_connections)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/scratch/1470bd876a88/ante-foundation/relay/nexus_relay/proxy.py", line 226, in __init__
+    super().__init__(path, handler)
+  File "/root/.local/share/uv/python/cpython-3.11.17-linux-x86_64-gnu/lib/python3.11/socketserver.py", line 452, in __init__
+    self.socket = socket.socket(self.address_family,
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.local/share/uv/python/cpython-3.11.17-linux-x86_64-gnu/lib/python3.11/socket.py", line 232, in __init__
+    _socket.socket.__init__(self, family, type, proto, fileno)
+PermissionError: [Errno 1] Operation not permitted
+
+======================================================================
+ERROR: test_count_tokens_has_its_own_field_set (test_relay.ProxyTests.test_count_tokens_has_its_own_field_set)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/1470bd876a88/ante-foundation/relay/tests/test_relay.py", line 669, in test_count_tokens_has_its_own_field_set
+    self.make(up)
+  File "/workspace/scratch/1470bd876a88/ante-foundation/relay/tests/test_relay.py", line 534, in make
+    p.start()
+  File "/workspace/scratch/1470bd876a88/ante-foundation/relay/nexus_relay/proxy.py", line 321, in start
+    self._server = _Server(str(self.socket_path), Handler, self.max_connections)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/scratch/1470bd876a88/ante-foundation/relay/nexus_relay/proxy.py", line 226, in __init__
+    super().__init__(path, handler)
+  File "/root/.local/share/uv/python/cpython-3.11.17-linux-x86_64-gnu/lib/python3.11/socketserver.py", line 452, in __init__
+    self.socket = socket.socket(self.address_family,
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.local/share/uv/python/cpython-3.11.17-linux-x86_64-gnu/lib/python3.11/socket.py", line 232, in __init__
+    _socket.socket.__init__(self, family, type, proto, fileno)
+PermissionError: [Errno 1] Operation not permitted
+
+======================================================================
+ERROR: test_count_tokens_is_not_held (test_relay.ProxyTests.test_count_tokens_is_not_held)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/1470bd876a88/ante-foundation/relay/tests/test_relay.py", line 755, in test_count_tokens_is_not_held
+    p, meter = self.make(up, reserved=1)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/scratch/1470bd876a88/ante-foundation/relay/tests/test_relay.py", line 534, in make
+    p.start()
+  File "/workspace/scratch/1470bd876a88/ante-foundation/relay/nexus_relay/proxy.py", line 321, in start
+    self._server = _Server(str(self.socket_path), Handler, self.max_connections)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/scratch/1470bd876a88/ante-foundation/relay/nexus_relay/proxy.py", line 226, in __init__
+    super().__init__(path, handler)
+  File "/root/.local/share/uv/python/cpython-3.11.17-linux-x86_64-gnu/lib/python3.11/socketserver.py", line 452, in __init__
+    self.socket = socket.socket(self.address_family,
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.local/share/uv/python/cpython-3.11.17-linux-x86_64-gnu/lib/python3.11/socket.py", line 232, in __init__
+    _socket.socket.__init__(self, family, type, proto, fileno)
+PermissionError: [Errno 1] Operation not permitted
+
+======================================================================
+ERROR: test_denied_betas_are_refused (test_relay.ProxyTests.test_denied_betas_are_refused)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/1470bd876a88/ante-foundation/relay/tests/test_relay.py", line 633, in test_denied_betas_are_refused
+    self.make(up)
+  File "/workspace/scratch/1470bd876a88/ante-foundation/relay/tests/test_relay.py", line 534, in make
+    p.start()
+  File "/workspace/scratch/1470bd876a88/ante-foundation/relay/nexus_relay/proxy.py", line 321, in start
+    self._server = _Server(str(self.socket_path), Handler, self.max_connections)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/scratch/1470bd876a88/ante-foundation/relay/nexus_relay/proxy.py", line 226, in __init__
+    super().__init__(path, handler)
+  File "/root/.local/share/uv/python/cpython-3.11.17-linux-x86_64-gnu/lib/python3.11/socketserver.py", line 452, in __init__
+    self.socket = socket.socket(self.address_family,
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.local/share/uv/python/cpython-3.11.17-linux-x86_64-gnu/lib/python3.11/socket.py", line 232, in __init__
+    _socket.socket.__init__(self, family, type, proto, fileno)
+PermissionError: [Errno 1] Operation not permitted
+
+======================================================================
+ERROR: test_each_provider_side_capability_is_refused (test_relay.ProxyTests.test_each_provider_side_capability_is_refused)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/1470bd876a88/ante-foundation/relay/tests/test_relay.py", line 594, in test_each_provider_side_capability_is_refused
+    self.make(up)
+  File "/workspace/scratch/1470bd876a88/ante-foundation/relay/tests/test_relay.py", line 534, in make
+    p.start()
+  File "/workspace/scratch/1470bd876a88/ante-foundation/relay/nexus_relay/proxy.py", line 321, in start
+    self._server = _Server(str(self.socket_path), Handler, self.max_connections)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/scratch/1470bd876a88/ante-foundation/relay/nexus_relay/proxy.py", line 226, in __init__
+    super().__init__(path, handler)
+  File "/root/.local/share/uv/python/cpython-3.11.17-linux-x86_64-gnu/lib/python3.11/socketserver.py", line 452, in __init__
+    self.socket = socket.socket(self.address_family,
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.local/share/uv/python/cpython-3.11.17-linux-x86_64-gnu/lib/python3.11/socket.py", line 232, in __init__
+    _socket.socket.__init__(self, family, type, proto, fileno)
+PermissionError: [Errno 1] Operation not permitted
+
+======================================================================
+ERROR: test_generation_requires_max_tokens (test_relay.ProxyTests.test_generation_requires_max_tokens)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/1470bd876a88/ante-foundation/relay/tests/test_relay.py", line 569, in test_generation_requires_max_tokens
+    self.make(up)
+  File "/workspace/scratch/1470bd876a88/ante-foundation/relay/tests/test_relay.py", line 534, in make
+    p.start()
+  File "/workspace/scratch/1470bd876a88/ante-foundation/relay/nexus_relay/proxy.py", line 321, in start
+    self._server = _Server(str(self.socket_path), Handler, self.max_connections)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/scratch/1470bd876a88/ante-foundation/relay/nexus_relay/proxy.py", line 226, in __init__
+    super().__init__(path, handler)
+  File "/root/.local/share/uv/python/cpython-3.11.17-linux-x86_64-gnu/lib/python3.11/socketserver.py", line 452, in __init__
+    self.socket = socket.socket(self.address_family,
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.local/share/uv/python/cpython-3.11.17-linux-x86_64-gnu/lib/python3.11/socket.py", line 232, in __init__
+    _socket.socket.__init__(self, family, type, proto, fileno)
+PermissionError: [Errno 1] Operation not permitted
+
+======================================================================
+ERROR: test_idle_and_excess_connections_are_bounded (test_relay.ProxyTests.test_idle_and_excess_connections_are_bounded)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/1470bd876a88/ante-foundation/relay/tests/test_relay.py", line 830, in test_idle_and_excess_connections_are_bounded
+    p, meter = self.make(up, idle_timeout=0.5)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/scratch/1470bd876a88/ante-foundation/relay/tests/test_relay.py", line 534, in make
+    p.start()
+  File "/workspace/scratch/1470bd876a88/ante-foundation/relay/nexus_relay/proxy.py", line 321, in start
+    self._server = _Server(str(self.socket_path), Handler, self.max_connections)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/scratch/1470bd876a88/ante-foundation/relay/nexus_relay/proxy.py", line 226, in __init__
+    super().__init__(path, handler)
+  File "/root/.local/share/uv/python/cpython-3.11.17-linux-x86_64-gnu/lib/python3.11/socketserver.py", line 452, in __init__
+    self.socket = socket.socket(self.address_family,
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.local/share/uv/python/cpython-3.11.17-linux-x86_64-gnu/lib/python3.11/socket.py", line 232, in __init__
+    _socket.socket.__init__(self, family, type, proto, fileno)
+PermissionError: [Errno 1] Operation not permitted
+
+======================================================================
+ERROR: test_image_hold_clamps_max_tokens_by_visual_tokens (test_relay.ProxyTests.test_image_hold_clamps_max_tokens_by_visual_tokens)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/1470bd876a88/ante-foundation/relay/tests/test_relay.py", line 705, in test_image_hold_clamps_max_tokens_by_visual_tokens
+    self.make(up, reserved=size + 64 + 500)
+  File "/workspace/scratch/1470bd876a88/ante-foundation/relay/tests/test_relay.py", line 534, in make
+    p.start()
+  File "/workspace/scratch/1470bd876a88/ante-foundation/relay/nexus_relay/proxy.py", line 321, in start
+    self._server = _Server(str(self.socket_path), Handler, self.max_connections)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/scratch/1470bd876a88/ante-foundation/relay/nexus_relay/proxy.py", line 226, in __init__
+    super().__init__(path, handler)
+  File "/root/.local/share/uv/python/cpython-3.11.17-linux-x86_64-gnu/lib/python3.11/socketserver.py", line 452, in __init__
+    self.socket = socket.socket(self.address_family,
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.local/share/uv/python/cpython-3.11.17-linux-x86_64-gnu/lib/python3.11/socket.py", line 232, in __init__
+    _socket.socket.__init__(self, family, type, proto, fileno)
+PermissionError: [Errno 1] Operation not permitted
+
+======================================================================
+ERROR: test_incomplete_stream_is_charged_its_full_hold (test_relay.ProxyTests.test_incomplete_stream_is_charged_its_full_hold)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/1470bd876a88/ante-foundation/relay/tests/test_relay.py", line 742, in test_incomplete_stream_is_charged_its_full_hold
+    p, meter = self.make(FakeUpstream(body=sse, headers={"content-type": "text/event-stream"}))
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/scratch/1470bd876a88/ante-foundation/relay/tests/test_relay.py", line 534, in make
+    p.start()
+  File "/workspace/scratch/1470bd876a88/ante-foundation/relay/nexus_relay/proxy.py", line 321, in start
+    self._server = _Server(str(self.socket_path), Handler, self.max_connections)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/scratch/1470bd876a88/ante-foundation/relay/nexus_relay/proxy.py", line 226, in __init__
+    super().__init__(path, handler)
+  File "/root/.local/share/uv/python/cpython-3.11.17-linux-x86_64-gnu/lib/python3.11/socketserver.py", line 452, in __init__
+    self.socket = socket.socket(self.address_family,
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.local/share/uv/python/cpython-3.11.17-linux-x86_64-gnu/lib/python3.11/socket.py", line 232, in __init__
+    _socket.socket.__init__(self, family, type, proto, fileno)
+PermissionError: [Errno 1] Operation not permitted
+
+======================================================================
+ERROR: test_max_tokens_is_clamped_to_the_remaining_budget (test_relay.ProxyTests.test_max_tokens_is_clamped_to_the_remaining_budget)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/1470bd876a88/ante-foundation/relay/tests/test_relay.py", line 793, in test_max_tokens_is_clamped_to_the_remaining_budget
+    p, meter = self.make(up, reserved=1000)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/scratch/1470bd876a88/ante-foundation/relay/tests/test_relay.py", line 534, in make
+    p.start()
+  File "/workspace/scratch/1470bd876a88/ante-foundation/relay/nexus_relay/proxy.py", line 321, in start
+    self._server = _Server(str(self.socket_path), Handler, self.max_connections)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/scratch/1470bd876a88/ante-foundation/relay/nexus_relay/proxy.py", line 226, in __init__
+    super().__init__(path, handler)
+  File "/root/.local/share/uv/python/cpython-3.11.17-linux-x86_64-gnu/lib/python3.11/socketserver.py", line 452, in __init__
+    self.socket = socket.socket(self.address_family,
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.local/share/uv/python/cpython-3.11.17-linux-x86_64-gnu/lib/python3.11/socket.py", line 232, in __init__
+    _socket.socket.__init__(self, family, type, proto, fileno)
+PermissionError: [Errno 1] Operation not permitted
+
+======================================================================
+ERROR: test_meters_streaming_usage (test_relay.ProxyTests.test_meters_streaming_usage)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/1470bd876a88/ante-foundation/relay/tests/test_relay.py", line 734, in test_meters_streaming_usage
+    p, meter = self.make(FakeUpstream(body=sse, headers={"content-type": "text/event-stream"}))
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/scratch/1470bd876a88/ante-foundation/relay/tests/test_relay.py", line 534, in make
+    p.start()
+  File "/workspace/scratch/1470bd876a88/ante-foundation/relay/nexus_relay/proxy.py", line 321, in start
+    self._server = _Server(str(self.socket_path), Handler, self.max_connections)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/scratch/1470bd876a88/ante-foundation/relay/nexus_relay/proxy.py", line 226, in __init__
+    super().__init__(path, handler)
+  File "/root/.local/share/uv/python/cpython-3.11.17-linux-x86_64-gnu/lib/python3.11/socketserver.py", line 452, in __init__
+    self.socket = socket.socket(self.address_family,
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.local/share/uv/python/cpython-3.11.17-linux-x86_64-gnu/lib/python3.11/socket.py", line 232, in __init__
+    _socket.socket.__init__(self, family, type, proto, fileno)
+PermissionError: [Errno 1] Operation not permitted
+
+======================================================================
+ERROR: test_oversized_body_is_refused (test_relay.ProxyTests.test_oversized_body_is_refused)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/1470bd876a88/ante-foundation/relay/tests/test_relay.py", line 846, in test_oversized_body_is_refused
+    self.make(up)
+  File "/workspace/scratch/1470bd876a88/ante-foundation/relay/tests/test_relay.py", line 534, in make
+    p.start()
+  File "/workspace/scratch/1470bd876a88/ante-foundation/relay/nexus_relay/proxy.py", line 321, in start
+    self._server = _Server(str(self.socket_path), Handler, self.max_connections)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/scratch/1470bd876a88/ante-foundation/relay/nexus_relay/proxy.py", line 226, in __init__
+    super().__init__(path, handler)
+  File "/root/.local/share/uv/python/cpython-3.11.17-linux-x86_64-gnu/lib/python3.11/socketserver.py", line 452, in __init__
+    self.socket = socket.socket(self.address_family,
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.local/share/uv/python/cpython-3.11.17-linux-x86_64-gnu/lib/python3.11/socket.py", line 232, in __init__
+    _socket.socket.__init__(self, family, type, proto, fileno)
+PermissionError: [Errno 1] Operation not permitted
+
+======================================================================
+ERROR: test_owner_can_allow_a_named_extra_field (test_relay.ProxyTests.test_owner_can_allow_a_named_extra_field)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/1470bd876a88/ante-foundation/relay/tests/test_relay.py", line 679, in test_owner_can_allow_a_named_extra_field
+    self.make(up, extra_request_fields=("future_option",))
+  File "/workspace/scratch/1470bd876a88/ante-foundation/relay/tests/test_relay.py", line 534, in make
+    p.start()
+  File "/workspace/scratch/1470bd876a88/ante-foundation/relay/nexus_relay/proxy.py", line 321, in start
+    self._server = _Server(str(self.socket_path), Handler, self.max_connections)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/scratch/1470bd876a88/ante-foundation/relay/nexus_relay/proxy.py", line 226, in __init__
+    super().__init__(path, handler)
+  File "/root/.local/share/uv/python/cpython-3.11.17-linux-x86_64-gnu/lib/python3.11/socketserver.py", line 452, in __init__
+    self.socket = socket.socket(self.address_family,
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.local/share/uv/python/cpython-3.11.17-linux-x86_64-gnu/lib/python3.11/socket.py", line 232, in __init__
+    _socket.socket.__init__(self, family, type, proto, fileno)
+PermissionError: [Errno 1] Operation not permitted
+
+======================================================================
+ERROR: test_pdf_is_held_at_the_model_input_limit (test_relay.ProxyTests.test_pdf_is_held_at_the_model_input_limit)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/1470bd876a88/ante-foundation/relay/tests/test_relay.py", line 712, in test_pdf_is_held_at_the_model_input_limit
+    p, meter = self.make(up, reserved=100_300, max_input_tokens=100_000)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/scratch/1470bd876a88/ante-foundation/relay/tests/test_relay.py", line 534, in make
+    p.start()
+  File "/workspace/scratch/1470bd876a88/ante-foundation/relay/nexus_relay/proxy.py", line 321, in start
+    self._server = _Server(str(self.socket_path), Handler, self.max_connections)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/scratch/1470bd876a88/ante-foundation/relay/nexus_relay/proxy.py", line 226, in __init__
+    super().__init__(path, handler)
+  File "/root/.local/share/uv/python/cpython-3.11.17-linux-x86_64-gnu/lib/python3.11/socketserver.py", line 452, in __init__
+    self.socket = socket.socket(self.address_family,
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.local/share/uv/python/cpython-3.11.17-linux-x86_64-gnu/lib/python3.11/socket.py", line 232, in __init__
+    _socket.socket.__init__(self, family, type, proto, fileno)
+PermissionError: [Errno 1] Operation not permitted
+
+======================================================================
+ERROR: test_provider_side_egress_poc_is_refused (test_relay.ProxyTests.test_provider_side_egress_poc_is_refused)
+Regression for the review finding: the agent asks the provider to reach the network.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/1470bd876a88/ante-foundation/relay/tests/test_relay.py", line 581, in test_provider_side_egress_poc_is_refused
+    self.make(up)
+  File "/workspace/scratch/1470bd876a88/ante-foundation/relay/tests/test_relay.py", line 534, in make
+    p.start()
+  File "/workspace/scratch/1470bd876a88/ante-foundation/relay/nexus_relay/proxy.py", line 321, in start
+    self._server = _Server(str(self.socket_path), Handler, self.max_connections)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/scratch/1470bd876a88/ante-foundation/relay/nexus_relay/proxy.py", line 226, in __init__
+    super().__init__(path, handler)
+  File "/root/.local/share/uv/python/cpython-3.11.17-linux-x86_64-gnu/lib/python3.11/socketserver.py", line 452, in __init__
+    self.socket = socket.socket(self.address_family,
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.local/share/uv/python/cpython-3.11.17-linux-x86_64-gnu/lib/python3.11/socket.py", line 232, in __init__
+    _socket.socket.__init__(self, family, type, proto, fileno)
+PermissionError: [Errno 1] Operation not permitted
+
+======================================================================
+ERROR: test_query_string_is_forwarded_to_the_fixed_upstream_path (test_relay.ProxyTests.test_query_string_is_forwarded_to_the_fixed_upstream_path)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/1470bd876a88/ante-foundation/relay/tests/test_relay.py", line 563, in test_query_string_is_forwarded_to_the_fixed_upstream_path
+    self.make(up)
+  File "/workspace/scratch/1470bd876a88/ante-foundation/relay/tests/test_relay.py", line 534, in make
+    p.start()
+  File "/workspace/scratch/1470bd876a88/ante-foundation/relay/nexus_relay/proxy.py", line 321, in start
+    self._server = _Server(str(self.socket_path), Handler, self.max_connections)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/scratch/1470bd876a88/ante-foundation/relay/nexus_relay/proxy.py", line 226, in __init__
+    super().__init__(path, handler)
+  File "/root/.local/share/uv/python/cpython-3.11.17-linux-x86_64-gnu/lib/python3.11/socketserver.py", line 452, in __init__
+    self.socket = socket.socket(self.address_family,
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.local/share/uv/python/cpython-3.11.17-linux-x86_64-gnu/lib/python3.11/socket.py", line 232, in __init__
+    _socket.socket.__init__(self, family, type, proto, fileno)
+PermissionError: [Errno 1] Operation not permitted
+
+======================================================================
+ERROR: test_refuses_wrong_token_and_paths (test_relay.ProxyTests.test_refuses_wrong_token_and_paths)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/1470bd876a88/ante-foundation/relay/tests/test_relay.py", line 553, in test_refuses_wrong_token_and_paths
+    self.make(up)
+  File "/workspace/scratch/1470bd876a88/ante-foundation/relay/tests/test_relay.py", line 534, in make
+    p.start()
+  File "/workspace/scratch/1470bd876a88/ante-foundation/relay/nexus_relay/proxy.py", line 321, in start
+    self._server = _Server(str(self.socket_path), Handler, self.max_connections)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/scratch/1470bd876a88/ante-foundation/relay/nexus_relay/proxy.py", line 226, in __init__
+    super().__init__(path, handler)
+  File "/root/.local/share/uv/python/cpython-3.11.17-linux-x86_64-gnu/lib/python3.11/socketserver.py", line 452, in __init__
+    self.socket = socket.socket(self.address_family,
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.local/share/uv/python/cpython-3.11.17-linux-x86_64-gnu/lib/python3.11/socket.py", line 232, in __init__
+    _socket.socket.__init__(self, family, type, proto, fileno)
+PermissionError: [Errno 1] Operation not permitted
+
+======================================================================
+ERROR: test_swaps_token_for_key_and_meters_json_usage (test_relay.ProxyTests.test_swaps_token_for_key_and_meters_json_usage)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/1470bd876a88/ante-foundation/relay/tests/test_relay.py", line 541, in test_swaps_token_for_key_and_meters_json_usage
+    p, meter = self.make(up)
+               ^^^^^^^^^^^^^
+  File "/workspace/scratch/1470bd876a88/ante-foundation/relay/tests/test_relay.py", line 534, in make
+    p.start()
+  File "/workspace/scratch/1470bd876a88/ante-foundation/relay/nexus_relay/proxy.py", line 321, in start
+    self._server = _Server(str(self.socket_path), Handler, self.max_connections)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/scratch/1470bd876a88/ante-foundation/relay/nexus_relay/proxy.py", line 226, in __init__
+    super().__init__(path, handler)
+  File "/root/.local/share/uv/python/cpython-3.11.17-linux-x86_64-gnu/lib/python3.11/socketserver.py", line 452, in __init__
+    self.socket = socket.socket(self.address_family,
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.local/share/uv/python/cpython-3.11.17-linux-x86_64-gnu/lib/python3.11/socket.py", line 232, in __init__
+    _socket.socket.__init__(self, family, type, proto, fileno)
+PermissionError: [Errno 1] Operation not permitted
+
+======================================================================
+ERROR: test_thinking_budget_follows_the_clamp_or_is_refused (test_relay.ProxyTests.test_thinking_budget_follows_the_clamp_or_is_refused)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/1470bd876a88/ante-foundation/relay/tests/test_relay.py", line 802, in test_thinking_budget_follows_the_clamp_or_is_refused
+    p, meter = self.make(up, reserved=5000)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/scratch/1470bd876a88/ante-foundation/relay/tests/test_relay.py", line 534, in make
+    p.start()
+  File "/workspace/scratch/1470bd876a88/ante-foundation/relay/nexus_relay/proxy.py", line 321, in start
+    self._server = _Server(str(self.socket_path), Handler, self.max_connections)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/scratch/1470bd876a88/ante-foundation/relay/nexus_relay/proxy.py", line 226, in __init__
+    super().__init__(path, handler)
+  File "/root/.local/share/uv/python/cpython-3.11.17-linux-x86_64-gnu/lib/python3.11/socketserver.py", line 452, in __init__
+    self.socket = socket.socket(self.address_family,
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.local/share/uv/python/cpython-3.11.17-linux-x86_64-gnu/lib/python3.11/socket.py", line 232, in __init__
+    _socket.socket.__init__(self, family, type, proto, fileno)
+PermissionError: [Errno 1] Operation not permitted
+
+======================================================================
+ERROR: test_upstream_errors_are_not_charged (test_relay.ProxyTests.test_upstream_errors_are_not_charged)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/1470bd876a88/ante-foundation/relay/tests/test_relay.py", line 748, in test_upstream_errors_are_not_charged
+    p, meter = self.make(FakeUpstream(status=529, body=b'{"type":"error"}'))
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/scratch/1470bd876a88/ante-foundation/relay/tests/test_relay.py", line 534, in make
+    p.start()
+  File "/workspace/scratch/1470bd876a88/ante-foundation/relay/nexus_relay/proxy.py", line 321, in start
+    self._server = _Server(str(self.socket_path), Handler, self.max_connections)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/scratch/1470bd876a88/ante-foundation/relay/nexus_relay/proxy.py", line 226, in __init__
+    super().__init__(path, handler)
+  File "/root/.local/share/uv/python/cpython-3.11.17-linux-x86_64-gnu/lib/python3.11/socketserver.py", line 452, in __init__
+    self.socket = socket.socket(self.address_family,
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.local/share/uv/python/cpython-3.11.17-linux-x86_64-gnu/lib/python3.11/socket.py", line 232, in __init__
+    _socket.socket.__init__(self, family, type, proto, fileno)
+PermissionError: [Errno 1] Operation not permitted
+
+======================================================================
+ERROR: test_usd_refuses_unpriced_models (test_relay.ProxyTests.test_usd_refuses_unpriced_models)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/1470bd876a88/ante-foundation/relay/tests/test_relay.py", line 761, in test_usd_refuses_unpriced_models
+    p, meter = self.make(up, reserved=1000, unit="usd", prices={"priced": {"input": 3, "output": 15}})
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/scratch/1470bd876a88/ante-foundation/relay/tests/test_relay.py", line 534, in make
+    p.start()
+  File "/workspace/scratch/1470bd876a88/ante-foundation/relay/nexus_relay/proxy.py", line 321, in start
+    self._server = _Server(str(self.socket_path), Handler, self.max_connections)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/scratch/1470bd876a88/ante-foundation/relay/nexus_relay/proxy.py", line 226, in __init__
+    super().__init__(path, handler)
+  File "/root/.local/share/uv/python/cpython-3.11.17-linux-x86_64-gnu/lib/python3.11/socketserver.py", line 452, in __init__
+    self.socket = socket.socket(self.address_family,
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.local/share/uv/python/cpython-3.11.17-linux-x86_64-gnu/lib/python3.11/socket.py", line 232, in __init__
+    _socket.socket.__init__(self, family, type, proto, fileno)
+PermissionError: [Errno 1] Operation not permitted
+
+----------------------------------------------------------------------
+Ran 131 tests in 60.360s
+
+FAILED (errors=24)

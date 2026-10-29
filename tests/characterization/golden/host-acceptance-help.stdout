@@ -1,0 +1,35 @@
+usage: host-acceptance.py [-h] [--require {accepted,no-unenforced-boundary}]
+                          [--root ROOT]
+                          {validate,emit-observation} record [record ...]
+
+host-acceptance.py — validate live host acceptance records.
+
+Installation and offline conversion tests establish what a FILE contains. They
+establish nothing about what a HOST does with it: whether the agent is
+discovered, which tools the host actually resolves for it, whether an operation
+outside the allowlist is refused, and whether removing the profile withdraws it.
+This validator consumes records produced by a live probe against a real host and
+refuses any record that claims more than its own method can support.
+
+Execution claims require `live-session`; availability claims may use host resolution.
+A record that reports enforcement from a filesystem read is rejected, not
+downgraded — a harness that silently accepts weaker evidence is worse than no
+harness, because it manufactures a green result for an untested boundary.
+
+The record never declares its own status. Status is derived here from the probe
+outcomes, so a record cannot assert `ACCEPTED` about itself.
+
+Usage:
+  host-acceptance.py validate RECORD...            # derive and print status
+  host-acceptance.py validate RECORD --require accepted
+  host-acceptance.py emit-observation RECORD       # agent-capabilities.py input
+
+positional arguments:
+  {validate,emit-observation}
+  record
+
+options:
+  -h, --help            show this help message and exit
+  --require {accepted,no-unenforced-boundary}
+                        exit non-zero unless every record reaches this bar
+  --root ROOT

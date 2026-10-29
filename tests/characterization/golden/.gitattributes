@@ -1,0 +1,3 @@
+# Raw legacy Markdown stdout contains significant two-space line breaks.
+# Preserve captured bytes; do not trim them to satisfy whitespace checks.
+*.stdout whitespace=-blank-at-eol
