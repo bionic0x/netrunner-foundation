@@ -344,8 +344,8 @@ two commands (for example `load` and `misuse`) would remove it.
 The prompt asks for the new checks in `verify-release.sh` and the runbook
 workflow. Both `scripts/verify-release.sh` and `.github/**` are protected paths,
 and adding steps is not a mechanical extraction, so this branch does not edit
-them (§11). `foundation/proposals/ci-wiring.patch` adds, for the owner to apply
-in a hand-written `protected:` commit: the characterization recordings, the
+them (§11). `foundation/proposals/ci-wiring.patch` adds, as a `protected:`
+commit applied under D-020 once the owner approves its two files: the characterization recordings, the
 extraction check, the foundation tests, the frozen-reviewer and defence-layer
 checks, and the institutional self-test run on `foundation/selftest-register.json`
 and published to the job summary (reported, never failing the build, as the
@@ -354,21 +354,25 @@ release gate was run with it applied.
 
 ---
 
-## D-018 · Bringing main's newer commits in needs a reviewed rebaseline of two recordings — PROPOSED
+## D-018 · Bringing main's newer commits in — ACCEPTED
 
-`main` has moved past the base commit `86addea` to `9c54ba2` (upstream sync with
-one new agent, held-out packs moved outside the checkout). A trial merge of
-`origin/main` into this branch conflicts only in `CHANGELOG.md` (both entries are
-kept). In the merged tree all foundation tests pass and 112 of 114
-characterization cases match; the two that differ — `catalog--check` and
-`check--check-agent-privileges` — print "507 agents" where the recording says
-506. `main` itself prints exactly those lines, so the difference is upstream
-data, not behaviour introduced here.
+**Context.** `main` moved past `86addea` to `b793d22`: the upstream sync (one
+new agent, 507 in total), held-out packs outside the checkout, and the
+dependency updates of #1 and #2 with the owner-authorized Semgrep/MCP rollback.
 
-**Proposal.** Merge `main`, then in a separate commit move the characterization
-base to the merge base and re-record those two cases from `main`'s own scripts
-(delete the two golden files, `run.py record`, state why), as the
-characterization contract requires for any rebaseline.
+**Measured on a trial merge.** Only `CHANGELOG.md` conflicts (both entries
+kept). Every foundation test, `check-divisions`, `check-runbooks`, the 8/8
+extraction proof and the frozen reviewers pass. Two invocations differ in both
+harnesses: `build-catalog.py --check` and `check-agent-privileges.py` print
+"507 agents" where the recordings say 506. `main` prints exactly those lines,
+and reproduces the other 112 normalised recordings unchanged.
+
+**Decision (owner, 29 Oct 2026).** Merge `main`; in a separate commit re-record
+only those two cases in each harness, from `main`'s own scripts at `b793d22`,
+each case carrying a `rebaselined` record. Nothing else is regenerated.
+
+**Implementation.** Merge commit, then the rebaseline commit
+(`foundation/CHARACTERIZATION.md` § Rebaselines).
 
 ---
 
@@ -399,27 +403,38 @@ self-test and the CI steps run in CI only after the owner applies
 
 ---
 
-## D-020 · Who may author a change to a protected path — OPEN (owner)
+## D-020 · Who may author a change to a protected path — ACCEPTED
 
-**Context.** Merging `foundation/phase-0` brings two records that disagree.
-D-003 (this line) lets protected paths change in separate `protected:` commits
-that are mechanical, listed file by file and reviewed by the owner as author of
-record; `7b213eb` (`strategy/contracts.json`, D-004) was written that way, by
-an agent, from the owner's dictated text. ADR-0003 (Codex line) holds that a
-`protected:` title does not make agent-generated code human-authored, and that
-no agent may produce those changes at all. The mandate says protected paths
-change only in "hand-written" commits. The two readings lead to different
-designs, so this is not settled here.
+**Context.** D-003 (this line) let the owner's review of a mechanical or
+dictated `protected:` commit make the owner its author of record. ADR-0003
+(Codex line) held that a `protected:` title does not make agent-generated code
+human-authored. The mandate and `strategy/NEXUS-OVERDRIVE.md` speak of
+"hand-written" and "human-authored" changes.
 
-**Options for the owner.**
-1. Keep D-003: owner review of a mechanical or dictated `protected:` commit
-   makes the owner its author of record. `7b213eb` stands.
-2. Adopt ADR-0003: the owner re-authors `7b213eb` by hand (or applies the same
-   text in a commit of their own) and every future protected change, including
-   `ci-wiring.patch` and `test-nexus-review-glob.patch`, is written by a human.
+**Decision (owner, 29 Oct 2026).** The rule already applied to the Semgrep/MCP
+rollback (`79cb744`) becomes general:
+1. An agent may write a change to a protected path.
+2. The owner approves each protected file explicitly before it lands; merging
+   the pull request is that approval only when its description lists every
+   protected file it changes.
+3. The commit says so in plain words — `protected:` title, "agent-authored",
+   who approved, when, and which files — and is never presented as written by
+   hand. Authorship stays the agent's; authority stays the owner's.
+4. The self-development loop (`ante develop`) still cannot propose or modify a
+   protected path; this rule covers changes an owner requested.
 
-**Until decided.** No new agent commit touches a protected path. Both patches
-stay as proposals in `foundation/proposals/`, unapplied.
+This replaces the authorship clause of D-003 and settles ADR-0003.
+
+**Existing commit.** `7b213eb` (`strategy/contracts.json`, D-004) was written by
+an agent from the owner's dictated decision and merged by the owner in #10.
+Under this rule it is recorded as agent-authored, owner-approved; it is not
+rewritten.
+
+**Consequences.** `ci-wiring.patch` and `test-nexus-review-glob.patch` can be
+applied as agent-authored `protected:` commits in a pull request that lists
+their files for approval. The wording "human-authored" in
+`strategy/overdrive-protected.json` and `strategy/NEXUS-OVERDRIVE.md` predates
+this rule; aligning it is itself a protected change and is offered separately.
 
 ---
 

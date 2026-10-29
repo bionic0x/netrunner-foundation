@@ -27,9 +27,12 @@
   Runbooks declare `strategy_commands` and `material`.
 - Synthetic end-to-end example in `examples/foundation/`; 169 foundation tests.
   Owner
-  decisions pending: D-003, D-010, D-013, D-014, D-016, D-017, D-018, D-020 (`foundation/DECISIONS.md`).
+  decisions pending: D-003, D-010, D-013, D-014, D-016, D-017 (`foundation/DECISIONS.md`).
 - `strategy/contracts.json` carries the seven coherence tests and fourteen
-  pathologies (D-004, accepted by the owner), in a separate `protected:` commit.
+  pathologies (D-004, accepted by the owner), in a separate `protected:` commit,
+  agent-authored and owner-approved (D-020).
+- Integrated with `main` at `b793d22` (D-018); two characterization cases
+  re-recorded there because `main` added one agent.
 
 ## Agency upstream synchronization — 2026-10-28
 
