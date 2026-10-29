@@ -1,32 +1,60 @@
 {
   "schema_version": 1,
   "date": "2026-10-29",
+  "status": "REFRESHED_REVIEW_PASSED",
+  "base_commit": "284275f1ae96174a542007fbfabe6522d5c66bbd",
+  "patch_sha256": "4810889f7716ef8b18da80b2935b534e31dde9d1e799e5068d99a769c87992f1",
   "independence_level": "SEPARATED_CONTEXT",
   "reviewer_wrote_implementation": false,
-  "patch_sha256": "fdea84af57869af77b3aa49bcdff175e40ccc096c6220821c2fde5189f6d929a",
   "inputs": [
-    "proposed diff and correction diffs",
+    "history-d021-g1a-review.diff",
     "owner-supplied Ante Foundation mandate",
     "foundation/evidence/d021-validation.json"
   ],
-  "findings": [
-    {
-      "priority": "P2",
-      "finding": "Make the one-time exception to the handwritten authorship requirement explicit in P1.",
-      "resolution": "Owner is asked explicitly to authorize the exact external agent-authored patch; no standing authority or self-development route is granted.",
-      "status": "RESOLVED"
-    },
-    {
-      "priority": "P2",
-      "finding": "Do not claim the preparation packet records actual approval while it remains pending.",
-      "resolution": "The proposed decision record distinguishes the scope packet from the future execution receipt containing the actual decision/application.",
-      "status": "RESOLVED"
-    }
-  ],
   "final_actionable_findings": 0,
+  "findings": [],
+  "verified_scope": {
+    "total_paths": 7,
+    "protected_paths": 6,
+    "unprotected_guide": "foundation/ATTEST.md"
+  },
+  "g1a_boundary_review": "T08 retains all five targets, expands the legacy Overdrive checks, and checks schema 2 with an exact manifest pointer and no shadow list; the new integration covers both entry points and the trust store.",
+  "g1a_implementation_preserved": true,
   "final_patch_digest_verified": true,
-  "four_tested_runtime_and_test_sections_unchanged": true,
   "owner_approval_and_application": "PENDING",
   "independent_operator_review": null,
-  "independent_operator_review_reason": "A separate agent context provides a coherence review, not authenticated operator independence or pause authority."
+  "independent_operator_review_reason": "Separate agent context is a coherence review, not authenticated independent operator authority.",
+  "previous_pre_g1a_review": {
+    "schema_version": 1,
+    "date": "2026-10-29",
+    "independence_level": "SEPARATED_CONTEXT",
+    "reviewer_wrote_implementation": false,
+    "patch_sha256": "fdea84af57869af77b3aa49bcdff175e40ccc096c6220821c2fde5189f6d929a",
+    "inputs": [
+      "proposed diff and correction diffs",
+      "owner-supplied Ante Foundation mandate",
+      "foundation/evidence/d021-validation.json"
+    ],
+    "findings": [
+      {
+        "priority": "P2",
+        "finding": "Make the one-time exception to the handwritten authorship requirement explicit in P1.",
+        "resolution": "Owner is asked explicitly to authorize the exact external agent-authored patch; no standing authority or self-development route is granted.",
+        "status": "RESOLVED"
+      },
+      {
+        "priority": "P2",
+        "finding": "Do not claim the preparation packet records actual approval while it remains pending.",
+        "resolution": "The proposed decision record distinguishes the scope packet from the future execution receipt containing the actual decision/application.",
+        "status": "RESOLVED"
+      }
+    ],
+    "final_actionable_findings": 0,
+    "final_patch_digest_verified": true,
+    "four_tested_runtime_and_test_sections_unchanged": true,
+    "owner_approval_and_application": "PENDING",
+    "independent_operator_review": null,
+    "independent_operator_review_reason": "A separate agent context provides a coherence review, not authenticated operator independence or pause authority."
+  },
+  "previous_review_status": "SUPERSEDED_BEFORE_APPROVAL"
 }

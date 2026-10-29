@@ -102,3 +102,7 @@ above remains a dated snapshot of ancestry, distinct from content integration.
 D-010, D-013 and D-014 now have a concrete owner decision proposal in
 [proposals/D-021-POLICY-AND-TRUST.md](proposals/D-021-POLICY-AND-TRUST.md).
 It does not adopt a new policy or authorize cryptographic signing by publication.
+
+G1a subsequently entered `main` through #23 (`284275f`). D-021 was refreshed
+against that merge, preserving the verifier and trust-store protections and
+including their boundary-test/guide migration in its exact proposed scope.

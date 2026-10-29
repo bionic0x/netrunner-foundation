@@ -4,7 +4,7 @@
   "status": "PROPOSED_NOT_APPLIED",
   "date": "2026-10-29",
   "repository": "bionic0x/netrunner-foundation",
-  "base_commit": "b719f5789b20288d8fa519f747ed4dac1d560674",
+  "base_commit": "284275f1ae96174a542007fbfabe6522d5c66bbd",
   "object_format": "sha1",
   "owner_approval": null,
   "approval_is_not_authenticated_by_this_file": true,
@@ -20,7 +20,7 @@
     {
       "id": "P1",
       "prior_decision": "D-013",
-      "proposal": "Adopt the one shared protected-path manifest and authorize the exact five-file patch below, including the D-010/D-013/D-014/D-021 decision record, outside the self-development loop.",
+      "proposal": "Adopt the shared protected-path manifest and authorize this exact seven-file maintenance patch: six protected paths plus the attestation guide. It includes the decision record and preserves the G1a integration.",
       "requested_actions": [
         "apply",
         "merge_after_required_checks_pass"
@@ -39,13 +39,26 @@
   ],
   "patch": {
     "file": "foundation/proposals/d021-shared-protection.patch",
-    "sha256": "fdea84af57869af77b3aa49bcdff175e40ccc096c6220821c2fde5189f6d929a",
+    "sha256": "4810889f7716ef8b18da80b2935b534e31dde9d1e799e5068d99a769c87992f1",
+    "paths": [
+      "ante/develop/policy.py",
+      "foundation/ATTEST.md",
+      "foundation/DECISIONS.md",
+      "foundation/develop-policy.json",
+      "strategy/overdrive-protected.json",
+      "tests/foundation/test_attest.py",
+      "tests/foundation/test_shared_protection_policy.py"
+    ],
     "protected_paths": [
       "ante/develop/policy.py",
       "foundation/DECISIONS.md",
       "foundation/develop-policy.json",
       "strategy/overdrive-protected.json",
+      "tests/foundation/test_attest.py",
       "tests/foundation/test_shared_protection_policy.py"
+    ],
+    "additional_unprotected_paths": [
+      "foundation/ATTEST.md"
     ],
     "files": {
       "ante/develop/policy.py": {
@@ -61,38 +74,16 @@
         },
         "mode": "100644"
       },
-      "foundation/develop-policy.json": {
+      "foundation/ATTEST.md": {
         "input": {
-          "sha256": "55faed1d9c3287c147d873c34c957ffd90c5265b8ee10ec0ed4d042cea07b8e4",
-          "git_blob_oid": "93f2726ed163094357acfc1f696c0276fc0a638c",
-          "bytes": 1665
+          "sha256": "56b29e4e893612a01704479f1675ce3d7a3c109153aa94c85da9a97d5d770634",
+          "git_blob_oid": "463d05a8f9eb0a77a10088ba2dbdc662be5159b9",
+          "bytes": 11409
         },
         "output": {
-          "sha256": "e0e4cfeb6f88bcc4e0947bef197337c6db5d8d2d546a0517291c9a70a99fd0e5",
-          "git_blob_oid": "25c2c55b943f19088872f87a0e6dc726a5773096",
-          "bytes": 1052
-        },
-        "mode": "100644"
-      },
-      "strategy/overdrive-protected.json": {
-        "input": {
-          "sha256": "a63a9c655edccbec1f4bfe93688450f79ba5a219f1d8cf96e2012e7f0221ab9b",
-          "git_blob_oid": "3c7d26a02bb3488fefeddb71feb7a930ddfcfedc",
-          "bytes": 1278
-        },
-        "output": {
-          "sha256": "e2ef05ce9d269e59fe06992bc9253680459fcb6c66b3dd9bb38c9741aa90c3e6",
-          "git_blob_oid": "a319ad2b8096c445686340431e32871d99aa6e47",
-          "bytes": 2015
-        },
-        "mode": "100644"
-      },
-      "tests/foundation/test_shared_protection_policy.py": {
-        "input": null,
-        "output": {
-          "sha256": "30494c55ce178fd368744088bbb963c0bf25905afb04ad3cd44949fd5c70cf25",
-          "git_blob_oid": "ed63d9fb2f052f471b5ec2cd339bafed8e4ebb44",
-          "bytes": 3798
+          "sha256": "fa25de22a71abdae5f08d1e810798cae8a97ad04edfdf04842631677f8b72c05",
+          "git_blob_oid": "45b9d90f146643312b63640a8472aab06bec4f19",
+          "bytes": 11615
         },
         "mode": "100644"
       },
@@ -103,15 +94,64 @@
           "bytes": 33655
         },
         "output": {
-          "sha256": "92ba7d02f0e0c346f2142a8a9c861773fee49f26aeb03a74a688360a3258ab47",
-          "git_blob_oid": "95ee2e471f0de9e907b542c460acfc8d57950a58",
-          "bytes": 35506
+          "sha256": "23d5327d61e8ea7697d9051f3921ea898c8c7b965e624b6832039c8377a13253",
+          "git_blob_oid": "4e480ef46fc5563e8db73ce12e3aae70d351deca",
+          "bytes": 35611
+        },
+        "mode": "100644"
+      },
+      "foundation/develop-policy.json": {
+        "input": {
+          "sha256": "e3d5b3946a694d8679e27bd09f7d5b6dae23629821eed2ad1e549bf29029ab3c",
+          "git_blob_oid": "569b839c29db446fcda3b9721aa4e83f6fc7fe39",
+          "bytes": 1715
+        },
+        "output": {
+          "sha256": "e0e4cfeb6f88bcc4e0947bef197337c6db5d8d2d546a0517291c9a70a99fd0e5",
+          "git_blob_oid": "25c2c55b943f19088872f87a0e6dc726a5773096",
+          "bytes": 1052
+        },
+        "mode": "100644"
+      },
+      "strategy/overdrive-protected.json": {
+        "input": {
+          "sha256": "7fff321925780a85857be2f25018ea1522b7480bd3699ec2cef47983b6899ba4",
+          "git_blob_oid": "9b283e78ad937ece1b6be6b4fed3a436afaf2893",
+          "bytes": 1328
+        },
+        "output": {
+          "sha256": "768b51ad9c7a8f444e41aea5e89410e16333f1db65ed6fc397cbabdbc9be7b28",
+          "git_blob_oid": "534695f0bf9ca419a10438d215166b10a3d6852d",
+          "bytes": 2043
+        },
+        "mode": "100644"
+      },
+      "tests/foundation/test_attest.py": {
+        "input": {
+          "sha256": "ab6c79672d98613ecf6b9d60e56a00735a909194fc351ed1de31122193f5891a",
+          "git_blob_oid": "9869e70177ca3bf6b3aa12b1fd8e65e9e45b36b8",
+          "bytes": 31305
+        },
+        "output": {
+          "sha256": "31d3bcf4f07963d374320a33d71ec7184dd0f732def95dbaffb202caeb98ca0a",
+          "git_blob_oid": "2fd75b6296efddf403c2d69f7deaecb6f97fda4e",
+          "bytes": 31356
+        },
+        "mode": "100644"
+      },
+      "tests/foundation/test_shared_protection_policy.py": {
+        "input": null,
+        "output": {
+          "sha256": "de76d243ddf0f8433c32c531f5f67a06df861ead18027d679085784596bb5c46",
+          "git_blob_oid": "8b4d0dbcee73755046cbcea55e2a4aaf9efeccda",
+          "bytes": 3858
         },
         "mode": "100644"
       }
     },
     "applied_to_main": false,
-    "isolated_review_worktree_only": true
+    "isolated_review_worktree_only": true,
+    "result_tree_oid_at_review_base": "365e1c689f6e7fdbba7fac13a5be1aed36cc118b"
   },
   "preserved_controls": {
     "old_protection_patterns_retained": true,
@@ -124,11 +164,28 @@
     "cryptographic_dependencies_added": false,
     "owner_signer_exposed": false
   },
-  "g0_g1a_design_delta": "The supplied pre-PR contracts ask for ante/attest/** in both protection lists. This proposal instead removes the schema-2 duplicate list and pins its pointer to the shared manifest. Tests prove both entry points protect ante/attest/**. This reconciliation is proposed for owner approval; the supplied contracts are not silently rewritten or adopted.",
+  "g0_g1a_design_delta": "G1a has landed through #23 with protections in both lists. D-021 proposes one pinned shared manifest, keeps both G1a patterns, and migrates its protection test and guide to that same source. This explicitly reconciles the earlier duplicated-list wording; it does not reauthorize G1a or grant signing authority.",
   "g0_g1a_adoption": false,
-  "g0_g1a_scope": "No signer, key registry, RFC serializer, receipt verifier, host approval broker or signed authorization object is implemented by D-021.",
+  "g0_g1a_scope": "D-021 changes no signer, signature kernel, key registry, cryptographic dependency, approval broker or host authorization service. Existing G1a behavior is preserved.",
   "validation": "foundation/evidence/d021-validation.json",
   "review_independence_level": "SEPARATED_CONTEXT",
   "review_receipt": "foundation/evidence/d021-review.json",
-  "future_application_receipt": "foundation/evidence/d021-execution.json"
+  "future_application_receipt": "foundation/evidence/d021-execution.json",
+  "prior_preparation": {
+    "base_commit": "b719f5789b20288d8fa519f747ed4dac1d560674",
+    "patch_sha256": "fdea84af57869af77b3aa49bcdff175e40ccc096c6220821c2fde5189f6d929a",
+    "owner_approval": null,
+    "status": "SUPERSEDED_BEFORE_APPROVAL",
+    "reason": "Concurrent G1a integration #23 changed both protection manifests and added a boundary test that must migrate with them."
+  },
+  "g1a_preserved_from_main": {
+    "pr": 23,
+    "merge_commit": "284275f1ae96174a542007fbfabe6522d5c66bbd",
+    "signer_and_trust_store_semantics_changed": false,
+    "existing_attest_patterns_retained": [
+      "ante/attest/**",
+      "foundation/attest/**"
+    ]
+  },
+  "packet_kind": "unsigned_preparation_scope_receipt_not_a_signed_ante.d020.approval"
 }
