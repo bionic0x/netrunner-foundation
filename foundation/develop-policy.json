@@ -41,6 +41,8 @@
     "ante/_compat.py",
     "ante/paths.py",
     "ante/strategy/**",
+    "ante/attest/**",
+    "foundation/attest/**",
     "ante/cli.py",
     "ante/deck.py",
     "ante/__init__.py",

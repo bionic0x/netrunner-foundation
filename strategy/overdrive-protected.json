@@ -24,6 +24,8 @@
     "scripts/test-*.py",
     "scripts/test-*.sh",
     "scripts/verify-release.sh",
+    "ante/attest/**",
+    "foundation/attest/**",
     ".github/**"
   ],
   "held_out_packs": "examples/nexus/casepacks/*/ whose pack.json declares split held_out, at the base or the head of the proposal"
