@@ -16,3 +16,10 @@ description = "Catalog source keys are division/agent-name slugs, not credential
 targetRules = ["generic-api-key"]
 regexTarget = "line"
 regexes = ['''^\s*"source_key":\s*"[a-z][a-z0-9]*(?:-[a-z0-9]+)*/[a-z][a-z0-9]*(?:-[a-z0-9]+)*",?\s*$''']
+
+[[allowlists]]
+description = "The example key pair of the W3C eddsa-jcs-2022 test vector (Data Integrity EdDSA Cryptosuites v1.0, Annex B.3) is published in the specification and signs nothing here but the vector. Only that exact value, in that one file, matches."
+targetRules = ["generic-api-key"]
+condition = "AND"
+paths = ['''^tests/foundation/vectors/eddsa-jcs-2022/keyPair\.json$''']
+regexes = ['''^z3u2en7t5LR2WtQH5PfFqMqwVHBeXouLzo6haApm8XHqvjxq$''']

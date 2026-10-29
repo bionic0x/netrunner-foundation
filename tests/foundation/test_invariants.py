@@ -30,6 +30,7 @@ PROCESS_USERS = {
     'ante/develop/policy.py': 'git show / git apply --numstat on the local repository',
     'ante/develop/commands.py': 'local git worktrees and tests; push and gh only under pr --execute',
     'ante/constructs/frozen.py': 'git show of the frozen registry at a base revision',
+    'ante/attest/documents.py': 'git rev-parse, show, status and diff on the local repository; read-only',
 }
 
 

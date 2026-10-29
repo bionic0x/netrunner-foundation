@@ -75,3 +75,15 @@ Every `develop` command takes `--state FILE` (a hash-chained log, anchored in
 | `learn box build\|recombine` | archive of discarded options, rejected hypotheses, refuted expectations and rejected proposals with their reasons; recombined items come back as `HYPOTHESIS` with `origin: system` |
 | `signals add\|export --register R --at T` | weak-signal register (first observation, where, provenance); exported as `HYPOTHESIS` claims for `frame` or `react`, without probabilities |
 | `deck --artifacts DIR [--ledger L] [--log S] [--plain]` | read-only terminal view: chain, epistemic states, nodal load, defence layers, shadow trials, drift |
+
+## Signatures (offline; never authorise anything)
+
+| Command | What it does |
+|---|---|
+| `attest receipt ARTEFACT --at T` | unsigned execution receipt: the artefact's sealed digest, the commit, the `ante/` tree object and the committed `strategy/contracts.json`; refused with uncommitted code or policy |
+| `attest approval --base B --head H --scope apply --review-ref R --author A --at T` | unsigned D-020 approval of the exact change from B to H: result tree, changed paths with blob ids, patch hash |
+| `attest key PUBLIC.pem --principal P --principal-type human` | trust-store entry for an Ed25519 public key; pinning it is a D-020 change |
+| `sign DOCUMENT --key KEY.pem --method M --at T` | adds an `eddsa-jcs-2022` proof; the key must be encrypted, outside the checkout, mode 600, and the passphrase is typed at the terminal |
+| `verify SIGNED [--trust F] [--repo D] [--artefact A] [--head H]` | read-only check against pinned keys and, with `--repo`, against git; exit 0 verified, 4 not verified, with a reason |
+
+`foundation/ATTEST.md` has the schemas, the trust model and the threat table.
