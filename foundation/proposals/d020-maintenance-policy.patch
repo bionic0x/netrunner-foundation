@@ -1,0 +1,29 @@
+diff --git a/strategy/overdrive-protected.json b/strategy/overdrive-protected.json
+--- a/strategy/overdrive-protected.json
++++ b/strategy/overdrive-protected.json
+@@ -1,6 +1,6 @@
+ {
+   "schema_version": 1,
+-  "purpose": "Paths a self-improvement proposal may not modify. Changing them needs a separate, human-authored pull request (strategy/NEXUS-OVERDRIVE.md).",
++  "purpose": "Paths a self-improvement proposal may not modify. Separate maintenance outside the self-development loop requires explicit owner authorization of the exact patch. Record the real human or agent author separately from the human approver; this manifest grants no authorization (D-020).",
+   "protected": [
+     "strategy/overdrive-protected.json",
+     "strategy/NEXUS-OVERDRIVE.md",
+diff --git a/strategy/NEXUS-OVERDRIVE.md b/strategy/NEXUS-OVERDRIVE.md
+--- a/strategy/NEXUS-OVERDRIVE.md
++++ b/strategy/NEXUS-OVERDRIVE.md
+@@ -132,8 +132,12 @@
+ 1. **The improver cannot touch the judge.** Paths listed in
+    `strategy/overdrive-protected.json` — held-out packs, the evaluator, the blind
+    sealer, judgments, the improvement gate itself, the engine's judgment rules,
+-   the release gate and CI — may not change in a self-improvement proposal. Changing
+-   them needs a separate, human-authored pull request.
++   the release gate and CI — may not change in a self-improvement proposal.
++   Maintenance happens outside that loop, in a separate pull request with
++   `protected:` commits and explicit owner authorization of the exact patch
++   (D-020). Record the actual human or agent author separately from the human
++   approver. Review, a commit prefix and passing CI do not grant authorization;
++   without the owner's scoped approval the maintenance change remains HOLD.
+ 2. **No composite score.** A proposal is admitted only if, on held-out packs,
+    it is no worse than the baseline on every metric beyond the declared tolerance
+    and better on at least one. Fatal defects get zero tolerance.

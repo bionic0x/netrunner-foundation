@@ -66,6 +66,11 @@ stop being one thing); wrap everything in one commit (not reviewable line by lin
 **Consequences.** The owner reviews those commits as the human author of record.
 Nothing in the self-development loop (Phase 4) can produce or modify them.
 
+**Authorship clarification (29 October 2026).** D-020 proposes explicit,
+patch-scoped owner authorization while retaining real authorship. Reviewing an
+agent's work does not make it handwritten; the old author-of-record inference
+above is disputed and does not grant a maintenance agent permission.
+
 ---
 
 ## D-004 · One machine source for the seven tests and fourteen pathologies — ACCEPTED
@@ -403,27 +408,34 @@ self-test and the CI steps run in CI only after the owner applies
 
 ---
 
-## D-020 · Who may author a change to a protected path — OPEN (owner)
+## D-020 · Protected maintenance: explicit owner authorization and truthful authorship — PROPOSED (owner)
 
-**Context.** Merging `foundation/phase-0` brings two records that disagree.
-D-003 (this line) lets protected paths change in separate `protected:` commits
-that are mechanical, listed file by file and reviewed by the owner as author of
-record; `7b213eb` (`strategy/contracts.json`, D-004) was written that way, by
-an agent, from the owner's dictated text. ADR-0003 (Codex line) holds that a
-`protected:` title does not make agent-generated code human-authored, and that
-no agent may produce those changes at all. The mandate says protected paths
-change only in "hand-written" commits. The two readings lead to different
-designs, so this is not settled here.
+**Recommended option C.** Keep the self-development loop unable to modify any
+protected path. Outside that loop, an owner-supervised maintenance agent may
+prepare or apply only an exact patch explicitly approved by the owner. Record
+the actual author, human approver and applicator separately. Approval does not
+turn agent-generated code into handwritten human authorship; this route needs
+an explicit mandate amendment/exception.
 
-**Options for the owner.**
-1. Keep D-003: owner review of a mechanical or dictated `protected:` commit
-   makes the owner its author of record. `7b213eb` stands.
-2. Adopt ADR-0003: the owner re-authors `7b213eb` by hand (or applies the same
-   text in a commit of their own) and every future protected change, including
-   `ci-wiring.patch` and `test-nexus-review-glob.patch`, is written by a human.
+**Precedent.** The owner specifically authorized Codex's two-file Semgrep rollback
+in PR #2 (`79cb744`), merged as `b793d22` after 13/13 hosted checks passed. That
+exception does not itself authorize any other protected change.
 
-**Until decided.** No new agent commit touches a protected path. Both patches
-stay as proposals in `foundation/proposals/`, unapplied.
+**Concrete packet.** [D-020-PROTECTED-MAINTENANCE.md](D-020-PROTECTED-MAINTENANCE.md)
+defines the procedure and the pending decisions: P0 (rule adoption), P1 (align
+the protected policy wording), P2 (`ci-wiring.patch`), P3
+(`test-nexus-review-glob.patch`) and R1 (retain `7b213eb` with truthful agent
+provenance and explicit ratification of its narrow exception). Exact patch and
+source hashes are in `proposals/d020-approval-packet.json`.
+
+**Reconciliation.** Keep D-003's isolated, reviewable changes and ADR-0003's
+truthful authorship. Replace the inference that owner review establishes human
+authorship with explicit owner authorization. Existing independence, held-out,
+Turing and merge controls still apply. A repository receipt is not authority.
+
+**Until the owner decides.** This is a proposal, not a standing permission. No
+pending protected patch is applied by publishing this record. The evaluator's
+protected list is unchanged. D-018 stays with the main-integration decision.
 
 ---
 
