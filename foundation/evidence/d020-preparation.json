@@ -1,0 +1,81 @@
+{
+  "schema_version": 1,
+  "prepared_on": "2026-10-29",
+  "decision": "D-020",
+  "status": "PROPOSED_PENDING_OWNER",
+  "independence_level": "SELF",
+  "checks": [
+    {
+      "id": "remote-source-fingerprints",
+      "status": "PASS",
+      "files": 8,
+      "remote_base": "cc027eda68ea281ac80d194ac3c19821541b016b"
+    },
+    {
+      "id": "apply-P1",
+      "status": "PASS",
+      "scope": "isolated frozen-base snapshot; repository protected paths untouched"
+    },
+    {
+      "id": "apply-P2",
+      "status": "PASS",
+      "scope": "isolated frozen-base snapshot; repository protected paths untouched"
+    },
+    {
+      "id": "apply-P3",
+      "status": "PASS",
+      "scope": "isolated frozen-base snapshot; repository protected paths untouched"
+    },
+    {
+      "id": "protected-list-and-other-manifest-fields",
+      "status": "PASS",
+      "protected_patterns": 23,
+      "changed_json_fields": [
+        "purpose"
+      ]
+    },
+    {
+      "id": "release-script-shell-syntax",
+      "status": "PASS"
+    },
+    {
+      "id": "workflow-yaml-and-requested-command-coverage",
+      "status": "PASS",
+      "steps": 7
+    },
+    {
+      "id": "patched-legacy-review-regressions",
+      "status": "PASS",
+      "exit_code": 0,
+      "tests": 7,
+      "python": "3.12.14",
+      "fixture_base": "86addea22f6060f2c50e81c67c6dadf978ea3749",
+      "limits": "Isolated legacy fixture execution, not a full Foundation-tree or hosted CI run"
+    },
+    {
+      "id": "decision-document-scope",
+      "status": "PASS",
+      "changed_decisions": [
+        "D-003 clarification",
+        "D-020 proposal"
+      ],
+      "D-018_unchanged": true,
+      "historical_codex_section_unchanged": true
+    },
+    {
+      "id": "actual-repository-protected-paths",
+      "status": "PASS",
+      "paths_changed": [],
+      "count_compared": 5
+    }
+  ],
+  "protected_patches_applied_to_repository": false,
+  "full_foundation_release": null,
+  "full_foundation_release_reason": "Pending owner approval and application of the exact packet to the complete Foundation tree. No new hosted CI run for these proposals.",
+  "independent_operator_review": null,
+  "independent_operator_review_reason": "No independent operator reviewed this preparation.",
+  "log_sha256": {
+    "d020-review-test.stdout.log": "5175dc5038125aa4f184e40281db685fe38c7efe48449a5a911fdbe37c0eae2c",
+    "d020-review-test.stderr.log": "fa894f53b39b491adda9206f88be86ceb38e8627620c15e3915c48a8647a7912"
+  }
+}
