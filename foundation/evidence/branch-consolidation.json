@@ -1,0 +1,625 @@
+{
+  "schema_version": 1,
+  "repository": "bionic0x/netrunner-foundation",
+  "snapshot_date": "2026-10-29",
+  "main_commit": "039e88da3f51947235c3e5114cdf6df39a4ecb0a",
+  "canonical_branch": "main",
+  "branches_deleted": 0,
+  "all_tips_retained": true,
+  "counts": {
+    "HISTORICAL_REFERENCE_RETAINED": 16,
+    "INTEGRATED_ANCESTOR": 68,
+    "SUPERSEDED_FOUNDATION_REFERENCE": 3
+  },
+  "branches": [
+    {
+      "branch": "arch/registry-driven-tools-ci-hardening",
+      "commit": "4246fcbf181a7c710848d020c09d0517719a7b36",
+      "ancestor_of_main": false,
+      "commits_not_reachable_from_main": 13,
+      "disposition": "HISTORICAL_REFERENCE_RETAINED"
+    },
+    {
+      "branch": "audit/2026-10-10-fixes",
+      "commit": "939e0b2b4a503051258b131e2eb74c0ddb5c7b20",
+      "ancestor_of_main": true,
+      "commits_not_reachable_from_main": 0,
+      "disposition": "INTEGRATED_ANCESTOR"
+    },
+    {
+      "branch": "audit/nexus-closure-htp-guards",
+      "commit": "97f12dd1dc388333405c91497e9f9b1ab9b5a22f",
+      "ancestor_of_main": true,
+      "commits_not_reachable_from_main": 0,
+      "disposition": "INTEGRATED_ANCESTOR"
+    },
+    {
+      "branch": "audit/relay-integrity-followup",
+      "commit": "848173e2ffa8e9e2a15c767c7b6296e5a142caca",
+      "ancestor_of_main": true,
+      "commits_not_reachable_from_main": 0,
+      "disposition": "INTEGRATED_ANCESTOR"
+    },
+    {
+      "branch": "ci/relay-security-hardening",
+      "commit": "f3bc6e9cb18a7973fa2e246b42ce1afa575f7fca",
+      "ancestor_of_main": true,
+      "commits_not_reachable_from_main": 0,
+      "disposition": "INTEGRATED_ANCESTOR"
+    },
+    {
+      "branch": "docs/ante-nexus-readme",
+      "commit": "8ebac8a5b9016b7a23bbd56aa6f8c55ce10c59fc",
+      "ancestor_of_main": true,
+      "commits_not_reachable_from_main": 0,
+      "disposition": "INTEGRATED_ANCESTOR"
+    },
+    {
+      "branch": "docs/public-foundation-entrypoint",
+      "commit": "b0ccd77ed22882d6a0aba7f2c592c11c5256f71f",
+      "ancestor_of_main": true,
+      "commits_not_reachable_from_main": 0,
+      "disposition": "INTEGRATED_ANCESTOR"
+    },
+    {
+      "branch": "docs/readme-current-nexus-phase1-20261010",
+      "commit": "37c75f589fd1c9da639e3600b846d3942b4860b7",
+      "ancestor_of_main": true,
+      "commits_not_reachable_from_main": 0,
+      "disposition": "INTEGRATED_ANCESTOR"
+    },
+    {
+      "branch": "docs/readme-information-architecture-20261016",
+      "commit": "fc51d5f2dcd6969317d1bca83f769387c0c02783",
+      "ancestor_of_main": true,
+      "commits_not_reachable_from_main": 0,
+      "disposition": "INTEGRATED_ANCESTOR"
+    },
+    {
+      "branch": "docs/strict-drift-ruleset-readiness",
+      "commit": "965ac34e942a1789c365526aa78c8eb027918649",
+      "ancestor_of_main": true,
+      "commits_not_reachable_from_main": 0,
+      "disposition": "INTEGRATED_ANCESTOR"
+    },
+    {
+      "branch": "docs/sync-operating-metadata",
+      "commit": "15813df192350d708c0d422bf3ad22578a803c15",
+      "ancestor_of_main": false,
+      "commits_not_reachable_from_main": 3,
+      "disposition": "HISTORICAL_REFERENCE_RETAINED"
+    },
+    {
+      "branch": "doctrine/complete-termination-contracts",
+      "commit": "426fe8fd9585969a450314d3017814243007230f",
+      "ancestor_of_main": false,
+      "commits_not_reachable_from_main": 8,
+      "disposition": "HISTORICAL_REFERENCE_RETAINED"
+    },
+    {
+      "branch": "feat/act-marketplace-intake",
+      "commit": "ccea7ada09bdeec30a81ce9ebb6042527f6b250d",
+      "ancestor_of_main": true,
+      "commits_not_reachable_from_main": 0,
+      "disposition": "INTEGRATED_ANCESTOR"
+    },
+    {
+      "branch": "feat/agents-alpha-sentinel-spider-patent",
+      "commit": "925c21e6328795f439ab60b0c3a4a83e30d29364",
+      "ancestor_of_main": true,
+      "commits_not_reachable_from_main": 0,
+      "disposition": "INTEGRATED_ANCESTOR"
+    },
+    {
+      "branch": "feat/alpha-research-suite-six-agents-20261010",
+      "commit": "367012630112167a632e158115ffd795617a6c3f",
+      "ancestor_of_main": true,
+      "commits_not_reachable_from_main": 0,
+      "disposition": "INTEGRATED_ANCESTOR"
+    },
+    {
+      "branch": "feat/challenger-veto",
+      "commit": "49c37b596b932e84b88acedea5cc910b9725db0a",
+      "ancestor_of_main": false,
+      "commits_not_reachable_from_main": 1,
+      "disposition": "HISTORICAL_REFERENCE_RETAINED"
+    },
+    {
+      "branch": "feat/doctrine-alignment",
+      "commit": "5ba3f9c3c87a51b8c3aaea327cdb499d3e610b78",
+      "ancestor_of_main": false,
+      "commits_not_reachable_from_main": 1,
+      "disposition": "HISTORICAL_REFERENCE_RETAINED"
+    },
+    {
+      "branch": "feat/gate0-kamino-aave-manifests",
+      "commit": "a2b3b74fec6ff7b26bb7845493f6bedf4fd3bc86",
+      "ancestor_of_main": true,
+      "commits_not_reachable_from_main": 0,
+      "disposition": "INTEGRATED_ANCESTOR"
+    },
+    {
+      "branch": "feat/host-acceptance-harness",
+      "commit": "e62f786f3b36bd6dfc20a5f37e9110f22165105e",
+      "ancestor_of_main": true,
+      "commits_not_reachable_from_main": 0,
+      "disposition": "INTEGRATED_ANCESTOR"
+    },
+    {
+      "branch": "feat/mispriced-cmo-division",
+      "commit": "a0722d5eb4ed95b1329b3e6c250e9ccdc0dda0ef",
+      "ancestor_of_main": true,
+      "commits_not_reachable_from_main": 0,
+      "disposition": "INTEGRATED_ANCESTOR"
+    },
+    {
+      "branch": "feat/mispriced-cmo-hardening",
+      "commit": "efa53ab5428c7f7a432184218a77645ec0009a10",
+      "ancestor_of_main": false,
+      "commits_not_reachable_from_main": 4,
+      "disposition": "HISTORICAL_REFERENCE_RETAINED"
+    },
+    {
+      "branch": "feat/nexus-anthropic-execution-pilot",
+      "commit": "20267d2c94cc3cbb2bdb035ac869ab5462e4c221",
+      "ancestor_of_main": true,
+      "commits_not_reachable_from_main": 0,
+      "disposition": "INTEGRATED_ANCESTOR"
+    },
+    {
+      "branch": "feat/nexus-instance-pilot",
+      "commit": "10f814f40594f4ea02f235c71295886ee0d70fa8",
+      "ancestor_of_main": true,
+      "commits_not_reachable_from_main": 0,
+      "disposition": "INTEGRATED_ANCESTOR"
+    },
+    {
+      "branch": "feat/nexus-measurement-protocol",
+      "commit": "d62e94e1195e68c2ce9c62cd18a93292247697c9",
+      "ancestor_of_main": true,
+      "commits_not_reachable_from_main": 0,
+      "disposition": "INTEGRATED_ANCESTOR"
+    },
+    {
+      "branch": "feat/nexus-relay",
+      "commit": "3b2f6e27e4976b047a2bf3e1d08c951b3e9ae2f4",
+      "ancestor_of_main": true,
+      "commits_not_reachable_from_main": 0,
+      "disposition": "INTEGRATED_ANCESTOR"
+    },
+    {
+      "branch": "feat/relay-reconcile",
+      "commit": "b46a26ae050c1cbe8ee928e0cf77ba8cc0030a0f",
+      "ancestor_of_main": true,
+      "commits_not_reachable_from_main": 0,
+      "disposition": "INTEGRATED_ANCESTOR"
+    },
+    {
+      "branch": "feat/security-engagement-contract",
+      "commit": "7d0e8a8fc3a8c6e83119bfc66594b4b27ea5232c",
+      "ancestor_of_main": true,
+      "commits_not_reachable_from_main": 0,
+      "disposition": "INTEGRATED_ANCESTOR"
+    },
+    {
+      "branch": "feat/security-strategy-doctrine",
+      "commit": "d31f306aa7096f302cbbebf5bbe13981f1078e97",
+      "ancestor_of_main": true,
+      "commits_not_reachable_from_main": 0,
+      "disposition": "INTEGRATED_ANCESTOR"
+    },
+    {
+      "branch": "feat/solana-program-engineer",
+      "commit": "3b23356e92794476ebdfcc871d89919ec86f569a",
+      "ancestor_of_main": false,
+      "commits_not_reachable_from_main": 23,
+      "disposition": "HISTORICAL_REFERENCE_RETAINED"
+    },
+    {
+      "branch": "feature/domain-expansion-2026-09",
+      "commit": "355597eaec381cea36dbad2c14ff1c6fff976c0f",
+      "ancestor_of_main": true,
+      "commits_not_reachable_from_main": 0,
+      "disposition": "INTEGRATED_ANCESTOR"
+    },
+    {
+      "branch": "fix/convert-outputs-manifest-resync",
+      "commit": "affe6154f4ce5d40a8dc80df10ccc6ddfbcbd93f",
+      "ancestor_of_main": true,
+      "commits_not_reachable_from_main": 0,
+      "disposition": "INTEGRATED_ANCESTOR"
+    },
+    {
+      "branch": "fix/functional-installation",
+      "commit": "cedb2a0804eb3007b95fd424e2ed9248e93ec116",
+      "ancestor_of_main": false,
+      "commits_not_reachable_from_main": 1,
+      "disposition": "HISTORICAL_REFERENCE_RETAINED"
+    },
+    {
+      "branch": "fix/host-capability-boundaries",
+      "commit": "b07c33b9bd69ae139f71716b8b2e32185b1fccd0",
+      "ancestor_of_main": true,
+      "commits_not_reachable_from_main": 0,
+      "disposition": "INTEGRATED_ANCESTOR"
+    },
+    {
+      "branch": "fix/kimi-current-agent-contract",
+      "commit": "4c01159ccc86dcbc0efb90568c6683716c05114a",
+      "ancestor_of_main": true,
+      "commits_not_reachable_from_main": 0,
+      "disposition": "INTEGRATED_ANCESTOR"
+    },
+    {
+      "branch": "fix/lint-changed-agent-discovery",
+      "commit": "4c7b76deefc2bafb7687eafa24299ee8370c69ee",
+      "ancestor_of_main": true,
+      "commits_not_reachable_from_main": 0,
+      "disposition": "INTEGRATED_ANCESTOR"
+    },
+    {
+      "branch": "fix/macos-install-agent-list-regression",
+      "commit": "504a3731d7ec2fca6d93adcb26e745a7e1a39dad",
+      "ancestor_of_main": true,
+      "commits_not_reachable_from_main": 0,
+      "disposition": "INTEGRATED_ANCESTOR"
+    },
+    {
+      "branch": "fix/nexus-replay-integrity",
+      "commit": "eedede7c6149c85660448301687c38ae34cb4bee",
+      "ancestor_of_main": true,
+      "commits_not_reachable_from_main": 0,
+      "disposition": "INTEGRATED_ANCESTOR"
+    },
+    {
+      "branch": "fix/nexus-review-artifact-selection",
+      "commit": "e20147a47e4d495a3eab3f2ff228b1093c3096db",
+      "ancestor_of_main": false,
+      "commits_not_reachable_from_main": 1,
+      "disposition": "HISTORICAL_REFERENCE_RETAINED"
+    },
+    {
+      "branch": "fix/nexus-strategic-contracts",
+      "commit": "0f65e1839f81a6d853e49d93357171a6395a3e22",
+      "ancestor_of_main": true,
+      "commits_not_reachable_from_main": 0,
+      "disposition": "INTEGRATED_ANCESTOR"
+    },
+    {
+      "branch": "fix/relay-audit",
+      "commit": "860a48c55aac078c81a27119f88b6ae32730461f",
+      "ancestor_of_main": false,
+      "commits_not_reachable_from_main": 5,
+      "disposition": "HISTORICAL_REFERENCE_RETAINED"
+    },
+    {
+      "branch": "fix/relay-media-budget",
+      "commit": "7fad2acf2ce9e44e0fa735f5e387fe7515db4698",
+      "ancestor_of_main": true,
+      "commits_not_reachable_from_main": 0,
+      "disposition": "INTEGRATED_ANCESTOR"
+    },
+    {
+      "branch": "fix/relay-provider-egress",
+      "commit": "73d36ef9d45181f4027711836b2d71f443f30f0e",
+      "ancestor_of_main": true,
+      "commits_not_reachable_from_main": 0,
+      "disposition": "INTEGRATED_ANCESTOR"
+    },
+    {
+      "branch": "fix/review-provenance-and-ci",
+      "commit": "d567d82669faf3328e2ee295653fcb1d11e314da",
+      "ancestor_of_main": false,
+      "commits_not_reachable_from_main": 1,
+      "disposition": "HISTORICAL_REFERENCE_RETAINED"
+    },
+    {
+      "branch": "fix/security-lock-refresh",
+      "commit": "942ed913a7e317dc24b2731366b53303ac806361",
+      "ancestor_of_main": true,
+      "commits_not_reachable_from_main": 0,
+      "disposition": "INTEGRATED_ANCESTOR"
+    },
+    {
+      "branch": "foundation/base-86addea",
+      "commit": "f3adcc48e259cf412f97ffe8f4c769db595d17f3",
+      "ancestor_of_main": true,
+      "commits_not_reachable_from_main": 0,
+      "disposition": "INTEGRATED_ANCESTOR"
+    },
+    {
+      "branch": "foundation/claude/calibration",
+      "commit": "f4bf5845296c1b0371c27bf45114ae90315787af",
+      "ancestor_of_main": true,
+      "commits_not_reachable_from_main": 0,
+      "disposition": "INTEGRATED_ANCESTOR"
+    },
+    {
+      "branch": "foundation/claude/decisions",
+      "commit": "275ab221c75211700476c10af96d590455e7dc9f",
+      "ancestor_of_main": true,
+      "commits_not_reachable_from_main": 0,
+      "disposition": "INTEGRATED_ANCESTOR"
+    },
+    {
+      "branch": "foundation/claude/ice-halt",
+      "commit": "2baeae7978c302c7f6c0f2609b8ba16e12e30c14",
+      "ancestor_of_main": false,
+      "commits_not_reachable_from_main": 1,
+      "disposition": "SUPERSEDED_FOUNDATION_REFERENCE"
+    },
+    {
+      "branch": "foundation/claude/integrate-main",
+      "commit": "029b8b5a6e4ba729fac26fef72ae5ba2a7306a38",
+      "ancestor_of_main": true,
+      "commits_not_reachable_from_main": 0,
+      "disposition": "INTEGRATED_ANCESTOR"
+    },
+    {
+      "branch": "foundation/claude/jackpot-cusum",
+      "commit": "4cbffa8760ad6ae84ead4a102dc7e86422cc6223",
+      "ancestor_of_main": true,
+      "commits_not_reachable_from_main": 0,
+      "disposition": "INTEGRATED_ANCESTOR"
+    },
+    {
+      "branch": "foundation/claude/phase-0",
+      "commit": "75538f59ee3d1216ef115bfa3bd91b3421d14098",
+      "ancestor_of_main": true,
+      "commits_not_reachable_from_main": 0,
+      "disposition": "INTEGRATED_ANCESTOR"
+    },
+    {
+      "branch": "foundation/claude/phase-1",
+      "commit": "bc903d8c5d2365d3c87a224c2ca83d97bed31e7f",
+      "ancestor_of_main": true,
+      "commits_not_reachable_from_main": 0,
+      "disposition": "INTEGRATED_ANCESTOR"
+    },
+    {
+      "branch": "foundation/claude/phase-2",
+      "commit": "dae74bdd0fc5f6e14bc01798c1b14cb9d1357522",
+      "ancestor_of_main": true,
+      "commits_not_reachable_from_main": 0,
+      "disposition": "INTEGRATED_ANCESTOR"
+    },
+    {
+      "branch": "foundation/claude/phase-3",
+      "commit": "64919f683d64b0c4f380219c1b1fdba2e8d3a813",
+      "ancestor_of_main": true,
+      "commits_not_reachable_from_main": 0,
+      "disposition": "INTEGRATED_ANCESTOR"
+    },
+    {
+      "branch": "foundation/claude/phase-4",
+      "commit": "df95f62fdd6d63459510005a725723c94812b8e9",
+      "ancestor_of_main": true,
+      "commits_not_reachable_from_main": 0,
+      "disposition": "INTEGRATED_ANCESTOR"
+    },
+    {
+      "branch": "foundation/claude/phase-5",
+      "commit": "8d04116331ba83687096df66fcc6021d420b4aad",
+      "ancestor_of_main": true,
+      "commits_not_reachable_from_main": 0,
+      "disposition": "INTEGRATED_ANCESTOR"
+    },
+    {
+      "branch": "foundation/claude/phase-6",
+      "commit": "c63356b4685bc3b05efd3b442d3baf8bb9ce7d6d",
+      "ancestor_of_main": true,
+      "commits_not_reachable_from_main": 0,
+      "disposition": "INTEGRATED_ANCESTOR"
+    },
+    {
+      "branch": "foundation/claude/protected-wiring",
+      "commit": "da5aa0bc398f2c21c074932a1a553391383cd99f",
+      "ancestor_of_main": false,
+      "commits_not_reachable_from_main": 4,
+      "disposition": "SUPERSEDED_FOUNDATION_REFERENCE"
+    },
+    {
+      "branch": "foundation/claude/street-goodhart",
+      "commit": "d2443237c7094b256c4c904751c521db9eaa5574",
+      "ancestor_of_main": true,
+      "commits_not_reachable_from_main": 0,
+      "disposition": "INTEGRATED_ANCESTOR"
+    },
+    {
+      "branch": "foundation/codex/d020",
+      "commit": "c0c31fe83fead049c7693a0c86782566c60ae262",
+      "ancestor_of_main": true,
+      "commits_not_reachable_from_main": 0,
+      "disposition": "INTEGRATED_ANCESTOR"
+    },
+    {
+      "branch": "foundation/phase-0",
+      "commit": "4cfb22840caf57e2cd0f7277a6ac5ce8aae730b4",
+      "ancestor_of_main": false,
+      "commits_not_reachable_from_main": 1,
+      "disposition": "SUPERSEDED_FOUNDATION_REFERENCE"
+    },
+    {
+      "branch": "foundation/v2",
+      "commit": "752af9dc2e0b022b73d5f7f1b78f8c0e94ae6e38",
+      "ancestor_of_main": true,
+      "commits_not_reachable_from_main": 0,
+      "disposition": "INTEGRATED_ANCESTOR"
+    },
+    {
+      "branch": "integration/reconcile-marketing-perf-20261009",
+      "commit": "d6a83f907c94adc2929efa9a632c88ca6fb3f68e",
+      "ancestor_of_main": true,
+      "commits_not_reachable_from_main": 0,
+      "disposition": "INTEGRATED_ANCESTOR"
+    },
+    {
+      "branch": "main",
+      "commit": "039e88da3f51947235c3e5114cdf6df39a4ecb0a",
+      "ancestor_of_main": true,
+      "commits_not_reachable_from_main": 0,
+      "disposition": "INTEGRATED_ANCESTOR"
+    },
+    {
+      "branch": "marketing-strategy-framework-v2",
+      "commit": "f11e4f38aa6b6b6b7e2e07c744d7ad4ed0a8e445",
+      "ancestor_of_main": true,
+      "commits_not_reachable_from_main": 0,
+      "disposition": "INTEGRATED_ANCESTOR"
+    },
+    {
+      "branch": "nexus/assertion-conflicts-p7",
+      "commit": "3f5f4b637dbd3bbfc2dcf8e4e3c8569eb9015bb9",
+      "ancestor_of_main": true,
+      "commits_not_reachable_from_main": 0,
+      "disposition": "INTEGRATED_ANCESTOR"
+    },
+    {
+      "branch": "nexus/independent-judgment-p1-p6",
+      "commit": "d82cc62c4788435fedaa6ca1e9553b9079db35cc",
+      "ancestor_of_main": true,
+      "commits_not_reachable_from_main": 0,
+      "disposition": "INTEGRATED_ANCESTOR"
+    },
+    {
+      "branch": "overdrive/authoring-guide-private-root",
+      "commit": "e8a1554938b36abcabafbdb872d81d1638c13870",
+      "ancestor_of_main": true,
+      "commits_not_reachable_from_main": 0,
+      "disposition": "INTEGRATED_ANCESTOR"
+    },
+    {
+      "branch": "overdrive/held-out-packs-claude",
+      "commit": "c85e348f2996b02ae27b05bebfc4ef5ed6ccf509",
+      "ancestor_of_main": true,
+      "commits_not_reachable_from_main": 0,
+      "disposition": "INTEGRATED_ANCESTOR"
+    },
+    {
+      "branch": "overdrive/independent-evaluator-boundary",
+      "commit": "52702f286b9ae534d433d08142a7e911791bef16",
+      "ancestor_of_main": true,
+      "commits_not_reachable_from_main": 0,
+      "disposition": "INTEGRATED_ANCESTOR"
+    },
+    {
+      "branch": "overdrive/phase1-measurement",
+      "commit": "196492337088f40dd39aca1b21e9cfad42d36875",
+      "ancestor_of_main": true,
+      "commits_not_reachable_from_main": 0,
+      "disposition": "INTEGRATED_ANCESTOR"
+    },
+    {
+      "branch": "overdrive/phase2-throughput",
+      "commit": "a3d7a835eb90ffbdc5738ec51a9977e24f88c8fc",
+      "ancestor_of_main": true,
+      "commits_not_reachable_from_main": 0,
+      "disposition": "INTEGRATED_ANCESTOR"
+    },
+    {
+      "branch": "overdrive/planner-agent",
+      "commit": "621af9d63e8c7cb34fd33ca2749a21758a26f21f",
+      "ancestor_of_main": false,
+      "commits_not_reachable_from_main": 1,
+      "disposition": "HISTORICAL_REFERENCE_RETAINED"
+    },
+    {
+      "branch": "overdrive/profile-optimizer",
+      "commit": "67ffe9e4760667274a8427ed8c186c13e41818d5",
+      "ancestor_of_main": true,
+      "commits_not_reachable_from_main": 0,
+      "disposition": "INTEGRATED_ANCESTOR"
+    },
+    {
+      "branch": "overdrive/review-kit-and-brief",
+      "commit": "167d9650ceca0f40f1ac78acee8f2b7ab5663e4d",
+      "ancestor_of_main": true,
+      "commits_not_reachable_from_main": 0,
+      "disposition": "INTEGRATED_ANCESTOR"
+    },
+    {
+      "branch": "perf/benchmark-canonical-agent-loading",
+      "commit": "8ec5fc76af126f45a36c5e824264142afed6aa7b",
+      "ancestor_of_main": false,
+      "commits_not_reachable_from_main": 12,
+      "disposition": "HISTORICAL_REFERENCE_RETAINED"
+    },
+    {
+      "branch": "perf/incremental-conversion-manifest",
+      "commit": "81dc0472a23e4b017ba51bd16fe30b9699b5ea09",
+      "ancestor_of_main": true,
+      "commits_not_reachable_from_main": 0,
+      "disposition": "INTEGRATED_ANCESTOR"
+    },
+    {
+      "branch": "perf/incremental-conversion-state-v2",
+      "commit": "ec93a7ff07b51ff0ba8d3deed23588cfb8965a8a",
+      "ancestor_of_main": true,
+      "commits_not_reachable_from_main": 0,
+      "disposition": "INTEGRATED_ANCESTOR"
+    },
+    {
+      "branch": "perf/reduce-conversion-overhead",
+      "commit": "40b4338926eb4099edfbb94284d0629ceaefa16a",
+      "ancestor_of_main": false,
+      "commits_not_reachable_from_main": 2,
+      "disposition": "HISTORICAL_REFERENCE_RETAINED"
+    },
+    {
+      "branch": "security/privilege-provenance-hardening",
+      "commit": "4a3086baabadaa792bec73ca57bf79949189efbe",
+      "ancestor_of_main": false,
+      "commits_not_reachable_from_main": 1,
+      "disposition": "HISTORICAL_REFERENCE_RETAINED"
+    },
+    {
+      "branch": "strategic-overhaul-v2",
+      "commit": "314cba94399b9078f54601a1962fb10540757485",
+      "ancestor_of_main": false,
+      "commits_not_reachable_from_main": 23,
+      "disposition": "HISTORICAL_REFERENCE_RETAINED"
+    },
+    {
+      "branch": "sync/upstream-2026-10-01",
+      "commit": "96edeb79ee74ffeda453abeccfc3fbb6ad142ca5",
+      "ancestor_of_main": true,
+      "commits_not_reachable_from_main": 0,
+      "disposition": "INTEGRATED_ANCESTOR"
+    },
+    {
+      "branch": "sync/upstream-2026-10-08",
+      "commit": "63d171ed84ac9955877ce0326406383c471da942",
+      "ancestor_of_main": true,
+      "commits_not_reachable_from_main": 0,
+      "disposition": "INTEGRATED_ANCESTOR"
+    },
+    {
+      "branch": "sync/upstream-20261028",
+      "commit": "7819cfeaedb87be532762f7f5cded24d109e4d51",
+      "ancestor_of_main": true,
+      "commits_not_reachable_from_main": 0,
+      "disposition": "INTEGRATED_ANCESTOR"
+    },
+    {
+      "branch": "sync/upstream-main-20261016",
+      "commit": "e3772fa3b01f7b9f6a19a589e6289cb25b119f25",
+      "ancestor_of_main": true,
+      "commits_not_reachable_from_main": 0,
+      "disposition": "INTEGRATED_ANCESTOR"
+    },
+    {
+      "branch": "tmp/convert-output-manifest-pr34",
+      "commit": "185d434940f193409b1693795ea3d0fb4ce23c5a",
+      "ancestor_of_main": true,
+      "commits_not_reachable_from_main": 0,
+      "disposition": "INTEGRATED_ANCESTOR"
+    },
+    {
+      "branch": "upstream-2026-09-strategy-doctrine",
+      "commit": "386c303d19296fe4e15cfe8107b23b8fc35c9c2e",
+      "ancestor_of_main": true,
+      "commits_not_reachable_from_main": 0,
+      "disposition": "INTEGRATED_ANCESTOR"
+    }
+  ]
+}

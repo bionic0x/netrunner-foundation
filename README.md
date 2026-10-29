@@ -1,13 +1,13 @@
-# Neuromancers Foundation — Ante strategic engine and NEXUS agents
+# Netrunner Foundation — Ante strategic engine and NEXUS agents
 
-**The public integration repository for Ante Foundation: a 507-agent catalog, NEXUS coordination toolkit, deterministic strategy CLI, evidence ledger and bounded self-development controls.**
+**The public integration repository for Netrunner Foundation (the Ante engine): a 507-agent catalog, NEXUS coordination toolkit, deterministic strategy CLI, evidence ledger and bounded self-development controls.**
 
-[![Runbook CI](https://github.com/bionic0x/neuromancers-foundation/actions/workflows/check-runbooks.yml/badge.svg)](https://github.com/bionic0x/neuromancers-foundation/actions/workflows/check-runbooks.yml)
+[![Runbook CI](https://github.com/bionic0x/netrunner-foundation/actions/workflows/check-runbooks.yml/badge.svg)](https://github.com/bionic0x/netrunner-foundation/actions/workflows/check-runbooks.yml)
 [![MIT license](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
 **507 agents** · **19 divisions** · **9 runbooks** · **17 registered tool targets**
 
-> **Repository identity (29 October 2026):** `bionic0x/neuromancers-foundation` is the public Foundation integration target. The package and CLI intentionally retain the name `ante`; the earlier [`bionic0x/Ante-agency-agents`](https://github.com/bionic0x/Ante-agency-agents) repository remains part of the source lineage, not the clone target below. History and license notices are preserved. Foundation was integrated through [PR #12](https://github.com/bionic0x/neuromancers-foundation/pull/12) and [PR #15](https://github.com/bionic0x/neuromancers-foundation/pull/15).
+> **Repository identity (29 October 2026):** `bionic0x/netrunner-foundation` is the public Foundation integration target. The package and CLI intentionally retain the name `ante`; the earlier [`bionic0x/Ante-agency-agents`](https://github.com/bionic0x/Ante-agency-agents) repository remains part of the source lineage, not the clone target below. The repository was renamed from `neuromancers-foundation` under the owner’s instruction. History and license notices are preserved. See the [consolidation record](foundation/NETRUNNER-FOUNDATION.md). Foundation was integrated through [PR #12](https://github.com/bionic0x/netrunner-foundation/pull/12) and [PR #15](https://github.com/bionic0x/netrunner-foundation/pull/15).
 
 > **Project maturity:** Agent profiles and offline NEXUS contracts are usable now. NEXUS Relay is a local execution pilot. Overdrive's planner, scheduler, reviewer and optimizer are implemented but **not validated as improving live-model outcomes**. This is not a production-ready autonomous agency or an autonomous trading system.
 
@@ -29,8 +29,8 @@ Ante extends [The Agency](https://github.com/msitarzewski/agency-agents) with st
 **Prerequisites:** Git, Bash 3.2+, Python 3 for the installer, and your separately installed AI host. Full validation needs Python 3.11+, PyYAML and the dependencies described in [Operations](OPERATIONS.md). On Windows, use WSL or a compatible Bash environment with `python3` available.
 
 ```bash
-git clone https://github.com/bionic0x/neuromancers-foundation.git
-cd neuromancers-foundation
+git clone https://github.com/bionic0x/netrunner-foundation.git
+cd netrunner-foundation
 
 # Inspect the available runbooks without installing anything.
 bash scripts/install.sh --list runbooks
@@ -93,7 +93,7 @@ python3 scripts/evaluate-nexus.py \
 
 For contracts, state transitions, and replay semantics, read [NEXUS instances](strategy/NEXUS-INSTANCE.md). For live execution, start with the [Relay threat model](relay/DESIGN.md) and [operations guide](relay/README.md); do not treat the offline example as proof of runtime isolation.
 
-## Ante Foundation: strategy, learning and self-development
+## Netrunner Foundation: strategy, learning and self-development
 
 `scripts/ante` turns the [General Theory of Strategy](strategy/GENERAL-STRATEGY-DOCTRINE.md) into commands whose outputs are sealed, chained artefacts. Three layers, each building on the one below:
 
@@ -151,7 +151,7 @@ To contribute: start with [CONTRIBUTING.md](CONTRIBUTING.md), use the [pull requ
 | [Operations](OPERATIONS.md) · [Tool registry](tools.json) | Install, configure, validate and troubleshoot adapters |
 | [General Strategy Doctrine](strategy/GENERAL-STRATEGY-DOCTRINE.md) | Purpose, non-object, levels, evidence and decision ownership |
 | [NEXUS contract](strategy/NEXUS-INSTANCE.md) · [Overdrive](strategy/NEXUS-OVERDRIVE.md) | Engine semantics, tests, optimizer and measured exits |
-| [Ante Foundation commands](foundation/COMMANDS.md) · [Migration](foundation/MIGRATION.md) · [Decisions](foundation/DECISIONS.md) | Strategy, learning and self-development layers; script-to-module map; owner decisions |
+| [Foundation commands](foundation/COMMANDS.md) · [Migration](foundation/MIGRATION.md) · [Decisions](foundation/DECISIONS.md) | Strategy, learning and self-development layers; script-to-module map; owner decisions |
 | [Relay](relay/README.md) · [Threat model](relay/DESIGN.md) | Bounded local execution and residual risks |
 | [HTP Gate 0](strategy/runbooks/scenario-htp-gate0-solana-arbitrum.md) · [Alpha Research](strategy/alpha-research-suite/README.md) | Domain-specific non-executing workflows |
 | [External marketplace intake](strategy/external-marketplaces/README.md) | ACT-LABS source review and offline task packets with identity, freshness and mandatory HOLD |

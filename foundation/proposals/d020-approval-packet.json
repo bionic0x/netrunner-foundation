@@ -1,10 +1,10 @@
 {
   "schema_version": 1,
   "decision": "D-020",
-  "status": "PROPOSED_OWNER_DECISION",
+  "status": "OWNER_APPROVED",
   "prepared_on": "2026-10-29",
-  "repository": "bionic0x/neuromancers-foundation",
-  "branch": "foundation/codex/d020",
+  "repository": "bionic0x/netrunner-foundation",
+  "branch": "netrunner/consolidation",
   "review_base_commit": "cc027eda68ea281ac80d194ac3c19821541b016b",
   "approval_is_not_authenticated_by_this_file": true,
   "proposed_rule": "Owner-authorized, patch-scoped maintenance outside the self-development loop, with real authorship and human approval recorded separately",
@@ -12,7 +12,7 @@
   "self_development_protected_path_ban_retained": true,
   "policy_adoption": {
     "id": "P0",
-    "owner_approval": "PENDING",
+    "owner_approval": "APPROVED",
     "scope": "Adopt the proposed D-020 C rule; permit only separately approved exact maintenance patches"
   },
   "patches": [
@@ -25,8 +25,8 @@
         "strategy/NEXUS-OVERDRIVE.md"
       ],
       "purpose": "Align protected policy wording; retain the exact protected list and the self-improver prohibition",
-      "owner_approval": "PENDING",
-      "applied_to_repository": false,
+      "owner_approval": "APPROVED",
+      "applied_to_repository": true,
       "input_files": {
         "strategy/overdrive-protected.json": {
           "sha256": "12ec5106611a6f650a1c4c32b13f35b88291fb70dc154dc1bc3e65dc3ae268af",
@@ -50,19 +50,19 @@
     },
     {
       "id": "P2",
-      "file": "foundation/proposals/ci-wiring.patch",
-      "sha256": "64d1085836748b669906833b4c54e669da70f2bb20cb94756b6a86dd2df65d42",
+      "file": "foundation/proposals/ci-wiring-v7.1.patch",
+      "sha256": "51d0a1f053d6faeafb85dfb8bf8f95bffb01831acaf676f2c1c1522d38757e09",
       "paths": [
         ".github/workflows/check-runbooks.yml",
         "scripts/verify-release.sh"
       ],
       "purpose": "Run both characterization harnesses and Foundation checks; publish the institutional self-test",
-      "owner_approval": "PENDING",
+      "owner_approval": "APPROVED",
       "applied_to_repository": false,
       "input_files": {
         ".github/workflows/check-runbooks.yml": {
-          "sha256": "ec926fb2febdd440d742b8b49514964c25fb497a620c32a452b53c07300eba82",
-          "git_blob": "5237b8f273073ac099263759a428bf8c5ff3e1de"
+          "sha256": "2fcb30f0bfaae651ff5dda05348ba5c044208bf8690ca24d95470202cb68dd2e",
+          "git_blob": "c441a70f58b87228f4d2459da139549d67581d20"
         },
         "scripts/verify-release.sh": {
           "sha256": "71a7622df244fc64b26cb02df7723b495ac2c2dcde78546eb0b1db7205f5f0fa",
@@ -71,12 +71,35 @@
       },
       "output_files": {
         ".github/workflows/check-runbooks.yml": {
-          "sha256": "0dc9196a4a9d1ffdea030c016ea092f479dfa6626f79d40d953995365f9ff72a",
-          "git_blob": "0ced0867883a536896080869eab9d3a90f0545cb"
+          "sha256": "f35713e7ac410125af4ed56045a0e7b672e30b2784c91c15263ed44095d12c93",
+          "git_blob": "3b0372199883b9bbca2dd984099fe8eb7169abdd"
         },
         "scripts/verify-release.sh": {
           "sha256": "f9675af8ccce4387dcd50dcc98effc33038596669d6918195af4f8fc2d5df122",
           "git_blob": "226947ec7653733ce5de28d6702a6b826392b4dc"
+        }
+      },
+      "superseded_sha256": "64d1085836748b669906833b4c54e669da70f2bb20cb94756b6a86dd2df65d42",
+      "revision": "v7.1.0 pin plus fetch-depth: 0; selected under owner instruction to decide P2 and consolidate PRs #12–#14",
+      "review_source": "origin/foundation/claude/protected-wiring at da5aa0bc398f2c21c074932a1a553391383cd99f",
+      "review_base_commit": "029b8b5a6e4ba729fac26fef72ae5ba2a7306a38",
+      "approval_basis": "Original P2 approved directly; v7.1.0 and full-history variant selected under the later explicit owner instruction to decide P2 and consolidate the branches.",
+      "application_status": "Prepared in consolidation candidate; original wiring already merged in #15",
+      "revision_delta": {
+        "file": "foundation/proposals/ci-python-v7.1-delta.patch",
+        "sha256": "5d4659fc3bd36f98412b11e40f1ea91df78417dbc9663b27c125a10f09fdb119",
+        "review_base_commit": "039e88da3f51947235c3e5114cdf6df39a4ecb0a",
+        "input_files": {
+          ".github/workflows/check-runbooks.yml": {
+            "sha256": "95b85a65da63b79baf8814220c9012a64a283fd4e8e2cc15af935a23f4b5dd45",
+            "git_blob": "41b128f1c9fea272ccd426c41d9ddd38adcb7d82"
+          }
+        },
+        "output_files": {
+          ".github/workflows/check-runbooks.yml": {
+            "sha256": "f35713e7ac410125af4ed56045a0e7b672e30b2784c91c15263ed44095d12c93",
+            "git_blob": "3b0372199883b9bbca2dd984099fe8eb7169abdd"
+          }
         }
       }
     },
@@ -88,8 +111,8 @@
         "scripts/test-nexus-review.py"
       ],
       "purpose": "Select a reviewed Markdown artifact deterministically, excluding REVIEWER.md",
-      "owner_approval": "PENDING",
-      "applied_to_repository": false,
+      "owner_approval": "APPROVED",
+      "applied_to_repository": true,
       "input_files": {
         "scripts/test-nexus-review.py": {
           "sha256": "65890783ed6af5ab18ac6098c9e86e3709728c3767b6cde8502ca14320422853",
@@ -109,13 +132,14 @@
     "commit": "7b213ebfa876bc8f44c185b19d7484009bb8f205",
     "path": "strategy/contracts.json",
     "proposal": "Retain the merged commit with honest agent authorship and explicit owner ratification of the narrow mandate exception; no rewrite or relabelling as handwritten",
-    "owner_ratification": "PENDING",
+    "owner_ratification": "RATIFIED",
     "parent": "752af9dc2e0b022b73d5f7f1b78f8c0e94ae6e38",
     "diff_sha256": "eaf85e012af4cd7e27ae82883dcc8cbe420880c52292f4366559ba2840770003",
     "changed_files": 1,
     "git_index": "3e4d41f..6e072d5 100644",
     "declared_commit_actor": "claude",
-    "declared_coauthor": "Claude Opus 5.5 <noreply@anthropic.com>"
+    "declared_coauthor": "Claude Opus 5.5 <noreply@anthropic.com>",
+    "ratified_on": "2026-10-29"
   },
   "observed_precedent": {
     "pr": 2,
@@ -183,10 +207,31 @@
   "independent_operator_review": null,
   "independent_operator_review_reason": "No independent operator reviewed this preparation. Human approval, a Git signature and a declared label do not authenticate independence.",
   "autonomy_assessment": null,
-  "autonomy_assessment_reason": "This is an unadopted documentation/proposal packet. No authenticated Turing review or expanded execution permission is claimed.",
+  "autonomy_assessment_reason": "Owner approved external, patch-scoped maintenance only. No self-development scope, protected pattern, threshold or runtime permission is expanded; no authenticated independent-operator review is claimed.",
   "prepared_by": {
     "agent": "Codex",
     "acting_github_account": "bionic0x",
     "owner_is_not_claimed_as_human_author": true
-  }
+  },
+  "approved_on": "2026-10-29",
+  "approval_record": {
+    "source": "direct user conversation",
+    "response": "si",
+    "context": "Direct approval of option C and original P0–P3 + R1; the later instruction explicitly delegates the P2 variant decision and consolidation.",
+    "items": [
+      "P0",
+      "P1",
+      "P2",
+      "P3",
+      "R1"
+    ],
+    "standing_authority_granted": false,
+    "actual_agent_authorship_retained": true
+  },
+  "latest_owner_instruction": {
+    "date": "2026-10-29",
+    "scope": "Review/merge #12, decide P2 using main-compatible v7.1.0 variant, ratify R1, close/reuse #14, consolidate branches as Netrunner Foundation",
+    "approval_kind": "owner-delegated consolidation and P2 variant decision"
+  },
+  "consolidation_base_commit": "039e88da3f51947235c3e5114cdf6df39a4ecb0a"
 }

@@ -1,10 +1,10 @@
 # Third-Party Notices
 
-## Ante Foundation (this fork)
+## Netrunner Foundation (this fork)
 
 The `ante/` package, `scripts/ante`, `foundation/`, `tests/foundation/`,
 `tests/characterization/` and `examples/foundation/` are original work of
-`bionic0x/neuromancers-foundation`, a fork of
+`bionic0x/netrunner-foundation` (formerly `bionic0x/neuromancers-foundation`), a fork of
 [bionic0x/Ante-agency-agents](https://github.com/bionic0x/Ante-agency-agents) at
 `86addea`, itself derived from
 [msitarzewski/agency-agents](https://github.com/msitarzewski/agency-agents). All

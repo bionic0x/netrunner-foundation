@@ -1,0 +1,85 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-29",
+  "repository": "bionic0x/netrunner-foundation",
+  "base_commit": "039e88da3f51947235c3e5114cdf6df39a4ecb0a",
+  "scope": "Consolidation candidate: one action pin and governance/identity records; implementation from main preserved",
+  "python": "3.11.17",
+  "checks": [
+    {
+      "name": "Foundation unit tests",
+      "command": "python -m unittest discover -s tests/foundation -p 'test_*.py'",
+      "exit_code": 0,
+      "tests": 196,
+      "duration_seconds": 108.628
+    },
+    {
+      "name": "Normalized characterization",
+      "command": "python tests/characterization/run.py",
+      "exit_code": 0,
+      "matched": 114,
+      "total": 114
+    },
+    {
+      "name": "Raw-byte characterization and regressions",
+      "command": "python -m unittest discover -s tests/characterization",
+      "exit_code": 0,
+      "test_methods": 4,
+      "raw_cases": 116,
+      "additional_regressions": 3,
+      "duration_seconds": 9.016
+    },
+    {
+      "name": "Mechanical extraction",
+      "exit_code": 0,
+      "matched": 8,
+      "total": 8
+    },
+    {
+      "name": "Frozen reviewer fingerprints",
+      "exit_code": 0,
+      "matched": 3,
+      "total": 3
+    },
+    {
+      "name": "Defence layers",
+      "exit_code": 0,
+      "distinct_functions": 5
+    },
+    {
+      "name": "Divisions",
+      "exit_code": 0,
+      "divisions": 19
+    },
+    {
+      "name": "Runbooks",
+      "exit_code": 0,
+      "runbooks": 9,
+      "agent_slug_references": 134
+    },
+    {
+      "name": "Approved patch hashes and output fingerprints",
+      "exit_code": 0
+    },
+    {
+      "name": "Workflow YAML, pinned action and full-history checkout",
+      "exit_code": 0
+    },
+    {
+      "name": "Frozen corpus diff against main",
+      "exit_code": 0,
+      "changed_files": 0
+    }
+  ],
+  "prior_interpreter_attempt": {
+    "python": "3.12.14",
+    "outcome": "failed frozen argparse byte comparisons; not the required runtime",
+    "correction": "Restored Python 3.11 and reran both harnesses and the 196-test Foundation suite; all pass without changing recordings"
+  },
+  "local_complete_release_gate": null,
+  "local_complete_release_gate_reason": "Unix socket creation denied with PermissionError [Errno 1]; no tests skipped or weakened",
+  "final_hosted_ci": "Must be observed on the final consolidation PR head",
+  "independence_level": "SELF",
+  "independent_operator_review": null,
+  "independent_operator_review_reason": "No authenticated independent operator review has occurred"
+}
