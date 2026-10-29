@@ -1,11 +1,13 @@
-# Ante — Specialist AI agents, governed by evidence
+# Neuromancers Foundation — Ante strategic engine and NEXUS agents
 
-**A 507-agent catalog and NEXUS coordination toolkit for teams that need traceable decisions, explicit authority, and reproducible workflows.**
+**The public integration repository for Ante Foundation: a 507-agent catalog, NEXUS coordination toolkit, deterministic strategy CLI, evidence ledger and bounded self-development controls.**
 
-[![Runbook CI](https://github.com/bionic0x/Ante-agency-agents/actions/workflows/check-runbooks.yml/badge.svg)](https://github.com/bionic0x/Ante-agency-agents/actions/workflows/check-runbooks.yml)
+[![Runbook CI](https://github.com/bionic0x/neuromancers-foundation/actions/workflows/check-runbooks.yml/badge.svg)](https://github.com/bionic0x/neuromancers-foundation/actions/workflows/check-runbooks.yml)
 [![MIT license](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
 **507 agents** · **19 divisions** · **9 runbooks** · **17 registered tool targets**
+
+> **Repository identity (29 October 2026):** `bionic0x/neuromancers-foundation` is the public Foundation integration target. The package and CLI intentionally retain the name `ante`; the earlier [`bionic0x/Ante-agency-agents`](https://github.com/bionic0x/Ante-agency-agents) repository remains part of the source lineage, not the clone target below. History and license notices are preserved. Foundation was integrated through [PR #12](https://github.com/bionic0x/neuromancers-foundation/pull/12) and [PR #15](https://github.com/bionic0x/neuromancers-foundation/pull/15).
 
 > **Project maturity:** Agent profiles and offline NEXUS contracts are usable now. NEXUS Relay is a local execution pilot. Overdrive's planner, scheduler, reviewer and optimizer are implemented but **not validated as improving live-model outcomes**. This is not a production-ready autonomous agency or an autonomous trading system.
 
@@ -27,8 +29,8 @@ Ante extends [The Agency](https://github.com/msitarzewski/agency-agents) with st
 **Prerequisites:** Git, Bash 3.2+, Python 3 for the installer, and your separately installed AI host. Full validation needs Python 3.11+, PyYAML and the dependencies described in [Operations](OPERATIONS.md). On Windows, use WSL or a compatible Bash environment with `python3` available.
 
 ```bash
-git clone https://github.com/bionic0x/Ante-agency-agents.git
-cd Ante-agency-agents
+git clone https://github.com/bionic0x/neuromancers-foundation.git
+cd neuromancers-foundation
 
 # Inspect the available runbooks without installing anything.
 bash scripts/install.sh --list runbooks
@@ -107,7 +109,7 @@ python3 scripts/ante deck --artifacts examples/foundation/lab-consortium/artifac
 python3 scripts/ante commands                       # the strategy commands and what each refuses
 ```
 
-Every existing script keeps its interface, exit codes and output: eight of them are now thin entry points over the shared `ante/` package, and 114 recorded characterization cases prove the outputs are byte-identical. See [foundation/COMMANDS.md](foundation/COMMANDS.md), [foundation/MIGRATION.md](foundation/MIGRATION.md) and the open owner decisions in [foundation/DECISIONS.md](foundation/DECISIONS.md).
+Every existing script keeps its interface, exit codes and output: eight of them are now thin entry points over the shared `ante/` package, and 114 normalised characterization cases plus 116 raw-byte cases check compatibility against their recorded baselines. See [foundation/COMMANDS.md](foundation/COMMANDS.md), [foundation/MIGRATION.md](foundation/MIGRATION.md) and the dated governance record in [foundation/DECISIONS.md](foundation/DECISIONS.md). Historical `PROPOSED` labels do not by themselves establish current GitHub merge status or independent human review. See [dated integration status](foundation/INTEGRATION-STATUS-2026-10-29.md).
 
 ## Evidence, safety, and project status
 
