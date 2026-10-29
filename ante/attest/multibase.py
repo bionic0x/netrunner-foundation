@@ -30,7 +30,7 @@ def b58decode(text: str) -> bytes:
     number = 0
     for ch in text:
         if ch not in _INDEX:
-            raise MultibaseError(f'{ch!r} is not base58-btc')
+            raise MultibaseError('not base58-btc')
         number = number * 58 + _INDEX[ch]
     body = number.to_bytes((number.bit_length() + 7) // 8, 'big') if number else b''
     pad = len(text) - len(text.lstrip('1'))

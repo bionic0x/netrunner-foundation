@@ -33,6 +33,7 @@ Git object ids are named as such; a SHA-1 tree id is never called a SHA-256.
 """
 from __future__ import annotations
 
+import contextlib
 import hashlib
 import subprocess
 from pathlib import Path
@@ -49,8 +50,17 @@ OBJECT_FORMATS = {'sha1': 40, 'sha256': 64}
 SCOPES = ('apply', 'merge')
 CODE_PATH = 'ante'
 POLICY_PATH = 'strategy/contracts.json'
-DIFF_OPTIONS = ('-c', 'diff.algorithm=myers', '-c', 'core.quotepath=true', 'diff', '--binary',
-                '--full-index', '--no-color', '--no-ext-diff', '--no-textconv', '--no-renames')
+# Every option that git configuration could change in a patch is pinned here, so
+# patch_sha256 is the same on any machine with git >= 2.40. Attributes are read
+# from the head commit, not from the working tree or the user's configuration.
+DIFF_CONFIG = ('-c', 'core.quotepath=true', '-c', 'core.attributesFile=/dev/null',
+               '-c', 'diff.suppressBlankEmpty=false', '-c', 'diff.noprefix=false',
+               '-c', 'diff.mnemonicPrefix=false', '-c', 'diff.relative=false')
+DIFF_OPTIONS = ('diff', '--binary', '--full-index', '--no-color', '--no-ext-diff', '--no-textconv',
+                '--no-renames', '--diff-algorithm=myers', '--indent-heuristic', '-U3',
+                '--inter-hunk-context=0', '--src-prefix=a/', '--dst-prefix=b/', '--no-relative',
+                '--submodule=short', '-O/dev/null')
+MIN_GIT = (2, 40)
 RECEIPT_KEYS = ('schema_version', 'kind', 'artifact_sha256', 'source_commit_oid', 'code_tree_oid',
                 'policy_sha256', 'issued_at')
 APPROVAL_KEYS = ('schema_version', 'kind', 'policy', 'object_format', 'base_commit', 'result_tree',
@@ -61,18 +71,48 @@ class DocumentError(ValueError):
     """The document or the repository state does not support the statement."""
 
 
+_TRUSTED: set[str] = set()
+
+
+@contextlib.contextmanager
+def trusting(repo: Path):
+    """Let git read ``repo`` although another account owns it (``ante sign`` under its own account).
+
+    Only for the checkout whose code is already running; every call stays read-only.
+    """
+    path = str(Path(repo).resolve())
+    _TRUSTED.add(path)
+    try:
+        yield
+    finally:
+        _TRUSTED.discard(path)
+
+
 def _git(repo: Path, *args: str, check: bool = True) -> subprocess.CompletedProcess:
-    result = subprocess.run(['git', '-C', str(repo), *args], capture_output=True)
+    """Read-only git with pathspec magic off and no fsmonitor hook from an untrusted repository."""
+    command = ['git', '--literal-pathspecs', '-c', 'core.fsmonitor=false']
+    path = str(Path(repo).resolve())
+    if path in _TRUSTED:
+        command += ['-c', f'safe.directory={path}']
+    result = subprocess.run([*command, '-C', path, *args], capture_output=True)
     if check and result.returncode != 0:
-        raise DocumentError(f'git {args[0] if args else ""} failed: '
-                            f'{result.stderr.decode("utf-8", "replace").strip()[:200]}')
+        raise DocumentError(f'git {args[0] if args else ""} failed (exit {result.returncode})')
     return result
+
+
+def _git_version() -> tuple[int, int]:
+    out = subprocess.run(['git', 'version'], capture_output=True).stdout.decode('ascii', 'replace')
+    try:
+        major, minor = out.split()[2].split('.')[:2]
+        return int(major), int(minor)
+    except (IndexError, ValueError):
+        return (0, 0)
 
 
 def object_format(repo: Path) -> str:
     fmt = _git(repo, 'rev-parse', '--show-object-format').stdout.decode().strip()
     if fmt not in OBJECT_FORMATS:
-        raise DocumentError(f'unsupported git object format {fmt!r}')
+        raise DocumentError('unsupported git object format')
     return fmt
 
 
@@ -93,6 +133,12 @@ def _require(repo: Path, spec: str) -> str:
 def dirty(repo: Path, paths: list[str]) -> list[str]:
     out = _git(repo, 'status', '--porcelain', '--untracked-files=all', '--', *paths).stdout
     return [line for line in out.decode('utf-8', 'replace').splitlines() if line.strip()]
+
+
+def committed(repo: Path, rev: str, path: str) -> bytes | None:
+    """The bytes of ``path`` as committed at ``rev``, or ``None`` when absent."""
+    result = _git(repo, 'show', f'{rev}:{path}', check=False)
+    return result.stdout if result.returncode == 0 else None
 
 
 def _sha256(data: bytes) -> str:
@@ -123,7 +169,7 @@ def _git_ref(value: object, where: str) -> str:
     if not isinstance(value, dict) or set(value) != {'object_format', 'oid'}:
         raise DocumentError(f'{where}: expected {{object_format, oid}}')
     fmt = value['object_format']
-    if fmt not in OBJECT_FORMATS:
+    if not isinstance(fmt, str) or fmt not in OBJECT_FORMATS:
         raise DocumentError(f'{where}.object_format must be sha1 or sha256')
     _oid(value['oid'], fmt, f'{where}.oid')
     return fmt
@@ -139,9 +185,9 @@ def validate(document: object) -> str:
         raise DocumentError(f'expected schema_version 1 and kind in {", ".join(KINDS)}')
     expected = RECEIPT_KEYS if kind == RECEIPT else APPROVAL_KEYS
     if set(document) != set(expected):
-        extra, missing = sorted(set(document) - set(expected)), sorted(set(expected) - set(document))
-        raise DocumentError(f'{kind}: unexpected {extra or "-"}, missing {missing or "-"}')
-    if utc(document['issued_at']) != document['issued_at']:
+        extra, missing = len(set(document) - set(expected)), sorted(set(expected) - set(document))
+        raise DocumentError(f'{kind}: {extra} unexpected field(s), missing {", ".join(missing) or "none"}')
+    if not isinstance(document['issued_at'], str) or utc(document['issued_at']) != document['issued_at']:
         raise DocumentError('issued_at must be YYYY-MM-DDTHH:MM:SSZ')
     if kind == RECEIPT:
         _hex64(document['artifact_sha256'], 'artifact_sha256')
@@ -151,7 +197,7 @@ def validate(document: object) -> str:
             raise DocumentError('source_commit_oid and code_tree_oid use different object formats')
         return kind
     fmt = document['object_format']
-    if fmt not in OBJECT_FORMATS:
+    if not isinstance(fmt, str) or fmt not in OBJECT_FORMATS:
         raise DocumentError('object_format must be sha1 or sha256')
     if document['policy'] != 'D-020':
         raise DocumentError('policy must be D-020')
@@ -175,7 +221,8 @@ def validate(document: object) -> str:
     if names != sorted(set(names)):
         raise DocumentError('paths must be sorted and unique')
     scope = document['scope']
-    if not isinstance(scope, list) or not scope or any(s not in SCOPES for s in scope) or scope != sorted(set(scope)):
+    if (not isinstance(scope, list) or not scope or not all(isinstance(s, str) and s in SCOPES for s in scope)
+            or scope != sorted(set(scope))):
         raise DocumentError(f'scope must be a sorted, non-empty subset of {", ".join(SCOPES)}')
     _text(document['review_ref'], 'review_ref')
     _text(document['author'], 'author')
@@ -213,33 +260,37 @@ def _changed(repo: Path, base: str, head: str) -> list[str]:
 
 
 def _patch(repo: Path, base: str, head: str, paths: list[str]) -> bytes:
-    return _git(repo, *DIFF_OPTIONS, base, head, '--', *paths).stdout
+    if _git_version() < MIN_GIT:
+        raise DocumentError('patch hashes need git 2.40 or later (--attr-source)')
+    return _git(repo, *DIFF_CONFIG, f'--attr-source={head}', *DIFF_OPTIONS, base, head, '--', *paths).stdout
 
 
-def approval(base: str, head: str, scope: list[str], review_ref: str, author: str, at: str,
-             repo: Path = ROOT) -> dict:
-    """An unsigned D-020 approval of the change from ``base`` to ``head``."""
+BINDING_KEYS = ('object_format', 'base_commit', 'result_tree', 'patch_sha256', 'paths')
+
+
+def bindings(base: str, head: str, repo: Path = ROOT) -> dict:
+    """What an approval of the change from ``base`` to ``head`` binds, read from git."""
     fmt = object_format(repo)
     base_commit = _require(repo, f'{base}^{{commit}}')
     head_commit = _require(repo, f'{head}^{{commit}}')
     names = _changed(repo, base_commit, head_commit)
     if not names:
         raise DocumentError('base and head do not differ; there is nothing to approve')
-    document = {
-        'schema_version': 1,
-        'kind': APPROVAL,
-        'policy': 'D-020',
+    return {
         'object_format': fmt,
         'base_commit': base_commit,
         'result_tree': _require(repo, f'{head_commit}^{{tree}}'),
         'patch_sha256': _sha256(_patch(repo, base_commit, head_commit, names)),
         'paths': [{'path': name, 'base_blob': resolve(repo, f'{base_commit}:{name}'),
                    'result_blob': resolve(repo, f'{head_commit}:{name}')} for name in names],
-        'scope': sorted(set(scope)),
-        'review_ref': review_ref,
-        'author': author,
-        'issued_at': utc(at),
     }
+
+
+def approval(base: str, head: str, scope: list[str], review_ref: str, author: str, at: str,
+             repo: Path = ROOT) -> dict:
+    """An unsigned D-020 approval of the change from ``base`` to ``head``."""
+    document = {'schema_version': 1, 'kind': APPROVAL, 'policy': 'D-020', **bindings(base, head, repo),
+                'scope': sorted(set(scope)), 'review_ref': review_ref, 'author': author, 'issued_at': utc(at)}
     try:
         validate(document)
     except jcs.CanonicalError as exc:
@@ -281,5 +332,9 @@ def check_approval(document: dict, repo: Path, head: str | None) -> dict:
         checks['result_tree'] = resolve(repo, f'{head_commit}^{{tree}}') == document['result_tree']
         names = _changed(repo, base, head_commit)
         checks['paths'] = names == [entry['path'] for entry in document['paths']]
+        checks['blobs'] = checks['paths'] and all(
+            resolve(repo, f'{base}:{entry["path"]}') == entry['base_blob']
+            and resolve(repo, f'{head_commit}:{entry["path"]}') == entry['result_blob']
+            for entry in document['paths'])
         checks['patch'] = _sha256(_patch(repo, base, head_commit, names)) == document['patch_sha256']
     return checks

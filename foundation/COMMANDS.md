@@ -83,7 +83,7 @@ Every `develop` command takes `--state FILE` (a hash-chained log, anchored in
 | `attest receipt ARTEFACT --at T` | unsigned execution receipt: the artefact's sealed digest, the commit, the `ante/` tree object and the committed `strategy/contracts.json`; refused with uncommitted code or policy |
 | `attest approval --base B --head H --scope apply --review-ref R --author A --at T` | unsigned D-020 approval of the exact change from B to H: result tree, changed paths with blob ids, patch hash |
 | `attest key PUBLIC.pem --principal P --principal-type human` | trust-store entry for an Ed25519 public key; pinning it is a D-020 change |
-| `sign DOCUMENT --key KEY.pem --method M --at T` | adds an `eddsa-jcs-2022` proof; the key must be encrypted, outside the checkout, mode 600, and the passphrase is typed at the terminal |
-| `verify SIGNED [--trust F] [--repo D] [--artefact A] [--head H]` | read-only check against pinned keys and, with `--repo`, against git; exit 0 verified, 4 not verified, with a reason |
+| `sign DOCUMENT --key KEY.pem --method M --at T [--head H]` | adds an `eddsa-jcs-2022` proof after re-deriving the document from the checkout (`--head` for approvals) and showing it; runs only as a separate signing account that owns an encrypted key outside the checkout, mode 600; the passphrase is typed at the terminal |
+| `verify SIGNED [--trust F] [--repo D] [--artefact A] [--head H]` | read-only check against the keys pinned at HEAD (or a named store) and, with `--repo`, against git; approvals need `--repo` and `--head`; exit 0 verified, 4 not verified, with a reason |
 
 `foundation/ATTEST.md` has the schemas, the trust model and the threat table.

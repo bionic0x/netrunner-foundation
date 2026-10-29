@@ -5,12 +5,13 @@
                                                              unsigned D-020 approval
     ante attest key PUBLIC.pem --principal WHO --principal-type human
                                                              a trust-store entry to pin (through D-020)
-    ante sign DOCUMENT --key KEY.pem --method ID --at T [--out FILE]
+    ante sign DOCUMENT --key KEY.pem --method ID --at T [--head REV] [--out FILE]
     ante verify SIGNED [--trust FILE] [--repo DIR] [--artefact FILE] [--head REV]
 
 ``ante sign`` reads an encrypted PKCS#8 Ed25519 key that lives outside the
-checkout and is readable by its owner only, and asks for the passphrase on the
-terminal; it accepts no passphrase from arguments, environment or a pipe. An
+checkout and belongs to a separate signing account, mode 600, and must itself
+run as that account, never as the account that owns the checkout. It asks for
+the passphrase on the terminal; it accepts no passphrase from arguments, environment or a pipe. An
 agent shell may have a terminal too: what keeps it from signing is that it does
 not know the passphrase. A signature does not prove that a person was present
 (``foundation/ATTEST.md``, T01).
@@ -18,12 +19,17 @@ not know the passphrase. A signature does not prove that a person was present
 ``ante verify`` is read-only. It never authorises anything: a verified approval
 is input to the D-020 host gate, a verified receipt stays a system record.
 
-Exit status: 0 verified or document written; 2 invalid input or refused
-operation; 4 not verified (every failure has a reason code).
+``ante sign`` first re-derives what the document binds from the checkout
+(``--head`` for approvals) and shows it, and only then asks for the passphrase.
+The default trust store is read from the checkout's HEAD commit; uncommitted
+changes to the verifier or the store fail every verification.
+
+Exit status: 0 verified or document written; 2 usage error, invalid input to
+``attest`` or a refused signature; 4 not verified, with a reason code, which
+includes unreadable or invalid documents given to ``verify``.
 """
 from __future__ import annotations
 
-import argparse
 import getpass
 import json
 import os
@@ -52,13 +58,12 @@ def _emit(document: dict, out: str | None) -> None:
         print(f'{document.get("kind", "document")} -> {out}')
 
 
-def sign_document(document: dict, signer: eddsa.Signer, method: str, at: str,
-                  purpose: str = DEFAULT_PURPOSE) -> dict:
-    """Validate an unsigned document and add its proof. The signer holds the key."""
+def sign_document(document: dict, signer: eddsa.Signer, method: str, at: str) -> dict:
+    """Validate an unsigned document and add an ``assertionMethod`` proof. The signer holds the key."""
     if 'proof' in document:
         raise SignError('the document is already signed')
     documents.validate(document)
-    return eddsa.create(document, method, purpose, documents.utc(at), signer)
+    return eddsa.create(document, method, DEFAULT_PURPOSE, documents.utc(at), signer)
 
 
 def _inside(path: Path, root: Path) -> bool:
@@ -69,20 +74,36 @@ def _inside(path: Path, root: Path) -> bool:
         return False
 
 
-def check_key_file(path: Path, root: Path = ROOT) -> Path:
-    """Refuse key files an agent working in the checkout could read or be handed."""
+def read_key_file(path: Path, root: Path = ROOT, checkout_uid: int | None = None) -> bytes:
+    """Read a signing key only from a separate account that an agent in the checkout cannot be.
+
+    The key must be outside the checkout, a regular file owned by the account
+    running ``ante sign``, with mode 600 or stricter, and that account must not
+    be the one that owns the checkout. Checks and read use one open descriptor.
+    """
+    if not hasattr(os, 'geteuid'):
+        raise SignError('signing needs POSIX file ownership; this platform is not supported')
     resolved = path.expanduser().resolve()
     if _inside(resolved, root.resolve()):
         raise SignError('the private key is inside the checkout; keep it outside the repository')
+    euid = os.geteuid()
+    owner_of_checkout = root.resolve().stat().st_uid if checkout_uid is None else checkout_uid
+    if euid == owner_of_checkout:
+        raise SignError('ante sign is running as the account that owns the checkout; '
+                        'run it as the separate signing account (for example sudo -u ante-signer)')
     try:
-        info = resolved.stat()
+        fd = os.open(resolved, os.O_RDONLY | getattr(os, 'O_NOFOLLOW', 0))
     except OSError as exc:
         raise SignError(f'key file: {exc.strerror or exc}') from None
-    if not stat.S_ISREG(info.st_mode):
-        raise SignError('key file is not a regular file')
-    if info.st_mode & 0o077:
-        raise SignError('key file is readable or writable by others; chmod 600 it')
-    return resolved
+    with os.fdopen(fd, 'rb') as handle:
+        info = os.fstat(handle.fileno())
+        if not stat.S_ISREG(info.st_mode):
+            raise SignError('key file is not a regular file')
+        if info.st_uid != euid:
+            raise SignError('the key file is not owned by the account running ante sign')
+        if info.st_mode & 0o077:
+            raise SignError('key file is readable or writable by others; chmod 600 it')
+        return handle.read()
 
 
 def read_passphrase(prompt: str = 'Passphrase for the signing key: ') -> bytes:
@@ -101,17 +122,18 @@ def read_passphrase(prompt: str = 'Passphrase for the signing key: ') -> bytes:
     return value.encode('utf-8')
 
 
-def file_signer(path: Path, method: str, passphrase=read_passphrase) -> eddsa.Signer:
+def file_signer(path: Path, method: str, passphrase=read_passphrase, *, root: Path = ROOT,
+                checkout_uid: int | None = None) -> eddsa.Signer:
     """An Ed25519 signer from an encrypted PKCS#8 file; the key never leaves this closure."""
     module, _ = eddsa.ed25519()
     from cryptography.hazmat.primitives import serialization
-    data = check_key_file(path).read_bytes()
+    data = read_key_file(path, root, checkout_uid)
     try:
         serialization.load_pem_private_key(data, password=None)
     except TypeError:
         pass                                    # encrypted, as required
-    except ValueError as exc:
-        raise SignError(f'not a PEM private key: {exc}') from None
+    except ValueError:
+        raise SignError('the key file is not a PEM private key') from None
     else:
         raise SignError('the key file is not encrypted; use an encrypted PKCS#8 key')
     try:
@@ -128,17 +150,47 @@ def file_signer(path: Path, method: str, passphrase=read_passphrase) -> eddsa.Si
 
 def _load(path: str):
     try:
-        data = Path(path).read_bytes()
+        with open(path, 'rb') as handle:
+            data = handle.read(jcs.MAX_BYTES + 1)
     except OSError as exc:
-        raise documents.DocumentError(f'{path}: {exc.strerror or exc}') from None
+        raise documents.DocumentError(f'cannot read the document ({exc.strerror or "error"})') from None
     return jcs.loads(data)
 
 
+VERIFIER_PATHS = ['ante/attest', 'foundation/attest']
+
+
+def load_trust(trust_path: str | None, root: Path = ROOT) -> tuple[trust.Store, dict]:
+    """The default store is read from the commit the checkout is on, never from the working tree.
+
+    A modified verifier or store in the working tree makes every verification fail.
+    """
+    if trust_path is not None:
+        store = trust.Store.load(trust_path)
+        return store, {'path': str(trust_path), 'sha256': store.sha256, 'default': False}
+    try:
+        changed = documents.dirty(root, VERIFIER_PATHS)
+        data = documents.committed(root, 'HEAD', trust.STORE_PATH)
+    except documents.DocumentError:
+        raise trust.TrustError('the default trust store needs the git checkout it is committed in') from None
+    if changed:
+        raise VerifierModified(f'{len(changed)} uncommitted change(s) under {" or ".join(VERIFIER_PATHS)}')
+    if data is None:
+        raise trust.TrustError(f'{trust.STORE_PATH} is not committed at HEAD')
+    store = trust.Store.from_bytes(data, f'HEAD:{trust.STORE_PATH}')
+    return store, {'path': f'HEAD:{trust.STORE_PATH}', 'sha256': store.sha256, 'default': True}
+
+
+class VerifierModified(ValueError):
+    """The verifier or its trust store differs from the committed one."""
+
+
 def verify_file(path: str, trust_path: str | None, repo: str | None, artefact: str | None,
-                head: str | None) -> dict:
-    report = {'verified': False, 'reason': 'MALFORMED', 'detail': '', 'kind': None,
+                head: str | None, root: Path = ROOT) -> dict:
+    """Read-only verification. Fields copied from the document appear only once it verified."""
+    report = {'verified': False, 'signature_valid': False, 'reason': 'MALFORMED', 'detail': '', 'kind': None,
               'verification_method': None, 'principal': None, 'proof_purpose': None, 'created': None,
-              'checks': {}, 'authorizes_action': False, 'evidence_origin': 'UNVERIFIED'}
+              'checks': {}, 'trust_store': None, 'authorizes_action': False, 'evidence_origin': 'UNVERIFIED'}
     try:
         secured = _load(path)
     except (documents.DocumentError, jcs.CanonicalError) as exc:
@@ -155,15 +207,24 @@ def verify_file(path: str, trust_path: str | None, repo: str | None, artefact: s
         return report
     report['kind'] = kind
     try:
-        store = trust.Store.load(trust_path or trust.STORE)
+        store, identity = load_trust(trust_path, root)
+    except VerifierModified as exc:
+        report['reason'], report['detail'] = 'VERIFIER_MODIFIED', str(exc)
+        return report
     except trust.TrustError as exc:
         report['reason'], report['detail'] = 'TRUST_STORE_INVALID', str(exc)
         return report
-    result = eddsa.verify(secured, store.resolver(kind))
-    report.update({'reason': result.reason, 'detail': result.detail, 'verification_method': result.method,
-                   'proof_purpose': result.purpose, 'created': result.created,
-                   'principal': store.principal(result.method) if result.verified else None})
+    report['trust_store'] = identity
+    resolve = store.resolver(kind)
+    result = eddsa.verify(secured, lambda method, purpose: resolve(method, purpose) if purpose == DEFAULT_PURPOSE else None)
+    report.update({'reason': result.reason, 'detail': result.detail})
     if not result.verified:
+        return report
+    report.update({'signature_valid': True, 'verification_method': result.method, 'proof_purpose': result.purpose,
+                   'created': result.created, 'principal': store.principal(result.method)})
+    if kind == documents.APPROVAL and (repo is None or head is None):
+        report['reason'] = 'CANDIDATE_REQUIRED'
+        report['detail'] = 'the signature is valid; an approval verifies only against a candidate (--repo and --head)'
         return report
     if repo is not None:
         try:
@@ -179,11 +240,14 @@ def verify_file(path: str, trust_path: str | None, repo: str | None, artefact: s
         if failed:
             report['reason'], report['detail'] = 'REPOSITORY_MISMATCH', 'failed: ' + ', '.join(failed)
             return report
-    elif artefact is not None or head is not None:
-        report['reason'], report['detail'] = 'MALFORMED', '--artefact and --head need --repo'
+    elif artefact is not None:
+        report['reason'], report['detail'] = 'MALFORMED', '--artefact needs --repo'
         return report
     report['verified'] = True
-    report['evidence_origin'] = 'SYSTEM' if kind == documents.RECEIPT else 'PINNED_HUMAN_KEY'
+    if kind == documents.RECEIPT:
+        report['evidence_origin'] = 'SYSTEM'
+    else:
+        report['evidence_origin'] = 'PINNED_HUMAN_KEY' if identity['default'] else 'CALLER_TRUST_STORE'
     return report
 
 
@@ -193,13 +257,52 @@ def _verify(args) -> int:
     return EXIT_OK if report['verified'] else EXIT_NOT_VERIFIED
 
 
+def summary(document: dict) -> str:
+    """What the signer is about to sign, shown on the terminal before the passphrase."""
+    if document['kind'] == documents.RECEIPT:
+        lines = ['execution receipt',
+                 f'  artefact  {document["artifact_sha256"]}',
+                 f'  commit    {document["source_commit_oid"]["oid"]}',
+                 f'  ante/     {document["code_tree_oid"]["oid"]}',
+                 f'  policy    {document["policy_sha256"]}']
+    else:
+        lines = [f'D-020 approval, scope {", ".join(document["scope"])}',
+                 f'  base         {document["base_commit"]}',
+                 f'  result tree  {document["result_tree"]}',
+                 f'  patch        {document["patch_sha256"]}',
+                 f'  author       {document["author"]}',
+                 f'  review       {document["review_ref"]}',
+                 f'  {len(document["paths"])} path(s):'] + [f'    {entry["path"]}' for entry in document['paths']]
+    return '\n'.join(lines + [f'  issued_at {document["issued_at"]}'])
+
+
+def check_before_signing(document: dict, head: str | None, root: Path = ROOT) -> None:
+    """Re-derive what the document binds from the checkout; refuse on any difference."""
+    with documents.trusting(root):
+        if document['kind'] == documents.APPROVAL:
+            if head is None:
+                raise SignError('an approval is signed only with --head, checked against the checkout')
+            expected = documents.bindings(document['base_commit'], head, root)
+            different = [key for key in documents.BINDING_KEYS if expected[key] != document[key]]
+            if different:
+                raise SignError(f'the approval does not describe base..{head} in this checkout: '
+                                f'{", ".join(different)} differ')
+        else:
+            failed = sorted(name for name, ok in documents.check_receipt(document, root, None).items() if not ok)
+            if failed:
+                raise SignError(f'the receipt does not match this checkout: {", ".join(failed)}')
+
+
 def _sign(args) -> int:
     try:
         document = _load(args.document)
-        if not isinstance(document, dict):
-            raise SignError('expected a JSON object')
+        if not isinstance(document, dict) or 'proof' in document:
+            raise SignError('expected an unsigned JSON object')
+        documents.validate(document)
+        check_before_signing(document, args.head)
+        print(summary(document), file=sys.stderr)
         signer = file_signer(Path(args.key), args.method)
-        signed = sign_document(document, signer, args.method, args.at, args.purpose)
+        signed = sign_document(document, signer, args.method, args.at)
     except (SignError, documents.DocumentError, jcs.CanonicalError, eddsa.ProofError,
             eddsa.CryptoUnavailable, ante_time.TimeError) as exc:
         print(f'REFUSED {exc}', file=sys.stderr)
@@ -255,19 +358,19 @@ def _key(args) -> int:
 def add_parser(sub) -> None:
     signer = sub.add_parser('sign', help='sign a receipt or a D-020 approval (eddsa-jcs-2022, local key)')
     signer.add_argument('document', help='unsigned receipt or approval (JSON)')
-    signer.add_argument('--key', required=True, help='encrypted PKCS#8 Ed25519 key, outside the checkout, mode 600')
+    signer.add_argument('--key', required=True, help='encrypted PKCS#8 Ed25519 key of the separate signing account, outside the checkout, mode 600')
     signer.add_argument('--method', required=True, help='verificationMethod, e.g. the key\'s did:key')
     signer.add_argument('--at', required=True, help='signing time, ISO-8601 with offset')
-    signer.add_argument('--purpose', default=DEFAULT_PURPOSE, help=argparse.SUPPRESS)
+    signer.add_argument('--head', help='approvals: the candidate head; the approval is re-derived from the checkout and must match')
     signer.add_argument('--out', help='output file (else stdout)')
     signer.set_defaults(handler=_sign)
 
     verifier = sub.add_parser('verify', help='verify a signed receipt or approval against pinned keys (read-only)')
     verifier.add_argument('signed')
-    verifier.add_argument('--trust', help='trust store (default foundation/attest/trusted-keys.json)')
+    verifier.add_argument('--trust', help='another trust store; the report then names it and never claims a pinned key')
     verifier.add_argument('--repo', help='also check commit, tree, policy or patch against this repository')
     verifier.add_argument('--artefact', help='receipts: also check this artefact file (needs --repo)')
-    verifier.add_argument('--head', help='approvals: also check this candidate head (needs --repo)')
+    verifier.add_argument('--head', help='approvals: the candidate head; an approval verifies only with --repo and --head')
     verifier.set_defaults(handler=_verify)
 
     attest = sub.add_parser('attest', help='prepare unsigned receipts, D-020 approvals and trust entries')
