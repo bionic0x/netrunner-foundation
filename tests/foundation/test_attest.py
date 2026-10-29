@@ -350,8 +350,12 @@ class TrustStore(unittest.TestCase):
         self.dir = Path(tempfile.mkdtemp())
         self.addCleanup(shutil.rmtree, self.dir, True)
 
-    def test_the_shipped_store_is_valid_and_pins_no_key(self):
-        self.assertEqual({}, trust.Store.load().keys)
+    def test_the_shipped_store_pins_only_the_owner_human_key(self):
+        keys = list(trust.Store.load().keys.values())
+        self.assertEqual(['owner:bionic0x'], [key.principal for key in keys])
+        self.assertEqual(['human'], [key.principal_type for key in keys])
+        self.assertEqual(('ante.d020.approval', 'ante.execution.receipt'), keys[0].kinds)
+        self.assertEqual(('assertionMethod',), keys[0].purposes)
 
     def test_a_did_key_must_encode_the_pinned_key(self):
         _, raw, _ = new_key()
@@ -547,9 +551,8 @@ class Documents(unittest.TestCase):
         head = self.repo.commit('change')
         return self.sign(documents.approval(base, head, ['apply'], 'PR#0', 'agent:test', AT, self.repo.dir)), head
 
-    def test_the_shipped_store_verifies_nothing_yet(self):
+    def test_a_store_without_the_signing_key_verifies_nothing(self):
         self.commit_store([])
-        self.assertEqual(b'{"keys":[],"schema_version":1}', jcs.canonical(jcs.loads(trust.STORE.read_bytes())))
         artefact = self.repo.artefact()
         path = self.sign(documents.receipt(artefact, AT, self.repo.dir))
         report = commands.verify_file(str(path), None, None, None, None, root=self.repo.dir)

@@ -1,4 +1,18 @@
 {
   "schema_version": 1,
-  "keys": []
+  "keys": [
+    {
+      "verification_method": "did:key:z6MkqhuU8ywu4E7thBXbQsTaeGSrZJWek376nooPcsUH1qWR#z6MkqhuU8ywu4E7thBXbQsTaeGSrZJWek376nooPcsUH1qWR",
+      "public_key_multibase": "z6MkqhuU8ywu4E7thBXbQsTaeGSrZJWek376nooPcsUH1qWR",
+      "principal": "owner:bionic0x",
+      "principal_type": "human",
+      "proof_purposes": [
+        "assertionMethod"
+      ],
+      "kinds": [
+        "ante.d020.approval",
+        "ante.execution.receipt"
+      ]
+    }
+  ]
 }

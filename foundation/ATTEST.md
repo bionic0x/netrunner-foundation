@@ -99,8 +99,10 @@ The verifier accepts only keys pinned in `foundation/attest/trusted-keys.json`,
 each for listed proof purposes and document kinds. A key is never taken from the
 document, the proof or a DID resolver. A `did:key` method must encode the pinned
 key. An approval verifies only with a `human` key; a future automated signer
-needs its own key and its own entry. The store ships **empty**: until the owner
-pins a key through D-020, nothing verifies.
+needs its own key and its own entry. The store pins one key, the owner's human
+key, added through D-020 on 2026-10-29. Any other key, purpose or kind does not
+verify. Replacing or removing that key is a D-020 change too; rotation and
+revocation are a later stage (G1b).
 
 `ante sign` signs only from a **separate signing account**. Each condition is
 tested and checked on one open file descriptor:
