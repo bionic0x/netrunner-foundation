@@ -83,3 +83,35 @@ jobs:
         run: |
           python3 scripts/check-htp-gate0.py
           python3 scripts/test-htp-gate0.py
+
+  ante-foundation:
+    name: Ante Foundation contract, layers and published self-test
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: '3.11'
+      - run: python3 -m pip install --require-hashes --no-deps -r .github/requirements/validation.txt
+
+      - name: Characterization recordings and mechanical moves
+        run: |
+          python3 tests/characterization/run.py
+          python3 -m unittest discover -s tests/characterization
+          python3 foundation/tools/extraction.py verify
+
+      - name: Foundation tests (strategy, learning, self-development, defences)
+        run: python3 -m unittest discover -s tests/foundation -p 'test_*.py'
+
+      - name: Frozen reviewers and defence-layer independence
+        run: |
+          python3 scripts/ante constructs verify
+          python3 scripts/ante ice layers
+
+      - name: Publish the institutional self-test (reported, never certified)
+        run: |
+          python3 scripts/ante selftest foundation/selftest-register.json --at "$(date -u +%Y-%m-%dT%H:%M:%SZ)" --out "$RUNNER_TEMP/selftest"
+          cat "$RUNNER_TEMP/selftest/selftest.md" >> "$GITHUB_STEP_SUMMARY"
