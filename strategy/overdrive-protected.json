@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "purpose": "Paths a self-improvement proposal may not modify. Changing them needs a separate, human-authored pull request (strategy/NEXUS-OVERDRIVE.md).",
+  "purpose": "Paths a self-improvement proposal may not modify. Separate maintenance outside the self-development loop requires explicit owner authorization of the exact patch. Record the real human or agent author separately from the human approver; this manifest grants no authorization (D-020).",
   "protected": [
     "strategy/overdrive-protected.json",
     "strategy/NEXUS-OVERDRIVE.md",
