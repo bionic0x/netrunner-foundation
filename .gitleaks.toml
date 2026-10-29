@@ -23,3 +23,11 @@ targetRules = ["generic-api-key"]
 condition = "AND"
 paths = ['''^tests/foundation/vectors/eddsa-jcs-2022/keyPair\.json$''']
 regexes = ['''^z3u2en7t5LR2WtQH5PfFqMqwVHBeXouLzo6haApm8XHqvjxq$''']
+
+[[allowlists]]
+description = "Validation evidence manifests list the SHA-256 of captured log files as \"<name>.log\": \"<64 hex>\". A digest of a log is public by design and not a credential. Only that line shape, in evidence JSON under foundation/evidence/, matches; a key with any other name, or in any other file, is still reported."
+targetRules = ["generic-api-key"]
+condition = "AND"
+paths = ['''^foundation/evidence/[A-Za-z0-9._-]+\.json$''']
+regexTarget = "line"
+regexes = ['''^\s*"[A-Za-z0-9._-]+\.log":\s*"[0-9a-f]{64}",?\s*$''']
