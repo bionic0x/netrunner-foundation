@@ -4,7 +4,7 @@
   "status": "P0_P2_ACCEPTED_P1_RENEWAL_REQUIRED",
   "date": "2026-10-29",
   "repository": "bionic0x/netrunner-foundation",
-  "base_commit": "edce974f38d6611696d23fc2d11ec29e560fe73d",
+  "base_commit": "ae184df4e5e8a82740344c29f52223731ce6a07c",
   "object_format": "sha1",
   "owner_approval": null,
   "approval_is_not_authenticated_by_this_file": true,
@@ -42,7 +42,7 @@
   ],
   "patch": {
     "file": "foundation/proposals/d021-shared-protection.patch",
-    "sha256": "1a8e34a57d4f08efac5db48e2543645683f409837b031a0a578afd63ec76d47e",
+    "sha256": "f0af758efe74714d420eeb82cd9f177411c51f2ba3963a6176b39dfde07e949c",
     "paths": [
       "ante/develop/policy.py",
       "foundation/ATTEST.md",
@@ -79,14 +79,14 @@
       },
       "foundation/ATTEST.md": {
         "input": {
-          "sha256": "1c458e1dec2a7b76f5d1437559f6fa321649ef1b8cc6b1598421532bb4a20770",
-          "git_blob_oid": "03ba6f0f39b9b80de27e293ca6d0d7096acb57c0",
-          "bytes": 14938
+          "sha256": "30006f8099832ae669f81e2b43cfd70f0d969cf66f50e9acac687753bf5a23a9",
+          "git_blob_oid": "da0cfa8d4baa4c2ffa325e60a1f107d690413e74",
+          "bytes": 15597
         },
         "output": {
-          "sha256": "318f1d96d2f0d5bb3fc14124971dd58073baf67fb934e0bb66f0b2481211babe",
-          "git_blob_oid": "f04f5ae271b032e527c1e56c13b192e22065127e",
-          "bytes": 15090
+          "sha256": "c094e4e141e9dc7eeec2b8845b7915af0cf0758ea8f7e2be9c686111186ee610",
+          "git_blob_oid": "53cdd73288748bb88202d2fb1344975ef9aa0d4c",
+          "bytes": 15749
         },
         "mode": "100644"
       },
@@ -131,14 +131,14 @@
       },
       "tests/foundation/test_attest.py": {
         "input": {
-          "sha256": "ee159c5e290d5a39c9c5a33b5d68918c492c65de28c37d55314608fb12dcf5ef",
-          "git_blob_oid": "819a18c19cdcf8b3543c95a488d39bb8d0344a0c",
-          "bytes": 41597
+          "sha256": "6727089aa4d6b01fe371aec8062320a4167677817ef89f50b0886635af4d6358",
+          "git_blob_oid": "3713364e760224d6c1d263b6c5fdc4bbd583aaf0",
+          "bytes": 43549
         },
         "output": {
-          "sha256": "9e06398be39d0d442c96359df53fd18cb08e447618ea13fb7104e67f8720cda7",
-          "git_blob_oid": "3077fc8170e3e1a3f9962ec59a71a531705cee7f",
-          "bytes": 41648
+          "sha256": "d13482185bfd772d24f66ce02228491bc0f781a0507aba8118fbf9f7ed383bc3",
+          "git_blob_oid": "d28e6391fdde7d89e51624ba23b89e2a79b9a365",
+          "bytes": 43600
         },
         "mode": "100644"
       },
@@ -154,7 +154,7 @@
     },
     "applied_to_main": false,
     "isolated_review_worktree_only": true,
-    "result_tree_oid_at_review_base": "1fd1a3d47e98e1e7818e058dc583563eb3d66229"
+    "result_tree_oid_at_review_base": "db01dc05f558db79b27385dd433e261eb5b08d17"
   },
   "preserved_controls": {
     "old_protection_patterns_retained": true,
@@ -167,7 +167,7 @@
     "cryptographic_dependencies_added": false,
     "owner_signer_exposed": false
   },
-  "g0_g1a_design_delta": "G1a and #26 signer-isolation/review fixes have landed. This shared-manifest migration preserves both G1a patterns, all #26 runtime and tests outside T08, and the guide warning about HEAD/default-store and dirty-verifier checks. No signing or host authority is granted.",
+  "g0_g1a_design_delta": "G1a plus #26 signer-isolation/review fixes and #28 key-generation support have landed. The shared-manifest migration preserves all their runtime code, all attestation tests outside T08, the owner-setup guide and the HEAD/default-store and modified-verifier warning. No key/account is created, and no signing or host authority is granted.",
   "g0_g1a_adoption": false,
   "g0_g1a_scope": "D-021 changes no signer, signature kernel, key registry, cryptographic dependency, approval broker or host authorization service. Existing G1a behavior is preserved.",
   "validation": "foundation/evidence/d021-validation.json",
@@ -183,7 +183,9 @@
       "foundation/attest/**"
     ],
     "follow_up_pr": 26,
-    "follow_up_merge_commit": "edce974f38d6611696d23fc2d11ec29e560fe73d"
+    "follow_up_merge_commit": "edce974f38d6611696d23fc2d11ec29e560fe73d",
+    "key_generation_pr": 28,
+    "key_generation_merge_commit": "ae184df4e5e8a82740344c29f52223731ce6a07c"
   },
   "packet_kind": "unsigned_preparation_scope_receipt_not_a_signed_ante.d020.approval",
   "ratified_decisions": {
@@ -214,6 +216,24 @@
       "status": "APPROVED_NOT_APPLIED_INPUT_CHANGED",
       "preserved_in_git_history_at": "2c77f150ee6460f3566975267d06be961c9ef00a",
       "reason": "PR #26 merged before application."
+    },
+    {
+      "base_commit": "edce974f38d6611696d23fc2d11ec29e560fe73d",
+      "patch_sha256": "1a8e34a57d4f08efac5db48e2543645683f409837b031a0a578afd63ec76d47e",
+      "status": "SUPERSEDED_BEFORE_RENEWED_APPROVAL",
+      "owner_approval": null,
+      "preserved_in_git_history_at": "9113537b8de9fa70325a1e1e2d51806c7d5c8c25",
+      "reason": "After #27 published the replacement packet, #28 merged key-generation support and changed the same protected test input and guide before renewed P1 approval."
     }
-  ]
+  ],
+  "latest_input_change": {
+    "pr": 28,
+    "changed_inputs": [
+      "foundation/ATTEST.md",
+      "tests/foundation/test_attest.py"
+    ],
+    "previous_replacement_was_approved": false,
+    "previous_replacement_was_applied": false,
+    "P0_P2_ratification_retained": true
+  }
 }
