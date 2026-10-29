@@ -1,0 +1,134 @@
+{
+  "schema_version": 1,
+  "decision": "D-021",
+  "status": "PROPOSED_NOT_APPLIED",
+  "date": "2026-10-29",
+  "repository": "bionic0x/netrunner-foundation",
+  "base_commit": "b719f5789b20288d8fa519f747ed4dac1d560674",
+  "object_format": "sha1",
+  "owner_approval": null,
+  "approval_is_not_authenticated_by_this_file": true,
+  "standing_authority_granted": false,
+  "self_development_route_may_apply_this_patch": false,
+  "owner_decisions": [
+    {
+      "id": "P0",
+      "prior_decision": "D-010",
+      "proposal": "Ratify the existing independence floor: only an INDEPENDENT_OPERATOR label admits PROCEED; SELF and SEPARATED_CONTEXT remain conditional at best. This structural label is not authenticated identity or execution authority.",
+      "runtime_change": false
+    },
+    {
+      "id": "P1",
+      "prior_decision": "D-013",
+      "proposal": "Adopt the one shared protected-path manifest and authorize the exact five-file patch below, including the D-010/D-013/D-014/D-021 decision record, outside the self-development loop.",
+      "requested_actions": [
+        "apply",
+        "merge_after_required_checks_pass"
+      ],
+      "mandate_exception": "Explicit owner authorization extends the D-020 handwritten-only exception to this exact agent-authored maintenance patch; authorship is not relabelled as human-written."
+    },
+    {
+      "id": "P2",
+      "prior_decision": "D-014",
+      "proposal": "Ratify the existing cumulative autonomy defaults and review requirements without changing them.",
+      "cumulative_limit": 4,
+      "window_days": 90,
+      "every_positive_delta_requires_independent_review": true,
+      "runtime_change": false
+    }
+  ],
+  "patch": {
+    "file": "foundation/proposals/d021-shared-protection.patch",
+    "sha256": "fdea84af57869af77b3aa49bcdff175e40ccc096c6220821c2fde5189f6d929a",
+    "protected_paths": [
+      "ante/develop/policy.py",
+      "foundation/DECISIONS.md",
+      "foundation/develop-policy.json",
+      "strategy/overdrive-protected.json",
+      "tests/foundation/test_shared_protection_policy.py"
+    ],
+    "files": {
+      "ante/develop/policy.py": {
+        "input": {
+          "sha256": "9255d29d5c5ace5fd3ab9c29a0c0212573beda250187f5f527d818cc8565c603",
+          "git_blob_oid": "991ac2eba99452295e5396d23996998966fa192d",
+          "bytes": 3858
+        },
+        "output": {
+          "sha256": "7ed628e662780240d1acc7827e35f5545e8956112e9577af1a4b8de897a8fd4a",
+          "git_blob_oid": "a55b381ae5d7f9ff17eb62847bcfbce5561df6ce",
+          "bytes": 4244
+        },
+        "mode": "100644"
+      },
+      "foundation/develop-policy.json": {
+        "input": {
+          "sha256": "55faed1d9c3287c147d873c34c957ffd90c5265b8ee10ec0ed4d042cea07b8e4",
+          "git_blob_oid": "93f2726ed163094357acfc1f696c0276fc0a638c",
+          "bytes": 1665
+        },
+        "output": {
+          "sha256": "e0e4cfeb6f88bcc4e0947bef197337c6db5d8d2d546a0517291c9a70a99fd0e5",
+          "git_blob_oid": "25c2c55b943f19088872f87a0e6dc726a5773096",
+          "bytes": 1052
+        },
+        "mode": "100644"
+      },
+      "strategy/overdrive-protected.json": {
+        "input": {
+          "sha256": "a63a9c655edccbec1f4bfe93688450f79ba5a219f1d8cf96e2012e7f0221ab9b",
+          "git_blob_oid": "3c7d26a02bb3488fefeddb71feb7a930ddfcfedc",
+          "bytes": 1278
+        },
+        "output": {
+          "sha256": "e2ef05ce9d269e59fe06992bc9253680459fcb6c66b3dd9bb38c9741aa90c3e6",
+          "git_blob_oid": "a319ad2b8096c445686340431e32871d99aa6e47",
+          "bytes": 2015
+        },
+        "mode": "100644"
+      },
+      "tests/foundation/test_shared_protection_policy.py": {
+        "input": null,
+        "output": {
+          "sha256": "30494c55ce178fd368744088bbb963c0bf25905afb04ad3cd44949fd5c70cf25",
+          "git_blob_oid": "ed63d9fb2f052f471b5ec2cd339bafed8e4ebb44",
+          "bytes": 3798
+        },
+        "mode": "100644"
+      },
+      "foundation/DECISIONS.md": {
+        "input": {
+          "sha256": "859971ba08e571466542a24d48eae9cb2c2444a3159432b83b3b7a0cccd7d7e2",
+          "git_blob_oid": "66fac7c0115c3f8c70e81a65c7e06966b562617b",
+          "bytes": 33655
+        },
+        "output": {
+          "sha256": "92ba7d02f0e0c346f2142a8a9c861773fee49f26aeb03a74a688360a3258ab47",
+          "git_blob_oid": "95ee2e471f0de9e907b542c460acfc8d57950a58",
+          "bytes": 35506
+        },
+        "mode": "100644"
+      }
+    },
+    "applied_to_main": false,
+    "isolated_review_worktree_only": true
+  },
+  "preserved_controls": {
+    "old_protection_patterns_retained": true,
+    "editable_scopes_unchanged": true,
+    "spend_and_proposal_limits_unchanged": true,
+    "autonomy_thresholds_unchanged": true,
+    "legacy_schema_1_supported": true,
+    "frozen_recordings_changed": false,
+    "network_or_credentials_added": false,
+    "cryptographic_dependencies_added": false,
+    "owner_signer_exposed": false
+  },
+  "g0_g1a_design_delta": "The supplied pre-PR contracts ask for ante/attest/** in both protection lists. This proposal instead removes the schema-2 duplicate list and pins its pointer to the shared manifest. Tests prove both entry points protect ante/attest/**. This reconciliation is proposed for owner approval; the supplied contracts are not silently rewritten or adopted.",
+  "g0_g1a_adoption": false,
+  "g0_g1a_scope": "No signer, key registry, RFC serializer, receipt verifier, host approval broker or signed authorization object is implemented by D-021.",
+  "validation": "foundation/evidence/d021-validation.json",
+  "review_independence_level": "SEPARATED_CONTEXT",
+  "review_receipt": "foundation/evidence/d021-review.json",
+  "future_application_receipt": "foundation/evidence/d021-execution.json"
+}

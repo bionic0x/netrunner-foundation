@@ -1,0 +1,358 @@
+diff --git a/ante/develop/policy.py b/ante/develop/policy.py
+index 991ac2e..a55b381 100644
+--- a/ante/develop/policy.py
++++ b/ante/develop/policy.py
+@@ -1,17 +1,13 @@
+ """What the develop loop may and may not touch, read from the base revision.
+ 
+-Two lists apply together and the stricter one wins:
+-
+-- ``strategy/overdrive-protected.json`` — the evaluator, held-out packs, tests and
+-  CI (``nexus-improve.py paths`` enforces it);
+-- ``foundation/develop-policy.json`` — the foundation's own protected paths (the
+-  gate, the Turing lock, ICE layers, constructs, doctrine, claims discipline,
+-  this policy) plus the scopes a proposal may edit and the loop's limits;
+-- ``ante/constructs/frozen.json`` — frozen reviewer profiles, which sit inside
+-  editable agent divisions but judge rather than learn.
+-
+-Both are read **at the base revision**: a proposal is judged by the rules that
+-existed before it, so it cannot loosen them.
++``strategy/overdrive-protected.json`` is the shared protected-path manifest for
++schema 2 policies. ``foundation/develop-policy.json`` keeps editable scopes and
++loop limits, and names that exact manifest without carrying a second list.
++Historical schema 1 revisions retain their extra protected list when loaded.
++Frozen reviewer fingerprints remain in ``ante/constructs/frozen.json``.
++
++Every input is read **at the base revision**: a proposal is judged by the rules
++that existed before it, so it cannot loosen them.
+ """
+ from __future__ import annotations
+ 
+@@ -51,11 +47,11 @@ class Policy:
+ 
+     def classify(self, path: str) -> str | None:
+         """Why ``path`` may not be changed, or None if it may."""
++        if path in self.frozen:
++            return 'frozen reviewer (ante/constructs/frozen.json)'
+         for pattern in self.overdrive:
+             if fnmatch.fnmatchcase(path, pattern):
+                 return f'protected by strategy/overdrive-protected.json ({pattern})'
+-        if path in self.frozen:
+-            return 'frozen reviewer (ante/constructs/frozen.json)'
+         for pattern in self.protected:
+             if fnmatch.fnmatchcase(path, pattern):
+                 return f'protected by {POLICY_PATH} ({pattern})'
+@@ -70,12 +66,23 @@ def at_ref(repo: Path, ref: str) -> Policy:
+         overdrive = json.loads(git(repo, 'show', f'{ref}:{OVERDRIVE_PATH}'))
+     except json.JSONDecodeError as exc:
+         raise PolicyError(f'policy at {ref} is not valid JSON: {exc}') from None
++    version = policy.get('schema_version')
++    if type(version) is not int:
++        raise PolicyError('develop policy schema_version must be an integer')
++    if version == 1:
++        legacy_protected = tuple(policy['protected'])
++    elif version == 2:
++        if policy.get('protected_manifest') != OVERDRIVE_PATH or 'protected' in policy:
++            raise PolicyError('schema 2 requires the shared protected manifest and no shadow list')
++        legacy_protected = ()
++    else:
++        raise PolicyError(f'unsupported develop policy schema_version: {version}')
+     return Policy(
+         max_open_proposals=int(policy['max_open_proposals']),
+         campaign_spend_usd=float(policy['campaign_spend_usd']),
+         consecutive_regressions_to_stop=int(policy['consecutive_regressions_to_stop']),
+         editable_scopes=tuple(policy['editable_scopes']),
+-        protected=tuple(policy['protected']),
++        protected=legacy_protected,
+         overdrive=tuple(overdrive['protected']),
+         frozen=frozen_mod.paths(repo, ref),
+         finding_min_sample=int(policy.get('finding_min_sample', 30)),
+diff --git a/foundation/DECISIONS.md b/foundation/DECISIONS.md
+index 66fac7c..95ee2e4 100644
+--- a/foundation/DECISIONS.md
++++ b/foundation/DECISIONS.md
+@@ -222,7 +222,7 @@ that reads `runbooks.json`).
+ 
+ ---
+ 
+-## D-010 · `PROCEED` requires an independent coherence review — PROPOSED
++## D-010 · `PROCEED` requires an independent coherence review — ACCEPTED VIA D-021
+ 
+ **Context.** Invariant 10 says a review by the same operator, model and context
+ is a coherence function, not a barrier; VIII.9 is satisfied only by
+@@ -231,8 +231,9 @@ is a coherence function, not a barrier; VIII.9 is satisfied only by
+ **Decision.** `ante decide` accepts `PROCEED` only when the `cohere` parent was
+ produced at `INDEPENDENT_OPERATOR`. With `SELF` or `SEPARATED_CONTEXT` the owner
+ can still decide `PROCEED_WITH_CONDITIONS` and name the independent review as a
+-condition. This is a design choice of the foundation, made explicit for the owner
+-to confirm or relax.
++condition. D-021 ratifies this existing floor without relaxing it. The label is
++structurally checked, not independently authenticated identity or execution
++authority; those remain host and organisational responsibilities.
+ 
+ ---
+ 
+@@ -258,7 +259,7 @@ other providers in `providers.json` are refused until one is written.
+ 
+ ---
+ 
+-## D-013 · The develop loop's own protected list lives beside Overdrive's — PROPOSED
++## D-013 · One shared protected-path manifest — ACCEPTED VIA D-021
+ 
+ `ante develop` must never change the evaluator that judges it. Overdrive already
+ protects its evaluator in `strategy/overdrive-protected.json`, and
+@@ -267,16 +268,21 @@ same protection (the gate, the Turing lock, ICE layers, constructs, doctrine and
+ claims discipline, the ledger, characterization tests) and declares which scopes
+ a proposal may edit at all.
+ 
+-Changing `overdrive-protected.json` is itself a change to a protected path, so
+-this branch does not touch it. Instead `foundation/develop-policy.json` holds the
+-foundation's protected list, the editable scopes and the loop's limits (one open
+-proposal, 50 USD committed per campaign, stop after two consecutive held-out
+-regressions), and protects itself. The gate applies both lists, read at the base
+-revision, and the stricter wins.
+-
+-**Proposal for the owner.** Merge the develop protected list into
+-`overdrive-protected.json` in a hand-written `protected:` commit, so a single
+-policy file governs every self-improvement path. Until then both lists apply.
++**Decision under D-021.** `strategy/overdrive-protected.json` is the shared
++protected-path manifest for both path checks: all 23 original Overdrive patterns,
++all 26 Foundation patterns, three frozen reviewer paths and `ante/attest/**`,
++deduplicated to 50 patterns without removing any earlier rule.
++`foundation/develop-policy.json` schema 2 retains editable scopes and limits
++(one open proposal, 50 USD committed per campaign, stop after two consecutive
++held-out regressions), names that exact shared manifest and has no duplicate
++list. Historical schema 1 bases still load their extra list. Alternate schema 2
++sources, shadow lists and unsupported schema versions are refused.
++
++The exact patch is owner-authorized external maintenance under D-020's narrow
++handwritten exception; agent authorship is recorded honestly. Neither loop may
++change this policy or use that maintenance authorization. The three frozen
++profiles remain pinned by their registry's hashes. Future attestation code is
++protected in advance; no signer or host identity service is implemented here.
+ 
+ **How the gate keeps its evaluator honest.** The candidate is applied in a
+ worktree at the base; `nexus-improve.py` and the characterization harness with
+@@ -289,7 +295,7 @@ touches `.github/**`.
+ 
+ ---
+ 
+-## D-014 · The Turing lock counts autonomy cumulatively — PROPOSED
++## D-014 · The Turing lock counts autonomy cumulatively — ACCEPTED VIA D-021
+ 
+ Each proposal declares an integer `autonomy_delta` on six dimensions
+ (permissions, budget, scope, gate thresholds, frequency, human-review reduction).
+@@ -304,8 +310,11 @@ single-step reviewer saw. A proposal that declares no change but adds lines abou
+ budgets, limits, approvals, permissions or thresholds trips a heuristic wire
+ (`UNDECLARED_AUTONOMY`) and is held. Review records are self-declared like every
+ independence label in Ante: the lock checks form, coverage, date, hash and that
+-the loop did not write them, not who the reviewer is. The limit and window are
+-constants in `ante/turing/lock.py`, a protected path, for the owner to set.
++the loop did not write them, not who the reviewer is. D-021 ratifies the unchanged limit of 4 and window of 90 days in
++`ante/turing/lock.py`. They are explicit policy defaults, not measured safety
++guarantees. No review label is promoted into authenticated identity by this
++ratification; a future host trust boundary needs a separate implementation and
++owner decision.
+ 
+ ---
+ 
+@@ -443,6 +452,25 @@ P2 approval is not misrepresented as approval of identical bytes.
+ 
+ ---
+ 
++## D-021 · Shared protection and retained independence controls — ACCEPTED
++
++The preparation packet `proposals/d021-approval-packet.json` describes the
++exact scope; `evidence/d021-execution.json` records the actual owner decision
++and application. The accepted decision ratifies D-010's existing independence
++floor and D-014's existing cumulative defaults, and authorizes the exact D-013
++shared-policy migration outside the development loop. Its scope includes this
++decision record so implementation and governance can land together. Approval does not turn agent-authored changes into handwritten
++code or create standing permission for later changes. The proposal and validation
++retain their preparation history; the application receipt records the actual
++owner decision and resulting commits.
++
++The G0/G1a design candidates remain separate. Replacing their duplicated-list
++wording with one pinned manifest is explicit in the approved D-021 scope; no
++cryptographic signer, key material, authenticated independent review, host action
++authorization or permission to execute follows from these records.
++
++---
++
+ ## Codex line — `foundation/phase-0` (raw-byte harness)
+ 
+ Recorded independently on `foundation/phase-0` (head `b60af82`) and kept verbatim below, headings one level down. Its ADR numbers are a separate series from the D-numbers above. ADR-0003 (no agent-generated change to protected paths, even under a `protected:` title) is stricter than D-003; D-020 now records the owner-approved narrow maintenance exception. The historical ADR text is retained verbatim.
+diff --git a/foundation/develop-policy.json b/foundation/develop-policy.json
+index 93f2726..25c2c55 100644
+--- a/foundation/develop-policy.json
++++ b/foundation/develop-policy.json
+@@ -1,6 +1,6 @@
+ {
+-  "schema_version": 1,
+-  "purpose": "Limits and extra protected paths of the ante develop loop. This file protects itself: a proposal that touches it is refused, and the gate reads it from the base revision.",
++  "schema_version": 2,
++  "purpose": "Editable scopes and limits of the ante develop loop. Protected paths are governed by the shared base-revision manifest named in protected_manifest; this file is itself protected there.",
+   "max_open_proposals": 1,
+   "campaign_spend_usd": 50,
+   "consecutive_regressions_to_stop": 2,
+@@ -28,34 +28,7 @@
+     "ante/nexus/**",
+     "ante/registry/**"
+   ],
+-  "protected": [
+-    "foundation/develop-policy.json",
+-    "foundation/DECISIONS.md",
+-    "ante/develop/**",
+-    "ante/turing/**",
+-    "ante/ice/**",
+-    "ante/constructs/**",
+-    "ante/core/**",
+-    "ante/doctrine/**",
+-    "ante/learn/**",
+-    "ante/_compat.py",
+-    "ante/paths.py",
+-    "ante/strategy/**",
+-    "ante/cli.py",
+-    "ante/deck.py",
+-    "ante/__init__.py",
+-    "ante/__main__.py",
+-    "tests/**",
+-    "strategy/*.md",
+-    "strategy/challenger-pairs.json",
+-    "strategy/contracts.json",
+-    "strategy/overdrive-protected.json",
+-    "strategy/providers.json",
+-    "strategy/runbooks.json",
+-    "strategy/unified-agency-sources.json",
+-    "scripts/**",
+-    ".github/**"
+-  ],
+   "finding_min_sample": 30,
+-  "pattern_semantics": "fnmatch, as in nexus-improve.py: \"*\" also matches \"/\", so \"strategy/*.md\" covers every Markdown file under strategy/."
++  "pattern_semantics": "fnmatch, as in nexus-improve.py: \"*\" also matches \"/\", so \"strategy/*.md\" covers every Markdown file under strategy/.",
++  "protected_manifest": "strategy/overdrive-protected.json"
+ }
+diff --git a/strategy/overdrive-protected.json b/strategy/overdrive-protected.json
+index 3c7d26a..a319ad2 100644
+--- a/strategy/overdrive-protected.json
++++ b/strategy/overdrive-protected.json
+@@ -24,7 +24,34 @@
+     "scripts/test-*.py",
+     "scripts/test-*.sh",
+     "scripts/verify-release.sh",
+-    ".github/**"
++    ".github/**",
++    "foundation/develop-policy.json",
++    "foundation/DECISIONS.md",
++    "ante/develop/**",
++    "ante/turing/**",
++    "ante/ice/**",
++    "ante/constructs/**",
++    "ante/core/**",
++    "ante/doctrine/**",
++    "ante/learn/**",
++    "ante/_compat.py",
++    "ante/paths.py",
++    "ante/strategy/**",
++    "ante/cli.py",
++    "ante/deck.py",
++    "ante/__init__.py",
++    "ante/__main__.py",
++    "tests/**",
++    "strategy/*.md",
++    "strategy/challenger-pairs.json",
++    "strategy/providers.json",
++    "strategy/runbooks.json",
++    "strategy/unified-agency-sources.json",
++    "scripts/**",
++    "finance/finance-quant-alpha-validator.md",
++    "specialized/strategic-red-team.md",
++    "marketing/marketing-strategic-red-team.md",
++    "ante/attest/**"
+   ],
+   "held_out_packs": "examples/nexus/casepacks/*/ whose pack.json declares split held_out, at the base or the head of the proposal"
+ }
+diff --git a/tests/foundation/test_shared_protection_policy.py b/tests/foundation/test_shared_protection_policy.py
+new file mode 100644
+index 0000000..ed63d9f
+--- /dev/null
++++ b/tests/foundation/test_shared_protection_policy.py
+@@ -0,0 +1,78 @@
++"""The two development entry points share protection at their base revision."""
++import json
++import runpy
++import subprocess
++import tempfile
++import unittest
++from pathlib import Path
++
++from ante.develop import policy
++
++ROOT = Path(__file__).resolve().parents[2]
++IMPROVE = runpy.run_path(str(ROOT / 'scripts/nexus-improve.py'))
++
++
++class SharedProtectionPolicy(unittest.TestCase):
++    def setUp(self):
++        self.scratch = tempfile.TemporaryDirectory(prefix='ante-shared-policy-')
++        self.addCleanup(self.scratch.cleanup)
++        self.repo = Path(self.scratch.name)
++        self.git('init', '-q')
++        self.git('config', 'user.name', 'Policy test fixture')
++        self.git('config', 'user.email', 'fixture@invalid')
++        for name in (policy.POLICY_PATH, policy.OVERDRIVE_PATH, 'ante/constructs/frozen.json'):
++            self.write(name, (ROOT / name).read_text())
++        self.base = self.commit()
++
++    def git(self, *args):
++        return subprocess.run(['git', '-C', str(self.repo), *args], check=True,
++                              capture_output=True, text=True).stdout.strip()
++
++    def write(self, name, text):
++        target = self.repo / name
++        target.parent.mkdir(parents=True, exist_ok=True)
++        target.write_text(text)
++
++    def commit(self):
++        self.git('add', '-A')
++        self.git('commit', '-qm', 'test fixture')
++        return self.git('rev-parse', 'HEAD')
++
++    def test_both_entry_points_refuse_foundation_and_frozen_evaluators(self):
++        loaded = policy.at_ref(self.repo, self.base)
++        frozen = json.loads((self.repo / 'ante/constructs/frozen.json').read_text())
++        protected = [policy.POLICY_PATH, policy.OVERDRIVE_PATH, 'ante/develop/policy.py',
++                     'ante/turing/lock.py', 'ante/attest/kernel.py',
++                     'tests/foundation/future_test.py', 'scripts/future-evaluator.py',
++                     '.github/workflows/future.yml']
++        protected += [entry['path'] for entry in frozen['frozen_reviewers']]
++        for name in protected:
++            self.assertIsNotNone(loaded.classify(name), name)
++            self.write(name, 'candidate tries to replace an evaluator\n')
++        self.write('academic/example.md', 'ordinary editable agent profile\n')
++        # Even replacing both candidate manifests cannot change the base rules.
++        head = self.commit()
++        report = IMPROVE['check_paths'](self.base, head, self.repo)
++        self.assertEqual(set(protected), {row['path'] for row in report['violations']})
++        self.assertIsNone(loaded.classify('academic/example.md'))
++        self.assertEqual((), loaded.protected)
++
++    def test_legacy_base_revision_keeps_its_extra_protected_list(self):
++        legacy = json.loads((self.repo / policy.POLICY_PATH).read_text())
++        legacy.update(schema_version=1, protected=['ante/turing/**'])
++        legacy.pop('protected_manifest')
++        self.write(policy.POLICY_PATH, json.dumps(legacy))
++        self.write(policy.OVERDRIVE_PATH, json.dumps({'protected': [policy.OVERDRIVE_PATH]}))
++        ref = self.commit()
++        loaded = policy.at_ref(self.repo, ref)
++        self.assertIn('foundation/develop-policy.json', loaded.classify('ante/turing/lock.py'))
++
++    def test_current_schema_refuses_a_redirect_shadow_list_or_unknown_version(self):
++        original = json.loads((self.repo / policy.POLICY_PATH).read_text())
++        for change in ({'protected_manifest': 'candidate-controlled.json'}, {'protected': []},
++                       {'schema_version': 3}, {'schema_version': True}):
++            with self.subTest(change=change):
++                self.write(policy.POLICY_PATH, json.dumps({**original, **change}))
++                ref = self.commit()
++                with self.assertRaises(policy.PolicyError):
++                    policy.at_ref(self.repo, ref)
