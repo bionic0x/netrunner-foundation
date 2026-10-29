@@ -138,3 +138,23 @@ The owner-approved scope and observed results are recorded in
 review tests pass after application on this operator's Python 3.12.14 checkout;
 the original hosted Foundation job subsequently passed. The revised candidate
 is checked separately and must not borrow that earlier green result.
+
+## G1a local signatures (#23)
+
+| Field | Value |
+|---|---|
+| Purpose | `ante sign` / `ante verify` / `ante attest`, the pinned trust store and their protection ([ATTEST.md](ATTEST.md)) |
+| Review base | `b719f5789b20288d8fa519f747ed4dac1d560674` (main after #22) |
+| Approved head | `53286803359579685ce07b3d34536f1c80ff1138` |
+| Result tree | `cf06b56cdd12579d7ae3eeed3da22b945c161be0` |
+| Patch SHA-256 | `b70b706222dad41dbbe1d3dfd8bc1f027ffc74188eb3570858a8297b21cda67e` (`ante attest approval`, fixed git options) |
+| Paths | 31 changed, 27 of them protected; listed in the #23 description |
+| Author | Claude (agent), in separate `protected:` commits; not handwritten |
+| Approver and applicator | The owner, by merging #23 on GitHub at 2026-10-29T13:44:25Z (merge `284275f`) |
+| Checks | 14/14 hosted checks succeeded on the approved head and on the merge commit |
+
+The approval packet was published unsigned: no owner key was pinned yet, so this
+approval exists only as the owner's merge action. It authorises this exact
+patch and nothing after it. From the moment the owner's key is pinned, later
+packets can be signed with `ante sign` and checked with `ante verify --head`;
+the signature records the approval, and D-020 still decides what it permits.

@@ -100,26 +100,28 @@ key. An approval verifies only with a `human` key; a future automated signer
 needs its own key and its own entry. The store ships **empty**: until the owner
 pins a key through D-020, nothing verifies.
 
-`ante sign` reads the private key under these conditions, each tested:
+`ante sign` signs only from a **separate signing account**. Each condition is
+tested and checked on one open file descriptor:
 
-- outside the checkout;
-- a regular file with mode `600` or stricter;
-- an encrypted PKCS#8 Ed25519 key — unencrypted keys are refused;
+- `ante sign` runs as an account that is not the owner of the checkout, so the
+  account an agent works under in the repository cannot sign;
+- the key file belongs to that signing account, is a regular file with mode
+  `600` or stricter and lies outside the checkout;
+- it is an encrypted PKCS#8 Ed25519 key — unencrypted keys are refused;
 - the passphrase is typed at the terminal; arguments, environment variables
   and pipes are not accepted, and a process without a terminal is refused.
 
-An agent shell can have a terminal of its own, so the check that matters is the
-passphrase: an agent that does not know it cannot sign. Never give it to an
-agent or store it where one can read it. None of this replaces OS separation:
-for the guarantee in T01, keep the key under a separate OS account or on a
-hardware token.
+Two controls remain the owner's and cannot be proven here: the passphrase is
+never given to an agent or stored where one can read it, and no agent runs with
+the right to become the signing account (root, or `sudo` to it without a
+password). A hardware token can replace the file key in a later stage.
 
-Owner setup, once:
+Owner setup, once (macOS or Linux; `ante-signer` is any dedicated account):
 
 ```sh
-openssl genpkey -algorithm ed25519 -aes-256-cbc -out ~/.ante/owner.pem   # asks for a passphrase
-chmod 600 ~/.ante/owner.pem
-openssl pkey -in ~/.ante/owner.pem -pubout -out owner.pub.pem
+sudo -u ante-signer sh -c 'umask 077; mkdir -p ~/.ante && openssl genpkey -algorithm ed25519 -aes-256-cbc -out ~/.ante/owner.pem'
+sudo -u ante-signer openssl pkey -in ~ante-signer/.ante/owner.pem -pubout > owner.pub.pem
+sudo -u ante-signer python3 -m pip install --user --require-hashes --no-deps -r .github/requirements/attest.txt
 python3 scripts/ante attest key owner.pub.pem --principal owner:bionic0x --principal-type human
 # add the printed entry to foundation/attest/trusted-keys.json in a D-020 change
 ```
@@ -130,9 +132,13 @@ Approving a protected change:
 python3 scripts/ante attest approval --base <base> --head <head> --scope apply \
   --review-ref <PR> --author <who prepared it> --at <now> --out approval.json
 git diff <base> <head>                       # read what you are about to approve
-python3 scripts/ante sign approval.json --key ~/.ante/owner.pem --method <did:key...> --at <now> --out approval.signed.json
+sudo -u ante-signer python3 scripts/ante sign approval.json --key ~ante-signer/.ante/owner.pem \
+  --method <did:key...> --at <now> > approval.signed.json
 python3 scripts/ante verify approval.signed.json --repo . --head <head>
 ```
+
+The signing account needs read access to the checkout and to `approval.json`;
+the signed document goes to standard output, written by the calling account.
 
 Exit status: `0` verified or written; `2` invalid input or refused; `4` not
 verified. Every failure carries a reason: `MALFORMED`, `SCHEMA_INVALID`,
@@ -144,7 +150,7 @@ verified. Every failure carries a reason: `MALFORMED`, `SCHEMA_INVALID`,
 
 | ID | Threat | Control | Status |
 |---|---|---|---|
-| T01 | An agent reads or uses the approver's key | Key outside the checkout, mode 600, encrypted; passphrase typed at a terminal and known only to the owner | Tested (`SigningGuards`). Passphrase secrecy and separation of OS principal or hardware are owner controls, not provable here |
+| T01 | An agent reads or uses the approver's key | Separate signing account that does not own the checkout; key owned by it, mode 600, encrypted, outside the checkout; passphrase typed at a terminal | Tested (`SigningGuards`), and run end to end with a real second account. Passphrase secrecy and denying agents the right to become the signing account are owner controls |
 | T02 | The owner signs an approval an agent prepared without reading it | `ante attest approval` lists paths and blobs; the owner reviews the diff before typing the passphrase | Human control, documented; no review interface in G1a |
 | T03 | Key substitution | Pinned store; `did:key` must encode the key; no resolution | Tested (`test_key_substitution_fails`, `test_a_did_key_must_encode_the_pinned_key`, `test_unknown_method_fails`) |
 | T04 | JSON ambiguity | Strict parsing; signed subset; RFC 8785 cross-check | Tested (`SignedSubset`, `test_duplicate_keys_in_a_signed_file_are_malformed`) |
