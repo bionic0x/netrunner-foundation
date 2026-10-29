@@ -89,3 +89,16 @@ Unix socket creation required by Relay. Tests are not skipped or weakened.
 A final reviewer receives only the diff, mandate and test results. Its level is
 `SEPARATED_CONTEXT`, not `INDEPENDENT_OPERATOR`; actual operator independence,
 live-model superiority and institutional self-test evidence remain unestablished.
+
+## Historical follow-up after #22
+
+The [16-branch reconciliation](HISTORICAL-BRANCHES.md), performed against
+`b719f57`, closes the previously unresolved content inventory: 13 exact-tree
+squash integrations, two merge-only references with no content delta and one
+test-only alternative superseded by the approved P3 fix. No further historical
+content merge or branch deletion is required. The original branch inventory
+above remains a dated snapshot of ancestry, distinct from content integration.
+
+D-010, D-013 and D-014 now have a concrete owner decision proposal in
+[proposals/D-021-POLICY-AND-TRUST.md](proposals/D-021-POLICY-AND-TRUST.md).
+It does not adopt a new policy or authorize cryptographic signing by publication.
