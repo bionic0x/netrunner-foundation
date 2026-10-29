@@ -113,3 +113,9 @@ attestation test. The replacement P1 is re-prepared against that merge and
 requires renewed approval under D-020 step 4. The approved previous patch was
 not applied; its approval and input mismatch remain in the packet. P0/P2 remain
 ratified, with the protected decision record to land alongside the migration.
+
+PR #27 merged the post-#26 preparation in `9113537`, with 14 checks passing
+on its head. It did not apply P1. PR #28 then merged key-generation support in
+`ae184df`, changing the guide and protected attestation tests before the first
+replacement was approved. The current replacement packet is measured against
+that new base; P0/P2 ratification is retained and renewed P1 approval is pending.
