@@ -330,6 +330,60 @@ class Drift(Workspace):
         self.assertEqual(0, jackpot.assess(ledger.read(self.ledger), '2026-10-29T00:00:00Z')['total'])
         self.assertEqual(0, jackpot.assess([], '2027-12-01T00:00:00Z', events=jackpot._events(events))['total'])
 
+    @staticmethod
+    def stream(errors):
+        return [{'seq': i, 'at': f'2026-12-01T00:00:{i % 60:02d}Z', 'decision': f'd{i}', 'expectation': 'e1',
+                 'error': e} for i, e in enumerate(errors)]
+
+    def test_cusum_needs_a_full_reference_before_it_says_anything(self):
+        result = jackpot.cusum(self.stream([0.09, 0.49] * 14))
+        self.assertEqual(('INSUFFICIENT_SAMPLE', None), (result['result'], result['alarm']))
+
+    def test_cusum_stays_quiet_on_a_stable_forecaster(self):
+        pattern = [0.09] * 7 + [0.49] * 3          # p = 0.7, right seven times in ten
+        result = jackpot.cusum(self.stream(pattern * 12))
+        self.assertEqual('MEASURED', result['result'])
+        self.assertIsNone(result['alarm'])
+        self.assertEqual(90, result['monitored'])
+
+    def test_cusum_alarms_on_a_sustained_shift_and_names_where(self):
+        pattern = [0.09] * 7 + [0.49] * 3
+        errors = pattern * 3 + [0.49] * 10          # then wrong every time at the same stated confidence
+        result = jackpot.cusum(self.stream(errors))
+        self.assertIsNotNone(result['alarm'])
+        crossed = int(result['alarm']['decision'][1:])
+        self.assertTrue(30 < crossed < 40, crossed)
+        self.assertGreater(result['statistic'], result['h'])
+
+    def test_cusum_reports_no_variation_instead_of_dividing_by_zero(self):
+        self.assertEqual('NO_VARIATION', jackpot.cusum(self.stream([0.09] * 40))['result'])
+
+    def test_a_brier_drift_requires_a_review_that_the_weighted_count_alone_would_miss(self):
+        def art(i, interval):
+            return decide_artifact(f'q{i}', expectations=[{'id': 'e1', 'what_should_change': 'x', 'in_whom': 'y',
+                                                           'horizon': '2026-12-01T00:00:00Z', 'refuted_by': 'z',
+                                                           'probability': {'verbal': 'likely', 'interval': interval}}])
+        arts = [art(i, [0.6, 0.8] if i % 2 else [0.8, 1.0]) for i in range(32)]
+        for a in arts:
+            self.record(a)
+        for i, a in enumerate(arts):
+            self.observe(a, 'CONFIRMED' if i < 30 else 'REFUTED', at=f'2026-12-02T00:{i:02d}:00Z')
+        result = jackpot.assess(ledger.read(self.ledger), '2026-12-03T00:00:00Z')
+        self.assertLess(result['total'], jackpot.CUMULATIVE_THRESHOLD)
+        self.assertTrue(all(a['weight'] < jackpot.INDIVIDUAL_THRESHOLD for a in result['counted']))
+        self.assertEqual('REVIEW_REQUIRED', result['status'])
+        self.assertIn('Brier CUSUM', result['reason'])
+        self.assertEqual(arts[30]['artifact_sha256'], result['brier_cusum']['alarm']['decision'])
+        jackpot.review(self.ledger, 'Ana (owner)', 'forecasting assumptions revised', '2026-12-04T00:00:00Z')
+        after = jackpot.assess(ledger.read(self.ledger), '2026-12-05T00:00:00Z')
+        self.assertEqual(('WITHIN_LIMITS', 'INSUFFICIENT_SAMPLE'), (after['status'], after['brier_cusum']['result']))
+
+    def test_synthetic_decisions_never_enter_the_brier_stream(self):
+        a = decide_artifact('syn')
+        self.record(a, synthetic=True)
+        self.observe(a, 'REFUTED')
+        self.assertEqual([], jackpot.brier_stream(ledger.read(self.ledger)))
+
     def test_cli_exits_1_when_review_is_required(self):
         for i in range(8):
             self.record(decide_artifact(f'd{i}', risks=[f'r{i}']), at=f'2026-10-28T13:0{i}:00Z')

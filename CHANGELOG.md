@@ -10,15 +10,16 @@
   `ach`, `watch`, `close`, `cohere`, `pathology`, `nodal`, `decide` — plus
   `selftest` and `ante run` (chain completeness per runbook). Each refuses its
   characteristic defect (`street` classifies every misuse scenario by Goodhart
-  variant and requires the adversarial one for each metric); `decide` admits only what `cohere` leaves admissible and
-  refuses `PROCEED` without an independent review, a termination contract, dated
+  variant and requires the adversarial one for each metric); `decide` admits
+  only what `cohere` leaves admissible and refuses `PROCEED` without an independent review, a termination contract, dated
   expectations, or with a load-bearing assumption not accepted as a named risk.
 - Learning layer: hash-chained decision ledger with frozen decision snapshots,
   reconciliation, calibration (Brier, Murphy decomposition on exact forecast
   groups, ECE and its binning sensitivity, skill only against a pre-declared
-  baseline, a policy floor on distinct decisions) or `INSUFFICIENT_SAMPLE`, patterns guarded by
-  a permutation test with Bonferroni correction, cumulative-drift review
-  (`jackpot`), shadow trials (`stub`), weak signals and a discard archive.
+  baseline, a policy floor on distinct decisions) or `INSUFFICIENT_SAMPLE`,
+  patterns guarded by a permutation test with Bonferroni correction, cumulative-drift review
+  (`jackpot`, with a CUSUM on forecast error), shadow trials (`stub`), weak signals
+  and a discard archive.
 - Self-development: `ante develop` proposes bounded changes, judges them with the
   base revision's evaluator, characterization, held-out comparison, canary scan
   (a canary halts the loop until a named human resumes it)
@@ -29,7 +30,7 @@
   before the move: 114 normalised cases and 116 raw-byte cases (180 distinct
   invocations; the 50 they share agree byte for byte).
   Runbooks declare `strategy_commands` and `material`.
-- Synthetic end-to-end example in `examples/foundation/`; 190 foundation tests.
+- Synthetic end-to-end example in `examples/foundation/`; 196 foundation tests.
   Owner
   decisions pending: D-003, D-010, D-013, D-014, D-016, D-017, D-020 (`foundation/DECISIONS.md`).
 - `strategy/contracts.json` carries the seven coherence tests and fourteen

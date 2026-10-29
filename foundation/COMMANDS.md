@@ -45,7 +45,7 @@ brief; see `ante/strategy/draft.py`.
 | `learn patterns --ledger L --at T` | proposes differences in refutation rate that survive a permutation test with Bonferroni correction | patterns that only system-sourced evidence supports; synthetic decisions |
 | `learn verify --ledger L` | checks the chain | — (a broken chain exits 3) |
 | `learn review --ledger L --by NAME --reason TEXT --at T` | records a model review; resets cumulative drift | — |
-| `jackpot --ledger L --at T [--state S] [--events E]` | cumulative drift: refutations, inconclusive outcomes, accepted risks, decide warnings, gate holds and rejects, release events; exit 1 when a model review is due | while a review is due, `learn record` refuses decisions that add accepted risks |
+| `jackpot --ledger L --at T [--state S] [--events E]` | cumulative drift: refutations, inconclusive outcomes, accepted risks, decide warnings, gate holds and rejects, release events; plus a one-sided CUSUM on the Brier error of each reconciled prediction since the last review (reference of 30, k = 0.5σ, h = 5σ, or `INSUFFICIENT_SAMPLE`); exit 1 when a model review is due | while a review is due, `learn record` refuses decisions that add accepted risks |
 
 ## Self-development
 
