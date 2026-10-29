@@ -41,7 +41,7 @@ brief; see `ante/strategy/draft.py`.
 |---|---|---|
 | `learn record DECIDE --ledger L --at T` | appends a sealed `decide` artefact, frozen, to a hash-chained ledger | anything but `decide`; a second record; a record dated before the decision |
 | `learn reconcile OBS --ledger L --at T` | appends observed outcomes (`CONFIRMED`, `REFUTED`, `INCONCLUSIVE`, `NOT_YET_OBSERVABLE`) as new entries | system-produced sources confirming or refuting; observations before the decision or in the future; `NOT_YET_OBSERVABLE` after the horizon |
-| `learn calibrate --ledger L --at T` | Brier score and reliability by runbook, agent and claim kind | groups below `--min-sample` (default 30) answer `INSUFFICIENT_SAMPLE`, with no number |
+| `learn calibrate --ledger L --at T` | Brier score, Brier skill against the in-sample base rate, Murphy decomposition (reliability, resolution, uncertainty) and ECE with its spread across binnings, by runbook, agent and claim kind | groups below `--min-sample` (default 30) answer `INSUFFICIENT_SAMPLE`, with no number |
 | `learn patterns --ledger L --at T` | proposes differences in refutation rate that survive a permutation test with Bonferroni correction | patterns that only system-sourced evidence supports; synthetic decisions |
 | `learn verify --ledger L` | checks the chain | — (a broken chain exits 3) |
 | `learn review --ledger L --by NAME --reason TEXT --at T` | records a model review; resets cumulative drift | — |

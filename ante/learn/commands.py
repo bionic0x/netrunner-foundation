@@ -13,6 +13,24 @@ profiles by itself: those changes go through ``ante develop`` and a human merge.
 
 When too few decisions have been reconciled, the honest output is that nothing
 has been learned yet: ``INSUFFICIENT_SAMPLE``, not a number.
+
+``calibrate`` reports, per group with enough decisive predictions:
+
+    brier                 mean squared error of the declared midpoint against the outcome
+    base_rate             share of CONFIRMED in the group
+    brier_reference       Brier of always forecasting that base rate: base_rate (1 - base_rate).
+                          In-sample climatology, so a generous reference.
+    brier_skill_score     1 - brier / brier_reference; null when the reference is 0
+                          (every outcome the same: there was nothing to forecast)
+    murphy                reliability (miscalibration, lower is better), resolution
+                          (higher is better) and uncertainty, on the reliability bins.
+                          brier = reliability - resolution + uncertainty + within_bin;
+                          within_bin is exactly 0 only when forecasts inside a bin are equal.
+    ece                   expected calibration error on the declared bins, plus the same
+                          error under other binnings and their spread: with small samples
+                          the number moves with the binning, and the spread says how much.
+
+None of these changes thresholds, routing or profiles by itself.
 """
 from __future__ import annotations
 
@@ -31,6 +49,8 @@ OUTCOMES = ('CONFIRMED', 'REFUTED', 'INCONCLUSIVE', 'NOT_YET_OBSERVABLE')
 DECISIVE = ('CONFIRMED', 'REFUTED')
 BINS = ((0.0, 0.2), (0.2, 0.4), (0.4, 0.6), (0.6, 0.8), (0.8, 1.0001))
 SCHEMA_VERSION = 1
+CALIBRATION_SCHEMA_VERSION = 2
+ECE_ALTERNATIVES = (('equal_width_10', 'width', 10), ('equal_mass_5', 'mass', 5))
 
 
 class LearnError(ValueError):
@@ -166,10 +186,37 @@ def calibrate(ledger_path: str, at: str, min_sample: int) -> dict:
                 group['frozen_reviewer'] = True
                 group['note'] = 'frozen reviewer: reported for reading, never a target of ante develop'
             groups.append(group)
-    return {'schema_version': SCHEMA_VERSION, 'kind': 'calibration', 'at': _at(at),
+    return {'schema_version': CALIBRATION_SCHEMA_VERSION, 'kind': 'calibration', 'at': _at(at),
             'ledger_head': entries[-1]['entry_hash'] if entries else ledger.GENESIS,
             'min_sample': min_sample, 'decisive_predictions': len(rows), 'excluded': excluded, 'groups': groups,
-            'method': 'Brier score on the midpoint of each declared interval; CONFIRMED = 1, REFUTED = 0.'}
+            'method': ('Brier score on the midpoint of each declared interval; CONFIRMED = 1, REFUTED = 0. '
+                       'Skill against the in-sample base rate; Murphy decomposition and ECE on five '
+                       'equal-width bins, ECE also under other binnings.')}
+
+
+def _round(value: float | None) -> float | None:
+    return None if value is None else round(value, 6)
+
+
+def _bins_by_width(rows: list[dict], count: int) -> list[list[dict]]:
+    edges = [index / count for index in range(count)] + [1.0001]
+    return [[r for r in rows if edges[k] <= r['p'] < edges[k + 1]] for k in range(count)]
+
+
+def _bins_by_mass(rows: list[dict], count: int) -> list[list[dict]]:
+    ordered = sorted(rows, key=lambda r: r['p'])
+    size, extra = divmod(len(ordered), count)
+    groups, start = [], 0
+    for k in range(count):
+        end = start + size + (1 if k < extra else 0)
+        groups.append(ordered[start:end])
+        start = end
+    return groups
+
+
+def _ece(groups: list[list[dict]], total: int) -> float:
+    return sum(len(g) / total * abs(sum(r['o'] for r in g) / len(g) - sum(r['p'] for r in g) / len(g))
+               for g in groups if g)
 
 
 def _calibration_group(dimension: str, key: str, rows: list[dict], min_sample: int) -> dict:
@@ -177,14 +224,37 @@ def _calibration_group(dimension: str, key: str, rows: list[dict], min_sample: i
     if len(rows) < min_sample:
         return {**base, 'result': 'INSUFFICIENT_SAMPLE', 'brier': None,
                 'reason': f'{len(rows)} decisive predictions; {min_sample} declared as the minimum'}
-    brier = sum((r['p'] - r['o']) ** 2 for r in rows) / len(rows)
-    curve = []
-    for low, high in BINS:
-        members = [r for r in rows if low <= r['p'] < high]
+    n = len(rows)
+    brier = sum((r['p'] - r['o']) ** 2 for r in rows) / n
+    base_rate = sum(r['o'] for r in rows) / n
+    reference = base_rate * (1 - base_rate)
+    declared = [[r for r in rows if low <= r['p'] < high] for low, high in BINS]
+    curve, reliability, resolution = [], 0.0, 0.0
+    for (low, high), members in zip(BINS, declared):
+        mean_forecast = sum(r['p'] for r in members) / len(members) if members else None
+        observed = sum(r['o'] for r in members) / len(members) if members else None
+        if members:
+            reliability += len(members) * (mean_forecast - observed) ** 2 / n
+            resolution += len(members) * (observed - base_rate) ** 2 / n
         curve.append({'bin': [low, min(high, 1.0)], 'n': len(members),
-                      'mean_forecast': round(sum(r['p'] for r in members) / len(members), 6) if members else None,
-                      'observed_rate': round(sum(r['o'] for r in members) / len(members), 6) if members else None})
-    return {**base, 'result': 'MEASURED', 'brier': round(brier, 6), 'reliability': curve}
+                      'mean_forecast': _round(mean_forecast), 'observed_rate': _round(observed)})
+    ece_declared = _ece(declared, n)
+    alternatives = {'equal_width_5': ece_declared}
+    for name, kind, count in ECE_ALTERNATIVES:
+        groups = _bins_by_width(rows, count) if kind == 'width' else _bins_by_mass(rows, count)
+        alternatives[name] = _ece(groups, n)
+    skill = None if reference == 0 else 1 - brier / reference
+    return {**base, 'result': 'MEASURED', 'brier': round(brier, 6), 'reliability': curve,
+            'base_rate': _round(base_rate), 'brier_reference': _round(reference),
+            'brier_skill_score': _round(skill),
+            **({'brier_skill_score_reason': 'every outcome in the group is the same; there was nothing to forecast'}
+               if skill is None else {}),
+            'murphy': {'reliability': _round(reliability), 'resolution': _round(resolution),
+                       'uncertainty': _round(reference),
+                       'within_bin': _round(brier - (reliability - resolution + reference))},
+            'ece': {'declared_bins': 'equal_width_5', 'value': _round(ece_declared),
+                    'by_binning': {k: _round(v) for k, v in alternatives.items()},
+                    'spread': _round(max(alternatives.values()) - min(alternatives.values()))}}
 
 
 def patterns(ledger_path: str, at: str, min_group: int, seed: int = 20261028) -> dict:
@@ -275,7 +345,7 @@ def add_parser(sub) -> None:
     rec.add_argument('--synthetic', action='store_true', help='fixture data; excluded from calibration and patterns')
     rcn = lsub.add_parser('reconcile', help='record observed outcomes of dated expectations')
     rcn.add_argument('observations')
-    cal = lsub.add_parser('calibrate', help='Brier score and reliability, or INSUFFICIENT_SAMPLE')
+    cal = lsub.add_parser('calibrate', help='Brier, skill, Murphy decomposition and ECE, or INSUFFICIENT_SAMPLE')
     cal.add_argument('--min-sample', type=int, default=30)
     cal.add_argument('--out')
     pat = lsub.add_parser('patterns', help='candidate patterns that survive the apophenia guard')

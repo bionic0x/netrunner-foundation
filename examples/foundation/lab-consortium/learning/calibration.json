@@ -18,7 +18,7 @@
   ],
   "kind": "calibration",
   "ledger_head": "e73755d69c289d3b195e76609b85382f5c0312bcd5d722ee45ef6f06e93bfcc7",
-  "method": "Brier score on the midpoint of each declared interval; CONFIRMED = 1, REFUTED = 0.",
+  "method": "Brier score on the midpoint of each declared interval; CONFIRMED = 1, REFUTED = 0. Skill against the in-sample base rate; Murphy decomposition and ECE on five equal-width bins, ECE also under other binnings.",
   "min_sample": 30,
-  "schema_version": 1
+  "schema_version": 2
 }
