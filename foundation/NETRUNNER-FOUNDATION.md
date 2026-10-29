@@ -99,10 +99,17 @@ test-only alternative superseded by the approved P3 fix. No further historical
 content merge or branch deletion is required. The original branch inventory
 above remains a dated snapshot of ancestry, distinct from content integration.
 
-D-010, D-013 and D-014 now have a concrete owner decision proposal in
+D-010, D-013 and D-014 have a concrete owner decision packet in
 [proposals/D-021-POLICY-AND-TRUST.md](proposals/D-021-POLICY-AND-TRUST.md).
 It does not adopt a new policy or authorize cryptographic signing by publication.
 
 G1a subsequently entered `main` through #23 (`284275f`). D-021 was refreshed
 against that merge, preserving the verifier and trust-store protections and
 including their boundary-test/guide migration in its exact proposed scope.
+
+The owner subsequently ratified D-021 P0/P2 and approved its then-current P1
+patch. Before application, #26 (`edce974`) changed the guide and a protected
+attestation test. The replacement P1 is re-prepared against that merge and
+requires renewed approval under D-020 step 4. The approved previous patch was
+not applied; its approval and input mismatch remain in the packet. P0/P2 remain
+ratified, with the protected decision record to land alongside the migration.

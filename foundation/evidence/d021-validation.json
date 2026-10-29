@@ -1,10 +1,10 @@
 {
   "schema_version": 1,
   "date": "2026-10-29",
-  "base_commit": "284275f1ae96174a542007fbfabe6522d5c66bbd",
-  "patch_sha256": "4810889f7716ef8b18da80b2935b534e31dde9d1e799e5068d99a769c87992f1",
-  "status": "ISOLATED_REFRESH_PASSED",
-  "scope": "Seven-file isolated proposal after #23; six protected paths plus guide; production is unchanged",
+  "base_commit": "edce974f38d6611696d23fc2d11ec29e560fe73d",
+  "patch_sha256": "1a8e34a57d4f08efac5db48e2543645683f409837b031a0a578afd63ec76d47e",
+  "status": "POST_G1A1_ISOLATED_REFRESH_PASSED",
+  "scope": "Seven-file isolated replacement after #26; six protected paths plus guide. Not applied to production.",
   "python": "3.11.17",
   "required_environment": {
     "ANTE_REQUIRE_ATTEST": "1"
@@ -15,21 +15,219 @@
     "pycparser": "3.1",
     "rfc8785": "0.1.4"
   },
-  "previous_pre_g1a_validation": {
-    "base_commit": "b719f5789b20288d8fa519f747ed4dac1d560674",
-    "patch_sha256": "fdea84af57869af77b3aa49bcdff175e40ccc096c6220821c2fde5189f6d929a",
+  "checks": [
+    {
+      "name": "foundation",
+      "command": [
+        "/workspace/scratch/1470bd876a88/netrunner-validation/bin/python",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests/foundation",
+        "-p",
+        "test_*.py"
+      ],
+      "exit_code": 0,
+      "duration_seconds": 136.595,
+      "tests": 265,
+      "skipped": 0
+    },
+    {
+      "name": "improve",
+      "command": [
+        "/workspace/scratch/1470bd876a88/netrunner-validation/bin/python",
+        "scripts/test-nexus-improve.py"
+      ],
+      "exit_code": 0,
+      "duration_seconds": 129.802,
+      "tests": 15,
+      "skipped": 0
+    },
+    {
+      "name": "normalized",
+      "command": [
+        "/workspace/scratch/1470bd876a88/netrunner-validation/bin/python",
+        "tests/characterization/run.py"
+      ],
+      "exit_code": 0,
+      "duration_seconds": 8.604,
+      "matched": 114,
+      "total": 114
+    },
+    {
+      "name": "raw",
+      "command": [
+        "/workspace/scratch/1470bd876a88/netrunner-validation/bin/python",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests/characterization"
+      ],
+      "exit_code": 0,
+      "duration_seconds": 11.243,
+      "tests": 4,
+      "skipped": 0,
+      "cases": 116,
+      "additional_regressions": 3
+    },
+    {
+      "name": "extraction",
+      "command": [
+        "/workspace/scratch/1470bd876a88/netrunner-validation/bin/python",
+        "foundation/tools/extraction.py",
+        "verify"
+      ],
+      "exit_code": 0,
+      "duration_seconds": 0.099
+    },
+    {
+      "name": "constructs",
+      "command": [
+        "/workspace/scratch/1470bd876a88/netrunner-validation/bin/python",
+        "scripts/ante",
+        "constructs",
+        "verify"
+      ],
+      "exit_code": 0,
+      "duration_seconds": 0.094
+    },
+    {
+      "name": "layers",
+      "command": [
+        "/workspace/scratch/1470bd876a88/netrunner-validation/bin/python",
+        "scripts/ante",
+        "ice",
+        "layers"
+      ],
+      "exit_code": 0,
+      "duration_seconds": 0.093
+    },
+    {
+      "name": "Exact private-index application and seven output fingerprints/modes",
+      "exit_code": 0,
+      "result_tree_oid": "1fd1a3d47e98e1e7818e058dc583563eb3d66229"
+    },
+    {
+      "name": "Protection preservation",
+      "canonical_patterns_after": 51,
+      "old_patterns_removed": 0,
+      "limits_scopes_floor_unchanged": true
+    },
+    {
+      "name": "#26 runtime, trust store, crypto locks and both frozen corpora unchanged",
+      "exit_code": 0
+    }
+  ],
+  "log_sha256": {
+    "d021-g1a1-foundation.stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "d021-g1a1-foundation.stderr.log": "f2543a5d5f78d0a401ee649acbf7e9aee5d5972f42182714ee22bccb9894f84b",
+    "d021-g1a1-improve.stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "d021-g1a1-improve.stderr.log": "dd8dd5cd6ff305807031e8f532862089ca6bb80f367b32e4bb00ee88d3080b9a",
+    "d021-g1a1-normalized.stdout.log": "1dbf58c57a1e230fc02909484996235883187aaf86d8d24fd7734fbbfb18c02d",
+    "d021-g1a1-normalized.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "d021-g1a1-raw.stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "d021-g1a1-raw.stderr.log": "4470b5aa4cbfde4ebf3a89aa7d4aadcdabfd8320f093833e25d07bb2f27f788d",
+    "d021-g1a1-extraction.stdout.log": "4195b8a0cad5f11eaafda2817f222a37f720ffe18c89ff0739f23fac643a8ec2",
+    "d021-g1a1-extraction.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "d021-g1a1-constructs.stdout.log": "cbc46abf253f6b0320a9adb19d33a19239a594df29def2f4c4dd40a609e2d5c5",
+    "d021-g1a1-constructs.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "d021-g1a1-layers.stdout.log": "d0fac7776d198586bf1ef955173c68aaa611da8a10bf97a5eda90ea1351051ca",
+    "d021-g1a1-layers.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "complete_local_release_gate": null,
+  "complete_local_release_gate_reason": "PermissionError [Errno 1] creating a Unix socket; no test skipped or weakened",
+  "hosted_ci_for_the_proposed_runtime_patch": null,
+  "hosted_ci_reason": "Replacement pending renewed approval; documentation CI cannot certify an unapplied runtime patch",
+  "independence_level": "SELF",
+  "prior_validation": {
+    "schema_version": 1,
+    "date": "2026-10-29",
+    "base_commit": "284275f1ae96174a542007fbfabe6522d5c66bbd",
+    "patch_sha256": "4810889f7716ef8b18da80b2935b534e31dde9d1e799e5068d99a769c87992f1",
+    "status": "ISOLATED_REFRESH_PASSED",
+    "scope": "Seven-file isolated proposal after #23; six protected paths plus guide; production is unchanged",
+    "python": "3.11.17",
+    "required_environment": {
+      "ANTE_REQUIRE_ATTEST": "1"
+    },
+    "installed_from_main_hash_lock": {
+      "cryptography": "50.0.2",
+      "cffi": "2.1.1",
+      "pycparser": "3.1",
+      "rfc8785": "0.1.4"
+    },
+    "previous_pre_g1a_validation": {
+      "base_commit": "b719f5789b20288d8fa519f747ed4dac1d560674",
+      "patch_sha256": "fdea84af57869af77b3aa49bcdff175e40ccc096c6220821c2fde5189f6d929a",
+      "checks": [
+        {
+          "name": "Foundation suite",
+          "tests": 199,
+          "exit_code": 0,
+          "duration_seconds": 119.197
+        },
+        {
+          "name": "Legacy nexus-improve suite",
+          "tests": 15,
+          "exit_code": 0,
+          "duration_seconds": 113.446
+        },
+        {
+          "name": "Normalized characterization",
+          "matched": 114,
+          "total": 114,
+          "exit_code": 0
+        },
+        {
+          "name": "Raw-byte characterization",
+          "cases": 116,
+          "additional_regressions": 3,
+          "test_methods": 4,
+          "exit_code": 0,
+          "duration_seconds": 10.193
+        },
+        {
+          "name": "Protection union",
+          "previous_overdrive_patterns": 23,
+          "previous_foundation_patterns": 26,
+          "canonical_patterns": 50,
+          "patterns_removed": 0,
+          "frozen_profile_paths_added": 3,
+          "future_attest_pattern_added": true
+        },
+        {
+          "name": "Limits, editable scopes and sample floor",
+          "unchanged": [
+            "max_open_proposals",
+            "campaign_spend_usd",
+            "consecutive_regressions_to_stop",
+            "editable_scopes",
+            "finding_min_sample"
+          ]
+        }
+      ],
+      "superseded_before_approval": true
+    },
+    "complete_local_release_gate": null,
+    "complete_local_release_gate_reason": "PermissionError [Errno 1] creating a Unix socket; no test skipped or weakened",
+    "hosted_ci_for_the_proposed_runtime_patch": null,
+    "hosted_ci_reason": "Unapplied pending owner approval; documentation CI cannot certify this runtime patch",
+    "independence_level": "SELF",
     "checks": [
       {
-        "name": "Foundation suite",
-        "tests": 199,
+        "name": "Foundation suite including G1a, strict dependencies",
+        "tests": 251,
         "exit_code": 0,
-        "duration_seconds": 119.197
+        "skipped": 0,
+        "duration_seconds": 135.624
       },
       {
         "name": "Legacy nexus-improve suite",
         "tests": 15,
         "exit_code": 0,
-        "duration_seconds": 113.446
+        "duration_seconds": 123.933
       },
       {
         "name": "Normalized characterization",
@@ -42,98 +240,55 @@
         "cases": 116,
         "additional_regressions": 3,
         "test_methods": 4,
-        "exit_code": 0,
-        "duration_seconds": 10.193
+        "exit_code": 0
       },
       {
-        "name": "Protection union",
-        "previous_overdrive_patterns": 23,
-        "previous_foundation_patterns": 26,
-        "canonical_patterns": 50,
-        "patterns_removed": 0,
+        "name": "Protection preservation",
+        "overdrive_patterns_before": 25,
+        "foundation_patterns_before": 28,
+        "canonical_patterns_after": 51,
+        "old_patterns_removed": 0,
         "frozen_profile_paths_added": 3,
-        "future_attest_pattern_added": true
+        "existing_g1a_patterns_retained": [
+          "ante/attest/**",
+          "foundation/attest/**"
+        ]
       },
       {
-        "name": "Limits, editable scopes and sample floor",
-        "unchanged": [
-          "max_open_proposals",
-          "campaign_spend_usd",
-          "consecutive_regressions_to_stop",
-          "editable_scopes",
-          "finding_min_sample"
-        ]
+        "name": "Exact patch application at pinned base",
+        "exit_code": 0,
+        "result_tree_oid": "365e1c689f6e7fdbba7fac13a5be1aed36cc118b",
+        "seven_output_fingerprints_match": true
+      },
+      {
+        "name": "Limits, editable scopes and sample floor unchanged",
+        "exit_code": 0
+      },
+      {
+        "name": "Frozen recordings, signer implementation, trust store and crypto locks unchanged",
+        "exit_code": 0
       }
     ],
-    "superseded_before_approval": true
-  },
-  "complete_local_release_gate": null,
-  "complete_local_release_gate_reason": "PermissionError [Errno 1] creating a Unix socket; no test skipped or weakened",
-  "hosted_ci_for_the_proposed_runtime_patch": null,
-  "hosted_ci_reason": "Unapplied pending owner approval; documentation CI cannot certify this runtime patch",
-  "independence_level": "SELF",
-  "checks": [
-    {
-      "name": "Foundation suite including G1a, strict dependencies",
-      "tests": 251,
-      "exit_code": 0,
-      "skipped": 0,
-      "duration_seconds": 135.624
-    },
-    {
-      "name": "Legacy nexus-improve suite",
-      "tests": 15,
-      "exit_code": 0,
-      "duration_seconds": 123.933
-    },
-    {
-      "name": "Normalized characterization",
-      "matched": 114,
-      "total": 114,
-      "exit_code": 0
-    },
-    {
-      "name": "Raw-byte characterization",
-      "cases": 116,
-      "additional_regressions": 3,
-      "test_methods": 4,
-      "exit_code": 0
-    },
-    {
-      "name": "Protection preservation",
-      "overdrive_patterns_before": 25,
-      "foundation_patterns_before": 28,
-      "canonical_patterns_after": 51,
-      "old_patterns_removed": 0,
-      "frozen_profile_paths_added": 3,
-      "existing_g1a_patterns_retained": [
-        "ante/attest/**",
-        "foundation/attest/**"
-      ]
-    },
-    {
-      "name": "Exact patch application at pinned base",
-      "exit_code": 0,
-      "result_tree_oid": "365e1c689f6e7fdbba7fac13a5be1aed36cc118b",
-      "seven_output_fingerprints_match": true
-    },
-    {
-      "name": "Limits, editable scopes and sample floor unchanged",
-      "exit_code": 0
-    },
-    {
-      "name": "Frozen recordings, signer implementation, trust store and crypto locks unchanged",
-      "exit_code": 0
+    "log_sha256": {
+      "d021-g1a-foundation.stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "d021-g1a-foundation.stderr.log": "d382852c7fe4c67f7f689153d39710dab58ce20af5a95c9554090927a39fbbf6",
+      "d021-g1a-improve.stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "d021-g1a-improve.stderr.log": "89d93b1b4c87f45b9c66812df36268230a92bee642f640a80d02fd4ce5fd7019",
+      "d021-g1a-normalized.stdout.log": "1dbf58c57a1e230fc02909484996235883187aaf86d8d24fd7734fbbfb18c02d",
+      "d021-g1a-normalized.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "d021-g1a-raw.stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "d021-g1a-raw.stderr.log": "da4b177536cb9495bbf29ddd5b7dc83b7b8f5a7c1079fd177ec839480dc00d32"
     }
-  ],
-  "log_sha256": {
-    "d021-g1a-foundation.stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-    "d021-g1a-foundation.stderr.log": "d382852c7fe4c67f7f689153d39710dab58ce20af5a95c9554090927a39fbbf6",
-    "d021-g1a-improve.stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-    "d021-g1a-improve.stderr.log": "89d93b1b4c87f45b9c66812df36268230a92bee642f640a80d02fd4ce5fd7019",
-    "d021-g1a-normalized.stdout.log": "1dbf58c57a1e230fc02909484996235883187aaf86d8d24fd7734fbbfb18c02d",
-    "d021-g1a-normalized.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-    "d021-g1a-raw.stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-    "d021-g1a-raw.stderr.log": "da4b177536cb9495bbf29ddd5b7dc83b7b8f5a7c1079fd177ec839480dc00d32"
+  },
+  "input_change_and_approval": {
+    "previous_patch_sha256": "4810889f7716ef8b18da80b2935b534e31dde9d1e799e5068d99a769c87992f1",
+    "previous_patch_approved": true,
+    "previous_patch_applied": false,
+    "P0_P2_remain_ratified": true,
+    "replacement_P1_approval": null,
+    "changed_inputs": [
+      "foundation/ATTEST.md",
+      "tests/foundation/test_attest.py"
+    ]
   }
 }

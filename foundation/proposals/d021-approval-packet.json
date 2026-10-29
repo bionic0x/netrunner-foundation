@@ -1,10 +1,10 @@
 {
   "schema_version": 1,
   "decision": "D-021",
-  "status": "PROPOSED_NOT_APPLIED",
+  "status": "P0_P2_ACCEPTED_P1_RENEWAL_REQUIRED",
   "date": "2026-10-29",
   "repository": "bionic0x/netrunner-foundation",
-  "base_commit": "284275f1ae96174a542007fbfabe6522d5c66bbd",
+  "base_commit": "edce974f38d6611696d23fc2d11ec29e560fe73d",
   "object_format": "sha1",
   "owner_approval": null,
   "approval_is_not_authenticated_by_this_file": true,
@@ -15,7 +15,8 @@
       "id": "P0",
       "prior_decision": "D-010",
       "proposal": "Ratify the existing independence floor: only an INDEPENDENT_OPERATOR label admits PROCEED; SELF and SEPARATED_CONTEXT remain conditional at best. This structural label is not authenticated identity or execution authority.",
-      "runtime_change": false
+      "runtime_change": false,
+      "status": "RATIFIED_BY_OWNER"
     },
     {
       "id": "P1",
@@ -25,7 +26,8 @@
         "apply",
         "merge_after_required_checks_pass"
       ],
-      "mandate_exception": "Explicit owner authorization extends the D-020 handwritten-only exception to this exact agent-authored maintenance patch; authorship is not relabelled as human-written."
+      "mandate_exception": "Explicit owner authorization extends the D-020 handwritten-only exception to this exact agent-authored maintenance patch; authorship is not relabelled as human-written.",
+      "status": "REPLACEMENT_PATCH_AWAITING_RENEWED_APPROVAL"
     },
     {
       "id": "P2",
@@ -34,12 +36,13 @@
       "cumulative_limit": 4,
       "window_days": 90,
       "every_positive_delta_requires_independent_review": true,
-      "runtime_change": false
+      "runtime_change": false,
+      "status": "RATIFIED_BY_OWNER"
     }
   ],
   "patch": {
     "file": "foundation/proposals/d021-shared-protection.patch",
-    "sha256": "4810889f7716ef8b18da80b2935b534e31dde9d1e799e5068d99a769c87992f1",
+    "sha256": "1a8e34a57d4f08efac5db48e2543645683f409837b031a0a578afd63ec76d47e",
     "paths": [
       "ante/develop/policy.py",
       "foundation/ATTEST.md",
@@ -76,14 +79,14 @@
       },
       "foundation/ATTEST.md": {
         "input": {
-          "sha256": "56b29e4e893612a01704479f1675ce3d7a3c109153aa94c85da9a97d5d770634",
-          "git_blob_oid": "463d05a8f9eb0a77a10088ba2dbdc662be5159b9",
-          "bytes": 11409
+          "sha256": "1c458e1dec2a7b76f5d1437559f6fa321649ef1b8cc6b1598421532bb4a20770",
+          "git_blob_oid": "03ba6f0f39b9b80de27e293ca6d0d7096acb57c0",
+          "bytes": 14938
         },
         "output": {
-          "sha256": "fa25de22a71abdae5f08d1e810798cae8a97ad04edfdf04842631677f8b72c05",
-          "git_blob_oid": "45b9d90f146643312b63640a8472aab06bec4f19",
-          "bytes": 11615
+          "sha256": "318f1d96d2f0d5bb3fc14124971dd58073baf67fb934e0bb66f0b2481211babe",
+          "git_blob_oid": "f04f5ae271b032e527c1e56c13b192e22065127e",
+          "bytes": 15090
         },
         "mode": "100644"
       },
@@ -94,9 +97,9 @@
           "bytes": 33655
         },
         "output": {
-          "sha256": "23d5327d61e8ea7697d9051f3921ea898c8c7b965e624b6832039c8377a13253",
-          "git_blob_oid": "4e480ef46fc5563e8db73ce12e3aae70d351deca",
-          "bytes": 35611
+          "sha256": "25c3f41002397683f49530034fce5d66d218d5d427c00706823c356a48bcbfeb",
+          "git_blob_oid": "d47d8b83eb3f0af1f9a4efb3b5c6e49e88930f16",
+          "bytes": 35656
         },
         "mode": "100644"
       },
@@ -128,14 +131,14 @@
       },
       "tests/foundation/test_attest.py": {
         "input": {
-          "sha256": "ab6c79672d98613ecf6b9d60e56a00735a909194fc351ed1de31122193f5891a",
-          "git_blob_oid": "9869e70177ca3bf6b3aa12b1fd8e65e9e45b36b8",
-          "bytes": 31305
+          "sha256": "ee159c5e290d5a39c9c5a33b5d68918c492c65de28c37d55314608fb12dcf5ef",
+          "git_blob_oid": "819a18c19cdcf8b3543c95a488d39bb8d0344a0c",
+          "bytes": 41597
         },
         "output": {
-          "sha256": "31d3bcf4f07963d374320a33d71ec7184dd0f732def95dbaffb202caeb98ca0a",
-          "git_blob_oid": "2fd75b6296efddf403c2d69f7deaecb6f97fda4e",
-          "bytes": 31356
+          "sha256": "9e06398be39d0d442c96359df53fd18cb08e447618ea13fb7104e67f8720cda7",
+          "git_blob_oid": "3077fc8170e3e1a3f9962ec59a71a531705cee7f",
+          "bytes": 41648
         },
         "mode": "100644"
       },
@@ -151,7 +154,7 @@
     },
     "applied_to_main": false,
     "isolated_review_worktree_only": true,
-    "result_tree_oid_at_review_base": "365e1c689f6e7fdbba7fac13a5be1aed36cc118b"
+    "result_tree_oid_at_review_base": "1fd1a3d47e98e1e7818e058dc583563eb3d66229"
   },
   "preserved_controls": {
     "old_protection_patterns_retained": true,
@@ -164,20 +167,13 @@
     "cryptographic_dependencies_added": false,
     "owner_signer_exposed": false
   },
-  "g0_g1a_design_delta": "G1a has landed through #23 with protections in both lists. D-021 proposes one pinned shared manifest, keeps both G1a patterns, and migrates its protection test and guide to that same source. This explicitly reconciles the earlier duplicated-list wording; it does not reauthorize G1a or grant signing authority.",
+  "g0_g1a_design_delta": "G1a and #26 signer-isolation/review fixes have landed. This shared-manifest migration preserves both G1a patterns, all #26 runtime and tests outside T08, and the guide warning about HEAD/default-store and dirty-verifier checks. No signing or host authority is granted.",
   "g0_g1a_adoption": false,
   "g0_g1a_scope": "D-021 changes no signer, signature kernel, key registry, cryptographic dependency, approval broker or host authorization service. Existing G1a behavior is preserved.",
   "validation": "foundation/evidence/d021-validation.json",
   "review_independence_level": "SEPARATED_CONTEXT",
   "review_receipt": "foundation/evidence/d021-review.json",
   "future_application_receipt": "foundation/evidence/d021-execution.json",
-  "prior_preparation": {
-    "base_commit": "b719f5789b20288d8fa519f747ed4dac1d560674",
-    "patch_sha256": "fdea84af57869af77b3aa49bcdff175e40ccc096c6220821c2fde5189f6d929a",
-    "owner_approval": null,
-    "status": "SUPERSEDED_BEFORE_APPROVAL",
-    "reason": "Concurrent G1a integration #23 changed both protection manifests and added a boundary test that must migrate with them."
-  },
   "g1a_preserved_from_main": {
     "pr": 23,
     "merge_commit": "284275f1ae96174a542007fbfabe6522d5c66bbd",
@@ -185,7 +181,39 @@
     "existing_attest_patterns_retained": [
       "ante/attest/**",
       "foundation/attest/**"
-    ]
+    ],
+    "follow_up_pr": 26,
+    "follow_up_merge_commit": "edce974f38d6611696d23fc2d11ec29e560fe73d"
   },
-  "packet_kind": "unsigned_preparation_scope_receipt_not_a_signed_ante.d020.approval"
+  "packet_kind": "unsigned_preparation_scope_receipt_not_a_signed_ante.d020.approval",
+  "ratified_decisions": {
+    "P0": "ACCEPTED by direct owner reply si on 29 October 2026",
+    "P2": "ACCEPTED by that same reply; no threshold changes"
+  },
+  "prior_approval_event": {
+    "source": "Direct owner reply si to the request to approve D-021 P0-P2 and apply/merge exact patch 4810889f...c87992f1 after checks.",
+    "approved_patch_sha256": "4810889f7716ef8b18da80b2935b534e31dde9d1e799e5068d99a769c87992f1",
+    "P0": "ACCEPTED",
+    "P2": "ACCEPTED",
+    "P1": "APPROVED_PREVIOUS_BYTES_NOT_APPLIED",
+    "application_status": "NOT_APPLIED_INPUT_CHANGED",
+    "reason": "PR #26 merged before application and changed foundation/ATTEST.md and the protected tests/foundation/test_attest.py. D-020 per-patch procedure step 4 requires renewed approval of the new exact patch.",
+    "does_not_approve_this_replacement_patch": true
+  },
+  "previous_preparations": [
+    {
+      "base_commit": "b719f5789b20288d8fa519f747ed4dac1d560674",
+      "patch_sha256": "fdea84af57869af77b3aa49bcdff175e40ccc096c6220821c2fde5189f6d929a",
+      "owner_approval": null,
+      "status": "SUPERSEDED_BEFORE_APPROVAL",
+      "reason": "Concurrent G1a integration #23 changed both protection manifests and added a boundary test that must migrate with them."
+    },
+    {
+      "base_commit": "284275f1ae96174a542007fbfabe6522d5c66bbd",
+      "patch_sha256": "4810889f7716ef8b18da80b2935b534e31dde9d1e799e5068d99a769c87992f1",
+      "status": "APPROVED_NOT_APPLIED_INPUT_CHANGED",
+      "preserved_in_git_history_at": "2c77f150ee6460f3566975267d06be961c9ef00a",
+      "reason": "PR #26 merged before application."
+    }
+  ]
 }
