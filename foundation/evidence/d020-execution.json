@@ -1,0 +1,137 @@
+{
+  "schema_version": 1,
+  "decision": "D-020",
+  "approved_on": "2026-10-29",
+  "approval_record": {
+    "source": "direct user conversation",
+    "response": "si",
+    "context": "Approval of option C and the exact P0–P3 + R1 packet requested after PR #13 was prepared",
+    "items": [
+      "P0",
+      "P1",
+      "P2",
+      "P3",
+      "R1"
+    ],
+    "standing_authority_granted": false,
+    "actual_agent_authorship_retained": true
+  },
+  "status": "ORIGINAL_CHANGES_MERGED_REVISION_PREPARED",
+  "pull_request": 13,
+  "branch": "foundation/codex/d020",
+  "policy": "option C",
+  "applied_patches": [
+    {
+      "id": "P1",
+      "sha256": "9d92cbd4c2cc1d2a7465a9705ae89e2ce9956550c754d70483fbc3db1d229f2b",
+      "paths": [
+        "strategy/overdrive-protected.json",
+        "strategy/NEXUS-OVERDRIVE.md"
+      ]
+    },
+    {
+      "id": "P2",
+      "sha256": "64d1085836748b669906833b4c54e669da70f2bb20cb94756b6a86dd2df65d42",
+      "paths": [
+        ".github/workflows/check-runbooks.yml",
+        "scripts/verify-release.sh"
+      ]
+    },
+    {
+      "id": "P3",
+      "sha256": "78e1ebfd20d33cdb8d925abf6a568ed3f3ee5857d9ec0d168a858b2be802b332",
+      "paths": [
+        "scripts/test-nexus-review.py"
+      ]
+    }
+  ],
+  "protected_patterns_unchanged": 23,
+  "prior_contract_commit_ratified": "7b213ebfa876bc8f44c185b19d7484009bb8f205",
+  "remote_application_commits": {
+    "P1": "cd4e51e4ada97b1bfcb0f42fcde1d9daf812eb9f",
+    "P3": "087b87a1590f75ef1a6c90801036af1d5ff46217",
+    "P2_release": "56b98fb333dee0b2bf2b0dd5444aa5ae321bc82e",
+    "P2_workflow": "d1be73f59a5b9094452280fed0e4c07546ef878c",
+    "P2_fetch_history": "c0c31fe83fead049c7693a0c86782566c60ae262"
+  },
+  "local_application": {
+    "owner_approved": true,
+    "patches": [
+      {
+        "id": "P1",
+        "local_commit": "a51e28050e050de616c5f784ca64b896972a59ae",
+        "sha256": "9d92cbd4c2cc1d2a7465a9705ae89e2ce9956550c754d70483fbc3db1d229f2b",
+        "verified_output_files": [
+          "strategy/overdrive-protected.json",
+          "strategy/NEXUS-OVERDRIVE.md"
+        ]
+      },
+      {
+        "id": "P2",
+        "local_commit": "1b65bca6ac77bda6e2b1fe936f2c64f526ba2877",
+        "sha256": "64d1085836748b669906833b4c54e669da70f2bb20cb94756b6a86dd2df65d42",
+        "verified_output_files": [
+          ".github/workflows/check-runbooks.yml",
+          "scripts/verify-release.sh"
+        ]
+      },
+      {
+        "id": "P3",
+        "local_commit": "b833d2aed6ee2d6645e75d907cb0db80239dd16d",
+        "sha256": "78e1ebfd20d33cdb8d925abf6a568ed3f3ee5857d9ec0d168a858b2be802b332",
+        "verified_output_files": [
+          "scripts/test-nexus-review.py"
+        ]
+      }
+    ],
+    "protected_patterns_unchanged": 23
+  },
+  "local_review_regression": {
+    "exit_code": 0,
+    "tests": 7,
+    "python": "3.12.14",
+    "duration_seconds": 10.666,
+    "limits": "Applied legacy review test on this operator checkout; not full Foundation target-runtime release."
+  },
+  "hosted_ci": {
+    "commit": "f3adcc48e259cf412f97ffe8f4c769db595d17f3",
+    "workflow_groups": 8,
+    "all_conclusions": "success",
+    "verified_on": "2026-10-29",
+    "scope": "Original P2 with fetch-depth: 0; does not certify the later v7.1.0 candidate"
+  },
+  "independence_level": "SELF",
+  "independent_operator_review": null,
+  "independent_operator_review_reason": "No independent operator review was performed or authenticated.",
+  "D-018_changed": false,
+  "frozen_characterization_outputs_changed": false,
+  "log_sha256": {
+    "d020-applied-review-test.stdout.log": "a03b349b4f715b850cab4cf49e43099a078b7992f9a6a74cd0b08f95ed4efed7",
+    "d020-applied-review-test.stderr.log": "34c746d6e0775c8230a76ad4353a6460e696672d85bde96904211bf9be635379"
+  },
+  "repository": "bionic0x/netrunner-foundation",
+  "consolidation_base_commit": "039e88da3f51947235c3e5114cdf6df39a4ecb0a",
+  "merges": {
+    "13": "f3adcc48e259cf412f97ffe8f4c769db595d17f3",
+    "15": "ff16cbe6c7c77799c3f4fc2bce987c68c5b29699"
+  },
+  "P2_revision": {
+    "file": "foundation/proposals/ci-python-v7.1-delta.patch",
+    "sha256": "5d4659fc3bd36f98412b11e40f1ea91df78417dbc9663b27c125a10f09fdb119",
+    "review_base_commit": "039e88da3f51947235c3e5114cdf6df39a4ecb0a",
+    "input_files": {
+      ".github/workflows/check-runbooks.yml": {
+        "sha256": "95b85a65da63b79baf8814220c9012a64a283fd4e8e2cc15af935a23f4b5dd45",
+        "git_blob": "41b128f1c9fea272ccd426c41d9ddd38adcb7d82"
+      }
+    },
+    "output_files": {
+      ".github/workflows/check-runbooks.yml": {
+        "sha256": "f35713e7ac410125af4ed56045a0e7b672e30b2784c91c15263ed44095d12c93",
+        "git_blob": "3b0372199883b9bbca2dd984099fe8eb7169abdd"
+      }
+    },
+    "approval_basis": "Original P2 approved directly; v7.1.0 and full-history variant selected under the later explicit owner instruction to decide P2 and consolidate the branches.",
+    "final_ci": "To be observed on the consolidation PR head"
+  }
+}
