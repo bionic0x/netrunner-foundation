@@ -9,8 +9,9 @@
     ante verify SIGNED [--trust FILE] [--repo DIR] [--artefact FILE] [--head REV]
 
 ``ante sign`` reads an encrypted PKCS#8 Ed25519 key that lives outside the
-checkout and is readable by its owner only, and asks for the passphrase on the
-terminal; it accepts no passphrase from arguments, environment or a pipe. An
+checkout and belongs to a separate signing account, mode 600, and must itself
+run as that account, never as the account that owns the checkout. It asks for
+the passphrase on the terminal; it accepts no passphrase from arguments, environment or a pipe. An
 agent shell may have a terminal too: what keeps it from signing is that it does
 not know the passphrase. A signature does not prove that a person was present
 (``foundation/ATTEST.md``, T01).
@@ -69,20 +70,36 @@ def _inside(path: Path, root: Path) -> bool:
         return False
 
 
-def check_key_file(path: Path, root: Path = ROOT) -> Path:
-    """Refuse key files an agent working in the checkout could read or be handed."""
+def read_key_file(path: Path, root: Path = ROOT, checkout_uid: int | None = None) -> bytes:
+    """Read a signing key only from a separate account that an agent in the checkout cannot be.
+
+    The key must be outside the checkout, a regular file owned by the account
+    running ``ante sign``, with mode 600 or stricter, and that account must not
+    be the one that owns the checkout. Checks and read use one open descriptor.
+    """
+    if not hasattr(os, 'geteuid'):
+        raise SignError('signing needs POSIX file ownership; this platform is not supported')
     resolved = path.expanduser().resolve()
     if _inside(resolved, root.resolve()):
         raise SignError('the private key is inside the checkout; keep it outside the repository')
+    euid = os.geteuid()
+    owner_of_checkout = root.resolve().stat().st_uid if checkout_uid is None else checkout_uid
+    if euid == owner_of_checkout:
+        raise SignError('ante sign is running as the account that owns the checkout; '
+                        'run it as the separate signing account (for example sudo -u ante-signer)')
     try:
-        info = resolved.stat()
+        fd = os.open(resolved, os.O_RDONLY | getattr(os, 'O_NOFOLLOW', 0))
     except OSError as exc:
         raise SignError(f'key file: {exc.strerror or exc}') from None
-    if not stat.S_ISREG(info.st_mode):
-        raise SignError('key file is not a regular file')
-    if info.st_mode & 0o077:
-        raise SignError('key file is readable or writable by others; chmod 600 it')
-    return resolved
+    with os.fdopen(fd, 'rb') as handle:
+        info = os.fstat(handle.fileno())
+        if not stat.S_ISREG(info.st_mode):
+            raise SignError('key file is not a regular file')
+        if info.st_uid != euid:
+            raise SignError('the key file is not owned by the account running ante sign')
+        if info.st_mode & 0o077:
+            raise SignError('key file is readable or writable by others; chmod 600 it')
+        return handle.read()
 
 
 def read_passphrase(prompt: str = 'Passphrase for the signing key: ') -> bytes:
@@ -101,17 +118,18 @@ def read_passphrase(prompt: str = 'Passphrase for the signing key: ') -> bytes:
     return value.encode('utf-8')
 
 
-def file_signer(path: Path, method: str, passphrase=read_passphrase) -> eddsa.Signer:
+def file_signer(path: Path, method: str, passphrase=read_passphrase, *, root: Path = ROOT,
+                checkout_uid: int | None = None) -> eddsa.Signer:
     """An Ed25519 signer from an encrypted PKCS#8 file; the key never leaves this closure."""
     module, _ = eddsa.ed25519()
     from cryptography.hazmat.primitives import serialization
-    data = check_key_file(path).read_bytes()
+    data = read_key_file(path, root, checkout_uid)
     try:
         serialization.load_pem_private_key(data, password=None)
     except TypeError:
         pass                                    # encrypted, as required
-    except ValueError as exc:
-        raise SignError(f'not a PEM private key: {exc}') from None
+    except ValueError:
+        raise SignError('the key file is not a PEM private key') from None
     else:
         raise SignError('the key file is not encrypted; use an encrypted PKCS#8 key')
     try:
@@ -255,7 +273,7 @@ def _key(args) -> int:
 def add_parser(sub) -> None:
     signer = sub.add_parser('sign', help='sign a receipt or a D-020 approval (eddsa-jcs-2022, local key)')
     signer.add_argument('document', help='unsigned receipt or approval (JSON)')
-    signer.add_argument('--key', required=True, help='encrypted PKCS#8 Ed25519 key, outside the checkout, mode 600')
+    signer.add_argument('--key', required=True, help='encrypted PKCS#8 Ed25519 key of the separate signing account, outside the checkout, mode 600')
     signer.add_argument('--method', required=True, help='verificationMethod, e.g. the key\'s did:key')
     signer.add_argument('--at', required=True, help='signing time, ISO-8601 with offset')
     signer.add_argument('--purpose', default=DEFAULT_PURPOSE, help=argparse.SUPPRESS)

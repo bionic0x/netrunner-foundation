@@ -76,6 +76,13 @@ def _check_created(value: Any) -> None:
         raise ProofError(f'created {value!r} is not a real UTC time') from None
 
 
+def valid_context(value: Any) -> bool:
+    """``@context`` is a non-empty string or a non-empty list of non-empty strings."""
+    if isinstance(value, str):
+        return bool(value)
+    return isinstance(value, list) and bool(value) and all(isinstance(v, str) and v for v in value)
+
+
 def _contexts(value: Any) -> list:
     return list(value) if isinstance(value, list) else [value]
 
@@ -101,6 +108,8 @@ def create(document: dict, method: str, purpose: str, created: str, sign: Signer
     options = {'type': PROOF_TYPE, 'cryptosuite': CRYPTOSUITE, 'created': created,
                'verificationMethod': method, 'proofPurpose': purpose}
     if '@context' in document:
+        if not valid_context(document['@context']):
+            raise ProofError('@context must be a non-empty string or list of strings')
         options['@context'] = copy.deepcopy(document['@context'])
     signature = sign(hash_data(document, options))
     if not isinstance(signature, (bytes, bytearray)) or len(signature) != 64:
@@ -139,6 +148,10 @@ def verify(secured: Any, resolve: KeyResolver) -> Verification:
         return result
     unsecured = {key: value for key, value in secured.items() if key != 'proof'}
     options = {key: value for key, value in proof.items() if key != 'proofValue'}
+    for where, holder in (('document', unsecured), ('proof', options)):
+        if '@context' in holder and not valid_context(holder['@context']):
+            result.detail = f'{where} @context must be a non-empty string or list of strings'
+            return result
     if '@context' in options:
         expected = _contexts(options['@context'])
         actual = _contexts(unsecured.get('@context'))

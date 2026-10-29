@@ -51,6 +51,7 @@ if HAS_CRYPTO:
     from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
 
 AT = '2026-10-29T12:00:00Z'
+OTHER = (os.geteuid() + 1) if hasattr(os, 'geteuid') else 1   # a checkout owner that is not the signer
 
 
 def vector(name: str) -> bytes:
@@ -307,6 +308,18 @@ class ProofNegatives(unittest.TestCase):
         altered['@context'] = ['https://example.invalid/b']
         self.assertEqual('CONTEXT_MISMATCH', self.reason(altered))
 
+    def test_an_empty_or_malformed_context_is_refused(self):
+        for context in ([], '', [''], [1], {'a': 'b'}):
+            with self.subTest(context=context), self.assertRaises(eddsa.ProofError):
+                eddsa.create({'@context': context, 'value': 'a'}, self.method, 'assertionMethod', AT, self.key.sign)
+        signed = eddsa.create({'@context': ['https://example.invalid/a'], 'value': 'a'}, self.method,
+                              'assertionMethod', AT, self.key.sign)
+        for context in ([], ['']):
+            altered = copy.deepcopy(signed)
+            altered['@context'] = context
+            altered['proof']['@context'] = context
+            self.assertEqual('MALFORMED', self.reason(altered), context)
+
     def test_missing_cryptography_fails_closed(self):
         with mock.patch.object(eddsa, 'ed25519', side_effect=eddsa.CryptoUnavailable('missing')):
             self.assertEqual('CRYPTO_UNAVAILABLE', self.reason(self.signed))
@@ -532,15 +545,28 @@ class SigningGuards(unittest.TestCase):
         inside = Path(tempfile.mkdtemp(dir=ROOT))
         self.addCleanup(shutil.rmtree, inside, True)
         with self.assertRaisesRegex(commands.SignError, 'inside the checkout'):
-            commands.file_signer(self.write_key(inside), self.method, lambda: b'correct horse')
+            commands.file_signer(self.write_key(inside), self.method, lambda: b'correct horse', checkout_uid=OTHER)
+
+    def test_the_account_that_owns_the_checkout_cannot_sign(self):
+        with self.assertRaisesRegex(commands.SignError, 'separate signing account'):
+            commands.file_signer(self.write_key(self.tmp), self.method, lambda: b'correct horse',
+                                 checkout_uid=os.geteuid())
+
+    def test_the_signing_account_must_own_the_key(self):
+        path = self.write_key(self.tmp)
+        with mock.patch.object(os, 'geteuid', return_value=OTHER + 1):
+            with self.assertRaisesRegex(commands.SignError, 'not owned by the account'):
+                commands.file_signer(path, self.method, lambda: b'correct horse', checkout_uid=OTHER)
 
     def test_a_key_readable_by_others_is_refused(self):
         with self.assertRaisesRegex(commands.SignError, 'chmod 600'):
-            commands.file_signer(self.write_key(self.tmp, mode=0o644), self.method, lambda: b'correct horse')
+            commands.file_signer(self.write_key(self.tmp, mode=0o644), self.method, lambda: b'correct horse',
+                                  checkout_uid=OTHER)
 
     def test_an_unencrypted_key_is_refused(self):
         with self.assertRaisesRegex(commands.SignError, 'not encrypted'):
-            commands.file_signer(self.write_key(self.tmp, encrypted=False), self.method, lambda: b'x')
+            commands.file_signer(self.write_key(self.tmp, encrypted=False), self.method, lambda: b'x',
+                                  checkout_uid=OTHER)
 
     def test_without_a_terminal_there_is_no_passphrase(self):
         with mock.patch.object(os, 'open', side_effect=OSError('no tty')):
@@ -552,7 +578,9 @@ class SigningGuards(unittest.TestCase):
         self.addCleanup(repo.close)
         unsigned = self.tmp / 'receipt.json'
         unsigned.write_text(json.dumps(documents.receipt(repo.artefact(), AT, repo.dir)))
-        with mock.patch.object(os, 'open', side_effect=OSError('no tty')):
+        key_bytes = self.write_key(self.tmp).read_bytes()
+        with mock.patch.object(commands, 'read_key_file', return_value=key_bytes), \
+                mock.patch.object(os, 'open', side_effect=OSError('no tty')):
             code, out, err = run(['sign', str(unsigned), '--key', str(self.write_key(self.tmp)),
                                   '--method', self.method, '--at', AT])
         self.assertEqual((2, ''), (code, out))
@@ -561,15 +589,16 @@ class SigningGuards(unittest.TestCase):
     def test_wrong_passphrase_and_wrong_did_key_are_refused(self):
         path = self.write_key(self.tmp)
         with self.assertRaisesRegex(commands.SignError, 'wrong passphrase'):
-            commands.file_signer(path, self.method, lambda: b'wrong')
+            commands.file_signer(path, self.method, lambda: b'wrong', checkout_uid=OTHER)
         _, _, other = new_key()
         with self.assertRaisesRegex(commands.SignError, 'not this key'):
-            commands.file_signer(path, other, lambda: b'correct horse')
+            commands.file_signer(path, other, lambda: b'correct horse', checkout_uid=OTHER)
 
     def test_a_typed_passphrase_signs_a_document_that_verifies(self):
         repo = Repo()
         self.addCleanup(repo.close)
-        signer = commands.file_signer(self.write_key(self.tmp), self.method, lambda: b'correct horse')
+        signer = commands.file_signer(self.write_key(self.tmp), self.method, lambda: b'correct horse',
+                                      checkout_uid=OTHER)
         signed = commands.sign_document(documents.receipt(repo.artefact(), AT, repo.dir), signer, self.method, AT)
         path = self.tmp / 'signed.json'
         path.write_text(json.dumps(signed))
