@@ -1,5 +1,5 @@
 {
-  "artifact_sha256": "9b779a6783be2bf0c8bf27261f468b6ccd17c599aa9c08171a272f6c5706b9a4",
+  "artifact_sha256": "bf0945a98aa4c002aaaee44368258185a9ff89555b3b463eabdffc43f7530549",
   "at": "2026-10-28T11:45:00Z",
   "body": {
     "covered_metrics": [
@@ -8,6 +8,10 @@
     ],
     "misuse_analysis": [
       {
+        "goodhart_variants": [
+          "regressional",
+          "adversarial"
+        ],
         "id": "urgent-share",
         "kind": "metric",
         "misuse": [
@@ -16,20 +20,34 @@
             "countermeasure": "an urgency label counts only with the funder's deadline letter",
             "effect_on_purpose": "urgent hours crowd out the requests the label was meant to protect",
             "indicator": "urgent requests without a deadline document attached",
-            "reuse": "relabel ordinary requests as urgent so they jump the queue"
+            "reuse": "relabel ordinary requests as urgent so they jump the queue",
+            "variant": "adversarial"
           },
           {
             "actor": "council",
             "countermeasure": "report missed deadlines beside the share every cycle",
             "effect_on_purpose": "real deadlines are missed while the indicator looks healthy",
             "indicator": "missed external deadlines on requests that were refused the urgent label",
-            "reuse": "push the share down by refusing urgent labels to show the metric improving"
+            "reuse": "push the share down by refusing urgent labels to show the metric improving",
+            "variant": "adversarial"
+          },
+          {
+            "actor": "council",
+            "countermeasure": "judge settings over several cycles against deadline hits, never on one cycle's share",
+            "effect_on_purpose": "the best-looking cycle was partly luck in how requests were labelled, so the copied settings protect nothing",
+            "indicator": "deadline hits per cycle, compared across the cycles ranked best and worst by urgent share",
+            "reuse": "rank cycles by the urgent share and copy the settings of the best one",
+            "variant": "regressional"
           }
         ],
         "purpose": "protect hours with a real external deadline",
         "statement": "share of hours declared urgent"
       },
       {
+        "goodhart_variants": [
+          "extremal",
+          "adversarial"
+        ],
         "id": "essential-demand",
         "kind": "metric",
         "misuse": [
@@ -38,13 +56,25 @@
             "countermeasure": "aggregate essential demand by project, not by booking",
             "effect_on_purpose": "the capacity trigger fires late because demand looks fragmented",
             "indicator": "bookings by one team within the same week whose sum exceeds its declared need",
-            "reuse": "split one essential booking into several smaller ones to look less dominant"
+            "reuse": "split one essential booking into several smaller ones to look less dominant",
+            "variant": "adversarial"
+          },
+          {
+            "actor": "research-teams",
+            "countermeasure": "collect declared need per project each cycle, independent of bookings",
+            "effect_on_purpose": "near saturation recorded demand understates need, so the capacity trigger never fires",
+            "indicator": "requests withdrawn or never filed that teams report in the cycle review",
+            "reuse": "stop booking hours that will not be served once the laboratory is full",
+            "variant": "extremal"
           }
         ],
         "purpose": "trigger a capacity decision before coordination stops helping",
         "statement": "essential demand per cycle"
       },
       {
+        "goodhart_variants": [
+          "adversarial"
+        ],
         "id": "deadline-document-rule",
         "kind": "rule",
         "misuse": [
@@ -53,13 +83,24 @@
             "countermeasure": "letters name the project and the date; the coordinator samples them each cycle",
             "effect_on_purpose": "the document becomes a formality and inflation resumes",
             "indicator": "deadline letters reused across unrelated projects",
-            "reuse": "obtain generic deadline letters that cover every request"
+            "reuse": "obtain generic deadline letters that cover every request",
+            "variant": "adversarial"
           }
         ],
         "purpose": "remove the incentive to inflate urgency",
         "statement": "urgency labels require a deadline document"
       }
-    ]
+    ],
+    "unconsidered_variants": {
+      "essential-demand": [
+        "regressional",
+        "causal"
+      ],
+      "urgent-share": [
+        "extremal",
+        "causal"
+      ]
+    }
   },
   "case_id": "lab-consortium",
   "claim_history": {
@@ -98,9 +139,22 @@
   },
   "claims": [],
   "command": "street",
-  "findings": [],
+  "findings": [
+    {
+      "code": "GOODHART_VARIANTS_UNCONSIDERED",
+      "message": "no scenario for: extremal, causal",
+      "path": "instruments[0].misuse",
+      "severity": "WARN"
+    },
+    {
+      "code": "GOODHART_VARIANTS_UNCONSIDERED",
+      "message": "no scenario for: regressional, causal",
+      "path": "instruments[1].misuse",
+      "severity": "WARN"
+    }
+  ],
   "independence_level": null,
-  "input_sha256": "971efd81e5cfa6f25f14e5944e21c86c482864888797226b09de3c262715cf3b",
+  "input_sha256": "0122006c62d142985d372c5ca01d41b3bac716f442a658f2b0d787142701d65e",
   "next_decision": "Carry each manipulation indicator into watch; cohere checks coverage.",
   "parents": [
     {
