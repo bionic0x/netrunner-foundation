@@ -118,15 +118,33 @@ never given to an agent or stored where one can read it, and no agent runs with
 the right to become the signing account (root, or `sudo` to it without a
 password). A hardware token can replace the file key in a later stage.
 
-Owner setup, once (macOS or Linux; `ante-signer` is any dedicated account):
+Owner setup, once. `ante-signer` is a dedicated account; create it first.
+
+macOS:
 
 ```sh
-sudo -u ante-signer sh -c 'umask 077; mkdir -p ~/.ante && openssl genpkey -algorithm ed25519 -aes-256-cbc -out ~/.ante/owner.pem'
-sudo -u ante-signer openssl pkey -in ~ante-signer/.ante/owner.pem -pubout > owner.pub.pem
+sudo sysadminctl -addUser ante-signer -fullName "Ante Signer" -password -
+sudo createhomedir -c -u ante-signer
+```
+
+Linux: `sudo adduser ante-signer`.
+
+The signing account must be able to read the checkout, because `ante sign`
+re-derives the approval from it. On macOS keep the checkout outside `~/Documents`
+and `~/Desktop`, which the system protects from other accounts.
+
+```sh
 sudo -u ante-signer python3 -m pip install --user --require-hashes --no-deps -r .github/requirements/attest.txt
-python3 scripts/ante attest key owner.pub.pem --principal owner:bionic0x --principal-type human
+sudo -u ante-signer sh -c 'mkdir -p ~/.ante && chmod 700 ~/.ante'
+sudo -u ante-signer python3 scripts/ante attest keygen --out ~ante-signer/.ante/owner.pem --public /tmp/owner.pub.pem
+python3 scripts/ante attest key /tmp/owner.pub.pem --principal owner:bionic0x --principal-type human
 # add the printed entry to foundation/attest/trusted-keys.json in a D-020 change
 ```
+
+`keygen` writes an encrypted PKCS#8 Ed25519 key with mode 600, never over an
+existing file, and asks for the passphrase twice on the terminal. It makes no
+use of `openssl`, so the LibreSSL that macOS ships does not matter. It refuses
+to run as the account that owns the checkout and to write inside it.
 
 Approving a protected change:
 

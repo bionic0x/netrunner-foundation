@@ -744,6 +744,35 @@ class SigningGuards(unittest.TestCase):
         self.assertEqual(0, code, out)
         self.assertTrue(json.loads(out)['verified'])
 
+    def test_keygen_creates_a_key_that_signs_and_is_never_overwritten(self):
+        out, public = self.tmp / 'new.pem', self.tmp / 'new.pub.pem'
+        method = commands.generate_key(out, public, lambda: b'correct horse', checkout_uid=OTHER)
+        self.assertEqual(0o600, out.stat().st_mode & 0o777)
+        self.assertIn(b'ENCRYPTED PRIVATE KEY', out.read_bytes())
+        signer = commands.file_signer(out, method, lambda: b'correct horse', checkout_uid=OTHER)
+        self.assertTrue(callable(signer))
+        code, shown, err = run(['attest', 'key', str(public), '--principal', 'owner:test', '--principal-type', 'human'])
+        self.assertEqual(0, code, err)
+        self.assertEqual(method, json.loads(shown)['verification_method'])
+        with self.assertRaisesRegex(commands.SignError, 'already exists'):
+            commands.generate_key(out, self.tmp / 'other.pub.pem', lambda: b'x', checkout_uid=OTHER)
+
+    def test_keygen_refuses_the_checkout_and_its_owner(self):
+        with self.assertRaisesRegex(commands.SignError, 'inside the checkout'):
+            commands.generate_key(commands.ROOT / 'k.pem', self.tmp / 'k.pub', lambda: b'x', checkout_uid=OTHER)
+        with self.assertRaisesRegex(commands.SignError, 'owns the checkout'):
+            commands.generate_key(self.tmp / 'k2.pem', self.tmp / 'k2.pub', lambda: b'x', checkout_uid=os.geteuid())
+        self.assertFalse((self.tmp / 'k2.pem').exists())
+
+    def test_keygen_needs_two_matching_typed_passphrases(self):
+        answers = iter([b'one', b'two'])
+        with mock.patch.object(commands, 'read_passphrase', side_effect=lambda *_: next(answers)):
+            with self.assertRaisesRegex(commands.SignError, 'differ'):
+                commands._passphrase_twice()
+        with mock.patch.object(os, 'open', side_effect=OSError('no tty')):
+            with self.assertRaisesRegex(commands.SignError, 'typed by a person'):
+                commands._passphrase_twice()
+
     def test_cli_builds_documents_and_trust_entries(self):
         repo = Repo()
         self.addCleanup(repo.close)
