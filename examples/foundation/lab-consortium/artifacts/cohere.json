@@ -1,5 +1,5 @@
 {
-  "artifact_sha256": "3dc4bdb4aca789ee4696dfe11778f9377e6ffe79a2544584402cb03f0036c3ef",
+  "artifact_sha256": "93ba12abee0dc78db233b62828312a00b44c7743042bab03b01af15845aef94b",
   "at": "2026-10-28T13:00:00Z",
   "body": {
     "admissible_verdicts": [
@@ -13,7 +13,7 @@
     ],
     "doctrine_sha256": "ac92df4ffe92ddf666e84fafd1fb4648a85ca103f4bea2e9b91fa15df921b3be",
     "misuse_analysis": {
-      "street": "9b779a6783be2bf0c8bf27261f468b6ccd17c599aa9c08171a272f6c5706b9a4",
+      "street": "bf0945a98aa4c002aaaee44368258185a9ff89555b3b463eabdffc43f7530549",
       "uncovered_metrics": []
     },
     "names": {
@@ -173,7 +173,7 @@
       "command": "map"
     },
     {
-      "artifact_sha256": "9b779a6783be2bf0c8bf27261f468b6ccd17c599aa9c08171a272f6c5706b9a4",
+      "artifact_sha256": "bf0945a98aa4c002aaaee44368258185a9ff89555b3b463eabdffc43f7530549",
       "command": "street"
     }
   ],

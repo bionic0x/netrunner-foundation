@@ -122,11 +122,17 @@ class Propose(Sandbox):
         with self.assertRaisesRegex(develop.DevelopError, 'outside the scope this proposal declared'):
             self.propose(self.spec(scope=('engineering/**',)), self.frame_patch())
 
+    def resume(self, reason='leak traced and removed'):
+        with contextlib.redirect_stdout(stdio.StringIO()):
+            return cli.main(['develop', 'resume', '--by', 'Ana (owner)', '--reason', reason,
+                             '--state', self.state, '--at', T, '--repo', str(self.repo)])
+
     def test_an_injected_canary_rejects_the_proposal(self):
         token = 'ANTE-CANARY-' + 'c3' * 16
         leaked = self.patch({TARGET: (OLD, f'{NEW} ({token})')}, name='leak.patch')
         with self.assertRaisesRegex(develop.DevelopError, 'canary'):
             self.propose(self.spec(), leaked)
+        self.assertEqual(0, self.resume())
         spec = json.loads(Path(self.spec('p2')).read_text())
         finding = Path(spec['findings'][0]['path'])
         finding.write_text(json.dumps({'kind': 'patterns', 'proposals': [{'feature': token}]}))
@@ -135,6 +141,21 @@ class Propose(Sandbox):
         path.write_text(json.dumps(spec))
         with self.assertRaisesRegex(develop.DevelopError, 'canary found in finding'):
             self.propose(str(path), self.frame_patch())
+
+    def test_a_canary_halts_the_loop_until_a_named_human_resumes_it(self):
+        token = 'ANTE-CANARY-' + 'd4' * 16
+        leaked = self.patch({TARGET: (OLD, f'{NEW} ({token})')}, name='leak.patch')
+        with self.assertRaisesRegex(develop.DevelopError, 'halted until a human resumes it'):
+            self.propose(self.spec('leak'), leaked)
+        state = develop.State(self.state, self.repo)
+        self.assertEqual({'reason': 'canary', 'proposal': 'leak', 'stage': 'propose', 'where': ['patch']},
+                         state.halt())
+        self.assertNotIn('leak', state.proposals())
+        with self.assertRaisesRegex(develop.DevelopError, 'stopped \\(halted by a held-out canary in patch\\)'):
+            self.propose(self.spec('clean'), self.frame_patch())
+        self.assertEqual(0, self.resume())
+        self.assertIsNone(develop.State(self.state, self.repo).halt())
+        self.propose(self.spec('clean'), self.frame_patch())
 
     def test_one_open_proposal_and_a_campaign_spend_ceiling(self):
         self.propose(self.spec('p1'), self.frame_patch())
@@ -182,6 +203,22 @@ class Gate(Sandbox):
         self.assertIn('no held-out evidence supplied', report['holds'])
         self.assertIn('no self-test evidence register supplied', report['holds'])
         self.assertNotIn('ante-develop/p1', git(self.repo, 'branch', '--list'))
+
+    def test_a_canary_that_appears_after_proposal_rejects_at_the_gate_and_halts_the_loop(self):
+        patch = self.frame_patch()
+        spec = self.spec()
+        self.propose(spec, patch)
+        finding = Path(json.loads(Path(spec).read_text())['findings'][0]['path'])
+        finding.write_text(json.dumps({'kind': 'patterns', 'decisions_used': 40,
+                                       'proposals': [{'feature': 'ANTE-CANARY-' + 'e5' * 16}]}))
+        report = develop.gate('p1', patch, self.state, T, None, None, None, self.repo)
+        self.assertEqual('REJECT', report['decision'])
+        self.assertTrue(any('canary' in reason for reason in report['reasons']))
+        state = develop.State(self.state, self.repo)
+        self.assertEqual('gate', state.halt()['stage'])
+        self.assertTrue(state.stopped(2))
+        with self.assertRaisesRegex(develop.DevelopError, 'halted by a held-out canary'):
+            develop.gate('p1', patch, self.state, T, None, None, None, self.repo)
 
     def test_a_forged_proposal_cannot_bring_its_own_evaluator(self):
         # Bypass propose (as a tampered state file would) with a patch that rewrites the

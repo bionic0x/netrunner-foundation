@@ -199,73 +199,21 @@ class Calibrate(Workspace):
         self.assertAlmostEqual(0.49, result['groups'][0]['brier'], places=6)
 
 
-class CalibrationMetrics(unittest.TestCase):
-    """Skill, Murphy decomposition and ECE on hand-checkable rows."""
-
-    @staticmethod
-    def rows(pairs):
-        return [{'p': p, 'o': o} for p, o in pairs]
-
-    def test_hand_computed_case(self):
-        group = commands._calibration_group('all', 'all', self.rows([(0.7, 1), (0.7, 1), (0.7, 0), (0.7, 1)]), 1)
-        self.assertAlmostEqual(0.19, group['brier'], places=6)
-        self.assertAlmostEqual(0.75, group['base_rate'], places=6)
-        self.assertAlmostEqual(0.1875, group['brier_reference'], places=6)
-        self.assertAlmostEqual(1 - 0.19 / 0.1875, group['brier_skill_score'], places=6)
-        self.assertEqual({'reliability': 0.0025, 'resolution': 0.0, 'uncertainty': 0.1875, 'within_bin': 0.0},
-                         group['murphy'])
-        self.assertAlmostEqual(0.05, group['ece']['value'], places=6)
-
-    def test_murphy_identity_is_exact_when_forecasts_are_constant_inside_each_bin(self):
-        rng = random.Random(11)
-        pairs = []
-        for _ in range(200):
-            p = rng.choice((0.1, 0.3, 0.5, 0.7, 0.9))
-            pairs.append((p, 1 if rng.random() < p else 0))
-        group = commands._calibration_group('all', 'all', self.rows(pairs), 30)
-        m = group['murphy']
-        self.assertAlmostEqual(0.0, m['within_bin'], places=6)
-        self.assertAlmostEqual(group['brier'], m['reliability'] - m['resolution'] + m['uncertainty'], places=5)
-
-    def test_within_bin_term_carries_the_rest_when_forecasts_differ_inside_a_bin(self):
-        group = commands._calibration_group('all', 'all', self.rows([(0.61, 1), (0.79, 0), (0.1, 0), (0.95, 1)]), 1)
-        m = group['murphy']
-        self.assertNotEqual(0.0, m['within_bin'])
-        self.assertAlmostEqual(group['brier'],
-                               m['reliability'] - m['resolution'] + m['uncertainty'] + m['within_bin'], places=5)
-
-    def test_skill_is_null_with_a_reason_when_every_outcome_is_the_same(self):
-        group = commands._calibration_group('all', 'all', self.rows([(0.9, 1), (0.8, 1), (0.6, 1)]), 1)
-        self.assertIsNone(group['brier_skill_score'])
-        self.assertIn('nothing to forecast', group['brier_skill_score_reason'])
-        self.assertEqual(0.0, group['brier_reference'])
-
-    def test_forecasting_the_base_rate_has_zero_skill_and_perfect_calibration(self):
-        group = commands._calibration_group('all', 'all', self.rows([(0.5, 1), (0.5, 0)] * 10), 1)
-        self.assertAlmostEqual(0.0, group['brier_skill_score'], places=6)
-        self.assertAlmostEqual(0.0, group['murphy']['reliability'], places=6)
-        self.assertAlmostEqual(0.0, group['ece']['value'], places=6)
-
-    def test_ece_is_reported_under_every_binning_with_its_spread(self):
-        rng = random.Random(3)
-        pairs = [(round(rng.random(), 3), rng.randint(0, 1)) for _ in range(40)]
-        ece = commands._calibration_group('all', 'all', self.rows(pairs), 30)['ece']
-        self.assertEqual({'equal_width_5', 'equal_width_10', 'equal_mass_5'}, set(ece['by_binning']))
-        self.assertEqual(ece['value'], ece['by_binning']['equal_width_5'])
-        values = ece['by_binning'].values()
-        self.assertAlmostEqual(max(values) - min(values), ece['spread'], places=6)
-
-    def test_equal_mass_bins_partition_every_row(self):
-        rows = self.rows([(index / 23, index % 2) for index in range(23)])
-        groups = commands._bins_by_mass(rows, 5)
-        self.assertEqual(23, sum(len(g) for g in groups))
-        self.assertLessEqual(max(len(g) for g in groups) - min(len(g) for g in groups), 1)
+class CalibrationGroups(unittest.TestCase):
+    """The diagnostics themselves are tested in test_calibration_diagnostics."""
 
     def test_below_the_minimum_no_metric_is_reported(self):
-        group = commands._calibration_group('all', 'all', self.rows([(0.7, 1)] * 3), 5)
-        self.assertEqual('INSUFFICIENT_SAMPLE', group['result'])
-        for key in ('brier_skill_score', 'murphy', 'ece', 'base_rate'):
-            self.assertNotIn(key, group)
+        rows = [{'p': 0.7, 'o': 1, 'decision': f'd{i}', 'decided_at': T0} for i in range(3)]
+        group = commands._calibration_group('all', 'all', rows, 5)
+        self.assertEqual(('INSUFFICIENT_SAMPLE', None), (group['result'], group['brier']))
+        self.assertNotIn('diagnostics', group)
+
+    def test_a_measured_group_carries_the_diagnostics_beside_the_legacy_fields(self):
+        rows = [{'p': 0.7, 'o': o, 'decision': f'd{i}', 'decided_at': T0} for i, o in enumerate([1, 1, 1, 0])]
+        group = commands._calibration_group('all', 'all', rows, 1)
+        self.assertEqual({'dimension', 'key', 'n', 'result', 'brier', 'reliability', 'diagnostics'}, set(group))
+        self.assertIsNone(group['diagnostics']['brier_skill_score'])
+        self.assertEqual('NO_PREDECLARED_REFERENCE', group['diagnostics']['reference_status'])
 
 
 class Patterns(Workspace):
@@ -381,6 +329,60 @@ class Drift(Workspace):
             self.record(decide_artifact(f's{i}', risks=['x']), synthetic=True, at=f'2026-10-28T13:0{i}:00Z')
         self.assertEqual(0, jackpot.assess(ledger.read(self.ledger), '2026-10-29T00:00:00Z')['total'])
         self.assertEqual(0, jackpot.assess([], '2027-12-01T00:00:00Z', events=jackpot._events(events))['total'])
+
+    @staticmethod
+    def stream(errors):
+        return [{'seq': i, 'at': f'2026-12-01T00:00:{i % 60:02d}Z', 'decision': f'd{i}', 'expectation': 'e1',
+                 'error': e} for i, e in enumerate(errors)]
+
+    def test_cusum_needs_a_full_reference_before_it_says_anything(self):
+        result = jackpot.cusum(self.stream([0.09, 0.49] * 14))
+        self.assertEqual(('INSUFFICIENT_SAMPLE', None), (result['result'], result['alarm']))
+
+    def test_cusum_stays_quiet_on_a_stable_forecaster(self):
+        pattern = [0.09] * 7 + [0.49] * 3          # p = 0.7, right seven times in ten
+        result = jackpot.cusum(self.stream(pattern * 12))
+        self.assertEqual('MEASURED', result['result'])
+        self.assertIsNone(result['alarm'])
+        self.assertEqual(90, result['monitored'])
+
+    def test_cusum_alarms_on_a_sustained_shift_and_names_where(self):
+        pattern = [0.09] * 7 + [0.49] * 3
+        errors = pattern * 3 + [0.49] * 10          # then wrong every time at the same stated confidence
+        result = jackpot.cusum(self.stream(errors))
+        self.assertIsNotNone(result['alarm'])
+        crossed = int(result['alarm']['decision'][1:])
+        self.assertTrue(30 < crossed < 40, crossed)
+        self.assertGreater(result['statistic'], result['h'])
+
+    def test_cusum_reports_no_variation_instead_of_dividing_by_zero(self):
+        self.assertEqual('NO_VARIATION', jackpot.cusum(self.stream([0.09] * 40))['result'])
+
+    def test_a_brier_drift_requires_a_review_that_the_weighted_count_alone_would_miss(self):
+        def art(i, interval):
+            return decide_artifact(f'q{i}', expectations=[{'id': 'e1', 'what_should_change': 'x', 'in_whom': 'y',
+                                                           'horizon': '2026-12-01T00:00:00Z', 'refuted_by': 'z',
+                                                           'probability': {'verbal': 'likely', 'interval': interval}}])
+        arts = [art(i, [0.6, 0.8] if i % 2 else [0.8, 1.0]) for i in range(32)]
+        for a in arts:
+            self.record(a)
+        for i, a in enumerate(arts):
+            self.observe(a, 'CONFIRMED' if i < 30 else 'REFUTED', at=f'2026-12-02T00:{i:02d}:00Z')
+        result = jackpot.assess(ledger.read(self.ledger), '2026-12-03T00:00:00Z')
+        self.assertLess(result['total'], jackpot.CUMULATIVE_THRESHOLD)
+        self.assertTrue(all(a['weight'] < jackpot.INDIVIDUAL_THRESHOLD for a in result['counted']))
+        self.assertEqual('REVIEW_REQUIRED', result['status'])
+        self.assertIn('Brier CUSUM', result['reason'])
+        self.assertEqual(arts[30]['artifact_sha256'], result['brier_cusum']['alarm']['decision'])
+        jackpot.review(self.ledger, 'Ana (owner)', 'forecasting assumptions revised', '2026-12-04T00:00:00Z')
+        after = jackpot.assess(ledger.read(self.ledger), '2026-12-05T00:00:00Z')
+        self.assertEqual(('WITHIN_LIMITS', 'INSUFFICIENT_SAMPLE'), (after['status'], after['brier_cusum']['result']))
+
+    def test_synthetic_decisions_never_enter_the_brier_stream(self):
+        a = decide_artifact('syn')
+        self.record(a, synthetic=True)
+        self.observe(a, 'REFUTED')
+        self.assertEqual([], jackpot.brier_stream(ledger.read(self.ledger)))
 
     def test_cli_exits_1_when_review_is_required(self):
         for i in range(8):

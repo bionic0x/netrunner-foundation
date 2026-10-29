@@ -18,7 +18,7 @@ docstring is its full input specification.
 | `focus` | XIII F4, III | map | centre without substitution or horizon; concept confusion (pathology 4) |
 | `options` | XIII F5, App. B | cause | one viable option plus decoys; no continuity baseline; same mechanism; scores |
 | `react` | XIII F6, VI, IX | options | no competent opposition, no unexpected cooperation, no third-party shift |
-| `street` | VIII.12, VI | frame (+ map) | instrument without a misuse scenario; manipulation indicator that is the instrument itself; unknown actor. `cohere` records the interactive test as `CONDITIONAL` (pending evidence) while any plan metric lacks this analysis |
+| `street` | VIII.12, VI | frame (+ map) | instrument without a misuse scenario; scenario without its Goodhart variant (regressional, extremal, causal, adversarial); metric with no adversarial scenario; manipulation indicator that is the instrument itself; unknown actor. Variants a metric leaves unconsidered are reported. `cohere` records the interactive test as `CONDITIONAL` (pending evidence) while any plan metric lacks this analysis |
 | `ach` | VIII.4 | frame | incomplete matrix; reports source groups, self-produced evidence, sensitivity |
 | `watch` | XIII F7, VI.9 | options | indicator without a response; no pause or terminate threshold |
 | `close` | XII, XIII F8 | frame | placeholder clauses; one clause pasted into several |
@@ -41,11 +41,11 @@ brief; see `ante/strategy/draft.py`.
 |---|---|---|
 | `learn record DECIDE --ledger L --at T` | appends a sealed `decide` artefact, frozen, to a hash-chained ledger | anything but `decide`; a second record; a record dated before the decision |
 | `learn reconcile OBS --ledger L --at T` | appends observed outcomes (`CONFIRMED`, `REFUTED`, `INCONCLUSIVE`, `NOT_YET_OBSERVABLE`) as new entries | system-produced sources confirming or refuting; observations before the decision or in the future; `NOT_YET_OBSERVABLE` after the horizon |
-| `learn calibrate --ledger L --at T` | Brier score, Brier skill against the in-sample base rate, Murphy decomposition (reliability, resolution, uncertainty) and ECE with its spread across binnings, by runbook, agent and claim kind | groups below `--min-sample` (default 30) answer `INSUFFICIENT_SAMPLE`, with no number |
+| `learn calibrate --ledger L --at T [--policy FILE]` | Brier and reliability by runbook, agent and claim kind, with Murphy decomposition on exact forecast groups, ECE and its binning sensitivity, distinct decisions; Brier skill only against a baseline declared in a policy dated before every evaluated decision (`foundation/CALIBRATION-CONTRACT.md`) | groups below the effective minimum answer `INSUFFICIENT_SAMPLE`, with no number; a policy floor is at least 30 distinct decisions and is not externally authenticated; `--at` is a cutoff |
 | `learn patterns --ledger L --at T` | proposes differences in refutation rate that survive a permutation test with Bonferroni correction | patterns that only system-sourced evidence supports; synthetic decisions |
 | `learn verify --ledger L` | checks the chain | — (a broken chain exits 3) |
 | `learn review --ledger L --by NAME --reason TEXT --at T` | records a model review; resets cumulative drift | — |
-| `jackpot --ledger L --at T [--state S] [--events E]` | cumulative drift: refutations, inconclusive outcomes, accepted risks, decide warnings, gate holds and rejects, release events; exit 1 when a model review is due | while a review is due, `learn record` refuses decisions that add accepted risks |
+| `jackpot --ledger L --at T [--state S] [--events E]` | cumulative drift: refutations, inconclusive outcomes, accepted risks, decide warnings, gate holds and rejects, release events; plus a one-sided CUSUM on the Brier error of each reconciled prediction since the last review (reference of 30, k = 0.5σ, h = 5σ, or `INSUFFICIENT_SAMPLE`); exit 1 when a model review is due | while a review is due, `learn record` refuses decisions that add accepted risks |
 
 ## Self-development
 
@@ -54,7 +54,7 @@ brief; see `ante/strategy/draft.py`.
 | `develop propose SPEC --patch P --base REF` | registers one bounded change with its findings, hypothesis, pre-registered metric, kill criterion, cost ceiling, scope and autonomy delta; refuses protected or out-of-scope paths, a second open proposal, spend beyond the campaign, a stopped loop |
 | `develop gate ID --patch P [held-out evidence] [--selftest-register R] [--independent-review F]` | applies the patch at the base and runs the base evaluator: Overdrive paths, develop policy, characterization, self-test, held-out Pareto comparison, Turing lock; answers `PROPOSE`, `HOLD` or `REJECT` |
 | `develop pr ID [--execute]` | after a `PROPOSE`, prints (or with `--execute` runs) the push and `gh pr create --draft`; once per proposal |
-| `develop resume --by NAME --reason TEXT` | a named human restarts a loop stopped after two consecutive held-out regressions |
+| `develop resume --by NAME --reason TEXT` | a named human restarts a loop stopped after two consecutive held-out regressions or halted by a held-out canary |
 | `develop close ID --outcome merged\|rejected\|withdrawn` | frees the open-proposal slot |
 | `develop status` | proposals, gates and committed spend |
 
@@ -70,7 +70,7 @@ Every `develop` command takes `--state FILE` (a hash-chained log, anchored in
 | `stub compare --log S --ledger L --at T` | compares shadow and real forecasts on reconciled expectations only; `INSUFFICIENT_HISTORY` below 30; eligibility permits an `ante develop` proposal, never an adoption |
 | `stub status --log S` | counts only; recommendations stay hidden until reconciled |
 | `constructs list\|verify` | frozen reviewer profiles and their pinned hashes |
-| `ice seed PACK --registry R` / `ice scan PATH...` / `ice layers` | canaries in held-out packs; contamination scan; independence of the five defensive layers |
+| `ice seed PACK --registry R` / `ice scan PATH...` / `ice layers` | canaries in held-out packs; contamination scan; independence of the five defensive layers. A canary found by `develop propose` or `gate` rejects the change and halts the loop until `develop resume` |
 | `ghosts --artifacts DIR --at T [--regimes R]` | expired claims, or claims dated before a declared regime change, that live artefacts still cite; exit 1 until renewed or withdrawn |
 | `learn box build\|recombine` | archive of discarded options, rejected hypotheses, refuted expectations and rejected proposals with their reasons; recombined items come back as `HYPOTHESIS` with `origin: system` |
 | `signals add\|export --register R --at T` | weak-signal register (first observation, where, provenance); exported as `HYPOTHESIS` claims for `frame` or `react`, without probabilities |
