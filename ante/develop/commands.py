@@ -27,7 +27,10 @@ these hold:
                      accumulated, needs an INDEPENDENT_OPERATOR review
 
 Missing evidence gives HOLD, never PROPOSE. Two consecutive held-out regressions
-stop the loop until a named human resumes it. ``pr`` opens at most one draft pull
+stop the loop until a named human resumes it, and so does a single held-out
+canary found in a proposal, its findings or its patch (ICE detect → contain): the
+leak may have reached other candidates from the same source, so nothing more is
+proposed or gated until someone has looked. ``pr`` opens at most one draft pull
 request per proposal, only with ``--execute``, never force-pushes and never merges.
 
 The loop's state is a hash-chained log (same format as the decision ledger).
@@ -50,7 +53,7 @@ from ante.learn import ledger
 from ante.turing.lock import DIMENSIONS as AUTONOMY_DIMENSIONS
 from ante.paths import ROOT
 
-STATE_KINDS = ('proposal', 'gate', 'pr', 'resume', 'close')
+STATE_KINDS = ('proposal', 'gate', 'pr', 'resume', 'close', 'halt')
 METRICS = ('cost_usd', 'tokens_total', 'wall_time_seconds', 'invalid_decisions', 'rework_cycles',
            'factual_errors', 'fatal_defects', 'constraint_violations', 'evidence_coverage')
 FINDING_KINDS = ('patterns', 'calibration', 'selftest')
@@ -121,14 +124,32 @@ class State:
     def prs(self, proposal_id: str) -> list[dict]:
         return [e for e in self.entries if e['kind'] == 'pr' and e['payload']['id'] == proposal_id]
 
-    def stopped(self, limit: int) -> bool:
+    def halt(self) -> dict | None:
+        """The canary halt in force, if any: the last one not followed by a resume."""
+        current = None
+        for entry in self.entries:
+            if entry['kind'] == 'resume':
+                current = None
+            elif entry['kind'] == 'halt':
+                current = entry['payload']
+        return current
+
+    def stop_reason(self, limit: int) -> str | None:
         streak = 0
         for entry in self.entries:
             if entry['kind'] == 'resume':
                 streak = 0
             elif entry['kind'] == 'gate' and entry['payload']['held_out_regression'] is not None:
                 streak = streak + 1 if entry['payload']['held_out_regression'] else 0
-        return streak >= limit
+        halted = self.halt()
+        if halted:
+            return 'halted by a held-out canary in ' + ', '.join(halted['where'])
+        if streak >= limit:
+            return f'{streak} consecutive held-out regressions'
+        return None
+
+    def stopped(self, limit: int) -> bool:
+        return self.stop_reason(limit) is not None
 
     def spend(self) -> float:
         return sum(e['payload']['spec']['cost']['usd_ceiling'] for e in self.entries if e['kind'] == 'proposal')
@@ -220,8 +241,9 @@ def propose(spec_path: str, patch: str, base: str, state_path: str, at: str, rep
     spec = _validate_spec(io.load_document(spec_path))
     state = State(state_path, repo)
     policy = policy_mod.at_ref(repo, base)
-    if state.stopped(policy.consecutive_regressions_to_stop):
-        raise DevelopError('the develop loop is stopped after consecutive held-out regressions; a human must resume it')
+    reason = state.stop_reason(policy.consecutive_regressions_to_stop)
+    if reason:
+        raise DevelopError(f'the develop loop is stopped ({reason}); a human must resume it')
     if spec['id'] in state.proposals():
         raise DevelopError(f'proposal {spec["id"]} already exists')
     open_ids = set(state.proposals()) - state.closed()
@@ -233,8 +255,10 @@ def propose(spec_path: str, patch: str, base: str, state_path: str, at: str, rep
     patch_bytes = patch_path.read_bytes()
     hits = _contamination(spec, patch_bytes)
     if hits:
-        raise DevelopError('held-out canary found in ' + ', '.join(sorted({h['where'] for h in hits}))
-                           + ': contamination; investigate the leak before any proposal from this source')
+        where = sorted({h['where'] for h in hits})
+        state.append('halt', {'reason': 'canary', 'proposal': spec['id'], 'stage': 'propose', 'where': where}, at)
+        raise DevelopError('held-out canary found in ' + ', '.join(where)
+                           + ': contamination; the develop loop is halted until a human resumes it')
     findings = _check_findings(spec, policy.finding_min_sample)
     paths = policy_mod.patch_paths(repo, patch_path)
     if not paths:
@@ -275,8 +299,9 @@ def gate(proposal_id: str, patch: str, state_path: str, at: str, evidence: dict 
         raise DevelopError(f'proposal {proposal_id} is closed')
     proposal = entry['payload']
     policy = policy_mod.at_ref(repo, proposal['base'])
-    if state.stopped(policy.consecutive_regressions_to_stop):
-        raise DevelopError('the develop loop is stopped; a human must resume it')
+    reason = state.stop_reason(policy.consecutive_regressions_to_stop)
+    if reason:
+        raise DevelopError(f'the develop loop is stopped ({reason}); a human must resume it')
     patch_path = Path(patch).resolve()
     patch_bytes = patch_path.read_bytes()
     if canon.sha256_hex(patch_bytes) != proposal['patch_sha256']:
@@ -308,7 +333,7 @@ def gate(proposal_id: str, patch: str, state_path: str, at: str, evidence: dict 
         hits = _contamination(proposal['spec'], patch_bytes)
         report['checks']['canaries'] = {'hits': [h['where'] for h in hits]}
         if hits:
-            report['reasons'].append('held-out canary in the candidate: contamination (ICE detect)')
+            report['reasons'].append('held-out canary in the candidate: contamination (ICE detect); loop halted')
         report['checks']['paths'] = paths['paths'] if paths else {'error': paths_proc.stderr.strip()[:300]}
         if paths is None or paths['paths']['violations']:
             report['reasons'].append('nexus-improve paths: protected or held-out path changed (or check failed)')
@@ -398,6 +423,9 @@ def gate(proposal_id: str, patch: str, state_path: str, at: str, evidence: dict 
         shutil.rmtree(work, ignore_errors=True)
         policy_mod.git(repo, 'worktree', 'prune', check=False)
     state.append('gate', report, at)
+    if report['checks'].get('canaries', {}).get('hits'):
+        state.append('halt', {'reason': 'canary', 'proposal': proposal_id, 'stage': 'gate',
+                              'where': sorted(set(report['checks']['canaries']['hits']))}, at)
     return report
 
 
@@ -526,7 +554,7 @@ def main(args) -> int:
             state = State(args.state, repo)
             result = {'proposals': sorted(state.proposals()), 'closed': sorted(state.closed()),
                       'gates': [{'id': g['payload']['id'], 'decision': g['payload']['decision']} for g in state.gates()],
-                      'spend_ceiling_committed_usd': state.spend()}
+                      'spend_ceiling_committed_usd': state.spend(), 'halted': state.halt()}
     except ledger.LedgerError as exc:
         print(f'LINEAGE {exc}', file=sys.stderr)
         return 3

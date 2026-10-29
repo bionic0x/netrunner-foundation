@@ -54,7 +54,7 @@ brief; see `ante/strategy/draft.py`.
 | `develop propose SPEC --patch P --base REF` | registers one bounded change with its findings, hypothesis, pre-registered metric, kill criterion, cost ceiling, scope and autonomy delta; refuses protected or out-of-scope paths, a second open proposal, spend beyond the campaign, a stopped loop |
 | `develop gate ID --patch P [held-out evidence] [--selftest-register R] [--independent-review F]` | applies the patch at the base and runs the base evaluator: Overdrive paths, develop policy, characterization, self-test, held-out Pareto comparison, Turing lock; answers `PROPOSE`, `HOLD` or `REJECT` |
 | `develop pr ID [--execute]` | after a `PROPOSE`, prints (or with `--execute` runs) the push and `gh pr create --draft`; once per proposal |
-| `develop resume --by NAME --reason TEXT` | a named human restarts a loop stopped after two consecutive held-out regressions |
+| `develop resume --by NAME --reason TEXT` | a named human restarts a loop stopped after two consecutive held-out regressions or halted by a held-out canary |
 | `develop close ID --outcome merged\|rejected\|withdrawn` | frees the open-proposal slot |
 | `develop status` | proposals, gates and committed spend |
 
@@ -70,7 +70,7 @@ Every `develop` command takes `--state FILE` (a hash-chained log, anchored in
 | `stub compare --log S --ledger L --at T` | compares shadow and real forecasts on reconciled expectations only; `INSUFFICIENT_HISTORY` below 30; eligibility permits an `ante develop` proposal, never an adoption |
 | `stub status --log S` | counts only; recommendations stay hidden until reconciled |
 | `constructs list\|verify` | frozen reviewer profiles and their pinned hashes |
-| `ice seed PACK --registry R` / `ice scan PATH...` / `ice layers` | canaries in held-out packs; contamination scan; independence of the five defensive layers |
+| `ice seed PACK --registry R` / `ice scan PATH...` / `ice layers` | canaries in held-out packs; contamination scan; independence of the five defensive layers. A canary found by `develop propose` or `gate` rejects the change and halts the loop until `develop resume` |
 | `ghosts --artifacts DIR --at T [--regimes R]` | expired claims, or claims dated before a declared regime change, that live artefacts still cite; exit 1 until renewed or withdrawn |
 | `learn box build\|recombine` | archive of discarded options, rejected hypotheses, refuted expectations and rejected proposals with their reasons; recombined items come back as `HYPOTHESIS` with `origin: system` |
 | `signals add\|export --register R --at T` | weak-signal register (first observation, where, provenance); exported as `HYPOTHESIS` claims for `frame` or `react`, without probabilities |
