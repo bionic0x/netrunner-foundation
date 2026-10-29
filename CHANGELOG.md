@@ -17,7 +17,8 @@
   reconciliation, calibration (Brier, skill against the base rate, Murphy
   decomposition, ECE with its spread across binnings) or `INSUFFICIENT_SAMPLE`, patterns guarded by
   a permutation test with Bonferroni correction, cumulative-drift review
-  (`jackpot`), shadow trials (`stub`), weak signals and a discard archive.
+  (`jackpot`, with a CUSUM on forecast error), shadow trials (`stub`), weak signals
+  and a discard archive.
 - Self-development: `ante develop` proposes bounded changes, judges them with the
   base revision's evaluator, characterization, held-out comparison, canary scan
   (a canary halts the loop until a named human resumes it)
@@ -28,7 +29,7 @@
   before the move: 114 normalised cases and 116 raw-byte cases (180 distinct
   invocations; the 50 they share agree byte for byte).
   Runbooks declare `strategy_commands` and `material`.
-- Synthetic end-to-end example in `examples/foundation/`; 182 foundation tests.
+- Synthetic end-to-end example in `examples/foundation/`; 188 foundation tests.
   Owner
   decisions pending: D-003, D-010, D-013, D-014, D-016, D-017, D-020 (`foundation/DECISIONS.md`).
 - `strategy/contracts.json` carries the seven coherence tests and fourteen
