@@ -1,5 +1,7 @@
 {
+  "analysis_mode": "EXPLORATORY",
   "at": "2026-12-15T09:00:00Z",
+  "calibration_policy": null,
   "decisive_predictions": 0,
   "excluded": {
     "not_decisive": 0,
@@ -17,8 +19,14 @@
     }
   ],
   "kind": "calibration",
+<<<<<<< HEAD
   "ledger_head": "254ea8f98cd70591f6e18a591072938a36bb42d10fb711a986c071e6aedaf85b",
   "method": "Brier score on the midpoint of each declared interval; CONFIRMED = 1, REFUTED = 0. Skill against the in-sample base rate; Murphy decomposition and ECE on five equal-width bins, ECE also under other binnings.",
+=======
+  "ledger_head": "e73755d69c289d3b195e76609b85382f5c0312bcd5d722ee45ef6f06e93bfcc7",
+  "method": "Brier score on the midpoint of each declared interval; CONFIRMED = 1, REFUTED = 0. Diagnostics: foundation/CALIBRATION-CONTRACT.md.",
+>>>>>>> foundation/claude/ice-halt
   "min_sample": 30,
+  "requested_min_sample": 30,
   "schema_version": 2
 }
