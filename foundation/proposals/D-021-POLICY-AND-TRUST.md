@@ -1,137 +1,85 @@
-# D-021 — Shared protection and the remaining independence decisions
+# D-021 — Shared protection and retained independence controls
 
-Status: **P0 and P2 accepted by owner; replacement P1 awaits renewed approval. No protected runtime change is applied.**
-Prepared against Netrunner Foundation `main` at
-`edce974f38d6611696d23fc2d11ec29e560fe73d` on 29 October 2026, after G1a and its signer-isolation follow-up were integrated through #23 and #26.
-The owner approved P0–P2 and the previous exact patch `4810889f…c87992f1`.
-Before application, #26 changed the guide and a protected test input. D-020 step 4
-therefore requires renewed approval of this replacement P1. P0 and P2 remain
-ratified. Earlier preparation and approval remain recorded in the packet and Git
-history. The historical branch audit remains valid as its own dated snapshot.
+Status: **P0/P2 ratified; P1 applied and merged through #31.**
+Reconciled on 30 October 2026. Claude applied the post-owner-key variant in
+`260f0f43fe0a099a7d028b58d54392b44371aa94`, based on `bb759e2`, and it merged
+as `9b93fae9b68df85cf4a25a05c29e430fba4a13de`. Codex verified the exact outputs
+and records the integration here. This reconciliation changes no runtime code.
 
-The original D-020 approval covered its P0–P3/R1 packet. It is not a standing
-grant for this new patch. This proposal is prepared outside `ante develop` and
-cannot be used by that loop as authority to change its evaluator.
+## Disposition
 
-## Decisions presented to the owner
-
-| ID | Existing decision | Proposed disposition |
+| ID | Decision | Recorded result |
 |---|---|---|
-| P0 | D-010, independence for `PROCEED` | Accepted by owner. Retain the existing floor: only `INDEPENDENT_OPERATOR` admits `PROCEED`; `SELF` and `SEPARATED_CONTEXT` remain conditional at best. The label is structurally checked, not authenticated identity or execution permission. |
-| P1 | D-013, shared protection | Authorize the exact seven-file patch below, including six protected paths and the guide, to apply outside the loop and merge only after required checks pass. |
-| P2 | D-014, cumulative autonomy | Accepted by owner. Retain the existing limit of 4 positive steps over 90 days and current review requirements. Every positive delta requires its own review; crossing the cumulative limit additionally requires acceptance of the accumulation. |
+| P0 / D-010 | Independence for `PROCEED` | Ratified by the direct owner reply. Only `INDEPENDENT_OPERATOR` admits `PROCEED`; the label is not authenticated identity or execution authority. |
+| P1 / D-013 | Shared protected paths | Applied outside the development loop by Claude in #31; truthful agent authorship retained. |
+| P2 / D-014 | Cumulative autonomy | Ratified by the same reply: existing 4-step / 90-day defaults and each positive delta's review retained. Policy choices, not measured safety guarantees. |
 
-P0 and P2 settle pending choices without changing runtime behavior. Their
-numeric defaults are policy choices, not measured guarantees of safety.
-The direct owner reply ratifies P0/P2. The protected decision record will be
-updated with the approved migration; publication alone cannot approve P1.
+Both entry points now read the base revision's shared
+`strategy/overdrive-protected.json`: **51 rules**, preserving every previous
+Overdrive/Foundation pattern and the three frozen-reviewer paths. Schema 2
+pins that source and rejects a shadow list or alternate source; historical
+schema 1 remains supported. Editable scopes, budgets, proposal/regression
+limits and sample floors are unchanged. T08 retains every target. The new
+regression checks both entry points even if a candidate overwrites manifests.
 
-Authorizing P1 explicitly applies D-020's narrow exception to the mandate's
-handwritten-only requirement to this exact new patch. It permits an external
-maintenance agent to prepare and apply these bytes with truthful agent
-authorship. Owner approval does not turn them into handwritten code or grant
-the self-development loop access to the maintenance route.
+## Exact applied scope
 
-## Concrete problem and resulting behavior
+The retained [patch](d021-shared-protection.patch) has SHA-256
+`7f8a49d631cc39edc263b64d17f32dbc2975d9c53a791a462d2a060bb6472fde`.
+Its [scope packet](d021-approval-packet.json) records all seven input/output
+hashes, blob IDs and modes, matching the applied commit and merged runtime.
+The six protected paths are `ante/develop/policy.py`,
+`foundation/develop-policy.json`, `strategy/overdrive-protected.json`,
+`tests/foundation/test_shared_protection_policy.py`,
+`tests/foundation/test_attest.py` and `foundation/DECISIONS.md`.
+The seventh path, `foundation/ATTEST.md`, is an unprotected guide.
 
-After #23, `ante develop` combines Overdrive's 25 patterns with 28 Foundation
-patterns and the frozen-reviewer registry. `nexus-improve.py paths` reads only
-the Overdrive list. Both now protect G1a, but the legacy path stage still does
-not express all the newer Foundation protections. This is a difference in path
-coverage, not a demonstrated end-to-end escape from the bounded optimizer.
+P1 preserves the signer, key generation, owner-key store and crypto locks.
+The store had already been pinned through #29. No account or private key was
+created or accessed by this reconciliation.
 
-P1 gives both entry points the same base-revision protected-path manifest:
+## Signed record and timing
 
-- Preserve every pattern in both current lists, including G1a's `ante/attest/**`
-  and `foundation/attest/**`. Add the three frozen reviewer paths explicitly:
-  **51 patterns total**, with no old rule removed.
-- Keep every editable scope, spend/proposal/regression limit and sample floor.
-- Move `foundation/develop-policy.json` to schema 2: retain limits and scopes,
-  pin `strategy/overdrive-protected.json`, and remove the duplicated list.
-- Continue loading historical schema 1 bases. In schema 2, reject an alternate
-  source, a shadow list, boolean versions and unsupported versions.
-- Read policy at the base so candidate manifest replacement cannot loosen it.
-- Migrate the post-#26 boundary test to the shared source. It still checks the
-  verifier and trust store, and now checks all five listed evaluator/test paths
-  in the Overdrive manifest. The new integration regression exercises both
-  entry points, including the trust-store path and all frozen reviewer paths.
+The [public #31 comment](https://github.com/bionic0x/netrunner-foundation/pull/31#issuecomment-6511565544)
+publishes a [signed approval](../evidence/d021-owner-approval.signed.json).
+Codex recomputed its [verification](../evidence/d021-owner-approval-verification.json)
+against the committed default trust store and candidate `260f0f4`: `VERIFIED`,
+`signature_valid: true`, all six repository binding checks true, and
+`authorizes_action: false`. An altered blob gives `BAD_SIGNATURE`.
 
-The post-#26 signature implementation, trusted-key registry and dependency
-locks are unchanged. The guide retains #26's warning that manifest protection
-is separate from HEAD/default-store and modified-verifier checks. Its guide is updated only to describe the shared protection
-source; no signing authority or host execution permission is added.
+It was issued at **2026-10-30T00:07:54Z**, after the merge at
+**2026-10-29T17:11:53Z**. Its scope is `apply`, not `merge`. This is a post-merge
+signed record, not evidence of a signed gate before application. The comment
+also reports earlier manual approval; this audit does not independently
+authenticate that earlier approval, human presence or operator independence.
+A pinned-key signature grants no host permission and does not turn agent code
+into handwritten code. Future protected changes retain D-020's procedure.
 
-## Exact maintenance patch
+The signed pinned-diff hash is
+`b49942422281db0a005a1606539a57a34da5643a1b4b27a8695e1b43fe434066`.
+Its Git `index` lines use full object IDs; the preparation patch abbreviates
+them to seven characters. Shortening only those IDs reproduces the preparation
+patch byte for byte. A private-index application at the actual base reproduces
+the signed and committed tree `637299fdd49ecb3208dffd270e2bbef71fd88158`.
 
-File: [d021-shared-protection.patch](d021-shared-protection.patch)
+## Validation and history
 
-SHA-256:
-`1a8e34a57d4f08efac5db48e2543645683f409837b031a0a578afd63ec76d47e`
+The exact candidate passed **268 Foundation tests without skips**, **15
+nexus-improve tests**, **114/114 normalized** cases, **116/116 raw-byte** cases
+plus three regressions, 8/8 extractions, 3/3 frozen reviewers and five layers.
+All **14 hosted checks on the actual runtime head** passed, including security
+and Linux/macOS installation. The [validation](../evidence/d021-validation.json)
+separates hosted results from isolated runs. The
+[review](../evidence/d021-review.json) found no actionable issue;
+`SEPARATED_CONTEXT` is a coherence check, not authenticated independent review.
+The complete local release gate remains unmeasured because Unix sockets are
+denied; it is not claimed as passed or silently skipped.
 
-| Path | Protection | Intended change |
-|---|---|---|
-| `strategy/overdrive-protected.json` | Protected | Shared union plus frozen reviewer paths; preserve G1a rules. |
-| `foundation/develop-policy.json` | Protected | Schema 2 pointer; limits and scopes retained. |
-| `ante/develop/policy.py` | Protected | Schema 2 loading, historical schema 1 support and frozen-reviewer diagnostics. |
-| `tests/foundation/test_shared_protection_policy.py` | Protected | Three new regressions for shared enforcement, base inheritance, legacy loading and invalid sources. |
-| `tests/foundation/test_attest.py` | Protected | Migrate T08 to the canonical manifest without dropping its targets. |
-| `foundation/DECISIONS.md` | Protected | Record D-010/D-013/D-014 and D-021 upon owner-approved application. |
-| `foundation/ATTEST.md` | Unprotected guide | Describe the same shared source in the boundary and threat tables. |
+Earlier preparation remains in history: `4810889f…` was approved but not
+applied after #26 changed inputs; `1a8e34a5…` and pre-key variant `f0af758e…`
+were superseded before renewed approval. The post-key variant was applied once
+through #31. Recording that integration needs no second runtime application.
 
-The decision record is in the exact scope so implementation and governance land
-together. Input/output hashes, blob IDs, modes and requested actions are in
-[d021-approval-packet.json](d021-approval-packet.json). The new test's input is
-explicitly absent. Authorship, approval and application remain separate roles.
-The preparation packet describes scope; a future execution receipt records the
-actual owner decision and application. No approval is authenticated by a JSON file.
-
-## Relationship to G0 and G1a
-
-`G0-TRUST-BOUNDARIES.md` and `G1A-INTEGRATION-CONTRACT.md` were read at version 1.
-They distinguish historical receipts, owner approval objects and host authority.
-G1a subsequently landed in #23, followed by signer isolation and review fixes in #26. Its current repository guide is
-[ATTEST.md](../ATTEST.md); D-021 preserves that implementation.
-
-The earlier drafts and G1a's current guide use two protection lists. D-013 asks
-for one policy source. P1 explicitly reconciles that wording by pinning the
-shared manifest, preserving both G1a patterns and migrating the boundary test.
-It does not reauthorize the G1a delivery or turn a signature into independent
-evidence, human presence or permission to execute. Host admission, key ownership,
-rotation/revocation and actual operator independence retain their own controls.
-
-## Validation
-
-[d021-validation.json](../evidence/d021-validation.json) retains the initial and post-#23 runs separately from this post-#26 candidate. The refreshed run uses Python 3.11.17,
-the hash-locked attestation dependencies already in main and
-`ANTE_REQUIRE_ATTEST=1`, so missing crypto dependencies fail instead of skipping.
-The refreshed candidate passes **265 Foundation tests with zero skips**,
-**15 nexus-improve tests**, **114/114 normalized** cases and **116/116 raw-byte**
-cases plus three regressions. Every old protection pattern is retained. The
-seven-file patch applies at the pinned base and reproduces the measured result
-tree and output fingerprints. Both frozen corpora, the signer implementation,
-trust store and crypto dependency locks are unchanged.
-
-The complete local release gate is unmeasured because this environment refuses
-Unix socket creation. No test is skipped or weakened. Hosted checks for the
-unapplied runtime patch are still required after approval: green CI for this
-documentation/proposal PR exercises production code, not the patch stored as data.
-
-The [post-#26 final review](../evidence/d021-review.json) reports no actionable
-findings and confirms the G1a boundary test is not weakened. It uses
-`SEPARATED_CONTEXT`, a coherence check. It does not claim
-authenticated independent-operator review or a real host authorization boundary.
-
-## Application after an explicit owner decision
-
-1. Retain the owner's existing P0/P2 ratification and obtain renewed approval
-   of this exact replacement P1 digest in the trusted owner channel.
-2. Recheck protected input hashes at the current integration tree; changed input
-   or patch bytes require a new packet.
-3. Apply this exact patch in separately reviewable, agent-authored `protected:`
-   maintenance commits. No self-development proposal applies it.
-4. Run affected suites, both corpora, security checks and complete socket-capable
-   release validation; merge only in the approved scope after required checks.
-5. Record the actual owner decision, application and merge in
-   `foundation/evidence/d021-execution.json`. The preparation history stays intact.
-
-The [historical branch audit](../HISTORICAL-BRANCHES.md) needs no protected patch.
+The [execution audit](../evidence/d021-execution.json) separates author,
+applicator, recorder, signed evidence, merge and limits. Historical branches
+remain reconciled in [HISTORICAL-BRANCHES.md](../HISTORICAL-BRANCHES.md).

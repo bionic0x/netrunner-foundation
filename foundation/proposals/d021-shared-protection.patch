@@ -68,7 +68,7 @@ index 991ac2e..a55b381 100644
          frozen=frozen_mod.paths(repo, ref),
          finding_min_sample=int(policy.get('finding_min_sample', 30)),
 diff --git a/foundation/ATTEST.md b/foundation/ATTEST.md
-index 03ba6f0..f04f5ae 100644
+index 49c0d2b..f9d7241 100644
 --- a/foundation/ATTEST.md
 +++ b/foundation/ATTEST.md
 @@ -15,7 +15,7 @@ exact bytes. Four boundaries follow from that and are enforced, not only stated.
@@ -80,7 +80,7 @@ index 03ba6f0..f04f5ae 100644
  | Independence | A record signed with the system's or the owner's own key is still an internal record. A signature does not make it independent corroboration. | A verified receipt reports `evidence_origin: SYSTEM`, a verified approval `PINNED_HUMAN_KEY`, anything else `UNVERIFIED`; nothing reads that report back into a claim. |
  
  A bare key signature also does not prove that a person was present. `ante sign`
-@@ -185,7 +185,7 @@ reason: `MALFORMED`, `SCHEMA_INVALID`, `UNSUPPORTED_PROOF`, `CONTEXT_MISMATCH`,
+@@ -205,7 +205,7 @@ reason: `MALFORMED`, `SCHEMA_INVALID`, `UNSUPPORTED_PROOF`, `CONTEXT_MISMATCH`,
  | T05 | Replaying a receipt triggers an action | Verification is read-only; `authorizes_action: false` | Tested (`test_verification_is_read_only_and_repeatable`) |
  | T06 | Receipt names code or policy that did not run | Commit, `ante/` tree and policy re-checked from git; dirty state refused | Tested (`test_uncommitted_code_or_policy_is_refused`, `test_receipt_for_other_code_or_policy_or_artefact_fails`) |
  | T07 | The system attests its own observation | `evidence_origin: SYSTEM`; no judging module reads signatures | Tested (`test_no_strategy_learning_or_construct_module_reads_a_signature`) |
@@ -298,10 +298,10 @@ index 9b283e7..534695f 100644
    "held_out_packs": "examples/nexus/casepacks/*/ whose pack.json declares split held_out, at the base or the head of the proposal"
  }
 diff --git a/tests/foundation/test_attest.py b/tests/foundation/test_attest.py
-index 819a18c..3077fc8 100644
+index 7214b97..fd53eb5 100644
 --- a/tests/foundation/test_attest.py
 +++ b/tests/foundation/test_attest.py
-@@ -783,15 +783,16 @@ class Boundaries(unittest.TestCase):
+@@ -815,15 +815,16 @@ class Boundaries(unittest.TestCase):
              self.assertFalse({m for m in modules if m.startswith('ante.attest')} or 'attest' in from_ante, name)
  
      def test_the_verifier_and_the_trust_store_are_protected_from_self_development(self):
