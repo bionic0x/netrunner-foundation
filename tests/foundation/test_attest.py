@@ -961,6 +961,67 @@ class AdmissionGate(unittest.TestCase):
         git(self.repo.dir, 'merge', '-q', '--no-edit', 'main')
         self.assertEqual('HOLD', self.decide()['decision'])
 
+    def test_a_target_only_change_to_a_protected_input_holds(self):
+        root = self.repo.dir
+        original = 'VALUE = 1\n' + ''.join(f'# stable {i}\n' for i in range(30)) + 'BASE_SETTING = 0\n'
+        git(root, 'checkout', '-q', 'main')
+        (root / 'ante/core.py').write_text(original)
+        self.base = self.repo.commit('long protected baseline')
+        git(root, 'checkout', '-q', 'feature')
+        git(root, 'merge', '-q', '--ff-only', 'main')
+        candidate = self.change(text=original.replace('VALUE = 1', 'VALUE = 2'))
+        approved_head = self.approve(candidate)
+        git(root, 'checkout', '-q', 'main')
+        (root / 'ante/core.py').write_text(original.replace('BASE_SETTING = 0', 'BASE_SETTING = 1'))
+        self.base = self.repo.commit('target changes a protected input')
+        git(root, 'checkout', '-q', 'feature')
+        self.assertEqual(approved_head, git(root, 'rev-parse', 'HEAD'))
+        report = self.decide()
+        self.assertEqual(('HOLD', 'STALE_BASE'), (report['decision'], report['reason']))
+        self.assertFalse(report['authorizes_action'])
+
+    def test_an_unrelated_target_only_change_keeps_matching_inputs_valid(self):
+        candidate = self.change()
+        approved_head = self.approve(candidate)
+        git(self.repo.dir, 'checkout', '-q', 'main')
+        (self.repo.dir / 'notes.md').write_text('unrelated target update\n')
+        self.base = self.repo.commit('target changes an unrelated file')
+        git(self.repo.dir, 'checkout', '-q', 'feature')
+        self.assertEqual(approved_head, git(self.repo.dir, 'rev-parse', 'HEAD'))
+        report = self.decide()
+        self.assertEqual(('PROCEED', 'APPROVED'), (report['decision'], report['reason']))
+
+    def test_a_target_only_mode_change_invalidates_the_approval(self):
+        candidate = self.change()
+        self.approve(candidate)
+        git(self.repo.dir, 'checkout', '-q', 'main')
+        git(self.repo.dir, 'config', 'core.filemode', 'true')
+        (self.repo.dir / 'ante/core.py').chmod(0o755)
+        self.base = self.repo.commit('target changes the protected input mode')
+        git(self.repo.dir, 'checkout', '-q', 'feature')
+        report = self.decide()
+        self.assertEqual(('HOLD', 'STALE_BASE'), (report['decision'], report['reason']))
+
+    def test_an_approval_only_replacement_renews_the_candidate(self):
+        candidate = self.change()
+        self.approve(candidate)
+        renewed_candidate = self.change(text='VALUE = 3\n')
+        self.approve(renewed_candidate)
+        report = self.decide()
+        self.assertEqual(('PROCEED', 'APPROVED', renewed_candidate),
+                         (report['decision'], report['reason'], report['candidate']))
+
+    def test_a_replacement_approval_commit_cannot_carry_an_unrelated_edit(self):
+        candidate = self.change()
+        self.approve(candidate)
+        renewed_candidate = self.change(text='VALUE = 3\n')
+        signed = self.approve(renewed_candidate, add=False)
+        (self.repo.dir / self.gate.approval_path(7)).write_text(json.dumps(signed))
+        (self.repo.dir / 'notes.md').write_text('unapproved edit\n')
+        self.repo.commit('replacement approval and unrelated edit')
+        report = self.decide()
+        self.assertEqual(('HOLD', 'APPROVAL_NOT_VERIFIED'), (report['decision'], report['reason']))
+
     def test_doubt_is_hold(self):
         self.assertEqual('REVISION_UNKNOWN', self.gate.decide(self.repo.dir, 'nope', 'HEAD', 7)['reason'])
         self.assertEqual('USAGE', self.gate.decide(self.repo.dir, self.base, 'HEAD', 0)['reason'])
