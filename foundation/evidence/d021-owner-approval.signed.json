@@ -1,0 +1,60 @@
+{
+  "author": "agent:claude",
+  "base_commit": "bb759e2e997d7c1eb25a5c45c2e51ebc61162f16",
+  "issued_at": "2026-10-30T00:07:54Z",
+  "kind": "ante.d020.approval",
+  "object_format": "sha1",
+  "patch_sha256": "b49942422281db0a005a1606539a57a34da5643a1b4b27a8695e1b43fe434066",
+  "paths": [
+    {
+      "base_blob": "991ac2eba99452295e5396d23996998966fa192d",
+      "path": "ante/develop/policy.py",
+      "result_blob": "a55b381ae5d7f9ff17eb62847bcfbce5561df6ce"
+    },
+    {
+      "base_blob": "49c0d2b19cb2c9c8935bb0ccae309a7ed7919c47",
+      "path": "foundation/ATTEST.md",
+      "result_blob": "f9d72417b0ce7144ba2ea19c019ee8bf86463b54"
+    },
+    {
+      "base_blob": "66fac7c0115c3f8c70e81a65c7e06966b562617b",
+      "path": "foundation/DECISIONS.md",
+      "result_blob": "d47d8b83eb3f0af1f9a4efb3b5c6e49e88930f16"
+    },
+    {
+      "base_blob": "569b839c29db446fcda3b9721aa4e83f6fc7fe39",
+      "path": "foundation/develop-policy.json",
+      "result_blob": "25c2c55b943f19088872f87a0e6dc726a5773096"
+    },
+    {
+      "base_blob": "9b283e78ad937ece1b6be6b4fed3a436afaf2893",
+      "path": "strategy/overdrive-protected.json",
+      "result_blob": "534695f0bf9ca419a10438d215166b10a3d6852d"
+    },
+    {
+      "base_blob": "7214b9782fcb9ad8415e21236766472e6d54c25a",
+      "path": "tests/foundation/test_attest.py",
+      "result_blob": "fd53eb598773607f41c1040f7e813725071cc01a"
+    },
+    {
+      "base_blob": null,
+      "path": "tests/foundation/test_shared_protection_policy.py",
+      "result_blob": "8b4d0dbcee73755046cbcea55e2a4aaf9efeccda"
+    }
+  ],
+  "policy": "D-020",
+  "proof": {
+    "created": "2026-10-30T00:07:54Z",
+    "cryptosuite": "eddsa-jcs-2022",
+    "proofPurpose": "assertionMethod",
+    "proofValue": "z5Cv6L7jGJdDbKSsZv237QNKNQpou3moK1P8fT5v7oQn9DdjeWBQxXuzUcWyVSt9yp6938eztuVaVG2EY899yyP1k",
+    "type": "DataIntegrityProof",
+    "verificationMethod": "did:key:z6MkqhuU8ywu4E7thBXbQsTaeGSrZJWek376nooPcsUH1qWR#z6MkqhuU8ywu4E7thBXbQsTaeGSrZJWek376nooPcsUH1qWR"
+  },
+  "result_tree": "637299fdd49ecb3208dffd270e2bbef71fd88158",
+  "review_ref": "PR#31",
+  "schema_version": 1,
+  "scope": [
+    "apply"
+  ]
+}
