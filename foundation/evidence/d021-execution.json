@@ -1,0 +1,166 @@
+{
+  "schema_version": 1,
+  "receipt_kind": "unsigned_repository_integration_audit_not_an_ante_execution_receipt",
+  "recorded_on": "2026-10-30",
+  "decision": "D-021",
+  "repository": "bionic0x/netrunner-foundation",
+  "status": "APPLIED_AND_MERGED_BY_EXTERNAL_AGENT_VERIFIED",
+  "P0_P2": "Ratified by the direct owner reply on 29 October 2026; retained unchanged",
+  "P1": {
+    "author": "Claude <noreply@anthropic.com>",
+    "applicator": "Claude (external parallel agent)",
+    "recording_and_verification_agent": "Codex",
+    "base_commit": "bb759e2e997d7c1eb25a5c45c2e51ebc61162f16",
+    "applied_commit": "260f0f43fe0a099a7d028b58d54392b44371aa94",
+    "merge_commit": "9b93fae9b68df85cf4a25a05c29e430fba4a13de",
+    "pr": 31,
+    "pr_url": "https://github.com/bionic0x/netrunner-foundation/pull/31",
+    "merged_at": "2026-10-29T17:11:53Z",
+    "object_format": "sha1",
+    "result_tree": "637299fdd49ecb3208dffd270e2bbef71fd88158",
+    "total_paths": 7,
+    "protected_paths": [
+      "ante/develop/policy.py",
+      "foundation/DECISIONS.md",
+      "foundation/develop-policy.json",
+      "strategy/overdrive-protected.json",
+      "tests/foundation/test_attest.py",
+      "tests/foundation/test_shared_protection_policy.py"
+    ],
+    "additional_unprotected_paths": [
+      "foundation/ATTEST.md"
+    ],
+    "all_seven_input_output_hashes_and_modes_match": true,
+    "merged_outputs_match_reviewed_B": true,
+    "prepared_patch_sha256": "7f8a49d631cc39edc263b64d17f32dbc2975d9c53a791a462d2a060bb6472fde",
+    "signed_pinned_full_index_patch_sha256": "b49942422281db0a005a1606539a57a34da5643a1b4b27a8695e1b43fe434066",
+    "hash_encoding_explanation": "index lines contain full object ids in the signed pinned diff; the prepared patch uses seven-character abbreviations",
+    "normalised_diff_bytes_identical": true,
+    "Codex_reapplied_or_merged_runtime_patch": false
+  },
+  "approval_evidence": {
+    "public_source": "https://github.com/bionic0x/netrunner-foundation/pull/31#issuecomment-6511565544",
+    "signed_copy": "foundation/evidence/d021-owner-approval.signed.json",
+    "verification": "foundation/evidence/d021-owner-approval-verification.json",
+    "issued_at": "2026-10-30T00:07:54Z",
+    "scope": [
+      "apply"
+    ],
+    "principal": "owner:bionic0x",
+    "signature_valid": true,
+    "candidate_verified": true,
+    "evidence_origin": "PINNED_HUMAN_KEY",
+    "authorizes_action": false,
+    "signed_record_is_post_merge": true,
+    "pre_merge_signed_gate_evidence": false,
+    "merge_scope_in_signed_document": false,
+    "pre_merge_manual_approval": "Reported by the public PR comment; not independently authenticated by this audit",
+    "human_presence_or_operator_independence_authenticated": false
+  },
+  "validation": {
+    "isolated_foundation_tests": 268,
+    "foundation_skipped": 0,
+    "legacy_improve_tests": 15,
+    "normalised_characterization": "114/114",
+    "raw_characterization": "116/116 plus three regressions",
+    "runtime_ci_head": "260f0f43fe0a099a7d028b58d54392b44371aa94",
+    "runtime_ci_success": 14,
+    "runtime_ci_total": 14,
+    "runtime_ci_checks": [
+      {
+        "name": "install.sh hermes config rewrite",
+        "status": "completed",
+        "conclusion": "success",
+        "details_url": "https://github.com/bionic0x/netrunner-foundation/actions/runs/40912091390/job/123582482259"
+      },
+      {
+        "name": "tools.json is the single source of truth",
+        "status": "completed",
+        "conclusion": "success",
+        "details_url": "https://github.com/bionic0x/netrunner-foundation/actions/runs/40912091343/job/123582481766"
+      },
+      {
+        "name": "relay unit, HTTP and container isolation tests",
+        "status": "completed",
+        "conclusion": "success",
+        "details_url": "https://github.com/bionic0x/netrunner-foundation/actions/runs/40912091301/job/123582481212"
+      },
+      {
+        "name": "Ante Foundation contract, layers and published self-test",
+        "status": "completed",
+        "conclusion": "success",
+        "details_url": "https://github.com/bionic0x/netrunner-foundation/actions/runs/40912091374/job/123582480399"
+      },
+      {
+        "name": "Whole roster, when the linter changes",
+        "status": "completed",
+        "conclusion": "success",
+        "details_url": "https://github.com/bionic0x/netrunner-foundation/actions/runs/40912091276/job/123582480237"
+      },
+      {
+        "name": "known vulnerabilities in pinned dependencies (osv-scanner)",
+        "status": "completed",
+        "conclusion": "success",
+        "details_url": "https://github.com/bionic0x/netrunner-foundation/actions/runs/40912091273/job/123582480203"
+      },
+      {
+        "name": "workflow security (zizmor)",
+        "status": "completed",
+        "conclusion": "success",
+        "details_url": "https://github.com/bionic0x/netrunner-foundation/actions/runs/40912091273/job/123582480171"
+      },
+      {
+        "name": "runbook rosters reference real agent slugs",
+        "status": "completed",
+        "conclusion": "success",
+        "details_url": "https://github.com/bionic0x/netrunner-foundation/actions/runs/40912091374/job/123582480063"
+      },
+      {
+        "name": "install.sh behavior (macos-15-intel)",
+        "status": "completed",
+        "conclusion": "success",
+        "details_url": "https://github.com/bionic0x/netrunner-foundation/actions/runs/40912091171/job/123582480051"
+      },
+      {
+        "name": "static analysis (semgrep)",
+        "status": "completed",
+        "conclusion": "success",
+        "details_url": "https://github.com/bionic0x/netrunner-foundation/actions/runs/40912091273/job/123582480028"
+      },
+      {
+        "name": "install.sh behavior (ubuntu-latest)",
+        "status": "completed",
+        "conclusion": "success",
+        "details_url": "https://github.com/bionic0x/netrunner-foundation/actions/runs/40912091171/job/123582479943"
+      },
+      {
+        "name": "Validate agent frontmatter and structure",
+        "status": "completed",
+        "conclusion": "success",
+        "details_url": "https://github.com/bionic0x/netrunner-foundation/actions/runs/40912091276/job/123582479832"
+      },
+      {
+        "name": "secrets in the full git history (gitleaks)",
+        "status": "completed",
+        "conclusion": "success",
+        "details_url": "https://github.com/bionic0x/netrunner-foundation/actions/runs/40912091273/job/123582479505"
+      },
+      {
+        "name": "divisions.json is the single source of truth",
+        "status": "completed",
+        "conclusion": "success",
+        "details_url": "https://github.com/bionic0x/netrunner-foundation/actions/runs/40912091243/job/123582479389"
+      }
+    ],
+    "separate_context_review": "foundation/evidence/d021-review.json",
+    "complete_local_release_gate": null,
+    "complete_local_release_gate_reason": "Environment denies Unix socket creation; not claimed as passed",
+    "all_runtime_checks_completed_before_merge": true,
+    "last_runtime_check_completed_at": "2026-10-29T16:38:31Z"
+  },
+  "source_commit_title_has_protected_prefix": false,
+  "source_history_preserved": true,
+  "new_authority_granted_by_this_audit": false,
+  "standing_authority_granted": false,
+  "signing_or_private_key_access_performed": false
+}

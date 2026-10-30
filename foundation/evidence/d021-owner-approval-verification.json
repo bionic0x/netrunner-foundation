@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "checked_on": "2026-10-30",
+  "verifier_commit": "9b93fae9b68df85cf4a25a05c29e430fba4a13de",
+  "candidate_commit": "260f0f43fe0a099a7d028b58d54392b44371aa94",
+  "candidate_base": "bb759e2e997d7c1eb25a5c45c2e51ebc61162f16",
+  "report": {
+    "authorizes_action": false,
+    "checks": {
+      "base_present": true,
+      "blobs": true,
+      "object_format": true,
+      "patch": true,
+      "paths": true,
+      "result_tree": true
+    },
+    "created": "2026-10-30T00:07:54Z",
+    "detail": "",
+    "evidence_origin": "PINNED_HUMAN_KEY",
+    "kind": "ante.d020.approval",
+    "principal": "owner:bionic0x",
+    "proof_purpose": "assertionMethod",
+    "reason": "VERIFIED",
+    "signature_valid": true,
+    "trust_store": {
+      "default": true,
+      "path": "HEAD:foundation/attest/trusted-keys.json",
+      "sha256": "b06ac471f971d85cb5c0c3a3e40a222c327f46037516f81069ac90ced2ddc6bf"
+    },
+    "verification_method": "did:key:z6MkqhuU8ywu4E7thBXbQsTaeGSrZJWek376nooPcsUH1qWR#z6MkqhuU8ywu4E7thBXbQsTaeGSrZJWek376nooPcsUH1qWR",
+    "verified": true
+  },
+  "altered_blob_negative_control": {
+    "exit_code": 4,
+    "reason": "BAD_SIGNATURE",
+    "verified": false
+  },
+  "prepared_patch_sha256": "7f8a49d631cc39edc263b64d17f32dbc2975d9c53a791a462d2a060bb6472fde",
+  "signed_pinned_full_index_patch_sha256": "b49942422281db0a005a1606539a57a34da5643a1b4b27a8695e1b43fe434066",
+  "only_encoding_difference": "index lines contain full object ids in the signed pinned diff; the prepared patch uses seven-character abbreviations",
+  "normalised_diff_bytes_identical": true,
+  "private_index_application_result_tree": "637299fdd49ecb3208dffd270e2bbef71fd88158",
+  "signing_or_private_key_access_performed": false,
+  "independence_level": "SELF",
+  "does_not_authenticate_human_presence_or_prior_manual_approval": true
+}

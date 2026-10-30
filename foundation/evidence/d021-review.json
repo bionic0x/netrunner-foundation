@@ -1,36 +1,43 @@
 {
   "schema_version": 1,
   "date": "2026-10-29",
-  "status": "POST_G1A1_REVIEW_PASSED",
-  "base_commit": "edce974f38d6611696d23fc2d11ec29e560fe73d",
-  "patch_sha256": "1a8e34a57d4f08efac5db48e2543645683f409837b031a0a578afd63ec76d47e",
+  "variant": "B_POST_OWNER_KEY",
+  "status": "POST_OWNER_KEY_REVIEW_PASSED",
+  "base_commit": "8c4719518b32277f1501cc2c15c5acb1ab40349b",
+  "patch_sha256": "7f8a49d631cc39edc263b64d17f32dbc2975d9c53a791a462d2a060bb6472fde",
   "independence_level": "SEPARATED_CONTEXT",
   "reviewer_wrote_implementation": false,
   "inputs": [
-    "d021-g1a1-review.diff",
+    "d021-owner-key-review.diff",
     "owner-supplied Ante Foundation mandate",
+    "foundation/evidence/d021-post-owner-key-validation.json",
     "foundation/evidence/d021-validation.json"
   ],
   "final_actionable_findings": 0,
   "findings": [],
+  "owner_approval_and_application": "Applied and merged by Claude in #31; post-merge signed acknowledgement independently recomputed by Codex against the pinned store, not an INDEPENDENT_OPERATOR claim",
+  "PR_29_key_pin_or_merge_authorized": false,
+  "independent_operator_review": null,
+  "final_patch_digest_verified": true,
   "verified_scope": {
     "total_paths": 7,
     "protected_paths": 6,
     "unprotected_guide": "foundation/ATTEST.md"
   },
-  "owner_approval_and_application": "P0/P2 ratified; replacement P1 pending; no application",
-  "independent_operator_review": null,
-  "independent_operator_review_reason": "Separate agent context is a coherence review, not authenticated operator authority.",
+  "g1a_implementation_preserved": true,
+  "key_pin_delivery_preserved": true,
+  "boundary_review": "B preserves #29 store, guide and non-T08 tests; T08 retains all targets and gains shared-manifest assertions. Signature implementation unchanged.",
+  "authorization_review": "Exact source and store fingerprints prevent wildcard or double application. The post-owner-key variant was applied once by Claude and merged in #31. This reconciliation neither approves a key pin, grants a merge scope nor signs anything; it records the post-merge signed apply acknowledgement and its limits.",
   "previous_review": {
     "schema_version": 1,
     "date": "2026-10-29",
-    "status": "REFRESHED_REVIEW_PASSED",
-    "base_commit": "284275f1ae96174a542007fbfabe6522d5c66bbd",
-    "patch_sha256": "4810889f7716ef8b18da80b2935b534e31dde9d1e799e5068d99a769c87992f1",
+    "status": "POST_KEYGEN_REVIEW_PASSED",
+    "base_commit": "ae184df4e5e8a82740344c29f52223731ce6a07c",
+    "patch_sha256": "f0af758efe74714d420eeb82cd9f177411c51f2ba3963a6176b39dfde07e949c",
     "independence_level": "SEPARATED_CONTEXT",
     "reviewer_wrote_implementation": false,
     "inputs": [
-      "history-d021-g1a-review.diff",
+      "d021-keygen-review.diff",
       "owner-supplied Ante Foundation mandate",
       "foundation/evidence/d021-validation.json"
     ],
@@ -41,49 +48,120 @@
       "protected_paths": 6,
       "unprotected_guide": "foundation/ATTEST.md"
     },
-    "g1a_boundary_review": "T08 retains all five targets, expands the legacy Overdrive checks, and checks schema 2 with an exact manifest pointer and no shadow list; the new integration covers both entry points and the trust store.",
-    "g1a_implementation_preserved": true,
-    "final_patch_digest_verified": true,
-    "owner_approval_and_application": "PENDING",
+    "owner_approval_and_application": "P0/P2 ratified; replacement P1 pending; no application",
     "independent_operator_review": null,
-    "independent_operator_review_reason": "Separate agent context is a coherence review, not authenticated independent operator authority.",
-    "previous_pre_g1a_review": {
+    "independent_operator_review_reason": "Separate agent context is a coherence review, not authenticated operator authority.",
+    "previous_review": {
       "schema_version": 1,
       "date": "2026-10-29",
+      "status": "POST_G1A1_REVIEW_PASSED",
+      "base_commit": "edce974f38d6611696d23fc2d11ec29e560fe73d",
+      "patch_sha256": "1a8e34a57d4f08efac5db48e2543645683f409837b031a0a578afd63ec76d47e",
       "independence_level": "SEPARATED_CONTEXT",
       "reviewer_wrote_implementation": false,
-      "patch_sha256": "fdea84af57869af77b3aa49bcdff175e40ccc096c6220821c2fde5189f6d929a",
       "inputs": [
-        "proposed diff and correction diffs",
+        "d021-g1a1-review.diff",
         "owner-supplied Ante Foundation mandate",
         "foundation/evidence/d021-validation.json"
       ],
-      "findings": [
-        {
-          "priority": "P2",
-          "finding": "Make the one-time exception to the handwritten authorship requirement explicit in P1.",
-          "resolution": "Owner is asked explicitly to authorize the exact external agent-authored patch; no standing authority or self-development route is granted.",
-          "status": "RESOLVED"
-        },
-        {
-          "priority": "P2",
-          "finding": "Do not claim the preparation packet records actual approval while it remains pending.",
-          "resolution": "The proposed decision record distinguishes the scope packet from the future execution receipt containing the actual decision/application.",
-          "status": "RESOLVED"
-        }
-      ],
       "final_actionable_findings": 0,
-      "final_patch_digest_verified": true,
-      "four_tested_runtime_and_test_sections_unchanged": true,
-      "owner_approval_and_application": "PENDING",
+      "findings": [],
+      "verified_scope": {
+        "total_paths": 7,
+        "protected_paths": 6,
+        "unprotected_guide": "foundation/ATTEST.md"
+      },
+      "owner_approval_and_application": "P0/P2 ratified; replacement P1 pending; no application",
       "independent_operator_review": null,
-      "independent_operator_review_reason": "A separate agent context provides a coherence review, not authenticated operator independence or pause authority."
+      "independent_operator_review_reason": "Separate agent context is a coherence review, not authenticated operator authority.",
+      "previous_review": {
+        "schema_version": 1,
+        "date": "2026-10-29",
+        "status": "REFRESHED_REVIEW_PASSED",
+        "base_commit": "284275f1ae96174a542007fbfabe6522d5c66bbd",
+        "patch_sha256": "4810889f7716ef8b18da80b2935b534e31dde9d1e799e5068d99a769c87992f1",
+        "independence_level": "SEPARATED_CONTEXT",
+        "reviewer_wrote_implementation": false,
+        "inputs": [
+          "history-d021-g1a-review.diff",
+          "owner-supplied Ante Foundation mandate",
+          "foundation/evidence/d021-validation.json"
+        ],
+        "final_actionable_findings": 0,
+        "findings": [],
+        "verified_scope": {
+          "total_paths": 7,
+          "protected_paths": 6,
+          "unprotected_guide": "foundation/ATTEST.md"
+        },
+        "g1a_boundary_review": "T08 retains all five targets, expands the legacy Overdrive checks, and checks schema 2 with an exact manifest pointer and no shadow list; the new integration covers both entry points and the trust store.",
+        "g1a_implementation_preserved": true,
+        "final_patch_digest_verified": true,
+        "owner_approval_and_application": "PENDING",
+        "independent_operator_review": null,
+        "independent_operator_review_reason": "Separate agent context is a coherence review, not authenticated independent operator authority.",
+        "previous_pre_g1a_review": {
+          "schema_version": 1,
+          "date": "2026-10-29",
+          "independence_level": "SEPARATED_CONTEXT",
+          "reviewer_wrote_implementation": false,
+          "patch_sha256": "fdea84af57869af77b3aa49bcdff175e40ccc096c6220821c2fde5189f6d929a",
+          "inputs": [
+            "proposed diff and correction diffs",
+            "owner-supplied Ante Foundation mandate",
+            "foundation/evidence/d021-validation.json"
+          ],
+          "findings": [
+            {
+              "priority": "P2",
+              "finding": "Make the one-time exception to the handwritten authorship requirement explicit in P1.",
+              "resolution": "Owner is asked explicitly to authorize the exact external agent-authored patch; no standing authority or self-development route is granted.",
+              "status": "RESOLVED"
+            },
+            {
+              "priority": "P2",
+              "finding": "Do not claim the preparation packet records actual approval while it remains pending.",
+              "resolution": "The proposed decision record distinguishes the scope packet from the future execution receipt containing the actual decision/application.",
+              "status": "RESOLVED"
+            }
+          ],
+          "final_actionable_findings": 0,
+          "final_patch_digest_verified": true,
+          "four_tested_runtime_and_test_sections_unchanged": true,
+          "owner_approval_and_application": "PENDING",
+          "independent_operator_review": null,
+          "independent_operator_review_reason": "A separate agent context provides a coherence review, not authenticated operator independence or pause authority."
+        },
+        "previous_review_status": "SUPERSEDED_BEFORE_APPROVAL"
+      },
+      "previous_review_status": "PREVIOUS_PATCH_APPROVED_NOT_APPLIED_INPUT_CHANGED",
+      "final_patch_digest_verified": true,
+      "g1a_implementation_preserved": true,
+      "g1a1_boundary_review": "T08 retains all five targets and strengthens the shared-manifest assertions. All other #26 test changes remain untouched. The guide preserves its HEAD/default-store and modified-verifier warning.",
+      "approval_review": "Receipts correctly distinguish ratified P0/P2, the approved but unapplied previous patch, and replacement P1 awaiting renewed approval."
     },
-    "previous_review_status": "SUPERSEDED_BEFORE_APPROVAL"
+    "previous_review_status": "SUPERSEDED_BEFORE_RENEWED_APPROVAL",
+    "final_patch_digest_verified": true,
+    "g1a_implementation_preserved": true,
+    "key_generation_delivery_preserved": true,
+    "boundary_review": "T08 retains all targets without weakening. #28 runtime/keygen, non-T08 tests and owner-setup instructions remain unchanged. The guide preserves its HEAD/default-store warning.",
+    "approval_review": "P0/P2 ratified; 4810889f approved but never applied; 1a8e34a5 neither approved nor applied; current f0af758e awaiting approval."
   },
-  "previous_review_status": "PREVIOUS_PATCH_APPROVED_NOT_APPLIED_INPUT_CHANGED",
-  "final_patch_digest_verified": true,
-  "g1a_implementation_preserved": true,
-  "g1a1_boundary_review": "T08 retains all five targets and strengthens the shared-manifest assertions. All other #26 test changes remain untouched. The guide preserves its HEAD/default-store and modified-verifier warning.",
-  "approval_review": "Receipts correctly distinguish ratified P0/P2, the approved but unapplied previous patch, and replacement P1 awaiting renewed approval."
+  "application_receipt": "foundation/evidence/d021-execution.json",
+  "reconciliation_review": {
+    "recorded_on": "2026-10-30",
+    "scope": "Nine unprotected documentation/evidence paths; no runtime change",
+    "independence_level": "SEPARATED_CONTEXT",
+    "reviewer_wrote_reconciliation": false,
+    "final_actionable_findings": 0,
+    "resolved_findings": [
+      {
+        "priority": "P2",
+        "finding": "Current authorization_review still said only B is now requested",
+        "resolution": "Replaced with observed applied-once/merged status and signed-record scope limits",
+        "status": "RESOLVED"
+      }
+    ],
+    "preserved": "True Claude authorship; post-merge apply-only signature; prior manual approval reported, not authenticated here; no new authority or independent-operator claim"
+  }
 }
