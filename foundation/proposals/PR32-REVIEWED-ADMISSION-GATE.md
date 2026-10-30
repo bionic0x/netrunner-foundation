@@ -1,6 +1,15 @@
 # PR #32 — Reviewed admission-gate candidate
 
-Status: **PREPARED, NOT APPLIED; specific D-020 owner approval required.**
+Status: **OWNER-APPROVED AND APPLIED TO #32; merge awaits the owner's signature.**
+
+The owner answered `si` to the exact six-file patch below in the authorized
+ChatGPT channel on 30 October 2026. Codex applied its outputs to the existing
+PR #32 after revalidating every input hash and mode. The original Claude commit
+is preserved; the two correction commits have `protected:` titles and truthful
+agent-authorship descriptions. A title does not establish human authorship.
+The corrected runtime head is `e83222a2d18fdbffb2a2f8601c3103d4cb918c97`.
+The [application record](../evidence/pr32-execution.json) distinguishes the
+owner's direct approval, the applied bytes, CI and the still-missing signature.
 Prepared on 30 October 2026 against `ed31c60`, after the #33 documentation
 reconciliation. D-021 is already integrated and is not reopened by this packet.
 
@@ -35,8 +44,8 @@ blob ID and mode, and the result tree reproduced with a private Git index.
 | `foundation/ATTEST.md` | Unprotected guide |
 | `foundation/COMMANDS.md` | Unprotected guide |
 
-The requested D-020 exception is limited to these exact outputs, outside the
-self-development loop, with truthful agent authorship. It requests application,
+The approved D-020 exception is limited to these exact outputs, outside the
+self-development loop, with truthful agent authorship. It covers application,
 preparation of the actual final candidate's unsigned merge approval for the
 owner, and merge only after required checks and owner merge approval. It
 creates no standing permission, private key, account or host authority.
@@ -46,6 +55,44 @@ and the PR head before application; changed inputs require renewed preparation.
 The CI must run again on the corrected runtime head. If the admission report is
 used, the owner signs `merge` scope against that final candidate and its merge
 base, and the approval is added in a separate last commit.
+
+## Owner signing step for the applied candidate
+
+The [unsigned merge approval](pr32-merge-approval.unsigned.json) binds the actual
+candidate above, with scope `merge` and review reference to #32. Its merge base
+is `9b93fae9b68df85cf4a25a05c29e430fba4a13de`. The later #33 update to `main`
+changed only unrelated documentation; all six reviewed input blobs and modes
+are identical at the preparation base and the real merge base.
+
+The canonical patch digest used by `ante sign` is
+`b669128653c29c7096453993bf9b296fb676c03e00ec1f069214cfa830c945fd`.
+The reviewed patch digest `1d268fad...` below remains unchanged. Replacing the
+canonical patch's 40-character `index` IDs with their seven-character prefixes
+reproduces the reviewed patch byte for byte. No code or mode differs. The
+actual candidate tree is `6e250a8822ace074dd836279a0dd4960cd5cafb8`; the
+preparation tree includes #33's unrelated documents and is recorded separately.
+
+Use the existing signing account and key, from a checkout that has fetched
+`foundation/d020-gate` and `netrunner/pr32-review-packet`. Export the public
+unsigned document from the packet branch before signing it:
+
+```sh
+git fetch origin foundation/d020-gate netrunner/pr32-review-packet
+git show origin/netrunner/pr32-review-packet:foundation/proposals/pr32-merge-approval.unsigned.json > /tmp/pr32-merge-approval.unsigned.json
+git diff 9b93fae9b68df85cf4a25a05c29e430fba4a13de e83222a2d18fdbffb2a2f8601c3103d4cb918c97
+```
+
+Then run the existing `ante sign` procedure as the signing account, with this
+document, `--head e83222a2d18fdbffb2a2f8601c3103d4cb918c97`, scope already
+fixed to `merge`, the pinned owner verification method, and the current UTC
+time. The signing command re-derives the bindings and refuses any difference
+before accessing the key. The agent has validated those bindings read-only and
+has not signed or accessed the private key.
+
+The returned signed JSON is the only content to add as
+`foundation/approvals/PR-32.json` in a final, separate commit on #32. After
+verification and the required final-head checks, the already-authorized merge
+can proceed. A code change after this candidate requires renewed preparation.
 
 ## Evidence and limits
 
