@@ -202,9 +202,12 @@ the target branch `B`, so a change cannot loosen its own rules or pin its own
 key. A change that touches no protected path proceeds. A change that does needs
 `foundation/approvals/PR-N.json`: an approval signed by a pinned human key, with
 scope `merge`, whose `review_ref` names `#N`, made against the merge base.
+Before accepting a protected patch's approval, the gate also compares every
+reviewed input blob and mode with the current target branch. A changed input returns
+`STALE_BASE`; an unrelated target update can retain the same reviewed inputs.
 
 An approval binds the exact head it approves, so it cannot be inside that head.
-It is added in a last commit that carries nothing else; the gate verifies it
+It is added or replaced in a last commit that carries nothing else; the gate verifies it
 against that commit's parent. A later commit or merge leaves the approval
 unbound and the answer HOLD; the owner signs again.
 
