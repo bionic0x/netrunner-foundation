@@ -1,0 +1,82 @@
+{
+  "schema_version": 1,
+  "prepared_on": "2026-10-30",
+  "patch_sha256": "1d268fad051bb0e308890983a0912a8257164728ea8ec4317268af9eb1b53bab",
+  "status": "ISOLATED_CORRECTED_CANDIDATE_PASSED",
+  "base_commit": "ed31c60b7fb45924a89d911992ea791fb91aeafc",
+  "original_PR_32_head": "252382f744a902d9acb1ca6bcc74522c4c4b2281",
+  "python": "3.11.17",
+  "required_environment": {
+    "ANTE_REQUIRE_ATTEST": "1"
+  },
+  "checks": [
+    {
+      "name": "foundation",
+      "command": [
+        "/workspace/scratch/1470bd876a88/netrunner-validation/bin/python",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests/foundation",
+        "-p",
+        "test_*.py"
+      ],
+      "exit_code": 0,
+      "duration_seconds": 231.298,
+      "tests": 286,
+      "skipped": 0
+    },
+    {
+      "name": "normalized",
+      "command": [
+        "/workspace/scratch/1470bd876a88/netrunner-validation/bin/python",
+        "tests/characterization/run.py"
+      ],
+      "exit_code": 0,
+      "duration_seconds": 17.295,
+      "matched": 114,
+      "total": 114
+    },
+    {
+      "name": "raw",
+      "command": [
+        "/workspace/scratch/1470bd876a88/netrunner-validation/bin/python",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests/characterization"
+      ],
+      "exit_code": 0,
+      "duration_seconds": 23.389,
+      "tests": 4,
+      "skipped": 0,
+      "cases": 116,
+      "additional_regressions": 3
+    }
+  ],
+  "log_sha256": {
+    "pr32-fixed-foundation.stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "pr32-fixed-foundation.stderr.log": "abef8461c4d7c7cca65611acb4fa56e23fe7f48894b05dc550aea5f8e5aef0e3",
+    "pr32-fixed-normalized.stdout.log": "1dbf58c57a1e230fc02909484996235883187aaf86d8d24fd7734fbbfb18c02d",
+    "pr32-fixed-normalized.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "pr32-fixed-raw.stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "pr32-fixed-raw.stderr.log": "0c61e8ec4b87975dd775d15705feca8fdb935fb971c246912eab2873a438b5f8"
+  },
+  "affected_attestation_tests": {
+    "tests": 87,
+    "exit_code": 0
+  },
+  "private_index_application": {
+    "result_tree": "7264f4bd67ac0b0308f3a344fbac039cf2ea79e6",
+    "all_six_outputs_and_modes_match": true
+  },
+  "frozen_corpora_changed": false,
+  "real_owner_key_accessed_or_signing_performed": false,
+  "hosted_CI_for_corrected_runtime": null,
+  "hosted_CI_reason": "Corrected runtime diff remains data pending specific owner approval; the original PR head CI is not this candidate",
+  "complete_local_release_gate": null,
+  "complete_local_release_gate_reason": "Environment denies Unix sockets; not claimed as passed",
+  "independence_level": "SELF"
+}

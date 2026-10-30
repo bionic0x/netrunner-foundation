@@ -1,0 +1,47 @@
+{
+  "author": "Claude (prototype); Codex (reviewed corrections and application)",
+  "base_commit": "9b93fae9b68df85cf4a25a05c29e430fba4a13de",
+  "issued_at": "2026-10-30T07:04:52Z",
+  "kind": "ante.d020.approval",
+  "object_format": "sha1",
+  "patch_sha256": "b669128653c29c7096453993bf9b296fb676c03e00ec1f069214cfa830c945fd",
+  "paths": [
+    {
+      "base_blob": "b40d2a70a0abe865695f7394293604a6dd9c8dd0",
+      "path": ".github/workflows/check-runbooks.yml",
+      "result_blob": "242b3fe2ff406fe851ac3e98429d9ef8f835e16e"
+    },
+    {
+      "base_blob": "dc57675819e8b9bf09f67fd5b885712482fe6766",
+      "path": "ante/attest/commands.py",
+      "result_blob": "1e3515ec4dbe0782403e70dcea236f12f41ad606"
+    },
+    {
+      "base_blob": null,
+      "path": "ante/attest/gate.py",
+      "result_blob": "b93f20ecbea93f302c434d44db921ab5b5ee1eaa"
+    },
+    {
+      "base_blob": "f9d72417b0ce7144ba2ea19c019ee8bf86463b54",
+      "path": "foundation/ATTEST.md",
+      "result_blob": "9293ea19ef727e51696a225153c36fe41fa10667"
+    },
+    {
+      "base_blob": "67fbae702e761b280f6c83267d69e2cb0446937b",
+      "path": "foundation/COMMANDS.md",
+      "result_blob": "931043f79e2fd4f479111ef6697dfd8f692824a0"
+    },
+    {
+      "base_blob": "fd53eb598773607f41c1040f7e813725071cc01a",
+      "path": "tests/foundation/test_attest.py",
+      "result_blob": "7455e37c8c8ddb083b4d8538ac7173d00f9dcefc"
+    }
+  ],
+  "policy": "D-020",
+  "result_tree": "6e250a8822ace074dd836279a0dd4960cd5cafb8",
+  "review_ref": "https://github.com/bionic0x/netrunner-foundation/pull/32",
+  "schema_version": 1,
+  "scope": [
+    "merge"
+  ]
+}

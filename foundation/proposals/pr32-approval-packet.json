@@ -1,0 +1,158 @@
+{
+  "schema_version": 1,
+  "packet_kind": "unsigned_preparation_scope_receipt_not_authority_or_a_signed_approval",
+  "prepared_on": "2026-10-30",
+  "repository": "bionic0x/netrunner-foundation",
+  "original_pr": 32,
+  "original_pr_head": "252382f744a902d9acb1ca6bcc74522c4c4b2281",
+  "base_commit": "ed31c60b7fb45924a89d911992ea791fb91aeafc",
+  "object_format": "sha1",
+  "status": "APPLIED_HOSTED_CHECKS_PASSED_AWAITING_OWNER_MERGE_SIGNATURE",
+  "owner_approval": {
+    "channel": "Authorized ChatGPT conversation",
+    "on": "2026-10-30",
+    "answer": "si",
+    "refers_to_patch_sha256": "1d268fad051bb0e308890983a0912a8257164728ea8ec4317268af9eb1b53bab",
+    "apply_authorized": true,
+    "merge_authorized_after_checks_and_owner_signature": true,
+    "signed_proof": null,
+    "standing_authority": false
+  },
+  "author": [
+    "Claude (original gate prototype)",
+    "Codex (isolated maintenance corrections)"
+  ],
+  "applicator": "Codex (external maintenance agent)",
+  "outside_self_development_loop": true,
+  "mandate_exception_requested": "D-020 limited external-maintenance exception for these exact six outputs, with truthful agent authorship; no standing authority",
+  "patch": {
+    "file": "foundation/proposals/pr32-reviewed-admission-gate.patch",
+    "sha256": "1d268fad051bb0e308890983a0912a8257164728ea8ec4317268af9eb1b53bab",
+    "paths": [
+      ".github/workflows/check-runbooks.yml",
+      "ante/attest/commands.py",
+      "ante/attest/gate.py",
+      "foundation/ATTEST.md",
+      "foundation/COMMANDS.md",
+      "tests/foundation/test_attest.py"
+    ],
+    "protected_paths": [
+      ".github/workflows/check-runbooks.yml",
+      "ante/attest/commands.py",
+      "ante/attest/gate.py",
+      "tests/foundation/test_attest.py"
+    ],
+    "unprotected_guides": [
+      "foundation/ATTEST.md",
+      "foundation/COMMANDS.md"
+    ],
+    "files": {
+      ".github/workflows/check-runbooks.yml": {
+        "input": {
+          "sha256": "b54c37120bdb36f789a90cd3ebfa30ecf9174386579af5dc1556ca48e514ef2d",
+          "git_blob_oid": "b40d2a70a0abe865695f7394293604a6dd9c8dd0",
+          "bytes": 5169,
+          "mode": "100644"
+        },
+        "output": {
+          "sha256": "b9526fbbb1c1dd2d759e924c7dc397cbe3f2adc1450c2af7e5e2e4d8f5aa062f",
+          "git_blob_oid": "242b3fe2ff406fe851ac3e98429d9ef8f835e16e",
+          "bytes": 5919,
+          "mode": "100644"
+        }
+      },
+      "ante/attest/commands.py": {
+        "input": {
+          "sha256": "4bac0ad62734b13d9f8dac855510eb1723267f9af2e5d8062e1cf8ac4f2e32cd",
+          "git_blob_oid": "dc57675819e8b9bf09f67fd5b885712482fe6766",
+          "bytes": 23042,
+          "mode": "100644"
+        },
+        "output": {
+          "sha256": "37df941757697452304eab1dcd0b553e7ef36c6d2f9c4a8ec7fccdbc0441a02c",
+          "git_blob_oid": "1e3515ec4dbe0782403e70dcea236f12f41ad606",
+          "bytes": 24041,
+          "mode": "100644"
+        }
+      },
+      "ante/attest/gate.py": {
+        "input": null,
+        "output": {
+          "sha256": "6a2261bf0dadde6bc67bf4092699ed938ab86a5eb6ae8d51b10f0082941fb72f",
+          "git_blob_oid": "b93f20ecbea93f302c434d44db921ab5b5ee1eaa",
+          "bytes": 6834,
+          "mode": "100644"
+        }
+      },
+      "foundation/ATTEST.md": {
+        "input": {
+          "sha256": "2231d373b8d73d89e65bc0c660a6a68ad278f702c5b459e718d3f77098e11966",
+          "git_blob_oid": "f9d72417b0ce7144ba2ea19c019ee8bf86463b54",
+          "bytes": 15895,
+          "mode": "100644"
+        },
+        "output": {
+          "sha256": "791ef7fdbb2d07848645cd6f5124d7924987eb4dc2961d062beba6a4f89caabf",
+          "git_blob_oid": "9293ea19ef727e51696a225153c36fe41fa10667",
+          "bytes": 17492,
+          "mode": "100644"
+        }
+      },
+      "foundation/COMMANDS.md": {
+        "input": {
+          "sha256": "eb7f0a6d0330a68d5ad02b9cd52cf03abd4e55c1dc4adcc05b7629b59007a1ff",
+          "git_blob_oid": "67fbae702e761b280f6c83267d69e2cb0446937b",
+          "bytes": 9618,
+          "mode": "100644"
+        },
+        "output": {
+          "sha256": "d4975d509b97811f3b54f1c9ae16ad78282a47dfe514aa3556e51a641c712a84",
+          "git_blob_oid": "931043f79e2fd4f479111ef6697dfd8f692824a0",
+          "bytes": 9951,
+          "mode": "100644"
+        }
+      },
+      "tests/foundation/test_attest.py": {
+        "input": {
+          "sha256": "c040643cf750b4de30acda4a0e2c694e23a0cea05f6867771fff57160e1c7150",
+          "git_blob_oid": "fd53eb598773607f41c1040f7e813725071cc01a",
+          "bytes": 43810,
+          "mode": "100644"
+        },
+        "output": {
+          "sha256": "a7946a1398ce4290d7009eaf6d709e2272090fa578b9472dd069b2084d73d2ec",
+          "git_blob_oid": "7455e37c8c8ddb083b4d8538ac7173d00f9dcefc",
+          "bytes": 54677,
+          "mode": "100644"
+        }
+      }
+    },
+    "result_tree_at_preparation_base": "7264f4bd67ac0b0308f3a344fbac039cf2ea79e6"
+  },
+  "requested_actions": [
+    "apply_exact_corrected_candidate",
+    "prepare_unsigned_merge_approval_for_owner",
+    "merge_only_after_required_checks_and_owner_merge_approval"
+  ],
+  "application_conditions": [
+    "Revalidate all six inputs/modes and original PR head before application; stop if changed",
+    "Apply only these reviewed outputs in separately reviewable protected commits",
+    "Run required hosted checks on the corrected head; original-head CI is not sufficient",
+    "If using the admission report, the owner signs merge scope against the actual final candidate and merge base; add the approval in a separate final commit"
+  ],
+  "runtime_trust_store_changed": false,
+  "new_credentials_or_permissions_created": false,
+  "real_owner_key_accessed_or_signing_performed": false,
+  "gate_stays_informational": true,
+  "CI_runs_candidate_gate_code_limit_preserved": true,
+  "authorizes_action": false,
+  "standing_authority_granted": false,
+  "original_PR_head_must_not_be_confused_with_this_corrected_candidate": true,
+  "validation": "foundation/evidence/pr32-reviewed-validation.json",
+  "review": "foundation/evidence/pr32-reviewed-review.json",
+  "applied_head": "e83222a2d18fdbffb2a2f8601c3103d4cb918c97",
+  "execution": "foundation/evidence/pr32-execution.json",
+  "unsigned_merge_approval": "foundation/proposals/pr32-merge-approval.unsigned.json",
+  "owner_merge_signature": null,
+  "preparation_base_and_result_tree_remain_historical": true
+}

@@ -1,0 +1,64 @@
+{
+  "candidate_head": "252382f744a902d9acb1ca6bcc74522c4c4b2281",
+  "fixture": "Existing AdmissionGate fixture; ephemeral test key only, no owner key",
+  "test": "Target branch changes another line in the same protected input after approval; feature/approval unchanged",
+  "original_report": {
+    "decision": "PROCEED",
+    "reason": "APPROVED",
+    "detail": "1 protected path(s) covered by a verified approval of a pinned human key",
+    "authorizes_action": false,
+    "pr": 7,
+    "base": "9f4115871eb08a12154025461619416d7622c751",
+    "candidate": "3917f535104301ec459bd0890be9c7cb67011200",
+    "protected_paths": [
+      "ante/core.py"
+    ],
+    "approval": {
+      "verified": true,
+      "signature_valid": true,
+      "reason": "VERIFIED",
+      "detail": "",
+      "principal": "owner:test",
+      "verification_method": "did:key:z6MkiUbwQXcGt1tCiZTN9naErCc5D3CNb5TJ4WzyaMs4xzyh#z6MkiUbwQXcGt1tCiZTN9naErCc5D3CNb5TJ4WzyaMs4xzyh",
+      "created": "2026-10-29T12:00:00Z",
+      "evidence_origin": "PINNED_HUMAN_KEY",
+      "trust_store": {
+        "path": "9f4115871eb08a12154025461619416d7622c751:foundation/attest/trusted-keys.json",
+        "sha256": "260a7925509cc1fd887eecb0e217cf74204d6a31ad8faa4cc414e2a3a8275a87",
+        "default": true
+      }
+    }
+  },
+  "report_after_target_protected_input_changes": {
+    "decision": "PROCEED",
+    "reason": "APPROVED",
+    "detail": "1 protected path(s) covered by a verified approval of a pinned human key",
+    "authorizes_action": false,
+    "pr": 7,
+    "base": "9f4115871eb08a12154025461619416d7622c751",
+    "candidate": "3917f535104301ec459bd0890be9c7cb67011200",
+    "protected_paths": [
+      "ante/core.py"
+    ],
+    "approval": {
+      "verified": true,
+      "signature_valid": true,
+      "reason": "VERIFIED",
+      "detail": "",
+      "principal": "owner:test",
+      "verification_method": "did:key:z6MkiUbwQXcGt1tCiZTN9naErCc5D3CNb5TJ4WzyaMs4xzyh#z6MkiUbwQXcGt1tCiZTN9naErCc5D3CNb5TJ4WzyaMs4xzyh",
+      "created": "2026-10-29T12:00:00Z",
+      "evidence_origin": "PINNED_HUMAN_KEY",
+      "trust_store": {
+        "path": "9bdad0cffa9722bd56d463d2e9e3810d85b2d76b:foundation/attest/trusted-keys.json",
+        "sha256": "260a7925509cc1fd887eecb0e217cf74204d6a31ad8faa4cc414e2a3a8275a87",
+        "default": true
+      }
+    }
+  },
+  "target_base_advanced": true,
+  "feature_head_unchanged": true,
+  "merge_tree_exit_code": 0,
+  "expected_under_D020_step4": "HOLD, renewed approval required for changed protected input",
+  "actual": "PROCEED"
+}

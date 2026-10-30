@@ -1,0 +1,527 @@
+diff --git a/.github/workflows/check-runbooks.yml b/.github/workflows/check-runbooks.yml
+index b40d2a7..242b3fe 100644
+--- a/.github/workflows/check-runbooks.yml
++++ b/.github/workflows/check-runbooks.yml
+@@ -112,6 +112,25 @@ jobs:
+           ANTE_REQUIRE_ATTEST: '1'
+         run: python3 -m unittest discover -s tests/foundation -p 'test_*.py'
+ 
++      - name: D-020 admission report (informational; never blocks)
++        if: github.event_name == 'pull_request'
++        continue-on-error: true
++        env:
++          BASE_SHA: ${{ github.event.pull_request.base.sha }}
++          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
++          PR_NUMBER: ${{ github.event.pull_request.number }}
++        run: |
++          set +e
++          python3 scripts/ante attest gate --base "$BASE_SHA" --head "$HEAD_SHA" --pr "$PR_NUMBER" > "$RUNNER_TEMP/gate.json"
++          status=$?
++          {
++            echo '### D-020 admission report (informational)'
++            echo '```json'
++            cat "$RUNNER_TEMP/gate.json"
++            echo '```'
++          } >> "$GITHUB_STEP_SUMMARY"
++          exit $status
++
+       - name: Frozen reviewers and defence-layer independence
+         run: |
+           python3 scripts/ante constructs verify
+diff --git a/ante/attest/commands.py b/ante/attest/commands.py
+index dc57675..1e3515e 100644
+--- a/ante/attest/commands.py
++++ b/ante/attest/commands.py
+@@ -6,6 +6,7 @@
+     ante attest key PUBLIC.pem --principal WHO --principal-type human
+                                                              a trust-store entry to pin (through D-020)
+     ante attest keygen --out KEY.pem --public PUBLIC.pem     new encrypted signing key (as the signing account)
++    ante attest gate --base REV --head REV --pr N            D-020 admission report (informational), see gate.py
+     ante sign DOCUMENT --key KEY.pem --method ID --at T [--head REV] [--out FILE]
+     ante verify SIGNED [--trust FILE] [--repo DIR] [--artefact FILE] [--head REV]
+ 
+@@ -161,8 +162,8 @@ def _load(path: str):
+ VERIFIER_PATHS = ['ante/attest', 'foundation/attest']
+ 
+ 
+-def load_trust(trust_path: str | None, root: Path = ROOT) -> tuple[trust.Store, dict]:
+-    """The default store is read from the commit the checkout is on, never from the working tree.
++def load_trust(trust_path: str | None, root: Path = ROOT, ref: str = 'HEAD') -> tuple[trust.Store, dict]:
++    """The default store is read from a commit (HEAD unless ``ref``), never from the working tree.
+ 
+     A modified verifier or store in the working tree makes every verification fail.
+     """
+@@ -171,15 +172,15 @@ def load_trust(trust_path: str | None, root: Path = ROOT) -> tuple[trust.Store,
+         return store, {'path': str(trust_path), 'sha256': store.sha256, 'default': False}
+     try:
+         changed = documents.dirty(root, VERIFIER_PATHS)
+-        data = documents.committed(root, 'HEAD', trust.STORE_PATH)
++        data = documents.committed(root, ref, trust.STORE_PATH)
+     except documents.DocumentError:
+         raise trust.TrustError('the default trust store needs the git checkout it is committed in') from None
+     if changed:
+         raise VerifierModified(f'{len(changed)} uncommitted change(s) under {" or ".join(VERIFIER_PATHS)}')
+     if data is None:
+-        raise trust.TrustError(f'{trust.STORE_PATH} is not committed at HEAD')
+-    store = trust.Store.from_bytes(data, f'HEAD:{trust.STORE_PATH}')
+-    return store, {'path': f'HEAD:{trust.STORE_PATH}', 'sha256': store.sha256, 'default': True}
++        raise trust.TrustError(f'{trust.STORE_PATH} is not committed at {ref}')
++    store = trust.Store.from_bytes(data, f'{ref}:{trust.STORE_PATH}')
++    return store, {'path': f'{ref}:{trust.STORE_PATH}', 'sha256': store.sha256, 'default': True}
+ 
+ 
+ class VerifierModified(ValueError):
+@@ -187,7 +188,7 @@ class VerifierModified(ValueError):
+ 
+ 
+ def verify_file(path: str, trust_path: str | None, repo: str | None, artefact: str | None,
+-                head: str | None, root: Path = ROOT) -> dict:
++                head: str | None, root: Path = ROOT, trust_ref: str = 'HEAD') -> dict:
+     """Read-only verification. Fields copied from the document appear only once it verified."""
+     report = {'verified': False, 'signature_valid': False, 'reason': 'MALFORMED', 'detail': '', 'kind': None,
+               'verification_method': None, 'principal': None, 'proof_purpose': None, 'created': None,
+@@ -208,7 +209,7 @@ def verify_file(path: str, trust_path: str | None, repo: str | None, artefact: s
+         return report
+     report['kind'] = kind
+     try:
+-        store, identity = load_trust(trust_path, root)
++        store, identity = load_trust(trust_path, root, trust_ref)
+     except VerifierModified as exc:
+         report['reason'], report['detail'] = 'VERIFIER_MODIFIED', str(exc)
+         return report
+@@ -252,6 +253,13 @@ def verify_file(path: str, trust_path: str | None, repo: str | None, artefact: s
+     return report
+ 
+ 
++def _gate(args) -> int:
++    from ante.attest import gate
++    report = gate.decide(Path(args.repo), args.base, args.head, args.pr)
++    sys.stdout.write(json.dumps(report, indent=2, sort_keys=True) + '\n')
++    return EXIT_OK if report['decision'] == gate.PROCEED else EXIT_NOT_VERIFIED
++
++
+ def _verify(args) -> int:
+     report = verify_file(args.signed, args.trust, args.repo, args.artefact, args.head)
+     sys.stdout.write(json.dumps(report, indent=2, sort_keys=True) + '\n')
+@@ -461,6 +469,12 @@ def add_parser(sub) -> None:
+     key.add_argument('--principal-type', required=True, choices=trust.PRINCIPAL_TYPES)
+     key.add_argument('--kind', action='append', choices=documents.KINDS)
+     key.set_defaults(handler=_key)
++    gate = inner.add_parser('gate', help='D-020 admission report: PROCEED or HOLD for the change from --base to --head (informational)')
++    gate.add_argument('--base', required=True, help='target branch revision; rules and trust store are read here')
++    gate.add_argument('--head', required=True, help='pull request head')
++    gate.add_argument('--pr', required=True, type=int, help='pull request number; the approval is foundation/approvals/PR-N.json')
++    gate.add_argument('--repo', default=str(ROOT))
++    gate.set_defaults(handler=_gate)
+     gen = inner.add_parser('keygen', help='create an encrypted signing key; run it as the separate signing account')
+     gen.add_argument('--out', required=True, help='private key file (new, outside the checkout, mode 600)')
+     gen.add_argument('--public', required=True, help='public key PEM to write')
+diff --git a/ante/attest/gate.py b/ante/attest/gate.py
+new file mode 100644
+index 0000000..b93f20e
+--- /dev/null
++++ b/ante/attest/gate.py
+@@ -0,0 +1,127 @@
++"""The D-020 admission gate: does a change to protected paths carry a verified human approval?
++
++    ante attest gate --base REV --head REV --pr N [--repo DIR]
++
++The answer is PROCEED or HOLD. Any doubt is HOLD. The gate is informational: it
++reports, it never merges, blocks or authorises (``authorizes_action`` is false);
++the host that merges decides what to do with the report.
++
++A signed approval binds the exact head it approves, so it cannot live inside
++that head. It is stored in the repository as ``foundation/approvals/PR-N.json``
++in one last commit that adds nothing else. The gate then treats the parent of
++that commit as the candidate and verifies the approval against it. Anything else
++(a later merge, a second file) leaves the approval unbound and the answer HOLD.
++
++Which paths are protected is read at ``--base``, the target branch, so the change
++cannot loosen its own rules; the trust store is read there too, so it cannot pin
++a key for its own approval.
++"""
++from __future__ import annotations
++
++import fnmatch
++import re
++import tempfile
++from pathlib import Path
++
++from ante.attest import commands, documents
++from ante.develop import policy as policy_mod
++
++APPROVALS_DIR = 'foundation/approvals'
++PROCEED, HOLD = 'PROCEED', 'HOLD'
++
++
++def approval_path(pr: int) -> str:
++    return f'{APPROVALS_DIR}/PR-{pr}.json'
++
++
++def protected_paths(rules: policy_mod.Policy, names: list[str]) -> list[str]:
++    """Paths the shared manifest, the legacy list or the frozen reviewers protect."""
++    def hit(name: str) -> bool:
++        return name in rules.frozen or any(fnmatch.fnmatchcase(name, pattern)
++                                           for pattern in (*rules.overdrive, *rules.protected))
++    return [name for name in names if hit(name)]
++
++
++def decide(repo: Path, base: str, head: str, pr: int) -> dict:
++    report = {'decision': HOLD, 'reason': 'UNDETERMINED', 'detail': '', 'authorizes_action': False,
++              'pr': pr, 'base': None, 'target_base': None, 'candidate': None, 'protected_paths': [], 'approval': None}
++    if not isinstance(pr, int) or isinstance(pr, bool) or pr < 1:
++        report['reason'], report['detail'] = 'USAGE', 'the pull request number must be a positive integer'
++        return report
++    try:
++        base_commit = documents.resolve(repo, f'{base}^{{commit}}')
++        head_commit = documents.resolve(repo, f'{head}^{{commit}}')
++        if base_commit is None or head_commit is None:
++            report['reason'], report['detail'] = 'REVISION_UNKNOWN', 'base or head is not a commit of this repository'
++            return report
++        report['target_base'] = base_commit
++        merge_base = documents._git(repo, 'merge-base', base_commit, head_commit, check=False).stdout.decode().strip()
++        if not merge_base:
++            report['reason'], report['detail'] = 'NO_MERGE_BASE', 'base and head share no history'
++            return report
++        path = approval_path(pr)
++        parents = documents._git(repo, 'rev-list', '--parents', '-n1', head_commit).stdout.split()[1:]
++        parent = parents[0].decode() if len(parents) == 1 else None
++        # The approval commit adds or replaces exactly the approval file.
++        candidate = head_commit
++        if parent is not None and documents._changed(repo, parent, head_commit) == [path]:
++            candidate = parent
++        report['base'], report['candidate'] = merge_base, candidate
++        rules = policy_mod.at_ref(repo, base_commit)
++        names = documents._changed(repo, merge_base, candidate)
++        protected = protected_paths(rules, names)
++        # A target-only update need not move the merge base. Compare entries,
++        # including modes, for every input of a protected patch. Unrelated
++        # target changes can leave all those reviewed inputs intact.
++        stale_inputs = bool(protected) and any(
++            documents._git(repo, 'ls-tree', '-z', merge_base, '--', name).stdout !=
++            documents._git(repo, 'ls-tree', '-z', base_commit, '--', name).stdout
++            for name in names)
++    except (documents.DocumentError, policy_mod.PolicyError, OSError, KeyError, ValueError) as exc:
++        report['reason'], report['detail'] = 'UNDETERMINED', f'{type(exc).__name__}: {exc}'[:300]
++        return report
++    report['protected_paths'] = protected
++    if not names:
++        report.update(decision=PROCEED, reason='NO_CHANGES', detail='the candidate does not differ from the base')
++        return report
++    if not protected:
++        report.update(decision=PROCEED, reason='NO_PROTECTED_PATHS',
++                      detail=f'{len(names)} changed path(s), none protected at the base revision')
++        return report
++    if stale_inputs:
++        report['reason'] = 'STALE_BASE'
++        report['detail'] = 'the target branch changed an input or mode of the reviewed patch; renew its approval'
++        return report
++    blob = documents.committed(repo, head_commit, path)
++    if blob is None:
++        report['reason'] = 'APPROVAL_MISSING'
++        report['detail'] = f'{len(protected)} protected path(s) changed and {path} is not in the head'
++        return report
++    with tempfile.TemporaryDirectory() as directory:
++        file = Path(directory) / 'approval.json'
++        file.write_bytes(blob)
++        verified = commands.verify_file(str(file), None, str(repo), None, candidate, root=repo, trust_ref=base_commit)
++        document = commands._load(str(file)) if verified['verified'] else None
++    report['approval'] = {key: verified.get(key) for key in (
++        'verified', 'signature_valid', 'reason', 'detail', 'principal', 'verification_method', 'created',
++        'evidence_origin', 'trust_store')}
++    if not verified['verified']:
++        report['reason'], report['detail'] = 'APPROVAL_NOT_VERIFIED', f'{verified["reason"]}: {verified["detail"]}'[:300]
++        return report
++    if verified['evidence_origin'] != 'PINNED_HUMAN_KEY':
++        report['reason'], report['detail'] = 'NOT_A_PINNED_HUMAN_KEY', f'evidence origin is {verified["evidence_origin"]}'
++        return report
++    if document['base_commit'] != merge_base:
++        report['reason'] = 'STALE_BASE'
++        report['detail'] = 'the approval was made against another base than the merge base; renew it'
++        return report
++    if 'merge' not in document['scope']:
++        report['reason'], report['detail'] = 'SCOPE_LACKS_MERGE', f'approval scope is {", ".join(document["scope"])}'
++        return report
++    if not re.search(rf'(?:#|/pull/){pr}(?!\d)', document['review_ref']):
++        report['reason'] = 'REVIEW_REF_MISMATCH'
++        report['detail'] = f'review_ref {document["review_ref"]!r} does not name pull request {pr}'
++        return report
++    report.update(decision=PROCEED, reason='APPROVED',
++                  detail=f'{len(protected)} protected path(s) covered by a verified approval of a pinned human key')
++    return report
+diff --git a/foundation/ATTEST.md b/foundation/ATTEST.md
+index f9d7241..9293ea1 100644
+--- a/foundation/ATTEST.md
++++ b/foundation/ATTEST.md
+@@ -194,6 +194,32 @@ reason: `MALFORMED`, `SCHEMA_INVALID`, `UNSUPPORTED_PROOF`, `CONTEXT_MISMATCH`,
+ `CRYPTO_UNAVAILABLE`, `CANDIDATE_REQUIRED`, `REPOSITORY_MISMATCH`,
+ `REPOSITORY_UNAVAILABLE`.
+ 
++## Admission gate
++
++`ante attest gate --base B --head H --pr N` answers PROCEED or HOLD for a pull
++request; any doubt is HOLD. It reads the protected paths and the trust store at
++the target branch `B`, so a change cannot loosen its own rules or pin its own
++key. A change that touches no protected path proceeds. A change that does needs
++`foundation/approvals/PR-N.json`: an approval signed by a pinned human key, with
++scope `merge`, whose `review_ref` names `#N`, made against the merge base.
++Before accepting a protected patch's approval, the gate also compares every
++reviewed input blob and mode with the current target branch. A changed input returns
++`STALE_BASE`; an unrelated target update can retain the same reviewed inputs.
++
++An approval binds the exact head it approves, so it cannot be inside that head.
++It is added or replaced in a last commit that carries nothing else; the gate verifies it
++against that commit's parent. A later commit or merge leaves the approval
++unbound and the answer HOLD; the owner signs again.
++
++The gate reports and never authorises (`authorizes_action` is false). In CI it
++is an informational step that cannot fail the job. Limit of that stage: CI runs
++the gate code of the pull request itself, so a change to the gate is judged by
++the gate it changes. Making the gate mandatory has to run the base's code.
++Reasons: `NO_CHANGES`, `NO_PROTECTED_PATHS`, `APPROVED`, `APPROVAL_MISSING`,
++`APPROVAL_NOT_VERIFIED`, `NOT_A_PINNED_HUMAN_KEY`, `STALE_BASE`,
++`SCOPE_LACKS_MERGE`, `REVIEW_REF_MISMATCH`, `REVISION_UNKNOWN`, `NO_MERGE_BASE`,
++`USAGE`, `UNDETERMINED`.
++
+ ## Threat model
+ 
+ | ID | Threat | Control | Status |
+@@ -214,8 +240,8 @@ reason: `MALFORMED`, `SCHEMA_INVALID`, `UNSUPPORTED_PROOF`, `CONTEXT_MISMATCH`,
+ ## Not in G1a
+ 
+ No blockchain, ZK proof, credential issuance, DID resolution, key rotation,
+-revocation, external timestamp, review interface, application receipt, host
+-admission gate or network access. G1b adds rotation and local revocation. G2–G4
++revocation, external timestamp, review interface, application receipt, a
++mandatory admission gate or network access. G1b adds rotation and local revocation. G2–G4
+ (zkVM, ZKML, external anchoring) need a named external verifier and a separate
+ owner decision.
+ 
+diff --git a/foundation/COMMANDS.md b/foundation/COMMANDS.md
+index 67fbae7..931043f 100644
+--- a/foundation/COMMANDS.md
++++ b/foundation/COMMANDS.md
+@@ -84,6 +84,7 @@ Every `develop` command takes `--state FILE` (a hash-chained log, anchored in
+ | `attest approval --base B --head H --scope apply --review-ref R --author A --at T` | unsigned D-020 approval of the exact change from B to H: result tree, changed paths with blob ids, patch hash |
+ | `attest key PUBLIC.pem --principal P --principal-type human` | trust-store entry for an Ed25519 public key; pinning it is a D-020 change |
+ | `attest keygen --out KEY.pem --public PUB.pem` | new encrypted Ed25519 signing key, mode 600, passphrase typed twice on the terminal; run as the separate signing account |
++| `attest gate --base B --head H --pr N` | D-020 admission report, PROCEED or HOLD (doubt is HOLD): a change to protected paths needs `foundation/approvals/PR-N.json`, a verified approval of a pinned human key with scope `merge`, added in a last commit that carries nothing else; informational, `authorizes_action` is always false |
+ | `sign DOCUMENT --key KEY.pem --method M --at T [--head H]` | adds an `eddsa-jcs-2022` proof after re-deriving the document from the checkout (`--head` for approvals) and showing it; runs only as a separate signing account that owns an encrypted key outside the checkout, mode 600; the passphrase is typed at the terminal |
+ | `verify SIGNED [--trust F] [--repo D] [--artefact A] [--head H]` | read-only check against the keys pinned at HEAD (or a named store) and, with `--repo`, against git; approvals need `--repo` and `--head`; exit 0 verified, 4 not verified, with a reason |
+ 
+diff --git a/tests/foundation/test_attest.py b/tests/foundation/test_attest.py
+index fd53eb5..7455e37 100644
+--- a/tests/foundation/test_attest.py
++++ b/tests/foundation/test_attest.py
+@@ -828,5 +828,211 @@ class Boundaries(unittest.TestCase):
+             self.assertTrue(any(fnmatch.fnmatch(target, pattern) for pattern in overdrive), target)
+ 
+ 
++class AdmissionGate(unittest.TestCase):
++    """The D-020 gate: protected changes need a verified approval of a pinned human key."""
++
++    def setUp(self):
++        from ante.attest import gate
++        from ante.constructs import frozen
++        self.gate = gate
++        self.repo = Repo()
++        self.addCleanup(self.repo.close)
++        self.key, self.raw, self.method = new_key()
++        self.tmp = Path(tempfile.mkdtemp())
++        self.addCleanup(shutil.rmtree, self.tmp, True)
++        root = self.repo.dir
++        for name, data in (
++                ('strategy/overdrive-protected.json', {'protected': ['ante/**', 'foundation/attest/**']}),
++                ('foundation/develop-policy.json', {
++                    'schema_version': 2, 'max_open_proposals': 1, 'campaign_spend_usd': 1,
++                    'consecutive_regressions_to_stop': 2, 'editable_scopes': ['notes.md'],
++                    'protected_manifest': 'strategy/overdrive-protected.json'}),
++                (frozen.REGISTRY, {'frozen_reviewers': []}),
++                ('foundation/attest/trusted-keys.json', {'schema_version': 1, 'keys': [entry(self.raw)]})):
++            (root / name).parent.mkdir(parents=True, exist_ok=True)
++            (root / name).write_text(json.dumps(data))
++        self.base = self.repo.commit('rules and pin')
++        git(root, 'checkout', '-q', '-b', 'feature')
++
++    def change(self, name='ante/core.py', text='VALUE = 2\n'):
++        (self.repo.dir / name).write_text(text)
++        return self.repo.commit(f'change {name}')
++
++    def approve(self, candidate, pr=7, scope=('merge',), review_ref=None, key=None, add=True):
++        document = documents.approval(self.base, candidate, list(scope), review_ref or f'PR#{pr}',
++                                      'agent:test', AT, self.repo.dir)
++        signed = commands.sign_document(document, (key or self.key).sign, self.method, AT)
++        if add:
++            path = self.repo.dir / self.gate.approval_path(pr)
++            path.parent.mkdir(parents=True, exist_ok=True)
++            path.write_text(json.dumps(signed, indent=2))
++            return self.repo.commit('approval')
++        return signed
++
++    def decide(self, head=None, pr=7):
++        return self.gate.decide(self.repo.dir, self.base, head or git(self.repo.dir, 'rev-parse', 'HEAD'), pr)
++
++    def test_a_change_without_protected_paths_proceeds_without_an_approval(self):
++        self.change('notes.md', 'edited\n')
++        report = self.decide()
++        self.assertEqual(('PROCEED', 'NO_PROTECTED_PATHS', False),
++                         (report['decision'], report['reason'], report['authorizes_action']))
++
++    def test_a_protected_change_without_an_approval_holds(self):
++        self.change()
++        report = self.decide()
++        self.assertEqual(('HOLD', 'APPROVAL_MISSING', ['ante/core.py']),
++                         (report['decision'], report['reason'], report['protected_paths']))
++
++    def test_a_protected_change_with_a_verified_approval_proceeds(self):
++        candidate = self.change()
++        self.approve(candidate)
++        report = self.decide()
++        self.assertEqual(('PROCEED', 'APPROVED', candidate), (report['decision'], report['reason'], report['candidate']))
++        self.assertEqual('PINNED_HUMAN_KEY', report['approval']['evidence_origin'])
++        self.assertFalse(report['authorizes_action'])
++
++    def test_any_change_after_the_approval_holds(self):
++        candidate = self.change()
++        self.approve(candidate)
++        self.change('ante/core.py', 'VALUE = 3\n')
++        report = self.decide()
++        self.assertEqual(('HOLD', 'APPROVAL_NOT_VERIFIED'), (report['decision'], report['reason']))
++
++    def test_an_approval_commit_that_carries_anything_else_holds(self):
++        candidate = self.change()
++        document = self.approve(candidate, add=False)
++        (self.repo.dir / 'foundation' / 'approvals').mkdir(parents=True)
++        (self.repo.dir / self.gate.approval_path(7)).write_text(json.dumps(document))
++        (self.repo.dir / 'ante' / 'core.py').write_text('VALUE = 9\n')
++        self.repo.commit('approval and more')
++        self.assertEqual('APPROVAL_NOT_VERIFIED', self.decide()['reason'])
++
++    def test_an_approval_for_another_pull_request_does_not_count(self):
++        candidate = self.change()
++        self.approve(candidate, pr=8)
++        self.assertEqual('APPROVAL_MISSING', self.decide(pr=7)['reason'])
++        self.assertEqual('PROCEED', self.decide(pr=8)['decision'])
++
++    def test_a_review_reference_naming_another_pull_request_holds(self):
++        candidate = self.change()
++        self.approve(candidate, review_ref='PR#70')
++        self.assertEqual('REVIEW_REF_MISMATCH', self.decide()['reason'])
++
++    def test_a_scope_without_merge_holds(self):
++        candidate = self.change()
++        self.approve(candidate, scope=('apply',))
++        self.assertEqual('SCOPE_LACKS_MERGE', self.decide()['reason'])
++
++    def test_a_key_that_is_not_pinned_at_the_base_holds(self):
++        candidate = self.change()
++        other, other_raw, other_method = new_key()
++        document = documents.approval(self.base, candidate, ['merge'], 'PR#7', 'agent:test', AT, self.repo.dir)
++        signed = commands.sign_document(document, other.sign, other_method, AT)
++        path = self.repo.dir / self.gate.approval_path(7)
++        path.parent.mkdir(parents=True, exist_ok=True)
++        path.write_text(json.dumps(signed))
++        self.repo.commit('approval')
++        self.assertEqual('APPROVAL_NOT_VERIFIED', self.decide()['reason'])
++
++    def test_the_change_cannot_pin_its_own_key(self):
++        """The store is read at the base, so a key added by the change itself is unknown."""
++        other, other_raw, other_method = new_key()
++        store = self.repo.dir / 'foundation' / 'attest' / 'trusted-keys.json'
++        store.write_text(json.dumps({'schema_version': 1, 'keys': [entry(self.raw), entry(other_raw)]}))
++        candidate = self.repo.commit('pin another key')
++        document = documents.approval(self.base, candidate, ['merge'], 'PR#7', 'agent:test', AT, self.repo.dir)
++        signed = commands.sign_document(document, other.sign, other_method, AT)
++        path = self.repo.dir / self.gate.approval_path(7)
++        path.parent.mkdir(parents=True, exist_ok=True)
++        path.write_text(json.dumps(signed))
++        self.repo.commit('approval')
++        report = self.decide()
++        self.assertEqual(('HOLD', 'APPROVAL_NOT_VERIFIED'), (report['decision'], report['reason']))
++        self.assertIn('UNTRUSTED_KEY', report['detail'])
++
++    def test_a_stale_base_holds(self):
++        candidate = self.change()
++        self.approve(candidate)
++        git(self.repo.dir, 'checkout', '-q', 'main')
++        (self.repo.dir / 'notes.md').write_text('main moved\n')
++        self.base = self.repo.commit('main moved')
++        git(self.repo.dir, 'checkout', '-q', 'feature')
++        git(self.repo.dir, 'merge', '-q', '--no-edit', 'main')
++        self.assertEqual('HOLD', self.decide()['decision'])
++
++    def test_a_target_only_change_to_a_protected_input_holds(self):
++        root = self.repo.dir
++        original = 'VALUE = 1\n' + ''.join(f'# stable {i}\n' for i in range(30)) + 'BASE_SETTING = 0\n'
++        git(root, 'checkout', '-q', 'main')
++        (root / 'ante/core.py').write_text(original)
++        self.base = self.repo.commit('long protected baseline')
++        git(root, 'checkout', '-q', 'feature')
++        git(root, 'merge', '-q', '--ff-only', 'main')
++        candidate = self.change(text=original.replace('VALUE = 1', 'VALUE = 2'))
++        approved_head = self.approve(candidate)
++        git(root, 'checkout', '-q', 'main')
++        (root / 'ante/core.py').write_text(original.replace('BASE_SETTING = 0', 'BASE_SETTING = 1'))
++        self.base = self.repo.commit('target changes a protected input')
++        git(root, 'checkout', '-q', 'feature')
++        self.assertEqual(approved_head, git(root, 'rev-parse', 'HEAD'))
++        report = self.decide()
++        self.assertEqual(('HOLD', 'STALE_BASE'), (report['decision'], report['reason']))
++        self.assertFalse(report['authorizes_action'])
++
++    def test_an_unrelated_target_only_change_keeps_matching_inputs_valid(self):
++        candidate = self.change()
++        approved_head = self.approve(candidate)
++        git(self.repo.dir, 'checkout', '-q', 'main')
++        (self.repo.dir / 'notes.md').write_text('unrelated target update\n')
++        self.base = self.repo.commit('target changes an unrelated file')
++        git(self.repo.dir, 'checkout', '-q', 'feature')
++        self.assertEqual(approved_head, git(self.repo.dir, 'rev-parse', 'HEAD'))
++        report = self.decide()
++        self.assertEqual(('PROCEED', 'APPROVED'), (report['decision'], report['reason']))
++
++    def test_a_target_only_mode_change_invalidates_the_approval(self):
++        candidate = self.change()
++        self.approve(candidate)
++        git(self.repo.dir, 'checkout', '-q', 'main')
++        git(self.repo.dir, 'config', 'core.filemode', 'true')
++        (self.repo.dir / 'ante/core.py').chmod(0o755)
++        self.base = self.repo.commit('target changes the protected input mode')
++        git(self.repo.dir, 'checkout', '-q', 'feature')
++        report = self.decide()
++        self.assertEqual(('HOLD', 'STALE_BASE'), (report['decision'], report['reason']))
++
++    def test_an_approval_only_replacement_renews_the_candidate(self):
++        candidate = self.change()
++        self.approve(candidate)
++        renewed_candidate = self.change(text='VALUE = 3\n')
++        self.approve(renewed_candidate)
++        report = self.decide()
++        self.assertEqual(('PROCEED', 'APPROVED', renewed_candidate),
++                         (report['decision'], report['reason'], report['candidate']))
++
++    def test_a_replacement_approval_commit_cannot_carry_an_unrelated_edit(self):
++        candidate = self.change()
++        self.approve(candidate)
++        renewed_candidate = self.change(text='VALUE = 3\n')
++        signed = self.approve(renewed_candidate, add=False)
++        (self.repo.dir / self.gate.approval_path(7)).write_text(json.dumps(signed))
++        (self.repo.dir / 'notes.md').write_text('unapproved edit\n')
++        self.repo.commit('replacement approval and unrelated edit')
++        report = self.decide()
++        self.assertEqual(('HOLD', 'APPROVAL_NOT_VERIFIED'), (report['decision'], report['reason']))
++
++    def test_doubt_is_hold(self):
++        self.assertEqual('REVISION_UNKNOWN', self.gate.decide(self.repo.dir, 'nope', 'HEAD', 7)['reason'])
++        self.assertEqual('USAGE', self.gate.decide(self.repo.dir, self.base, 'HEAD', 0)['reason'])
++
++    def test_the_command_reports_and_exits_by_decision(self):
++        self.change()
++        code, out, _ = run(['attest', 'gate', '--base', self.base, '--head', 'HEAD', '--pr', '7',
++                            '--repo', str(self.repo.dir)])
++        self.assertEqual(4, code)
++        self.assertEqual('APPROVAL_MISSING', json.loads(out)['reason'])
++
++
+ if __name__ == '__main__':
+     unittest.main()
