@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "prepared_on": "2026-10-30",
+  "original_head": "252382f744a902d9acb1ca6bcc74522c4c4b2281",
+  "patch_sha256": "1d268fad051bb0e308890983a0912a8257164728ea8ec4317268af9eb1b53bab",
+  "status": "CORRECTED_CANDIDATE_REVIEW_PASSED",
+  "independence_level": "SEPARATED_CONTEXT",
+  "reviewer_wrote_implementation": false,
+  "findings": [
+    {
+      "id": "P1",
+      "finding": "Target-only changes to a reviewed protected input retained PROCEED on the unchanged signed feature",
+      "original_status": "INDEPENDENTLY_REPRODUCED",
+      "resolution": "Compare complete Git tree entries for all reviewed inputs against the actual target; blobs and modes included; unrelated target updates remain admissible",
+      "status": "RESOLVED_IN_ISOLATED_CANDIDATE"
+    },
+    {
+      "id": "P2",
+      "finding": "Replacing an existing approval with a valid renewed signature was never recognised as the approval-only tip",
+      "original_status": "INDEPENDENTLY_REPRODUCED",
+      "resolution": "Allow an approval-only add or replacement with exactly one parent and one changed path; verify the signed parent and reject mixed renewal commits",
+      "status": "RESOLVED_IN_ISOLATED_CANDIDATE"
+    }
+  ],
+  "final_actionable_findings": 0,
+  "additional_reviewer_checks": [
+    "deletion returns HOLD/STALE_BASE",
+    "literal bracketed path drift returns HOLD/STALE_BASE",
+    "symlink conversion with identical blob bytes returns HOLD/STALE_BASE",
+    "renewal remains bound to its signed parent",
+    "mixed renewal commit remains rejected"
+  ],
+  "informational_continue_on_error_preserved": true,
+  "authorizes_action_still_false": true,
+  "owner_approval": null,
+  "independent_operator_review": null
+}
