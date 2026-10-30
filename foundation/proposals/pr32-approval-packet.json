@@ -7,13 +7,22 @@
   "original_pr_head": "252382f744a902d9acb1ca6bcc74522c4c4b2281",
   "base_commit": "ed31c60b7fb45924a89d911992ea791fb91aeafc",
   "object_format": "sha1",
-  "status": "PREPARED_NOT_APPLIED_AWAITING_SPECIFIC_OWNER_APPROVAL",
-  "owner_approval": null,
+  "status": "APPLIED_HOSTED_CHECKS_PASSED_AWAITING_OWNER_MERGE_SIGNATURE",
+  "owner_approval": {
+    "channel": "Authorized ChatGPT conversation",
+    "on": "2026-10-30",
+    "answer": "si",
+    "refers_to_patch_sha256": "1d268fad051bb0e308890983a0912a8257164728ea8ec4317268af9eb1b53bab",
+    "apply_authorized": true,
+    "merge_authorized_after_checks_and_owner_signature": true,
+    "signed_proof": null,
+    "standing_authority": false
+  },
   "author": [
     "Claude (original gate prototype)",
     "Codex (isolated maintenance corrections)"
   ],
-  "applicator": null,
+  "applicator": "Codex (external maintenance agent)",
   "outside_self_development_loop": true,
   "mandate_exception_requested": "D-020 limited external-maintenance exception for these exact six outputs, with truthful agent authorship; no standing authority",
   "patch": {
@@ -140,5 +149,10 @@
   "standing_authority_granted": false,
   "original_PR_head_must_not_be_confused_with_this_corrected_candidate": true,
   "validation": "foundation/evidence/pr32-reviewed-validation.json",
-  "review": "foundation/evidence/pr32-reviewed-review.json"
+  "review": "foundation/evidence/pr32-reviewed-review.json",
+  "applied_head": "e83222a2d18fdbffb2a2f8601c3103d4cb918c97",
+  "execution": "foundation/evidence/pr32-execution.json",
+  "unsigned_merge_approval": "foundation/proposals/pr32-merge-approval.unsigned.json",
+  "owner_merge_signature": null,
+  "preparation_base_and_result_tree_remain_historical": true
 }
