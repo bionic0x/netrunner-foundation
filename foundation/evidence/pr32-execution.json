@@ -1,0 +1,275 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-10-30T07:10:21Z",
+  "repository": "bionic0x/netrunner-foundation",
+  "runtime_pr": 32,
+  "packet_pr": 34,
+  "status": "APPLIED_HOSTED_CHECKS_PASSED_AWAITING_OWNER_MERGE_SIGNATURE",
+  "direct_owner_approval": {
+    "channel": "Authorized ChatGPT conversation",
+    "on": "2026-10-30",
+    "answer": "si",
+    "refers_to": "Specific final request to apply the six-file PR32 patch published in #34, then merge after corrected CI and the owner merge signature",
+    "patch_sha256": "1d268fad051bb0e308890983a0912a8257164728ea8ec4317268af9eb1b53bab",
+    "apply_authorized": true,
+    "merge_authorized_conditionally": true,
+    "signed_proof": null,
+    "is_standing_authority": false
+  },
+  "actual_authors": {
+    "original_prototype": "Claude (agent)",
+    "corrections_and_application": "Codex (agent)",
+    "owner_role": "Approver; not relabelled as handwritten code author"
+  },
+  "original_head": "252382f744a902d9acb1ca6bcc74522c4c4b2281",
+  "applied_head": "e83222a2d18fdbffb2a2f8601c3103d4cb918c97",
+  "merge_base": "9b93fae9b68df85cf4a25a05c29e430fba4a13de",
+  "target_at_input_revalidation": "ed31c60b7fb45924a89d911992ea791fb91aeafc",
+  "prepared_patch_sha256": "1d268fad051bb0e308890983a0912a8257164728ea8ec4317268af9eb1b53bab",
+  "canonical_patch_sha256": "b669128653c29c7096453993bf9b296fb676c03e00ec1f069214cfa830c945fd",
+  "serialization_comparison": "Canonical full-index patch becomes byte-identical to the approved patch when only 40-character Git index IDs are abbreviated to seven characters",
+  "all_six_input_blobs_and_modes_revalidated": true,
+  "all_six_published_output_hashes_and_modes_match": true,
+  "paths": [
+    ".github/workflows/check-runbooks.yml",
+    "ante/attest/commands.py",
+    "ante/attest/gate.py",
+    "foundation/ATTEST.md",
+    "foundation/COMMANDS.md",
+    "tests/foundation/test_attest.py"
+  ],
+  "protected_paths": [
+    ".github/workflows/check-runbooks.yml",
+    "ante/attest/commands.py",
+    "ante/attest/gate.py",
+    "tests/foundation/test_attest.py"
+  ],
+  "applied_tree": "6e250a8822ace074dd836279a0dd4960cd5cafb8",
+  "preparation_tree": "7264f4bd67ac0b0308f3a344fbac039cf2ea79e6",
+  "tree_difference_reason": "The preparation tree includes #33 unrelated documentation; actual PR32 candidate descends from 9b93fae. Reviewed six inputs and outputs are identical.",
+  "application_commits": [
+    {
+      "oid": "f9caa1ce23e716f27d3b615df216fb0caaf77021",
+      "path": "ante/attest/gate.py",
+      "protected": true
+    },
+    {
+      "oid": "62d9622716602916e130f000278c08072a7c5c27",
+      "path": "tests/foundation/test_attest.py",
+      "protected": true
+    },
+    {
+      "oid": "e83222a2d18fdbffb2a2f8601c3103d4cb918c97",
+      "path": "foundation/ATTEST.md",
+      "protected": false
+    }
+  ],
+  "local_published_head_check": {
+    "command": "ANTE_REQUIRE_ATTEST=1 python -m unittest discover -s tests/foundation -p test_attest.py",
+    "tests": 87,
+    "skipped": 0,
+    "seconds": 3.164,
+    "exit_code": 0
+  },
+  "hosted_CI": {
+    "head": "e83222a2d18fdbffb2a2f8601c3103d4cb918c97",
+    "successful": 14,
+    "total": 14,
+    "failed": 0,
+    "checks": [
+      {
+        "id": 123937560635,
+        "name": "install.sh behavior (ubuntu-latest)",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-30T07:02:54Z",
+        "completed_at": "2026-10-30T07:05:14Z",
+        "html_url": "https://github.com/bionic0x/netrunner-foundation/actions/runs/41017547748/job/123937560635",
+        "head_sha": "e83222a2d18fdbffb2a2f8601c3103d4cb918c97"
+      },
+      {
+        "id": 123937560313,
+        "name": "install.sh behavior (macos-15-intel)",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-30T07:02:55Z",
+        "completed_at": "2026-10-30T07:08:39Z",
+        "html_url": "https://github.com/bionic0x/netrunner-foundation/actions/runs/41017547748/job/123937560313",
+        "head_sha": "e83222a2d18fdbffb2a2f8601c3103d4cb918c97"
+      },
+      {
+        "id": 123937532441,
+        "name": "runbook rosters reference real agent slugs",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-30T07:02:49Z",
+        "completed_at": "2026-10-30T07:05:53Z",
+        "html_url": "https://github.com/bionic0x/netrunner-foundation/actions/runs/41017547754/job/123937532441",
+        "head_sha": "e83222a2d18fdbffb2a2f8601c3103d4cb918c97"
+      },
+      {
+        "id": 123937532130,
+        "name": "Ante Foundation contract, layers and published self-test",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-30T07:02:49Z",
+        "completed_at": "2026-10-30T07:05:53Z",
+        "html_url": "https://github.com/bionic0x/netrunner-foundation/actions/runs/41017547754/job/123937532130",
+        "head_sha": "e83222a2d18fdbffb2a2f8601c3103d4cb918c97"
+      },
+      {
+        "id": 123937475493,
+        "name": "tools.json is the single source of truth",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-30T07:02:38Z",
+        "completed_at": "2026-10-30T07:05:50Z",
+        "html_url": "https://github.com/bionic0x/netrunner-foundation/actions/runs/41017547884/job/123937475493",
+        "head_sha": "e83222a2d18fdbffb2a2f8601c3103d4cb918c97"
+      },
+      {
+        "id": 123937456675,
+        "name": "relay unit, HTTP and container isolation tests",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-30T07:02:35Z",
+        "completed_at": "2026-10-30T07:04:04Z",
+        "html_url": "https://github.com/bionic0x/netrunner-foundation/actions/runs/41017547812/job/123937456675",
+        "head_sha": "e83222a2d18fdbffb2a2f8601c3103d4cb918c97"
+      },
+      {
+        "id": 123937187589,
+        "name": "divisions.json is the single source of truth",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-30T07:01:44Z",
+        "completed_at": "2026-10-30T07:01:51Z",
+        "html_url": "https://github.com/bionic0x/netrunner-foundation/actions/runs/41017547853/job/123937187589",
+        "head_sha": "e83222a2d18fdbffb2a2f8601c3103d4cb918c97"
+      },
+      {
+        "id": 123937187498,
+        "name": "Whole roster, when the linter changes",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-30T07:01:44Z",
+        "completed_at": "2026-10-30T07:01:50Z",
+        "html_url": "https://github.com/bionic0x/netrunner-foundation/actions/runs/41017547824/job/123937187498",
+        "head_sha": "e83222a2d18fdbffb2a2f8601c3103d4cb918c97"
+      },
+      {
+        "id": 123937187375,
+        "name": "known vulnerabilities in pinned dependencies (osv-scanner)",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-30T07:01:44Z",
+        "completed_at": "2026-10-30T07:01:52Z",
+        "html_url": "https://github.com/bionic0x/netrunner-foundation/actions/runs/41017547783/job/123937187375",
+        "head_sha": "e83222a2d18fdbffb2a2f8601c3103d4cb918c97"
+      },
+      {
+        "id": 123937187358,
+        "name": "secrets in the full git history (gitleaks)",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-30T07:01:44Z",
+        "completed_at": "2026-10-30T07:01:51Z",
+        "html_url": "https://github.com/bionic0x/netrunner-foundation/actions/runs/41017547783/job/123937187358",
+        "head_sha": "e83222a2d18fdbffb2a2f8601c3103d4cb918c97"
+      },
+      {
+        "id": 123937187345,
+        "name": "workflow security (zizmor)",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-30T07:01:44Z",
+        "completed_at": "2026-10-30T07:01:53Z",
+        "html_url": "https://github.com/bionic0x/netrunner-foundation/actions/runs/41017547783/job/123937187345",
+        "head_sha": "e83222a2d18fdbffb2a2f8601c3103d4cb918c97"
+      },
+      {
+        "id": 123937187299,
+        "name": "Validate agent frontmatter and structure",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-30T07:01:45Z",
+        "completed_at": "2026-10-30T07:01:57Z",
+        "html_url": "https://github.com/bionic0x/netrunner-foundation/actions/runs/41017547824/job/123937187299",
+        "head_sha": "e83222a2d18fdbffb2a2f8601c3103d4cb918c97"
+      },
+      {
+        "id": 123937187226,
+        "name": "static analysis (semgrep)",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-30T07:01:44Z",
+        "completed_at": "2026-10-30T07:02:21Z",
+        "html_url": "https://github.com/bionic0x/netrunner-foundation/actions/runs/41017547783/job/123937187226",
+        "head_sha": "e83222a2d18fdbffb2a2f8601c3103d4cb918c97"
+      },
+      {
+        "id": 123937186680,
+        "name": "install.sh hermes config rewrite",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-30T07:01:44Z",
+        "completed_at": "2026-10-30T07:01:52Z",
+        "html_url": "https://github.com/bionic0x/netrunner-foundation/actions/runs/41017547749/job/123937186680",
+        "head_sha": "e83222a2d18fdbffb2a2f8601c3103d4cb918c97"
+      }
+    ],
+    "foundation": {
+      "tests": 286,
+      "skipped": 0,
+      "seconds": 150.327,
+      "normalized_cases": "114/114",
+      "raw_case_count": 116,
+      "raw_regressions": 3,
+      "raw_unittest_methods": 4
+    }
+  },
+  "unsigned_merge_approval": {
+    "path": "foundation/proposals/pr32-merge-approval.unsigned.json",
+    "file_sha256": "654d01af8594db332fe11d50e6191a0c689aa5e9efac8e986b4e78d9a3c148bf",
+    "scope": [
+      "merge"
+    ],
+    "bindings_rederived_read_only": true,
+    "signed": false
+  },
+  "gate_before_owner_signature": {
+    "decision": "HOLD",
+    "reason": "APPROVAL_MISSING",
+    "detail": "4 protected path(s) changed and foundation/approvals/PR-32.json is not in the head",
+    "authorizes_action": false,
+    "pr": 32,
+    "base": "9b93fae9b68df85cf4a25a05c29e430fba4a13de",
+    "target_base": "ed31c60b7fb45924a89d911992ea791fb91aeafc",
+    "candidate": "e83222a2d18fdbffb2a2f8601c3103d4cb918c97",
+    "protected_paths": [
+      ".github/workflows/check-runbooks.yml",
+      "ante/attest/commands.py",
+      "ante/attest/gate.py",
+      "tests/foundation/test_attest.py"
+    ],
+    "approval": null
+  },
+  "merge": {
+    "authorized_only_after": [
+      "Required final-head checks pass",
+      "Owner merge-scope signature for the actual candidate is verified",
+      "Signed approval is the sole final commit file foundation/approvals/PR-32.json"
+    ],
+    "merged": false,
+    "commit": null
+  },
+  "frozen_corpora_changed": false,
+  "trust_store_changed": false,
+  "real_owner_key_accessed_or_signing_performed": false,
+  "independence_level": "SEPARATED_CONTEXT for review; SELF for local application checks",
+  "independent_operator_authenticated": false,
+  "gate_is_informational": true,
+  "authorizes_action": false,
+  "full_local_release_measured": false,
+  "full_local_release_limit": "Unix sockets denied by environment; no full local release pass claimed"
+}
