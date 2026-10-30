@@ -112,6 +112,25 @@ jobs:
           ANTE_REQUIRE_ATTEST: '1'
         run: python3 -m unittest discover -s tests/foundation -p 'test_*.py'
 
+      - name: D-020 admission report (informational; never blocks)
+        if: github.event_name == 'pull_request'
+        continue-on-error: true
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          set +e
+          python3 scripts/ante attest gate --base "$BASE_SHA" --head "$HEAD_SHA" --pr "$PR_NUMBER" > "$RUNNER_TEMP/gate.json"
+          status=$?
+          {
+            echo '### D-020 admission report (informational)'
+            echo '```json'
+            cat "$RUNNER_TEMP/gate.json"
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+          exit $status
+
       - name: Frozen reviewers and defence-layer independence
         run: |
           python3 scripts/ante constructs verify
