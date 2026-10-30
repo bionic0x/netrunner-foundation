@@ -6,6 +6,7 @@
     ante attest key PUBLIC.pem --principal WHO --principal-type human
                                                              a trust-store entry to pin (through D-020)
     ante attest keygen --out KEY.pem --public PUBLIC.pem     new encrypted signing key (as the signing account)
+    ante attest gate --base REV --head REV --pr N            D-020 admission report (informational), see gate.py
     ante sign DOCUMENT --key KEY.pem --method ID --at T [--head REV] [--out FILE]
     ante verify SIGNED [--trust FILE] [--repo DIR] [--artefact FILE] [--head REV]
 
@@ -161,8 +162,8 @@ def _load(path: str):
 VERIFIER_PATHS = ['ante/attest', 'foundation/attest']
 
 
-def load_trust(trust_path: str | None, root: Path = ROOT) -> tuple[trust.Store, dict]:
-    """The default store is read from the commit the checkout is on, never from the working tree.
+def load_trust(trust_path: str | None, root: Path = ROOT, ref: str = 'HEAD') -> tuple[trust.Store, dict]:
+    """The default store is read from a commit (HEAD unless ``ref``), never from the working tree.
 
     A modified verifier or store in the working tree makes every verification fail.
     """
@@ -171,15 +172,15 @@ def load_trust(trust_path: str | None, root: Path = ROOT) -> tuple[trust.Store, 
         return store, {'path': str(trust_path), 'sha256': store.sha256, 'default': False}
     try:
         changed = documents.dirty(root, VERIFIER_PATHS)
-        data = documents.committed(root, 'HEAD', trust.STORE_PATH)
+        data = documents.committed(root, ref, trust.STORE_PATH)
     except documents.DocumentError:
         raise trust.TrustError('the default trust store needs the git checkout it is committed in') from None
     if changed:
         raise VerifierModified(f'{len(changed)} uncommitted change(s) under {" or ".join(VERIFIER_PATHS)}')
     if data is None:
-        raise trust.TrustError(f'{trust.STORE_PATH} is not committed at HEAD')
-    store = trust.Store.from_bytes(data, f'HEAD:{trust.STORE_PATH}')
-    return store, {'path': f'HEAD:{trust.STORE_PATH}', 'sha256': store.sha256, 'default': True}
+        raise trust.TrustError(f'{trust.STORE_PATH} is not committed at {ref}')
+    store = trust.Store.from_bytes(data, f'{ref}:{trust.STORE_PATH}')
+    return store, {'path': f'{ref}:{trust.STORE_PATH}', 'sha256': store.sha256, 'default': True}
 
 
 class VerifierModified(ValueError):
@@ -187,7 +188,7 @@ class VerifierModified(ValueError):
 
 
 def verify_file(path: str, trust_path: str | None, repo: str | None, artefact: str | None,
-                head: str | None, root: Path = ROOT) -> dict:
+                head: str | None, root: Path = ROOT, trust_ref: str = 'HEAD') -> dict:
     """Read-only verification. Fields copied from the document appear only once it verified."""
     report = {'verified': False, 'signature_valid': False, 'reason': 'MALFORMED', 'detail': '', 'kind': None,
               'verification_method': None, 'principal': None, 'proof_purpose': None, 'created': None,
@@ -208,7 +209,7 @@ def verify_file(path: str, trust_path: str | None, repo: str | None, artefact: s
         return report
     report['kind'] = kind
     try:
-        store, identity = load_trust(trust_path, root)
+        store, identity = load_trust(trust_path, root, trust_ref)
     except VerifierModified as exc:
         report['reason'], report['detail'] = 'VERIFIER_MODIFIED', str(exc)
         return report
@@ -250,6 +251,13 @@ def verify_file(path: str, trust_path: str | None, repo: str | None, artefact: s
     else:
         report['evidence_origin'] = 'PINNED_HUMAN_KEY' if identity['default'] else 'CALLER_TRUST_STORE'
     return report
+
+
+def _gate(args) -> int:
+    from ante.attest import gate
+    report = gate.decide(Path(args.repo), args.base, args.head, args.pr)
+    sys.stdout.write(json.dumps(report, indent=2, sort_keys=True) + '\n')
+    return EXIT_OK if report['decision'] == gate.PROCEED else EXIT_NOT_VERIFIED
 
 
 def _verify(args) -> int:
@@ -461,6 +469,12 @@ def add_parser(sub) -> None:
     key.add_argument('--principal-type', required=True, choices=trust.PRINCIPAL_TYPES)
     key.add_argument('--kind', action='append', choices=documents.KINDS)
     key.set_defaults(handler=_key)
+    gate = inner.add_parser('gate', help='D-020 admission report: PROCEED or HOLD for the change from --base to --head (informational)')
+    gate.add_argument('--base', required=True, help='target branch revision; rules and trust store are read here')
+    gate.add_argument('--head', required=True, help='pull request head')
+    gate.add_argument('--pr', required=True, type=int, help='pull request number; the approval is foundation/approvals/PR-N.json')
+    gate.add_argument('--repo', default=str(ROOT))
+    gate.set_defaults(handler=_gate)
     gen = inner.add_parser('keygen', help='create an encrypted signing key; run it as the separate signing account')
     gen.add_argument('--out', required=True, help='private key file (new, outside the checkout, mode 600)')
     gen.add_argument('--public', required=True, help='public key PEM to write')

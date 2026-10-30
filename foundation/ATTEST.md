@@ -194,6 +194,29 @@ reason: `MALFORMED`, `SCHEMA_INVALID`, `UNSUPPORTED_PROOF`, `CONTEXT_MISMATCH`,
 `CRYPTO_UNAVAILABLE`, `CANDIDATE_REQUIRED`, `REPOSITORY_MISMATCH`,
 `REPOSITORY_UNAVAILABLE`.
 
+## Admission gate
+
+`ante attest gate --base B --head H --pr N` answers PROCEED or HOLD for a pull
+request; any doubt is HOLD. It reads the protected paths and the trust store at
+the target branch `B`, so a change cannot loosen its own rules or pin its own
+key. A change that touches no protected path proceeds. A change that does needs
+`foundation/approvals/PR-N.json`: an approval signed by a pinned human key, with
+scope `merge`, whose `review_ref` names `#N`, made against the merge base.
+
+An approval binds the exact head it approves, so it cannot be inside that head.
+It is added in a last commit that carries nothing else; the gate verifies it
+against that commit's parent. A later commit or merge leaves the approval
+unbound and the answer HOLD; the owner signs again.
+
+The gate reports and never authorises (`authorizes_action` is false). In CI it
+is an informational step that cannot fail the job. Limit of that stage: CI runs
+the gate code of the pull request itself, so a change to the gate is judged by
+the gate it changes. Making the gate mandatory has to run the base's code.
+Reasons: `NO_CHANGES`, `NO_PROTECTED_PATHS`, `APPROVED`, `APPROVAL_MISSING`,
+`APPROVAL_NOT_VERIFIED`, `NOT_A_PINNED_HUMAN_KEY`, `STALE_BASE`,
+`SCOPE_LACKS_MERGE`, `REVIEW_REF_MISMATCH`, `REVISION_UNKNOWN`, `NO_MERGE_BASE`,
+`USAGE`, `UNDETERMINED`.
+
 ## Threat model
 
 | ID | Threat | Control | Status |
@@ -214,8 +237,8 @@ reason: `MALFORMED`, `SCHEMA_INVALID`, `UNSUPPORTED_PROOF`, `CONTEXT_MISMATCH`,
 ## Not in G1a
 
 No blockchain, ZK proof, credential issuance, DID resolution, key rotation,
-revocation, external timestamp, review interface, application receipt, host
-admission gate or network access. G1b adds rotation and local revocation. G2–G4
+revocation, external timestamp, review interface, application receipt, a
+mandatory admission gate or network access. G1b adds rotation and local revocation. G2–G4
 (zkVM, ZKML, external anchoring) need a named external verifier and a separate
 owner decision.
 

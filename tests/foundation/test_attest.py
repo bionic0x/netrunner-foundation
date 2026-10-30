@@ -828,5 +828,150 @@ class Boundaries(unittest.TestCase):
             self.assertTrue(any(fnmatch.fnmatch(target, pattern) for pattern in overdrive), target)
 
 
+class AdmissionGate(unittest.TestCase):
+    """The D-020 gate: protected changes need a verified approval of a pinned human key."""
+
+    def setUp(self):
+        from ante.attest import gate
+        from ante.constructs import frozen
+        self.gate = gate
+        self.repo = Repo()
+        self.addCleanup(self.repo.close)
+        self.key, self.raw, self.method = new_key()
+        self.tmp = Path(tempfile.mkdtemp())
+        self.addCleanup(shutil.rmtree, self.tmp, True)
+        root = self.repo.dir
+        for name, data in (
+                ('strategy/overdrive-protected.json', {'protected': ['ante/**', 'foundation/attest/**']}),
+                ('foundation/develop-policy.json', {
+                    'schema_version': 2, 'max_open_proposals': 1, 'campaign_spend_usd': 1,
+                    'consecutive_regressions_to_stop': 2, 'editable_scopes': ['notes.md'],
+                    'protected_manifest': 'strategy/overdrive-protected.json'}),
+                (frozen.REGISTRY, {'frozen_reviewers': []}),
+                ('foundation/attest/trusted-keys.json', {'schema_version': 1, 'keys': [entry(self.raw)]})):
+            (root / name).parent.mkdir(parents=True, exist_ok=True)
+            (root / name).write_text(json.dumps(data))
+        self.base = self.repo.commit('rules and pin')
+        git(root, 'checkout', '-q', '-b', 'feature')
+
+    def change(self, name='ante/core.py', text='VALUE = 2\n'):
+        (self.repo.dir / name).write_text(text)
+        return self.repo.commit(f'change {name}')
+
+    def approve(self, candidate, pr=7, scope=('merge',), review_ref=None, key=None, add=True):
+        document = documents.approval(self.base, candidate, list(scope), review_ref or f'PR#{pr}',
+                                      'agent:test', AT, self.repo.dir)
+        signed = commands.sign_document(document, (key or self.key).sign, self.method, AT)
+        if add:
+            path = self.repo.dir / self.gate.approval_path(pr)
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_text(json.dumps(signed, indent=2))
+            return self.repo.commit('approval')
+        return signed
+
+    def decide(self, head=None, pr=7):
+        return self.gate.decide(self.repo.dir, self.base, head or git(self.repo.dir, 'rev-parse', 'HEAD'), pr)
+
+    def test_a_change_without_protected_paths_proceeds_without_an_approval(self):
+        self.change('notes.md', 'edited\n')
+        report = self.decide()
+        self.assertEqual(('PROCEED', 'NO_PROTECTED_PATHS', False),
+                         (report['decision'], report['reason'], report['authorizes_action']))
+
+    def test_a_protected_change_without_an_approval_holds(self):
+        self.change()
+        report = self.decide()
+        self.assertEqual(('HOLD', 'APPROVAL_MISSING', ['ante/core.py']),
+                         (report['decision'], report['reason'], report['protected_paths']))
+
+    def test_a_protected_change_with_a_verified_approval_proceeds(self):
+        candidate = self.change()
+        self.approve(candidate)
+        report = self.decide()
+        self.assertEqual(('PROCEED', 'APPROVED', candidate), (report['decision'], report['reason'], report['candidate']))
+        self.assertEqual('PINNED_HUMAN_KEY', report['approval']['evidence_origin'])
+        self.assertFalse(report['authorizes_action'])
+
+    def test_any_change_after_the_approval_holds(self):
+        candidate = self.change()
+        self.approve(candidate)
+        self.change('ante/core.py', 'VALUE = 3\n')
+        report = self.decide()
+        self.assertEqual(('HOLD', 'APPROVAL_NOT_VERIFIED'), (report['decision'], report['reason']))
+
+    def test_an_approval_commit_that_carries_anything_else_holds(self):
+        candidate = self.change()
+        document = self.approve(candidate, add=False)
+        (self.repo.dir / 'foundation' / 'approvals').mkdir(parents=True)
+        (self.repo.dir / self.gate.approval_path(7)).write_text(json.dumps(document))
+        (self.repo.dir / 'ante' / 'core.py').write_text('VALUE = 9\n')
+        self.repo.commit('approval and more')
+        self.assertEqual('APPROVAL_NOT_VERIFIED', self.decide()['reason'])
+
+    def test_an_approval_for_another_pull_request_does_not_count(self):
+        candidate = self.change()
+        self.approve(candidate, pr=8)
+        self.assertEqual('APPROVAL_MISSING', self.decide(pr=7)['reason'])
+        self.assertEqual('PROCEED', self.decide(pr=8)['decision'])
+
+    def test_a_review_reference_naming_another_pull_request_holds(self):
+        candidate = self.change()
+        self.approve(candidate, review_ref='PR#70')
+        self.assertEqual('REVIEW_REF_MISMATCH', self.decide()['reason'])
+
+    def test_a_scope_without_merge_holds(self):
+        candidate = self.change()
+        self.approve(candidate, scope=('apply',))
+        self.assertEqual('SCOPE_LACKS_MERGE', self.decide()['reason'])
+
+    def test_a_key_that_is_not_pinned_at_the_base_holds(self):
+        candidate = self.change()
+        other, other_raw, other_method = new_key()
+        document = documents.approval(self.base, candidate, ['merge'], 'PR#7', 'agent:test', AT, self.repo.dir)
+        signed = commands.sign_document(document, other.sign, other_method, AT)
+        path = self.repo.dir / self.gate.approval_path(7)
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(json.dumps(signed))
+        self.repo.commit('approval')
+        self.assertEqual('APPROVAL_NOT_VERIFIED', self.decide()['reason'])
+
+    def test_the_change_cannot_pin_its_own_key(self):
+        """The store is read at the base, so a key added by the change itself is unknown."""
+        other, other_raw, other_method = new_key()
+        store = self.repo.dir / 'foundation' / 'attest' / 'trusted-keys.json'
+        store.write_text(json.dumps({'schema_version': 1, 'keys': [entry(self.raw), entry(other_raw)]}))
+        candidate = self.repo.commit('pin another key')
+        document = documents.approval(self.base, candidate, ['merge'], 'PR#7', 'agent:test', AT, self.repo.dir)
+        signed = commands.sign_document(document, other.sign, other_method, AT)
+        path = self.repo.dir / self.gate.approval_path(7)
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(json.dumps(signed))
+        self.repo.commit('approval')
+        report = self.decide()
+        self.assertEqual(('HOLD', 'APPROVAL_NOT_VERIFIED'), (report['decision'], report['reason']))
+        self.assertIn('UNTRUSTED_KEY', report['detail'])
+
+    def test_a_stale_base_holds(self):
+        candidate = self.change()
+        self.approve(candidate)
+        git(self.repo.dir, 'checkout', '-q', 'main')
+        (self.repo.dir / 'notes.md').write_text('main moved\n')
+        self.base = self.repo.commit('main moved')
+        git(self.repo.dir, 'checkout', '-q', 'feature')
+        git(self.repo.dir, 'merge', '-q', '--no-edit', 'main')
+        self.assertEqual('HOLD', self.decide()['decision'])
+
+    def test_doubt_is_hold(self):
+        self.assertEqual('REVISION_UNKNOWN', self.gate.decide(self.repo.dir, 'nope', 'HEAD', 7)['reason'])
+        self.assertEqual('USAGE', self.gate.decide(self.repo.dir, self.base, 'HEAD', 0)['reason'])
+
+    def test_the_command_reports_and_exits_by_decision(self):
+        self.change()
+        code, out, _ = run(['attest', 'gate', '--base', self.base, '--head', 'HEAD', '--pr', '7',
+                            '--repo', str(self.repo.dir)])
+        self.assertEqual(4, code)
+        self.assertEqual('APPROVAL_MISSING', json.loads(out)['reason'])
+
+
 if __name__ == '__main__':
     unittest.main()
