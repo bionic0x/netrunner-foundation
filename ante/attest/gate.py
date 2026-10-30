@@ -44,7 +44,7 @@ def protected_paths(rules: policy_mod.Policy, names: list[str]) -> list[str]:
 
 def decide(repo: Path, base: str, head: str, pr: int) -> dict:
     report = {'decision': HOLD, 'reason': 'UNDETERMINED', 'detail': '', 'authorizes_action': False,
-              'pr': pr, 'base': None, 'candidate': None, 'protected_paths': [], 'approval': None}
+              'pr': pr, 'base': None, 'target_base': None, 'candidate': None, 'protected_paths': [], 'approval': None}
     if not isinstance(pr, int) or isinstance(pr, bool) or pr < 1:
         report['reason'], report['detail'] = 'USAGE', 'the pull request number must be a positive integer'
         return report
@@ -54,6 +54,7 @@ def decide(repo: Path, base: str, head: str, pr: int) -> dict:
         if base_commit is None or head_commit is None:
             report['reason'], report['detail'] = 'REVISION_UNKNOWN', 'base or head is not a commit of this repository'
             return report
+        report['target_base'] = base_commit
         merge_base = documents._git(repo, 'merge-base', base_commit, head_commit, check=False).stdout.decode().strip()
         if not merge_base:
             report['reason'], report['detail'] = 'NO_MERGE_BASE', 'base and head share no history'
@@ -61,15 +62,21 @@ def decide(repo: Path, base: str, head: str, pr: int) -> dict:
         path = approval_path(pr)
         parents = documents._git(repo, 'rev-list', '--parents', '-n1', head_commit).stdout.split()[1:]
         parent = parents[0].decode() if len(parents) == 1 else None
-        # The approval commit adds exactly the approval file and nothing else.
+        # The approval commit adds or replaces exactly the approval file.
         candidate = head_commit
-        if parent is not None and documents._changed(repo, parent, head_commit) == [path] \
-                and documents.resolve(repo, f'{parent}:{path}') is None:
+        if parent is not None and documents._changed(repo, parent, head_commit) == [path]:
             candidate = parent
         report['base'], report['candidate'] = merge_base, candidate
         rules = policy_mod.at_ref(repo, base_commit)
         names = documents._changed(repo, merge_base, candidate)
         protected = protected_paths(rules, names)
+        # A target-only update need not move the merge base. Compare entries,
+        # including modes, for every input of a protected patch. Unrelated
+        # target changes can leave all those reviewed inputs intact.
+        stale_inputs = bool(protected) and any(
+            documents._git(repo, 'ls-tree', '-z', merge_base, '--', name).stdout !=
+            documents._git(repo, 'ls-tree', '-z', base_commit, '--', name).stdout
+            for name in names)
     except (documents.DocumentError, policy_mod.PolicyError, OSError, KeyError, ValueError) as exc:
         report['reason'], report['detail'] = 'UNDETERMINED', f'{type(exc).__name__}: {exc}'[:300]
         return report
@@ -80,6 +87,10 @@ def decide(repo: Path, base: str, head: str, pr: int) -> dict:
     if not protected:
         report.update(decision=PROCEED, reason='NO_PROTECTED_PATHS',
                       detail=f'{len(names)} changed path(s), none protected at the base revision')
+        return report
+    if stale_inputs:
+        report['reason'] = 'STALE_BASE'
+        report['detail'] = 'the target branch changed an input or mode of the reviewed patch; renew its approval'
         return report
     blob = documents.committed(repo, head_commit, path)
     if blob is None:
