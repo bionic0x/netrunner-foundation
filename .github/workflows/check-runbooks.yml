@@ -84,6 +84,46 @@ jobs:
           python3 scripts/check-htp-gate0.py
           python3 scripts/test-htp-gate0.py
 
+  d020-admission:
+    name: D-020 admission gate
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      # The gate that judges the pull request is the target branch's code, never the
+      # pull request's own: a change to the gate cannot approve itself.
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.pull_request.base.sha }}
+          path: trusted
+          persist-credentials: false
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          path: candidate
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: '3.11'
+      - run: python3 -m pip install --require-hashes --no-deps -r trusted/.github/requirements/attest.txt
+      - name: PROCEED or HOLD (doubt is HOLD)
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          set +e
+          python3 trusted/scripts/ante attest gate --repo candidate --base "$BASE_SHA" --head "$HEAD_SHA" --pr "$PR_NUMBER" > "$RUNNER_TEMP/gate.json"
+          status=$?
+          {
+            echo '### D-020 admission gate'
+            echo '```json'
+            cat "$RUNNER_TEMP/gate.json"
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+          exit $status
+
   ante-foundation:
     name: Ante Foundation contract, layers and published self-test
     runs-on: ubuntu-latest
@@ -111,25 +151,6 @@ jobs:
           # A missing signing dependency fails the suite instead of skipping it.
           ANTE_REQUIRE_ATTEST: '1'
         run: python3 -m unittest discover -s tests/foundation -p 'test_*.py'
-
-      - name: D-020 admission report (informational; never blocks)
-        if: github.event_name == 'pull_request'
-        continue-on-error: true
-        env:
-          BASE_SHA: ${{ github.event.pull_request.base.sha }}
-          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
-          PR_NUMBER: ${{ github.event.pull_request.number }}
-        run: |
-          set +e
-          python3 scripts/ante attest gate --base "$BASE_SHA" --head "$HEAD_SHA" --pr "$PR_NUMBER" > "$RUNNER_TEMP/gate.json"
-          status=$?
-          {
-            echo '### D-020 admission report (informational)'
-            echo '```json'
-            cat "$RUNNER_TEMP/gate.json"
-            echo '```'
-          } >> "$GITHUB_STEP_SUMMARY"
-          exit $status
 
       - name: Frozen reviewers and defence-layer independence
         run: |

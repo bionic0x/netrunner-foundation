@@ -212,9 +212,12 @@ against that commit's parent. A later commit or merge leaves the approval
 unbound and the answer HOLD; the owner signs again.
 
 The gate reports and never authorises (`authorizes_action` is false). In CI it
-is an informational step that cannot fail the job. Limit of that stage: CI runs
-the gate code of the pull request itself, so a change to the gate is judged by
-the gate it changes. Making the gate mandatory has to run the base's code.
+is the job `D-020 admission gate`, which fails on HOLD. It runs the target
+branch's code (the base commit is checked out apart from the candidate), so a
+change to the gate is judged by the gate it changes, not by itself. Whether that
+job blocks a merge is a branch-protection setting of the repository owner:
+add `D-020 admission gate` to the required checks. The first change to the gate
+after this one is judged by the version that merged here.
 Reasons: `NO_CHANGES`, `NO_PROTECTED_PATHS`, `APPROVED`, `APPROVAL_MISSING`,
 `APPROVAL_NOT_VERIFIED`, `NOT_A_PINNED_HUMAN_KEY`, `STALE_BASE`,
 `SCOPE_LACKS_MERGE`, `REVIEW_REF_MISMATCH`, `REVISION_UNKNOWN`, `NO_MERGE_BASE`,
